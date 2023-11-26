@@ -37,7 +37,9 @@ typedef struct {
     LPVOID (*HeapAlloc)(HANDLE, DWORD, SIZE_T);
     LPVOID (*HeapReAlloc)(HANDLE, DWORD, LPVOID, SIZE_T);
     BOOL (*HeapFree)(HANDLE, DWORD, LPVOID);
-    WINAPI HANDLE (*GetStdHandle)(DWORD);
+    DWORD (*GetLastError)(void);
+    HANDLE WINAPI (*GetStdHandle)(DWORD);
+    BOOL WINAPI (*AttachConsole)(DWORD);
     int (*MultiByteToWideChar)(UINT, DWORD, const char*, int, LPWSTR, int);
     BOOL WINAPI (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
 } OMG_Kernel32;
