@@ -24,9 +24,9 @@ void app_init(App* this, OMG_EntryData* data) {
         return;
     }
     this->omg->log_info_str(this->omg, "1 123 456\n", 0);
+    /*this->omg->log_info_str(this->omg, "1 123 456", 0);
     this->omg->log_info_str(this->omg, "1 123 456", 0);
-    this->omg->log_info_str(this->omg, "1 123 456", 0);
-    this->omg->log_info_str(this->omg, "1 123 456\n", 0);
+    this->omg->log_info_str(this->omg, "1 123 456\n", 0);*/
     this->omg->destroy(this->omg);
 }
 

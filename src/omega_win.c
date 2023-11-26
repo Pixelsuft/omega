@@ -2,6 +2,7 @@
 
 #if OMG_SUPPORT_WIN
 #include <omega/omega_win.h>
+#include <omega/ostd.h>
 #include <omega/memory_win.h>
 #define base ((OMG_Omega*)this)
 
@@ -24,31 +25,19 @@ void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
             return;
         }
     }
-    if (size == 0) {
-        char* counter = (char*)data;
-        while (*counter) {
-            counter++;
-            size++;
-        }
-    }
+    if (size == 0)
+        size = omg_strlen(data);
     int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data, size, NULL, 0);
     if (count <= 0)
         return;
-    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 50);
-    out_buf[0] = L'[';
-    out_buf[1] = L'I';
-    out_buf[2] = L'N';
-    out_buf[3] = L'F';
-    out_buf[4] = L'O';
-    out_buf[5] = L']';
-    out_buf[6] = L':';
-    out_buf[7] = L' ';
+    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20);
     if (OMG_ISNULL(out_buf))
         return;
     if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data, size, out_buf + 8, count) <= 0) {
         OMG_FREE(base->mem, out_buf);
         return;
     }
+    omg_memcpy(out_buf, L"[INFO]: ", 16);
     if (out_buf[count + 7] == L'\n') {
         count--;
     }
