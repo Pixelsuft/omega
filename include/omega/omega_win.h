@@ -9,6 +9,8 @@ typedef struct {
     OMG_Kernel32 k32_stk;
     OMG_Kernel32* k32;
     OMG_Ntdll* nt;
+    HANDLE stdout_handle;
+    HANDLE stderr_handle;
     bool should_free_k32;
     bool should_free_ntdll;
 } OMG_OmegaWin;

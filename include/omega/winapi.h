@@ -24,7 +24,7 @@ typedef struct {
     UCHAR wReserved;
 } NTDLL_OSVERSIONINFOEXW;
 
-#if !OMG_WINAPI_DYNAMIC
+#if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
 OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(NTDLL_OSVERSIONINFOEXW* version_information);
 #endif
 
@@ -37,6 +37,9 @@ typedef struct {
     LPVOID (*HeapAlloc)(HANDLE, DWORD, SIZE_T);
     LPVOID (*HeapReAlloc)(HANDLE, DWORD, LPVOID, SIZE_T);
     BOOL (*HeapFree)(HANDLE, DWORD, LPVOID);
+    WINAPI HANDLE (*GetStdHandle)(DWORD);
+    int (*MultiByteToWideChar)(UINT, DWORD, const char*, int, LPWSTR, int);
+    BOOL WINAPI (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
 } OMG_Kernel32;
 
 typedef struct {

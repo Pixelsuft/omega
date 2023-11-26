@@ -5,6 +5,9 @@
 #include <omega/memory_win.h>
 #define base ((OMG_Omega*)this)
 
+#define WIN_STDOUT ((DWORD)-11)
+#define WIN_CP_UTF8 65001
+
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     OMG_UNUSED(data);
     static OMG_OmegaWin result;
@@ -12,6 +15,49 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     result.parent.mem = NULL;
     result.nt = NULL;
     return &result;
+}
+
+void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
+    if (OMG_ISNULL(this->stdout_handle)) {
+        this->stdout_handle = this->k32->GetStdHandle(WIN_STDOUT);
+        if (OMG_ISNULL(this->stdout_handle)) {
+            return;
+        }
+    }
+    if (size == 0) {
+        char* counter = (char*)data;
+        while (*counter) {
+            counter++;
+            size++;
+        }
+    }
+    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data, size, NULL, 0);
+    if (count <= 0)
+        return;
+    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 50);
+    out_buf[0] = L'[';
+    out_buf[1] = L'I';
+    out_buf[2] = L'N';
+    out_buf[3] = L'F';
+    out_buf[4] = L'O';
+    out_buf[5] = L']';
+    out_buf[6] = L':';
+    out_buf[7] = L' ';
+    if (OMG_ISNULL(out_buf))
+        return;
+    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data, size, out_buf + 8, count) <= 0) {
+        OMG_FREE(base->mem, out_buf);
+        return;
+    }
+    if (out_buf[count + 7] == L'\n') {
+        count--;
+    }
+    out_buf[count + 8] = '\n';
+    out_buf[count + 9] = '\r';
+    count += 2;
+    DWORD counter = 0;
+    this->k32->WriteConsoleW(this->stdout_handle, out_buf, (DWORD)count + 8, &counter, NULL);
+    OMG_FREE(base->mem, out_buf);
 }
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
@@ -78,6 +124,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     else {
         this->should_free_ntdll = false;
     }
+    base->log_info_str = omg_win_log_info_str;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
     return false;

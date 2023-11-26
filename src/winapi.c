@@ -7,6 +7,11 @@
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
+#if OMG_WINAPI_DYNAMIC_UGLY
+#define LOAD_REQUIRED_UGLY(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
+#else
+#define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
+#endif
 
 #if OMG_IS_WIN
 bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
@@ -23,6 +28,9 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(HeapAlloc);
     LOAD_REQUIRED(HeapReAlloc);
     LOAD_REQUIRED(HeapFree);
+    LOAD_REQUIRED(GetStdHandle);
+    LOAD_REQUIRED(MultiByteToWideChar);
+    LOAD_REQUIRED(WriteConsoleW);
 #if OMG_WINAPI_DYNAMIC
     OMG_END_POINTER_CAST();
 #endif
@@ -44,12 +52,10 @@ bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
     this->handle = LOAD_SYSTEM_LIBRARY(L"ntdll.dll");
     if (this->handle == NULL)
         return true;
+#endif
     OMG_BEGIN_POINTER_CAST();
-#endif
-    LOAD_REQUIRED(RtlGetVersion);
-#if OMG_WINAPI_DYNAMIC
+    LOAD_REQUIRED_UGLY(RtlGetVersion);
     OMG_END_POINTER_CAST();
-#endif
     return false;
 }
 
