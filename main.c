@@ -23,8 +23,6 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
-    void* ptr = OMG_MALLOC(this->omg->mem, 1337);
-    OMG_FREE(this->omg->mem, ptr);
     this->omg->destroy(this->omg);
     printf("1\n");
 }

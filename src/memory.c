@@ -10,6 +10,11 @@ void* omg_memory_alloc(OMG_Memory* this, OMG_MemoryExtra extra) {
     return NULL;
 }
 
+void* omg_memory_realloc(OMG_Memory* this, void* ptr, size_t size) {
+    OMG_UNUSED(this, ptr, size);
+    return NULL;
+}
+
 bool omg_memory_free(OMG_Memory* this, void* ptr) {
     OMG_UNUSED(this, ptr);
     return false;
@@ -20,6 +25,7 @@ bool omg_memory_init(OMG_Memory* this) {
     this->is_allocated = false;
     this->destroy = omg_memory_destroy;
     this->alloc = omg_memory_alloc;
+    this->realloc = omg_memory_realloc;
     this->free = omg_memory_free;
     return false;
 }

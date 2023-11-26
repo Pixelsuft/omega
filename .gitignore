@@ -11,6 +11,7 @@ x86
 x64
 x32
 push.bat
+*.stackdump
 *.zip
 *.tar
 *.gz

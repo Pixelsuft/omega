@@ -42,12 +42,42 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 #endif
 }
 
+void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
+#if OMG_DEBUG
+    if (OMG_ISNULL(ptr))
+        return NULL;
+    OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
+    if (OMG_ISNULL(real_ptr))
+        return NULL;
+    if (!real_ptr->is_allocated)
+        return NULL;
+    size_t size_before = real_ptr->size;
+    OMG_MemoryExtra* new_ptr = this->k32->HeapReAlloc(this->heap, 0, real_ptr, size + sizeof(OMG_MemoryExtra));
+    if (OMG_ISNULL(new_ptr)) {
+        if (base->alloc_size >= size_before)
+            base->alloc_size -= size_before;
+        if (base->alloc_count > 0)
+            base->alloc_count--;
+        return NULL;
+    }
+    base->alloc_size = base->alloc_size + size - size_before;
+    new_ptr->size = size;
+    return (void*)((size_t)new_ptr + sizeof(OMG_MemoryExtra));
+#else
+    void* result = this->k32->HeapReAlloc(this->heap, 0, ptr, size);
+    if (OMG_ISNULL(result)) {
+        return NULL;
+    }
+    return result;
+#endif
+}
+
 bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
 #if OMG_DEBUG
     if (OMG_ISNULL(ptr))
         return true;
     OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
-    if (OMG_ISNULL(ptr))
+    if (OMG_ISNULL(real_ptr))
         return true;
     if (!real_ptr->is_allocated)
         return true;
@@ -79,6 +109,7 @@ OMG_MemoryWin* omg_memory_win_create(OMG_Kernel32* data) {
     OMG_BEGIN_POINTER_CAST();
     omg_memory_init(this);
     base->alloc = omg_memory_win_alloc;
+    base->realloc = omg_memory_win_realloc;
     base->free = omg_memory_win_free;
     base->destroy = omg_memory_win_destroy;
     OMG_END_POINTER_CAST();

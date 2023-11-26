@@ -16,6 +16,7 @@ typedef struct {
 typedef size_t OMG_MemoryExtra;
 #define OMG_MALLOC(mem, size) mem->alloc(mem, (OMG_MemoryExtra)size)
 #endif
+#define OMG_REALLOC(mem, ptr, size) mem->realloc(mem, ptr, size)
 #define OMG_FREE(mem, ptr) mem->free(mem, ptr)
 
 typedef struct OMG_Memory {
@@ -23,6 +24,7 @@ typedef struct OMG_Memory {
     size_t alloc_size;
     bool (*destroy)(struct OMG_Memory* this);
     void* (*alloc)(struct OMG_Memory* this, OMG_MemoryExtra extra);
+    void* (*realloc)(struct OMG_Memory* this, void* ptr, size_t size);
     bool (*free)(struct OMG_Memory* this, void* ptr);
     bool is_allocated;
 } OMG_Memory;
