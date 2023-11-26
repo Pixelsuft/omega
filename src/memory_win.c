@@ -1,0 +1,89 @@
+#include <omega/winapi.h>
+#include <omega/memory_win.h>
+#define base ((OMG_Memory*)this)
+
+// TODO: show warn on errors
+
+#if OMG_SUPPORT_WIN
+bool omg_memory_win_destroy(OMG_MemoryWin* this) {
+    bool result = false;
+    HANDLE heap = this->heap;
+    OMG_Kernel32* k32 = this->k32;
+    if (!k32->HeapFree(heap, 0, this))
+        result = true;
+    if (!k32->HeapDestroy(heap))
+        result = true;
+    return result;
+}
+
+void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
+#if OMG_DEBUG
+    OMG_MemoryExtra* result = this->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
+    if (OMG_ISNULL(result)) {
+        return NULL;
+    }
+    result->filename = extra.filename;
+    result->func = extra.func;
+    result->size = extra.size;
+    result->line = extra.line;
+    result->is_allocated = true;
+    base->alloc_count++;
+    base->alloc_size += extra.size;
+    return (void*)((size_t)result + sizeof(OMG_MemoryExtra));
+#else
+    OMG_UNUSED(extra);
+    void* result = this->k32->HeapAlloc(this->heap, 0, (size_t)extra);
+    if (OMG_ISNULL(result)) {
+        return NULL;
+    }
+    return result;
+#endif
+}
+
+bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
+#if OMG_DEBUG
+    if (OMG_ISNULL(ptr))
+        return true;
+    OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
+    if (OMG_ISNULL(ptr))
+        return true;
+    if (!real_ptr->is_allocated)
+        return true;
+    real_ptr->is_allocated = false;
+    OMG_MemoryExtra data = *real_ptr;
+    if (this->k32->HeapFree(this->heap, 0, real_ptr)) {
+        if (base->alloc_size >= data.size)
+            base->alloc_size -= data.size;
+        if (base->alloc_count > 0)
+            base->alloc_count--;
+        return false;
+    }
+    return true;
+#else
+    return !this->k32->HeapFree(this->heap, 0, ptr);
+#endif
+}
+
+OMG_MemoryWin* omg_memory_win_create(OMG_Kernel32* data) {
+    // TODO: function, that doesn't allocate object (omg_memory_win_init)
+    HANDLE heap = data->HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 0, 0);
+    if (heap == NULL)
+        return NULL;
+    OMG_MemoryWin* this = data->HeapAlloc(heap, 0, sizeof(OMG_MemoryWin));
+    if (this == NULL) {
+        data->HeapDestroy(heap);
+        return NULL;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    omg_memory_init(this);
+    base->alloc = omg_memory_win_alloc;
+    base->free = omg_memory_win_free;
+    base->destroy = omg_memory_win_destroy;
+    OMG_END_POINTER_CAST();
+    this->k32 = data;
+    this->heap = heap;
+    base->alloc_count = 0;
+    base->is_allocated = true;
+    return this;
+}
+#endif
