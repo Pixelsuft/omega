@@ -8,7 +8,9 @@ typedef struct {
     OMG_Omega parent;
     OMG_Kernel32 k32_stk;
     OMG_Kernel32* k32;
+    OMG_Ntdll* nt;
     bool should_free_k32;
+    bool should_free_ntdll;
 } OMG_OmegaWin;
 
 OMG_API OMG_OmegaWin* omg_win_create(OMG_EntryData* data);

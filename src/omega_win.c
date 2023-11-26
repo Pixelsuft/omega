@@ -10,16 +10,21 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     static OMG_OmegaWin result;
     result.k32 = NULL;
     result.parent.mem = NULL;
+    result.nt = NULL;
     return &result;
 }
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
     bool result = false;
+    if (this->should_free_ntdll) {
+        result = omg_winapi_ntdll_free(this->nt, this->k32) || result;
+        result = OMG_FREE(base->mem, this->nt) || result;
+    }
     if (base->should_free_mem) {
-        result = result || base->mem->destroy(base->mem);
+        result = base->mem->destroy(base->mem) || result;
     }
     if (this->should_free_k32) {
-        result = result || omg_kernel32_free(this->k32);
+        result = omg_winapi_kernel32_free(this->k32) || result;
     }
     return result;
 }
@@ -27,7 +32,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
-        if (omg_kernel32_load(this->k32))
+        if (omg_winapi_kernel32_load(this->k32))
             return false;
         this->should_free_k32 = true;
     }
@@ -39,12 +44,25 @@ bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_win_create(this->k32);
         if (OMG_ISNULL(base->mem)) {
-            return false; // TODO: free here and probably in other places
+            return true; // TODO: free here and probably in other places
         }
         base->should_free_mem = true;
     }
     else {
         base->should_free_mem = false;
+    }
+    if (OMG_ISNULL(this->nt)) {
+        this->nt = OMG_MALLOC(base->mem, sizeof(OMG_Ntdll));
+        if (OMG_ISNULL(this->nt))
+            return true;
+        if (omg_winapi_ntdll_load(this->nt, this->k32)) {
+            OMG_FREE(base->mem, this->nt);
+            return true;
+        }
+        this->should_free_ntdll = true;
+    }
+    else {
+        this->should_free_ntdll = false;
     }
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
