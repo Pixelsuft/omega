@@ -1,5 +1,4 @@
 #include <omega/omega.h>
-#include <omega/omega_win.h>
 
 OMG_Omega* omg_create(OMG_EntryData* data) {
     OMG_UNUSED(data);

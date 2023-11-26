@@ -15,7 +15,7 @@ typedef struct {
 } OMG_EntryData;
 
 #define OMG_MAKE_MAIN(main_func) int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PWSTR cmdline, int cmdshow) { \
-    (void)hInstPrev; \
+    OMG_UNUSED(hInstPrev); \
     OMG_EntryData entry_data; \
     entry_data.hInst = hInst; \
     entry_data.cmdline = cmdline; \
@@ -25,7 +25,7 @@ typedef struct {
 } \
 \
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow) { \
-    (void)hInstPrev; \
+    OMG_UNUSED(hInstPrev); \
     OMG_EntryData entry_data; \
     entry_data.hInst = hInst; \
     entry_data.cmdline = NULL; \

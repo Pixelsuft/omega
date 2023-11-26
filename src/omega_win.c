@@ -1,8 +1,10 @@
+#include <omega/config.h>
+
+#if OMG_SUPPORT_WIN
 #include <omega/omega_win.h>
 #include <omega/memory_win.h>
 #define base ((OMG_Omega*)this)
 
-#if OMG_SUPPORT_WIN
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     OMG_UNUSED(data);
     static OMG_OmegaWin result;

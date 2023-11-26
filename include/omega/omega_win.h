@@ -1,8 +1,9 @@
 #pragma once
 #include <omega/omega.h>
-#include <omega/winapi.h>
 
 #if OMG_SUPPORT_WIN
+#include <omega/winapi.h>
+
 typedef struct {
     OMG_Omega parent;
     OMG_Kernel32 k32_stk;

@@ -1,8 +1,9 @@
 #pragma once
 #include <omega/memory.h>
-#include <omega/winapi.h>
 
 #if OMG_SUPPORT_WIN
+#include <omega/winapi.h>
+
 typedef struct {
     OMG_Memory parent;
     HANDLE heap;

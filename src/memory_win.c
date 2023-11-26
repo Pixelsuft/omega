@@ -1,10 +1,12 @@
-#include <omega/winapi.h>
-#include <omega/memory_win.h>
-#define base ((OMG_Memory*)this)
+#include <omega/config.h>
 
 // TODO: show warn on errors
 
 #if OMG_SUPPORT_WIN
+#include <omega/winapi.h>
+#include <omega/memory_win.h>
+#define base ((OMG_Memory*)this)
+
 bool omg_memory_win_destroy(OMG_MemoryWin* this) {
     bool result = false;
     HANDLE heap = this->heap;
