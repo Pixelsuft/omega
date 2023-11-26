@@ -23,7 +23,7 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     return &result;
 }
 
-void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
+void omg_win_attach_console(OMG_OmegaWin* this) {
     if (this->con_result == 0) {
         BOOL attach_res = this->k32->AttachConsole(WIN_ATTACH_PARENT_PROCESS);
         if (!attach_res) {
@@ -41,6 +41,10 @@ void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
         else
             this->con_result = 1;
     }
+}
+
+void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
+    omg_win_attach_console(this);
     if (this->con_result < 0)
         return;
     if (OMG_ISNULL(this->stdout_handle)) {
