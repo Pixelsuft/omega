@@ -23,3 +23,9 @@ size_t omg_strlen(const char* src) {
         temp_counter++;
     return (size_t)temp_counter - (size_t)src;
 }
+
+OMG_API void omg_std_fill_defaults(OMG_Std* this) {
+    this->memset = omg_memset;
+    this->memcpy = omg_memcpy;
+    this->strlen = omg_strlen;
+}

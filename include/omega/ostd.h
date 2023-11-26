@@ -43,8 +43,13 @@
     _Pragma("GCC diagnostic pop") \
 } while (0)
 
-OMG_API void* omg_memset(void *dest, register int val, register size_t len);
-OMG_API void* omg_memcpy(void *dest, const void* src, size_t len);
-OMG_API size_t omg_strlen(const char* src);
-
 #endif
+
+typedef struct {
+    void* (*memset)(void *dest, register int val, register size_t len);
+    void* (*memcpy)(void *dest, const void* src, size_t len);
+    size_t (*strlen)(const char* src);
+    void* extra;
+} OMG_Std;
+
+OMG_API void omg_std_fill_defaults(OMG_Std* this);

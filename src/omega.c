@@ -16,6 +16,7 @@ bool omg_destroy(OMG_Omega* this) {
 
 bool omg_init(OMG_Omega* this) {
     this->unused = NULL;
+    this->std = NULL;
     this->should_free_mem = false;
     this->log_info_str = omg_log_info_str;
     this->destroy = omg_destroy;
