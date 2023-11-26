@@ -19,12 +19,15 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
     if (this->should_free_ntdll) {
         result = omg_winapi_ntdll_free(this->nt, this->k32) || result;
         result = OMG_FREE(base->mem, this->nt) || result;
+        this->nt = NULL;
     }
     if (base->should_free_mem) {
         result = base->mem->destroy(base->mem) || result;
+        base->mem = NULL;
     }
     if (this->should_free_k32) {
         result = omg_winapi_kernel32_free(this->k32) || result;
+        this->k32 = NULL;
     }
     return result;
 }
@@ -44,7 +47,9 @@ bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_win_create(this->k32);
         if (OMG_ISNULL(base->mem)) {
-            return true; // TODO: free here and probably in other places
+            omg_winapi_kernel32_free(this->k32);
+            this->k32 = NULL;
+            return true;
         }
         base->should_free_mem = true;
     }
@@ -53,10 +58,19 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     if (OMG_ISNULL(this->nt)) {
         this->nt = OMG_MALLOC(base->mem, sizeof(OMG_Ntdll));
-        if (OMG_ISNULL(this->nt))
+        if (OMG_ISNULL(this->nt)) {
+            base->mem->destroy(base->mem);
+            base->mem = NULL;
+            omg_winapi_kernel32_free(this->k32);
+            this->k32 = NULL;
             return true;
+        }
         if (omg_winapi_ntdll_load(this->nt, this->k32)) {
             OMG_FREE(base->mem, this->nt);
+            base->mem->destroy(base->mem);
+            base->mem = NULL;
+            omg_winapi_kernel32_free(this->k32);
+            this->k32 = NULL;
             return true;
         }
         this->should_free_ntdll = true;
