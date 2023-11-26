@@ -35,6 +35,7 @@ typedef struct {
     HANDLE (*HeapCreate)(DWORD, SIZE_T, SIZE_T);
     BOOL (*HeapDestroy)(HANDLE);
     LPVOID (*HeapAlloc)(HANDLE, DWORD, SIZE_T);
+    LPVOID (*HeapReAlloc)(HANDLE, DWORD, LPVOID, SIZE_T);
     BOOL (*HeapFree)(HANDLE, DWORD, LPVOID);
 } OMG_Kernel32;
 
@@ -45,6 +46,6 @@ typedef struct {
 
 OMG_API bool omg_winapi_kernel32_load(OMG_Kernel32* this);
 OMG_API bool omg_winapi_kernel32_free(OMG_Kernel32* this);
-OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this, OMG_Kernel32* k32);
-OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this, OMG_Kernel32* k32);
+OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
+OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
 #endif

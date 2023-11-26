@@ -17,7 +17,7 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
 bool omg_win_destroy(OMG_OmegaWin* this) {
     bool result = false;
     if (this->should_free_ntdll) {
-        result = omg_winapi_ntdll_free(this->nt, this->k32) || result;
+        result = omg_winapi_ntdll_free(this->nt) || result;
         result = OMG_FREE(base->mem, this->nt) || result;
         this->nt = NULL;
     }
@@ -65,7 +65,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
             this->k32 = NULL;
             return true;
         }
-        if (omg_winapi_ntdll_load(this->nt, this->k32)) {
+        if (omg_winapi_ntdll_load(this->nt)) {
             OMG_FREE(base->mem, this->nt);
             base->mem->destroy(base->mem);
             base->mem = NULL;
