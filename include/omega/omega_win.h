@@ -11,6 +11,7 @@ typedef struct {
     OMG_Ntdll* nt;
     HANDLE stdout_handle;
     HANDLE stderr_handle;
+    int con_result;
     bool should_free_k32;
     bool should_free_ntdll;
 } OMG_OmegaWin;

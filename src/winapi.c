@@ -30,6 +30,8 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(HeapFree);
     LOAD_REQUIRED(GetLastError);
     LOAD_REQUIRED(GetStdHandle);
+    LOAD_REQUIRED(AllocConsole);
+    LOAD_REQUIRED(FreeConsole);
     LOAD_REQUIRED(AttachConsole);
     LOAD_REQUIRED(MultiByteToWideChar);
     LOAD_REQUIRED(WriteConsoleW);

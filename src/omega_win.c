@@ -10,7 +10,7 @@
 #define WIN_STD_ERROR_HANDLE ((DWORD)-12)
 #define WIN_CP_UTF8 65001
 #define WIN_ATTACH_PARENT_PROCESS ((DWORD)-1)
-#define WIN_ERROR_ACCESS_DENIED 0x4
+#define WIN_ERROR_ACCESS_DENIED 0x5
 #define WIN_ERROR_INVALID_HANDLE 0x6
 #define WIN_ERROR_GEN_FAILURE 0x1F
 
@@ -24,6 +24,25 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
 }
 
 void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
+    if (this->con_result == 0) {
+        BOOL attach_res = this->k32->AttachConsole(WIN_ATTACH_PARENT_PROCESS);
+        if (!attach_res) {
+            if (this->k32->GetLastError() == WIN_ERROR_ACCESS_DENIED)
+                this->con_result = 1;
+            else {
+                this->con_result = 1;
+                if (!this->k32->AllocConsole()) {
+                    this->con_result = -1;
+                    return;
+                }
+                this->con_result = 2;
+            }
+        }
+        else
+            this->con_result = 1;
+    }
+    if (this->con_result < 0)
+        return;
     if (OMG_ISNULL(this->stdout_handle)) {
         this->stdout_handle = this->k32->GetStdHandle(WIN_STD_OUTPUT_HANDLE);
         if (OMG_ISNULL(this->stdout_handle)) {
@@ -61,6 +80,10 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
         result = OMG_FREE(base->mem, this->nt) || result;
         this->nt = NULL;
     }
+    if (this->con_result > 1) {
+        result = !this->k32->FreeConsole() || result;
+        this->con_result = 0;
+    }
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -88,6 +111,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     OMG_BEGIN_POINTER_CAST();
     omg_init(this);
+    this->con_result = 0;
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_win_create(this->k32);
         if (OMG_ISNULL(base->mem)) {
