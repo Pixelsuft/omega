@@ -30,7 +30,6 @@ void omg_win_attach_console(OMG_OmegaWin* this) {
             if (this->k32->GetLastError() == WIN_ERROR_ACCESS_DENIED)
                 this->con_result = 1;
             else {
-                this->con_result = 1;
                 if (!this->k32->AllocConsole()) {
                     this->con_result = -1;
                     return;
