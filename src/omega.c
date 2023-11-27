@@ -5,8 +5,8 @@ OMG_Omega* omg_create(OMG_EntryData* data) {
     return NULL;
 }
 
-void omg_log_info_str(OMG_Omega* this, const char* data, size_t size) {
-    OMG_UNUSED(this, data, size);
+void omg_log_info_str(OMG_Omega* this, const OMG_String* data) {
+    OMG_UNUSED(this, data);
 }
 
 bool omg_destroy(OMG_Omega* this) {

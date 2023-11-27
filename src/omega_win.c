@@ -42,7 +42,7 @@ void omg_win_attach_console(OMG_OmegaWin* this) {
     }
 }
 
-void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
+void omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data) {
     omg_win_attach_console(this);
     if (this->con_result < 0)
         return;
@@ -52,15 +52,13 @@ void omg_win_log_info_str(OMG_OmegaWin* this, const char* data, size_t size) {
             return;
         }
     }
-    if (size == 0)
-        size = base->std->strlen(data);
-    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data, size, NULL, 0);
+    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, NULL, 0);
     if (count <= 0)
         return;
     wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20);
     if (OMG_ISNULL(out_buf))
         return;
-    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data, size, out_buf + 8, count) <= 0) {
+    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + 8, count) <= 0) {
         OMG_FREE(base->mem, out_buf);
         return;
     }
