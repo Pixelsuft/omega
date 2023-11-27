@@ -9,6 +9,10 @@
 #define OMG_ISNULL(ptr) (ptr == NULL)
 #define OMG_ISNOTNULL(ptr) (ptr != NULL)
 
+#define OMG_STRING_STATIC 1
+#define OMG_STRING_BUFFER 2
+#define OMG_STRING_DYNAMIC 3
+
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)
 #define _OMG_UNUSED3(p1, p2, p3) ((void)p1, (void)p2, (void)p3)
@@ -51,5 +55,13 @@ typedef struct {
     size_t (*strlen)(const char* src);
     void* extra;
 } OMG_Std;
+
+typedef struct {
+    size_t size;
+    size_t len;
+    int type;
+    char* ptr;
+    char buf[];
+} OMG_String;
 
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
