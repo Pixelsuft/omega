@@ -9,13 +9,16 @@
 #define OMG_ISNULL(ptr) (ptr == NULL)
 #define OMG_ISNOTNULL(ptr) (ptr != NULL)
 
+#define OMG_STRING_NONE 0
 #define OMG_STRING_STATIC 1
 #define OMG_STRING_BUFFER 2
 #define OMG_STRING_DYNAMIC 3
+// TODO: use << and >> to speedup
+#define OMG_STRING_CHUNK_SIZE 16
 
 #define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
-#define OMG_STRING_MAKE_BUFFER_P(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
-#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
+#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
+#define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
 
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)
@@ -72,3 +75,5 @@ typedef struct {
 OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
 OMG_API size_t omg_strlen(const char* src);
+OMG_API bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base);
+OMG_API bool omg_string_destroy(OMG_String* this);

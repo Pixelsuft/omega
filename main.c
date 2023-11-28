@@ -23,6 +23,10 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
+    OMG_String test_str;
+    omg_string_init_dynamic(&test_str, &OMG_STRING_MAKE_STATIC("123"));
+    this->omg->log_info_str(this->omg, &test_str);
+    omg_string_destroy(&test_str);
     this->omg->log_info_str(this->omg, &OMG_STRING_MAKE_STATIC("1 123 456\n"));
     this->omg->log_info_str(this->omg, &OMG_STRING_MAKE_STATIC("1 123 456"));
     this->omg->log_info_str(this->omg, &OMG_STRING_MAKE_STATIC("1 123 456"));
