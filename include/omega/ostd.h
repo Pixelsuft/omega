@@ -57,6 +57,7 @@ typedef struct {
     void* (*memset)(void *dest, register int val, register size_t len);
     void* (*memcpy)(void *dest, const void* src, size_t len);
     size_t (*strlen)(const char* src);
+    void* memory_allocator;
     void* extra;
 } OMG_Std;
 
@@ -68,5 +69,6 @@ typedef struct {
     char buf[];
 } OMG_String;
 
-OMG_API size_t omg_strlen(const char* src);
+OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
+OMG_API size_t omg_strlen(const char* src);

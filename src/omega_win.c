@@ -14,12 +14,16 @@
 #define WIN_ERROR_INVALID_HANDLE 0x6
 #define WIN_ERROR_GEN_FAILURE 0x1F
 
+void omg_win_fill_after_create(OMG_OmegaWin* this) {
+    this->k32 = NULL;
+    base->mem = NULL;
+    this->nt = NULL;
+}
+
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     OMG_UNUSED(data);
     static OMG_OmegaWin result;
-    result.k32 = NULL;
-    result.parent.mem = NULL;
-    result.nt = NULL;
+    omg_win_fill_after_create(&result);
     return &result;
 }
 
@@ -133,6 +137,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
             return true;
         }
         omg_std_fill_defaults(base->std);
+        base->std->memory_allocator = base->mem;
+        omg_std_set_default_handle(base->std);
         base->should_free_std = true;
     }
     else {
