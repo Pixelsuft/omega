@@ -66,6 +66,17 @@ bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
     return false;
 }
 
+bool omg_string_add_chunk(OMG_String* this) {
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    char* res = OMG_REALLOC(mem, this->ptr, this->size + OMG_STRING_CHUNK_SIZE);
+    if (OMG_ISNULL(res))
+        return true;
+    this->size += OMG_STRING_CHUNK_SIZE;
+    this->ptr = res;
+    return false;
+}
+
 bool omg_string_destroy(OMG_String* this) {
     bool res = false;
     if (this->type == OMG_STRING_DYNAMIC && OMG_ISNOTNULL(this->ptr)) {
