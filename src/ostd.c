@@ -66,14 +66,37 @@ bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
     return false;
 }
 
-bool omg_string_add_chunk(OMG_String* this) {
+bool omg_string_resize(OMG_String* this, size_t new_size) {
     if (this->type < OMG_STRING_DYNAMIC)
         return true;
-    char* res = OMG_REALLOC(mem, this->ptr, this->size + OMG_STRING_CHUNK_SIZE);
+    char* res = OMG_REALLOC(mem, this->ptr, new_size);
     if (OMG_ISNULL(res))
         return true;
-    this->size += OMG_STRING_CHUNK_SIZE;
+    this->size = new_size;
     this->ptr = res;
+    return false;
+}
+
+bool omg_string_add_chunk(OMG_String* this) {
+    return omg_string_resize(this, this->size + OMG_STRING_CHUNK_SIZE);
+}
+
+bool omg_string_ensure_null(OMG_String* this) {
+    if (this->type < OMG_STRING_STATIC)
+        return true;
+    if (this->ptr[this->len - 1] == '\0')
+        return false;
+    if (this->type == OMG_STRING_STATIC)
+        return true;
+    if (this->size > this->len) {
+        this->ptr[this->len - 1] = '\0';
+        return false;
+    }
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    if (omg_string_add_chunk(this))
+        return true;
+    this->ptr[this->len - 1] = '\0';
     return false;
 }
 

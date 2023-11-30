@@ -76,5 +76,7 @@ OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
 OMG_API size_t omg_strlen(const char* src);
 OMG_API bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base);
+OMG_API bool omg_string_resize(OMG_String* this, size_t new_size);
 OMG_API bool omg_string_add_chunk(OMG_String* this);
+OMG_API bool omg_string_ensure_null(OMG_String* this);
 OMG_API bool omg_string_destroy(OMG_String* this);
