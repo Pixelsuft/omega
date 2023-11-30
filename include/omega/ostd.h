@@ -83,3 +83,5 @@ OMG_API bool omg_string_resize(OMG_String* this, size_t new_len);
 OMG_API bool omg_string_ensure_null(OMG_String* this);
 OMG_API bool omg_string_add(OMG_String* this, const OMG_String* new_str);
 OMG_API bool omg_string_destroy(OMG_String* this);
+OMG_API bool omg_string_add_char(OMG_String* this, const char char_to_add);
+bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);

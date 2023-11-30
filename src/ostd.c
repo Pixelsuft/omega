@@ -39,6 +39,41 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strlen = omg_strlen;
 }
 
+bool omg_string_add_char(OMG_String* this, const char char_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (this->size > this->len) {
+        this->ptr[this->len] = char_to_add;
+        this->len++;
+        return false;
+    }
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    if (omg_string_buffer_add_chunk(this))
+        return true;
+    this->ptr[this->len] = char_to_add;
+    this->len++;
+    return false;
+}
+
+bool omg_string_add_char_p(OMG_String* this, const char* str_to_add) {
+    if (this->type < OMG_STRING_BUFFER || OMG_ISNULL(str_to_add))
+        return true;
+    size_t str_len = omg_def_std->strlen(str_to_add);
+    if (this->size > (this->len + str_len)) {
+        omg_def_std->memcpy(this->ptr + this->len, str_to_add, str_len);
+        this->len += str_len;
+        return false;
+    }
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    if (omg_string_buffer_set_size(this, this->size + OMG_STRING_CALC_SIZE_BY_LENGTH(str_len)))
+        return true;
+    omg_def_std->memcpy(this->ptr + this->len, str_to_add, str_len);
+    this->len += str_len;
+    return false;
+}
+
 bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
     if (OMG_ISNULL(base)) {
         this->len = 0;
@@ -85,6 +120,8 @@ bool omg_string_buffer_add_chunk(OMG_String* this) {
 bool omg_string_resize(OMG_String* this, size_t new_len) {
     if (this->type < OMG_STRING_DYNAMIC)
         return true;
+    if (this->len == new_len)
+        return false;
     size_t new_size = OMG_STRING_CALC_SIZE_BY_LENGTH(new_len);
     if (new_size != this->size) {
         char* res = OMG_REALLOC(mem, this->ptr, new_size);
@@ -120,19 +157,19 @@ bool omg_string_add(OMG_String* this, const OMG_String* new_str) {
 bool omg_string_ensure_null(OMG_String* this) {
     if (this->type < OMG_STRING_STATIC)
         return true;
-    if (this->ptr[this->len - 1] == '\0')
+    if (this->size > this->len && this->ptr[this->len] == '\0')
         return false;
     if (this->type == OMG_STRING_STATIC)
         return true;
     if (this->size > this->len) {
-        this->ptr[this->len - 1] = '\0';
+        this->ptr[this->len] = '\0';
         return false;
     }
     if (this->type < OMG_STRING_DYNAMIC)
         return true;
     if (omg_string_buffer_add_chunk(this))
         return true;
-    this->ptr[this->len - 1] = '\0';
+    this->ptr[this->len] = '\0';
     return false;
 }
 
