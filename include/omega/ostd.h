@@ -19,6 +19,7 @@
 #define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
+#define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) ((str_len % OMG_STRING_CHUNK_SIZE) ? ((str_len / OMG_STRING_CHUNK_SIZE + 1) * OMG_STRING_CHUNK_SIZE) : (str_len ? str_len : OMG_STRING_CHUNK_SIZE))
 
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)
@@ -78,6 +79,7 @@ OMG_API size_t omg_strlen(const char* src);
 OMG_API bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base);
 OMG_API bool omg_string_buffer_set_size(OMG_String* this, size_t new_size);
 OMG_API bool omg_string_buffer_add_chunk(OMG_String* this);
+OMG_API bool omg_string_resize(OMG_String* this, size_t new_len);
 OMG_API bool omg_string_ensure_null(OMG_String* this);
 OMG_API bool omg_string_add(OMG_String* this, const OMG_String* new_str);
 OMG_API bool omg_string_destroy(OMG_String* this);

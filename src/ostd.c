@@ -53,7 +53,7 @@ bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
         return false;
     }
     this->len = base->len;
-    this->size = (this->len % OMG_STRING_CHUNK_SIZE) ? ((this->len / OMG_STRING_CHUNK_SIZE + 1) * OMG_STRING_CHUNK_SIZE) : this->len;
+    this->size = OMG_STRING_CALC_SIZE_BY_LENGTH(this->len);
     if (this->size < OMG_STRING_CHUNK_SIZE)
         this->size = OMG_STRING_CHUNK_SIZE;
     this->ptr = OMG_MALLOC(mem, this->size);
@@ -80,6 +80,24 @@ bool omg_string_buffer_set_size(OMG_String* this, size_t new_size) {
 
 bool omg_string_buffer_add_chunk(OMG_String* this) {
     return omg_string_buffer_set_size(this, this->size + OMG_STRING_CHUNK_SIZE);
+}
+
+bool omg_string_resize(OMG_String* this, size_t new_len) {
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    size_t new_size = OMG_STRING_CALC_SIZE_BY_LENGTH(new_len);
+    if (new_size != this->size) {
+        char* res = OMG_REALLOC(mem, this->ptr, new_size);
+        if (OMG_ISNULL(res))
+            return true;
+        this->size = new_size;
+        this->ptr = res;
+    }
+    if (new_len > this->len) {
+        omg_def_std->memset(this->ptr + this->len, 0, new_len - this->len);
+    }
+    this->len = new_len;
+    return false;
 }
 
 bool omg_string_add(OMG_String* this, const OMG_String* new_str) {
