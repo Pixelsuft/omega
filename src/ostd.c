@@ -62,11 +62,12 @@ bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
         this->type = OMG_STRING_NONE;
         return true;
     }
+    this->type = OMG_STRING_DYNAMIC;
     omg_def_std->memcpy(this->ptr, base->ptr, this->len);
     return false;
 }
 
-bool omg_string_resize(OMG_String* this, size_t new_size) {
+bool omg_string_buffer_set_size(OMG_String* this, size_t new_size) {
     if (this->type < OMG_STRING_DYNAMIC)
         return true;
     char* res = OMG_REALLOC(mem, this->ptr, new_size);
@@ -77,8 +78,25 @@ bool omg_string_resize(OMG_String* this, size_t new_size) {
     return false;
 }
 
-bool omg_string_add_chunk(OMG_String* this) {
-    return omg_string_resize(this, this->size + OMG_STRING_CHUNK_SIZE);
+bool omg_string_buffer_add_chunk(OMG_String* this) {
+    return omg_string_buffer_set_size(this, this->size + OMG_STRING_CHUNK_SIZE);
+}
+
+bool omg_string_add(OMG_String* this, const OMG_String* new_str) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (this->size >= (this->len + new_str->len)) {
+        omg_def_std->memcpy(this->ptr + this->len, new_str->ptr, new_str->len);
+        this->len += new_str->len;
+        return false;
+    }
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    if (omg_string_buffer_set_size(this, this->size + new_str->size))
+        return true;
+    omg_def_std->memcpy(this->ptr + this->len, new_str->ptr, new_str->len);
+    this->len += new_str->len;
+    return false;
 }
 
 bool omg_string_ensure_null(OMG_String* this) {
@@ -94,7 +112,7 @@ bool omg_string_ensure_null(OMG_String* this) {
     }
     if (this->type < OMG_STRING_DYNAMIC)
         return true;
-    if (omg_string_add_chunk(this))
+    if (omg_string_buffer_add_chunk(this))
         return true;
     this->ptr[this->len - 1] = '\0';
     return false;
