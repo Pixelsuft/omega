@@ -66,7 +66,11 @@
     print_func(omg, &_omg_temp_str); \
     omg_string_destroy(&_omg_temp_str); \
 } while (0)
+#if OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO
 #define OMG_INFO(omg, ...) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, __VA_ARGS__)
+#else
+#define OMG_INFO(omg, ...) _OMG_UNUSED1(omg)
+#endif
 
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)
