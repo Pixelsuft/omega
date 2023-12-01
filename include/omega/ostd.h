@@ -15,18 +15,17 @@
 #define OMG_STRING_DYNAMIC 3
 // TODO: use << and >> to speedup
 #define OMG_STRING_CHUNK_SIZE 16
-#define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
-#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
+#define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_std_strlen(char_ptr), .size = omg_std_strlen(char_ptr) + 1, .ptr = char_ptr })
+#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_strlen(char_ptr), .size = omg_std_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
-#define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) ((str_len % OMG_STRING_CHUNK_SIZE) ? ((str_len / OMG_STRING_CHUNK_SIZE + 1) * OMG_STRING_CHUNK_SIZE) : (str_len ? str_len : OMG_STRING_CHUNK_SIZE))
+#define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? (((str_len) / OMG_STRING_CHUNK_SIZE + 1) * OMG_STRING_CHUNK_SIZE) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
 
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     char*: omg_string_add_char_p, \
-    OMG_String*: omg_string_add, \
-    OMG_String: omg_string_add \
+    int: omg_string_add_int, \
+    OMG_String*: omg_string_add \
 )
 #define _OMG_STRING_GET_ADD_VALUE(X) _Generic((X), \
-    OMG_String: &X, \
     default: X \
 )
 
@@ -66,11 +65,7 @@
     print_func(omg, &_omg_temp_str); \
     omg_string_destroy(&_omg_temp_str); \
 } while (0)
-#if OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO
-#define OMG_INFO(omg, ...) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, __VA_ARGS__)
-#else
-#define OMG_INFO(omg, ...) _OMG_UNUSED1(omg)
-#endif
+#define OMG_INFO(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, __VA_ARGS__); } while (0)
 
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)
@@ -112,6 +107,7 @@ typedef struct {
     void* (*memset)(void *dest, register int val, register size_t len);
     void* (*memcpy)(void *dest, const void* src, size_t len);
     size_t (*strlen)(const char* src);
+    char* (*itoa)(int value, char* buffer, int radix);
     void* memory_allocator;
     void* extra;
 } OMG_Std;
@@ -126,13 +122,16 @@ typedef struct {
 
 OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
-OMG_API size_t omg_strlen(const char* src);
+OMG_API size_t omg_std_strlen(const char* src);
+OMG_API void omg_std_str_reverse(char* str, size_t length);
 OMG_API bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base);
 OMG_API bool omg_string_buffer_set_size(OMG_String* this, size_t new_size);
 OMG_API bool omg_string_buffer_add_chunk(OMG_String* this);
 OMG_API bool omg_string_resize(OMG_String* this, size_t new_len);
 OMG_API bool omg_string_ensure_null(OMG_String* this);
+OMG_API bool omg_string_ensure_free_len(OMG_String* this, size_t need_size);
 OMG_API bool omg_string_add(OMG_String* this, const OMG_String* new_str);
 OMG_API bool omg_string_destroy(OMG_String* this);
 OMG_API bool omg_string_add_char(OMG_String* this, const char char_to_add);
+OMG_API bool omg_string_add_int(OMG_String* this, const int int_to_add);
 OMG_API bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);

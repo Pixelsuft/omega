@@ -5,14 +5,14 @@
 static OMG_Std* omg_def_std = NULL;
 
 // TODO: Should we redirect to omg_def_std if not the same?
-void* omg_memset(void* dest, register int val, register size_t len) {
+void* omg_std_memset(void* dest, register int val, register size_t len) {
     register unsigned char *ptr = (unsigned char*)dest;
     while (len-- > 0)
         *ptr++ = val;
     return dest;
 }
 
-void* omg_memcpy(void* dest, const void* src, size_t len) {
+void* omg_std_memcpy(void* dest, const void* src, size_t len) {
     char *d = dest;
     const char *s = src;
     while (len--)
@@ -20,7 +20,7 @@ void* omg_memcpy(void* dest, const void* src, size_t len) {
     return dest;
 }
 
-size_t omg_strlen(const char* src) {
+size_t omg_std_strlen(const char* src) {
     if (OMG_ISNULL(src))
         return 0;
     char* temp_counter = (char*)src;
@@ -29,14 +29,61 @@ size_t omg_strlen(const char* src) {
     return (size_t)temp_counter - (size_t)src;
 }
 
+void omg_std_str_reverse(char* str, size_t length) {
+    size_t start = 0;
+    size_t end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        end--;
+        start++;
+    }
+}
+
+char* omg_std_itoa(int value, char* buffer, int radix) {
+    size_t i = 0;
+    bool isNegative = false;
+    if (value == 0) {
+        buffer[i++] = '0';
+        buffer[i] = '\0';
+        return buffer;
+    }
+    if (value < 0 && radix == 10) {
+        isNegative = true;
+        value = -value;
+    }
+    while (value != 0) {
+        int rem = value % radix;
+        buffer[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
+        value = value / radix;
+    }
+    if (isNegative)
+        buffer[i++] = '-';
+    buffer[i] = '\0';
+    omg_std_str_reverse(buffer, i);
+    return buffer;
+}
+
 void omg_std_set_default_handle(OMG_Std* this) {
     omg_def_std = this;
 }
 
 void omg_std_fill_defaults(OMG_Std* this) {
-    this->memset = omg_memset;
-    this->memcpy = omg_memcpy;
-    this->strlen = omg_strlen;
+    this->memset = omg_std_memset;
+    this->memcpy = omg_std_memcpy;
+    this->strlen = omg_std_strlen;
+    this->itoa = omg_std_itoa;
+}
+
+bool omg_string_add_int(OMG_String* this, const int int_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 11))
+        return true;
+    omg_def_std->itoa(int_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strlen(this->ptr + this->len);
+    return false;
 }
 
 bool omg_string_add_char(OMG_String* this, const char char_to_add) {
@@ -170,6 +217,17 @@ bool omg_string_ensure_null(OMG_String* this) {
     if (omg_string_buffer_add_chunk(this))
         return true;
     this->ptr[this->len] = '\0';
+    return false;
+}
+
+bool omg_string_ensure_free_len(OMG_String* this, size_t need_len) {
+    if (this->size >= this->len + need_len)
+        return false;
+    if (this->type < OMG_STRING_DYNAMIC)
+        return true;
+    size_t need_size = OMG_STRING_CALC_SIZE_BY_LENGTH(need_len + this->len);
+    if (omg_string_buffer_set_size(this, need_size))
+        return true;
     return false;
 }
 
