@@ -15,11 +15,21 @@
 #define OMG_STRING_DYNAMIC 3
 // TODO: use << and >> to speedup
 #define OMG_STRING_CHUNK_SIZE 16
-
 #define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_strlen(char_ptr), .size = omg_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
 #define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) ((str_len % OMG_STRING_CHUNK_SIZE) ? ((str_len / OMG_STRING_CHUNK_SIZE + 1) * OMG_STRING_CHUNK_SIZE) : (str_len ? str_len : OMG_STRING_CHUNK_SIZE))
+
+#define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
+    char*: omg_string_add_char_p, \
+    OMG_String*: omg_string_add, \
+    OMG_String: omg_string_add \
+)
+#define _OMG_STRING_GET_ADD_VALUE(X) _Generic((X), \
+    OMG_String: &X, \
+    default: X \
+)
+#define OMG_STRING_ADD(string, to_add) _OMG_STRING_GET_ADD_FUNC(to_add)(string, _OMG_STRING_GET_ADD_VALUE(to_add));
 
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)

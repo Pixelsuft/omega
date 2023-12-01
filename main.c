@@ -26,8 +26,8 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_String test_str;
     omg_string_init_dynamic(&test_str, &OMG_STRING_MAKE_STATIC("123"));
     omg_string_add(&test_str, &OMG_STRING_MAKE_STATIC(" 456\n789"));
-    omg_string_add_char_p(&test_str, " lul");
-    omg_string_add_char(&test_str, '!');
+    OMG_STRING_ADD(&test_str, "!\n");
+    OMG_STRING_ADD(&test_str, "hello, world!");
     omg_string_ensure_null(&test_str);
     omg_string_resize(&test_str, 50);
     this->omg->log_info_str(this->omg, &test_str);
