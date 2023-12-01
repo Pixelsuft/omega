@@ -58,6 +58,16 @@
 #define _OMG_STRING_ADD_INTERNAL(_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16, _17, _18, _19, _20, _21, _22, _23, _24, _25, NAME, ...) NAME
 #define OMG_STRING_ADD_MANY(string, ...) _OMG_STRING_ADD_INTERNAL(__VA_ARGS__, _OMG_STRING_ADD25, _OMG_STRING_ADD24, _OMG_STRING_ADD23, _OMG_STRING_ADD22, _OMG_STRING_ADD21, _OMG_STRING_ADD20, _OMG_STRING_ADD19, _OMG_STRING_ADD18, _OMG_STRING_ADD17, _OMG_STRING_ADD16, _OMG_STRING_ADD15, _OMG_STRING_ADD14, _OMG_STRING_ADD13, _OMG_STRING_ADD12, _OMG_STRING_ADD11, _OMG_STRING_ADD10, _OMG_STRING_ADD9, _OMG_STRING_ADD8, _OMG_STRING_ADD7, _OMG_STRING_ADD6, _OMG_STRING_ADD5, _OMG_STRING_ADD4, _OMG_STRING_ADD3, _OMG_STRING_ADD2, _OMG_STRING_ADD1) (string, __VA_ARGS__)
 
+#define _OMG_PRINT_BY_FUNC(omg, print_func, ...) do { \
+    OMG_String _omg_temp_str; \
+    if (omg_string_init_dynamic(&_omg_temp_str, NULL)) \
+        break; \
+    OMG_STRING_ADD_MANY(&_omg_temp_str, __VA_ARGS__); \
+    print_func(omg, &_omg_temp_str); \
+    omg_string_destroy(&_omg_temp_str); \
+} while (0)
+#define OMG_INFO(omg, ...) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, __VA_ARGS__)
+
 #define _OMG_UNUSED1(p1) ((void)p1)
 #define _OMG_UNUSED2(p1, p2) ((void)p1, (void)p2)
 #define _OMG_UNUSED3(p1, p2, p3) ((void)p1, (void)p2, (void)p3)

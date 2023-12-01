@@ -26,12 +26,11 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_String test_str;
     omg_string_init_dynamic(&test_str, &OMG_STRING_MAKE_STATIC("123"));
     omg_string_add(&test_str, &OMG_STRING_MAKE_STATIC(" 456\n789"));
-    OMG_STRING_ADD_MANY(&test_str, "!123\n", "456");
     omg_string_ensure_null(&test_str);
     omg_string_resize(&test_str, 50);
     this->omg->log_info_str(this->omg, &test_str);
     omg_string_destroy(&test_str);
-    this->omg->log_info_str(this->omg, &OMG_STRING_MAKE_STATIC("1 123 456\n"));
+    OMG_INFO(this->omg, "!123\n", "456");
     this->omg->destroy(this->omg);
 }
 
