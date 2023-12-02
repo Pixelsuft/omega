@@ -62,6 +62,34 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
     this->nt = NULL;
 }
 
+void* omg_win_lib_load(OMG_OmegaWin* this, const OMG_String* fn) {
+    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, NULL, 0);
+    if (count <= 0)
+        return NULL;
+    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(out_buf))
+        return NULL;
+    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, count) <= 0) {
+        OMG_FREE(base->mem, out_buf);
+        return NULL;
+    }
+    out_buf[fn->len] = L'\0';
+    HMODULE result = this->k32->LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+    OMG_FREE(base->mem, out_buf);
+    return (void*)result;
+}
+
+void* omg_win_lib_func(OMG_OmegaWin* this, void* lib, const OMG_String* func_name) {
+    omg_string_ensure_null((OMG_String*)func_name);
+    OMG_BEGIN_POINTER_CAST();
+    return (void*)((size_t)this->k32->GetProcAddress((HMODULE)lib, func_name->ptr));
+    OMG_END_POINTER_CAST();
+}
+
+bool omg_win_lib_free(OMG_OmegaWin* this, void* lib) {
+    return (bool)this->k32->FreeLibrary((HMODULE)lib);
+}
+
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
     OMG_UNUSED(data);
     static OMG_OmegaWin result;
@@ -131,6 +159,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {
+    // TODO: std init to seperate function
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
         if (omg_winapi_kernel32_load(this->k32))
@@ -196,6 +225,9 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_warn_str = omg_win_log_warn_str;
     base->log_error_str = omg_win_log_error_str;
     base->log_fatal_str = omg_win_log_fatal_str;
+    base->lib_load = omg_win_lib_load;
+    base->lib_func = omg_win_lib_func;
+    base->lib_free = omg_win_lib_free;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
     return false;

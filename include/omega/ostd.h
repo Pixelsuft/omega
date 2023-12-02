@@ -132,6 +132,7 @@ typedef struct {
     char buf[];
 } OMG_String;
 
+OMG_API OMG_Std* omg_std_get_default_handle(void);
 OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
 OMG_API size_t omg_std_strlen(const char* src);

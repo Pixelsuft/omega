@@ -32,6 +32,7 @@ typedef struct {
     HMODULE handle;
     HMODULE (*LoadLibraryExW)(LPCWSTR, HANDLE, DWORD);
     BOOL (*FreeLibrary)(HMODULE);
+    FARPROC (*GetProcAddress)(HMODULE, LPCSTR);
     HANDLE (*HeapCreate)(DWORD, SIZE_T, SIZE_T);
     BOOL (*HeapDestroy)(HANDLE);
     LPVOID (*HeapAlloc)(HANDLE, DWORD, SIZE_T);

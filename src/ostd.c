@@ -65,6 +65,10 @@ char* omg_std_itoa(int value, char* buffer, int radix) {
     return buffer;
 }
 
+OMG_Std* omg_std_get_default_handle(void) {
+    return omg_def_std;
+}
+
 void omg_std_set_default_handle(OMG_Std* this) {
     omg_def_std = this;
 }
