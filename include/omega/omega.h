@@ -4,6 +4,9 @@
 #include <omega/memory.h>
 #include <omega/ostd.h>
 
+#define OMG_OMG_TYPE_NONE 0
+#define OMG_OMG_TYPE_WIN 1
+
 #define OMG_LOG_CATEGORY_INFO 1
 #define OMG_LOG_CATEGORY_WARN 2
 #define OMG_LOG_CATEGORY_ERROR 3
@@ -18,12 +21,14 @@ typedef struct OMG_Omega {
     void* (*lib_load)(struct OMG_Omega* this, const OMG_String* fn);
     void* (*lib_func)(struct OMG_Omega* this, void* lib, const OMG_String* func_name);
     bool (*lib_free)(struct OMG_Omega* this, void* lib);
-    void (*log_set_level)(struct OMG_Omega* this, const int log_level);
+    void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level);
     void (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
     void (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
     void (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
     void (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
+    int log_level_omg;
     int log_level;
+    int type;
     bool should_free_mem;
     bool should_free_std;
 } OMG_Omega;
