@@ -124,15 +124,6 @@
 #endif
 
 typedef struct {
-    void* (*memset)(void *dest, register int val, register size_t len);
-    void* (*memcpy)(void *dest, const void* src, size_t len);
-    size_t (*strlen)(const char* src);
-    char* (*itoa)(int value, char* buffer, int radix);
-    void* memory_allocator;
-    void* extra;
-} OMG_Std;
-
-typedef struct {
     size_t size;
      // Technically, we should also include utf-8 size for things like utf-16 convertion, but Microsoft sucks
     size_t len;
@@ -140,6 +131,18 @@ typedef struct {
     char* ptr;
     char buf[];
 } OMG_String;
+
+typedef struct {
+    void* (*lib_load)(const OMG_String* fn);
+    void* (*lib_func)(void* lib, const OMG_String* func_name);
+    bool (*lib_free)(void* lib);
+    void* (*memset)(void *dest, register int val, register size_t len);
+    void* (*memcpy)(void *dest, const void* src, size_t len);
+    size_t (*strlen)(const char* src);
+    char* (*itoa)(int value, char* buffer, int radix);
+    void* memory_allocator;
+    void* extra;
+} OMG_Std;
 
 OMG_API OMG_Std* omg_std_get_default_handle(void);
 OMG_API void omg_std_set_default_handle(OMG_Std* this);

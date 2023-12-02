@@ -18,9 +18,6 @@ typedef struct OMG_Omega {
     OMG_Std* std;
     void* unused;
     bool (*destroy)(struct OMG_Omega* this);
-    void* (*lib_load)(struct OMG_Omega* this, const OMG_String* fn);
-    void* (*lib_func)(struct OMG_Omega* this, void* lib, const OMG_String* func_name);
-    bool (*lib_free)(struct OMG_Omega* this, void* lib);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level);
     void (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
     void (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);

@@ -73,7 +73,25 @@ void omg_std_set_default_handle(OMG_Std* this) {
     omg_def_std = this;
 }
 
+void* omg_std_lib_load(const OMG_String* fn) {
+    OMG_UNUSED(fn);
+    return NULL;
+}
+
+void* omg_std_lib_func(void* lib, const OMG_String* func_name) {
+    OMG_UNUSED(lib, func_name);
+    return NULL;
+}
+
+bool omg_std_lib_free(void* lib) {
+    OMG_UNUSED(lib);
+    return false;
+}
+
 void omg_std_fill_defaults(OMG_Std* this) {
+    this->lib_load = omg_std_lib_load;
+    this->lib_func = omg_std_lib_func;
+    this->lib_free = omg_std_lib_free;
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
     this->strlen = omg_std_strlen;
