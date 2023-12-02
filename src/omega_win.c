@@ -34,13 +34,11 @@
             } \
         } \
     } \
-    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, NULL, 0); \
-    if (count <= 0) \
-        return; \
+    size_t count = data->len; \
     wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20); \
     if (OMG_ISNULL(out_buf)) \
         return; \
-    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, count) <= 0) { \
+    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, (int)count) <= 0) { \
         OMG_FREE(base->mem, out_buf); \
         return; \
     } \
@@ -63,13 +61,10 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
 }
 
 void* omg_win_lib_load(OMG_OmegaWin* this, const OMG_String* fn) {
-    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, NULL, 0);
-    if (count <= 0)
-        return NULL;
-    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 2);
+    wchar_t* out_buf = OMG_MALLOC(base->mem, fn->len * 2 + 2);
     if (OMG_ISNULL(out_buf))
         return NULL;
-    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, count) <= 0) {
+    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)fn->len) <= 0) {
         OMG_FREE(base->mem, out_buf);
         return NULL;
     }
