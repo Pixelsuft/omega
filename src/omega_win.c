@@ -193,6 +193,9 @@ bool omg_win_init(OMG_OmegaWin* this) {
         this->should_free_ntdll = false;
     }
     base->log_info_str = omg_win_log_info_str;
+    base->log_warn_str = omg_win_log_warn_str;
+    base->log_error_str = omg_win_log_error_str;
+    base->log_fatal_str = omg_win_log_fatal_str;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
     return false;

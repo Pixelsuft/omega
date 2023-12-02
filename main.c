@@ -29,8 +29,8 @@ void app_init(App* this, OMG_EntryData* data) {
     omg_string_ensure_null(&test_str);
     omg_string_resize(&test_str, 50);
     this->omg->log_info_str(this->omg, &test_str);
-    omg_string_destroy(&test_str);
     OMG_INFO(this->omg, "1", 228, "1");
+    omg_string_destroy(&test_str);
     this->omg->destroy(this->omg);
 }
 
