@@ -14,6 +14,48 @@
 #define WIN_ERROR_INVALID_HANDLE 0x6
 #define WIN_ERROR_GEN_FAILURE 0x1F
 
+#define _OMG_WIN_LOG_MACRO(this, data, type_str, type_len, type_len2, is_error) { \
+    omg_win_attach_console(this); \
+    if (this->con_result < 0) \
+        return; \
+    if (is_error) { \
+        if (OMG_ISNULL(this->stderr_handle)) { \
+            this->stderr_handle = this->k32->GetStdHandle(WIN_STD_ERROR_HANDLE); \
+            if (OMG_ISNULL(this->stderr_handle)) { \
+                return; \
+            } \
+        } \
+    } \
+    else { \
+        if (OMG_ISNULL(this->stdout_handle)) { \
+            this->stdout_handle = this->k32->GetStdHandle(WIN_STD_OUTPUT_HANDLE); \
+            if (OMG_ISNULL(this->stdout_handle)) { \
+                return; \
+            } \
+        } \
+    } \
+    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, NULL, 0); \
+    if (count <= 0) \
+        return; \
+    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20); \
+    if (OMG_ISNULL(out_buf)) \
+        return; \
+    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, count) <= 0) { \
+        OMG_FREE(base->mem, out_buf); \
+        return; \
+    } \
+    base->std->memcpy(out_buf, type_str, type_len2); \
+    if (out_buf[count + type_len - 1] == L'\n') { \
+        count--; \
+    } \
+    out_buf[count + type_len] = '\n'; \
+    out_buf[count + type_len + 1] = '\r'; \
+    count += 2; \
+    DWORD counter = 0; \
+    this->k32->WriteConsoleW(is_error ? this->stderr_handle : this->stdout_handle, out_buf, (DWORD)count + 8, &counter, NULL); \
+    OMG_FREE(base->mem, out_buf); \
+}
+
 void omg_win_fill_after_create(OMG_OmegaWin* this) {
     this->k32 = NULL;
     base->mem = NULL;
@@ -47,35 +89,19 @@ void omg_win_attach_console(OMG_OmegaWin* this) {
 }
 
 void omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data) {
-    omg_win_attach_console(this);
-    if (this->con_result < 0)
-        return;
-    if (OMG_ISNULL(this->stdout_handle)) {
-        this->stdout_handle = this->k32->GetStdHandle(WIN_STD_OUTPUT_HANDLE);
-        if (OMG_ISNULL(this->stdout_handle)) {
-            return;
-        }
-    }
-    int count = this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, NULL, 0);
-    if (count <= 0)
-        return;
-    wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20);
-    if (OMG_ISNULL(out_buf))
-        return;
-    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + 8, count) <= 0) {
-        OMG_FREE(base->mem, out_buf);
-        return;
-    }
-    base->std->memcpy(out_buf, L"[INFO]: ", 16);
-    if (out_buf[count + 7] == L'\n') {
-        count--;
-    }
-    out_buf[count + 8] = '\n';
-    out_buf[count + 9] = '\r';
-    count += 2;
-    DWORD counter = 0;
-    this->k32->WriteConsoleW(this->stdout_handle, out_buf, (DWORD)count + 8, &counter, NULL);
-    OMG_FREE(base->mem, out_buf);
+    _OMG_WIN_LOG_MACRO(this, data, L"[INFO]: ", 8, 16, false);
+}
+
+void omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data) {
+    _OMG_WIN_LOG_MACRO(this, data, L"[WARN]: ", 8, 16, false);
+}
+
+void omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data) {
+    _OMG_WIN_LOG_MACRO(this, data, L"[ERROR]: ", 9, 18, true);
+}
+
+void omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
+    _OMG_WIN_LOG_MACRO(this, data, L"[FATAL]: ", 9, 18, true);
 }
 
 bool omg_win_destroy(OMG_OmegaWin* this) {

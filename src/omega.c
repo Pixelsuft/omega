@@ -22,7 +22,7 @@ bool omg_init(OMG_Omega* this) {
     this->unused = NULL;
     this->std = NULL;
     this->should_free_mem = false;
-    this->log_info_str = omg_log_info_str;
+    this->log_info_str = this->log_warn_str = this->log_error_str = this->log_fatal_str = omg_log_info_str;
     this->log_set_level = omg_log_set_level;
     this->destroy = omg_destroy;
     return false;

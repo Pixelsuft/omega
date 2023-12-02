@@ -17,6 +17,9 @@ typedef struct OMG_Omega {
     bool (*destroy)(struct OMG_Omega* this);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level);
     void (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
+    void (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
+    void (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
+    void (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
     int log_level;
     bool should_free_mem;
     bool should_free_std;
