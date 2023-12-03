@@ -169,7 +169,6 @@ void omg_win_fill_std(OMG_OmegaWin* this) {
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {
-    // TODO: std init to seperate function
     base->type = OMG_OMG_TYPE_WIN;
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
