@@ -29,17 +29,22 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
         OMG_Omega* omg = omg_get_default_omega();
         if (OMG_ISNOTNULL(omg) && OMG_ISNOTNULL(extra.func)) {
             DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
-            // For the future
-            /*wchar_t* w_error_buffer = _OMG_INTERNAL_MALLOC((OMG_Memory*)this, (128 + 64) * 1024);
-            char* error_buffer = (char*)((size_t)w_error_buffer + (128 * 1024));
-            if (OMG_ISNOTNULL(error_buffer)) {
-                if (((OMG_OmegaWin*)omg)->k32->FormatMessageW(
+            DWORD res = 0;
+            wchar_t* w_error_buffer = _OMG_INTERNAL_MALLOC((OMG_Memory*)this, 128 * 1024);
+            if (OMG_ISNOTNULL(w_error_buffer)) {
+                res = ((OMG_OmegaWin*)omg)->k32->FormatMessageW(
                     OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM | OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM,
                     NULL, error, 0, w_error_buffer, 64 * 1024, NULL
-                )) {}
+                );
+                if (res > 2) {
+                    w_error_buffer[res - 3] = L'\0';
+                    _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", w_error_buffer, ")");
+                }
                 OMG_FREE((OMG_Memory*)this, w_error_buffer);
-            }*/
-            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
+            }
+            if (res <= 2)
+                _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
+            _OMG_LOG_ERROR(omg, "Allocation failure info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
         }
         return NULL;
     }
@@ -56,8 +61,9 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
     void* result = this->k32->HeapAlloc(this->heap, 0, (size_t)extra);
     if (OMG_ISNULL(result)) {
         OMG_Omega* omg = omg_get_default_omega();
-        if (OMG_ISNOTNULL(omg) && OMG_ISNOTNULL(extra.func)) {
-            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory");
+        if (OMG_ISNOTNULL(omg)) {
+            DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
+            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra, " bytes of memory (Error Code - ", error, ")");
         }
         return NULL;
     }
