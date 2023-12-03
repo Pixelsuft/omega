@@ -27,7 +27,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg, "Windows ", ((OMG_OmegaWin*)this->omg)->win_major_ver, " build ",
         ((OMG_OmegaWin*)this->omg)->win_build_number
     );
-    OMG_INFO(this->omg, "1", 228, "1 0x", (void*)this->omg);
+    OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }
 

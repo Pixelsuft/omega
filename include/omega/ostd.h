@@ -25,6 +25,8 @@
     char*: omg_string_add_char_p, \
     int: omg_string_add_int, \
     unsigned int: omg_string_add_uint, \
+    float: omg_string_add_float, \
+    double: omg_string_add_double, \
     long: omg_string_add_long, \
     unsigned long: omg_string_add_ulong, \
     OMG_String*: omg_string_add, \
@@ -181,4 +183,6 @@ OMG_API bool omg_string_add_ulong(OMG_String* this, const unsigned long ulong_to
 OMG_API bool omg_string_add_longlong(OMG_String* this, const int64_t longlong_to_add);
 OMG_API bool omg_string_add_ulonglong(OMG_String* this, const uint64_t ulonglong_to_add);
 OMG_API bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add);
+OMG_API bool omg_string_add_float(OMG_String* this, const float float_to_add);
+OMG_API bool omg_string_add_double(OMG_String* this, const double double_to_add);
 OMG_API bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);

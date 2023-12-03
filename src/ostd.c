@@ -229,6 +229,44 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->ulltoa = omg_std_ulltoa;
 }
 
+bool omg_string_add_double(OMG_String* this, const double double_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 21))
+        return true;
+    omg_def_std->itoa((int)double_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 20);
+    // TODO: round
+    int double_prec = (int)((double_to_add - (double)((int)double_to_add)) * 1000000.0);
+    if (double_prec <= 0)
+        return false;
+    while (!(double_prec % 10))
+        double_prec /= 10;
+    this->ptr[this->len] = '.';
+    omg_def_std->itoa(double_prec, this->ptr + this->len + 1, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len + 1, 20) + 1;
+    return false;
+}
+
+bool omg_string_add_float(OMG_String* this, const float float_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 21))
+        return true;
+    omg_def_std->itoa((int)float_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 20);
+    // TODO: round
+    int float_prec = (int)((float_to_add - (float)((int)float_to_add)) * 10000.0f);
+    if (float_prec <= 0)
+        return false;
+    while (!(float_prec % 10))
+        float_prec /= 10;
+    this->ptr[this->len] = '.';
+    omg_def_std->itoa(float_prec, this->ptr + this->len + 1, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len + 1, 20) + 1;
+    return false;
+}
+
 bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add) {
     if (this->type < OMG_STRING_BUFFER)
         return true;
