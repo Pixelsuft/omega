@@ -16,7 +16,7 @@ static const char ntoa_table[] = {
 };
 static OMG_Std* omg_def_std = NULL;
 
-#if OMG_IMPL_STD_FUNCS
+#if OMG_IMPL_BASIC_STD_FUNCS
 void* omg_std_memset(void* dst, register int val, register size_t len) {
     register unsigned char *ptr = (unsigned char*)dst;
     while (len-- > 0)
@@ -80,6 +80,7 @@ size_t omg_std_strnlen(const char* src, size_t max_len) {
         temp_counter++;
     return (size_t)temp_counter - (size_t)src;
 }
+#endif
 
 char* omg_std_strrev(char* str) {
     omg_std_str_reverse(str, omg_def_std->strlen(str));
@@ -152,7 +153,6 @@ char* omg_std_ulltoa(uint64_t value, char* string, int radix)
     omg_def_std->strrev(string);
     return string;
 }
-#endif
 
 size_t omg_std_utf8strlen(const char* src) {
     size_t retval = 0;
@@ -217,12 +217,22 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->lib_load = omg_std_lib_load;
     this->lib_func = omg_std_lib_func;
     this->lib_free = omg_std_lib_free;
+#if OMG_IMPL_BASIC_STD_FUNCS
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
     this->memmove = omg_std_memmove;
     this->memcmp = omg_std_memcmp;
     this->strlen = omg_std_strlen;
     this->strnlen = omg_std_strnlen;
+#else
+    this->memset = memset;
+    this->memcpy = memcpy;
+    this->memmove = memmove;
+    this->memcmp = memcmp;
+    this->strlen = strlen;
+    this->strnlen = strnlen;
+#endif
+    // These funcs are not that portable, so let's keep them here
     this->strrev = omg_std_strrev;
     this->itoa = omg_std_itoa;
     this->uitoa = omg_std_uitoa;
@@ -230,19 +240,6 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->ultoa = omg_std_ultoa;
     this->lltoa = omg_std_lltoa;
     this->ulltoa = omg_std_ulltoa;
-    /*this->memset = memset;
-    this->memcpy = memcpy;
-    this->memmove = memmove;
-    this->memcmp = memcmp;
-    this->strlen = strlen;
-    this->strnlen = strnlen;
-    this->strrev = _strrev;
-    this->itoa = itoa;
-    this->uitoa = _uitoa;
-    this->ltoa = ltoa;
-    this->ultoa = ultoa;
-    this->lltoa = lltoa;
-    this->ulltoa = ulltoa;*/
     this->utf8strlen = omg_std_utf8strlen;
     this->utf8strnlen = omg_std_utf8strnlen;
 }
