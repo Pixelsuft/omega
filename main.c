@@ -14,6 +14,7 @@ OMG_MAKE_MAIN(omega_main)
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 0;
+#if 1
     this->omg = (OMG_Omega*)omg_win_create(data);
     if (OMG_ISNULL(this->omg)) {
         this->exit_code = 1;
@@ -23,6 +24,8 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
+#else
+#endif
     OMG_INFO(
         this->omg, "Windows ", ((OMG_OmegaWin*)this->omg)->win_major_ver, " build ",
         ((OMG_OmegaWin*)this->omg)->win_build_number

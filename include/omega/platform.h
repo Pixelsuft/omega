@@ -6,6 +6,12 @@
 #define OMG_IS_WIN 0
 #endif
 
+#ifdef __EMSCRIPTEN__
+#define OMG_IS_EMSCRIPTEN 1
+#else
+#define OMG_IS_EMSCRIPTEN 0
+#endif
+
 #ifdef _MSC_VER
 #define OMG_IS_VC 1
 #else

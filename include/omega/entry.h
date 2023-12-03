@@ -1,10 +1,10 @@
 #pragma once
 #include <omega/config.h>
-#include <omega/config.h>
 #include <omega/ostd.h>
 
 #if OMG_ENTRY
-#if OMG_IS_WIN
+// Somewhy SDL2_main doesn't work for me on shitdows with mingw :(
+#if OMG_IS_WIN && !(OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORTS_SDL2_MAIN && OMG_IS_VC)
 #include <omega/winapi.h>
 
 typedef struct {
@@ -34,6 +34,9 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdsh
     return main_func(&entry_data); \
 }
 #else
+#if OMG_IS_WIN && OMG_SUPPORTS_SDL2 && OMG_SUPPORTS_SDL2_MAIN && !OMG_SDL2_DYNAMIC && !OMG_IS_VC && OMG_HAS_STD
+#define SDL_MAIN_HANDLED
+#endif
 typedef struct {
     int argc;
     char** argv;
