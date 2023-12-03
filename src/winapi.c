@@ -48,12 +48,13 @@ bool omg_winapi_kernel32_free(OMG_Kernel32* this) {
         return true;
     return (bool)FreeLibrary(this->handle);
 #else
+    OMG_UNUSED(this);
     return false;
 #endif
 }
 
 bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
-#if OMG_WINAPI_DYNAMIC
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_UGLY
     this->handle = LOAD_SYSTEM_LIBRARY(L"ntdll.dll");
     if (this->handle == NULL)
         return true;
@@ -65,11 +66,12 @@ bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
 }
 
 bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
-#if OMG_WINAPI_DYNAMIC
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_UGLY
     if (this->handle == NULL)
         return true;
     return (bool)FreeLibrary(this->handle);
 #else
+    OMG_UNUSED(this);
     return false;
 #endif
 }

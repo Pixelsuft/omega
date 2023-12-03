@@ -9,7 +9,7 @@
 #endif
 
 #ifndef OMG_SUPPORT_WIN
-#define OMG_SUPPORT_WIN 1
+#define OMG_SUPPORT_WIN OMG_IS_WIN
 #endif
 #ifndef OMG_WINAPI_DYNAMIC
 #define OMG_WINAPI_DYNAMIC 1
