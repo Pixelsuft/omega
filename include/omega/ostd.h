@@ -187,3 +187,4 @@ OMG_API bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add
 OMG_API bool omg_string_add_float(OMG_String* this, const float float_to_add);
 OMG_API bool omg_string_add_double(OMG_String* this, const double double_to_add);
 OMG_API bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);
+// TODO: wchar_t* support (probably windows only)

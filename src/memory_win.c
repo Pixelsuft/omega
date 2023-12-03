@@ -29,7 +29,17 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
         OMG_Omega* omg = omg_get_default_omega();
         if (OMG_ISNOTNULL(omg) && OMG_ISNOTNULL(extra.func)) {
             DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
-            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", error, ")");
+            // For the future
+            /*wchar_t* w_error_buffer = _OMG_INTERNAL_MALLOC((OMG_Memory*)this, (128 + 64) * 1024);
+            char* error_buffer = (char*)((size_t)w_error_buffer + (128 * 1024));
+            if (OMG_ISNOTNULL(error_buffer)) {
+                if (((OMG_OmegaWin*)omg)->k32->FormatMessageW(
+                    OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM | OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM,
+                    NULL, error, 0, w_error_buffer, 64 * 1024, NULL
+                )) {}
+                OMG_FREE((OMG_Memory*)this, w_error_buffer);
+            }*/
+            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
         }
         return NULL;
     }

@@ -10,6 +10,18 @@
 #include <windows.h>
 #endif
 
+#ifdef FORMAT_MESSAGE_FROM_SYSTEM
+#define OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM FORMAT_MESSAGE_FROM_SYSTEM
+#else
+#define OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM 0x00001000
+#endif
+
+#ifdef FORMAT_MESSAGE_FROM_SYSTEM
+#define OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM FORMAT_MESSAGE_FROM_SYSTEM
+#else
+#define OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM 0x00001000
+#endif
+
 typedef struct {
     ULONG dwOSVersionInfoSize;
     ULONG dwMajorVersion;
@@ -45,6 +57,7 @@ typedef struct {
     BOOL WINAPI (*AttachConsole)(DWORD);
     int (*MultiByteToWideChar)(UINT, DWORD, const char*, int, LPWSTR, int);
     BOOL WINAPI (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
+    DWORD (*FormatMessageW)(DWORD, LPCVOID, DWORD, DWORD, LPWSTR, DWORD, void* args);
 } OMG_Kernel32;
 
 typedef struct {
