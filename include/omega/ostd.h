@@ -24,7 +24,12 @@
     const char*: omg_string_add_char_p, \
     char*: omg_string_add_char_p, \
     int: omg_string_add_int, \
-    OMG_String*: omg_string_add \
+    unsigned int: omg_string_add_uint, \
+    long: omg_string_add_long, \
+    unsigned long: omg_string_add_ulong, \
+    OMG_String*: omg_string_add, \
+    void*: omg_string_add_pointer, \
+    const void*: omg_string_add_pointer \
 )
 #define _OMG_STRING_GET_ADD_VALUE(X) _Generic((X), \
     default: X \
@@ -170,4 +175,10 @@ OMG_API bool omg_string_add(OMG_String* this, const OMG_String* new_str);
 OMG_API bool omg_string_destroy(OMG_String* this);
 OMG_API bool omg_string_add_char(OMG_String* this, const char char_to_add);
 OMG_API bool omg_string_add_int(OMG_String* this, const int int_to_add);
+OMG_API bool omg_string_add_uint(OMG_String* this, const unsigned int uint_to_add);
+OMG_API bool omg_string_add_long(OMG_String* this, const long long_to_add);
+OMG_API bool omg_string_add_ulong(OMG_String* this, const unsigned long ulong_to_add);
+OMG_API bool omg_string_add_longlong(OMG_String* this, const int64_t longlong_to_add);
+OMG_API bool omg_string_add_ulonglong(OMG_String* this, const uint64_t ulonglong_to_add);
+OMG_API bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add);
 OMG_API bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);

@@ -229,6 +229,66 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->ulltoa = omg_std_ulltoa;
 }
 
+bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 41))
+        return true;
+    omg_def_std->ulltoa((uint64_t)pointer_to_add, this->ptr + this->len, 16);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 40);
+    return false;
+}
+
+bool omg_string_add_ulonglong(OMG_String* this, const uint64_t ulonglong_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 41))
+        return true;
+    omg_def_std->ulltoa(ulonglong_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 40);
+    return false;
+}
+
+bool omg_string_add_longlong(OMG_String* this, const int64_t longlong_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 41))
+        return true;
+    omg_def_std->lltoa(longlong_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 40);
+    return false;
+}
+
+bool omg_string_add_ulong(OMG_String* this, const unsigned long ulong_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 21))
+        return true;
+    omg_def_std->ultoa(ulong_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 40);
+    return false;
+}
+
+bool omg_string_add_long(OMG_String* this, const long long_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 21))
+        return true;
+    omg_def_std->ltoa(long_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 20);
+    return false;
+}
+
+bool omg_string_add_uint(OMG_String* this, const unsigned int uint_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 11))
+        return true;
+    omg_def_std->uitoa(uint_to_add, this->ptr + this->len, 10);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 20);
+    return false;
+}
+
 bool omg_string_add_int(OMG_String* this, const int int_to_add) {
     if (this->type < OMG_STRING_BUFFER)
         return true;
