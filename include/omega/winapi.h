@@ -6,7 +6,6 @@
 #if OMG_WINAPI_DYNAMIC
 #include <libloaderapi.h>
 #include <basetsd.h>
-#include <stringapiset.h>
 #else
 #include <windows.h>
 #endif

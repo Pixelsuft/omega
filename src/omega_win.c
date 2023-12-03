@@ -4,6 +4,10 @@
 #include <omega/omega_win.h>
 #include <omega/ostd.h>
 #include <omega/memory_win.h>
+#if OMG_WIN_BETTER_LIBRARY_LOAD
+#include <stringapiset.h>
+#include <heapapi.h>
+#endif
 #define base ((OMG_Omega*)this)
 
 #define WIN_STD_OUTPUT_HANDLE ((DWORD)-11)
@@ -61,28 +65,22 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
 }
 
 void* omg_win_std_lib_load(const OMG_String* fn) {
-    OMG_Memory* mem = NULL;
-    OMG_Std* omg_std = omg_std_get_default_handle();
-    if (OMG_ISNOTNULL(omg_std))
-        mem = (OMG_Memory*)(omg_std->memory_allocator);
-    HMODULE result;
-    if (OMG_ISNULL(mem) || true) {
-        omg_string_ensure_null((OMG_String*)fn);
-        result = LoadLibraryExA(fn->ptr, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
-    }
-    else {
-        /* wchar_t* out_buf = OMG_MALLOC(mem, fn->len * 2 + 2);
-        if (OMG_ISNULL(out_buf))
-            return NULL;
-        if (MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)fn->len) <= 0) {
-            OMG_FREE(mem, out_buf);
-            return NULL;
+    void* result = NULL;
+#if OMG_WIN_BETTER_LIBRARY_LOAD
+    wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 2 + 2);
+    if (OMG_ISNOTNULL(out_buf)) {
+        if (MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)fn->len) > 0) {
+            out_buf[fn->len] = L'\0';
+            result = (void*)LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
         }
-        out_buf[fn->len] = L'\0';
-        result = LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
-        OMG_FREE(mem, out_buf); */
+        HeapFree(GetProcessHeap(), 0, out_buf);
     }
-    return (void*)result;
+#endif
+    if (OMG_ISNULL(result)) {
+        omg_string_ensure_null((OMG_String*)fn);
+        result = (void*)LoadLibraryExA(fn->ptr, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+    }
+    return result;
 }
 
 void* omg_win_std_lib_func(void* lib, const OMG_String* func_name) {

@@ -18,5 +18,8 @@ typedef struct {
 
 OMG_API OMG_OmegaWin* omg_win_create(OMG_EntryData* data);
 OMG_API bool omg_win_init(OMG_OmegaWin* this);
+OMG_API void* omg_win_std_lib_load(const OMG_String* fn);
+OMG_API void* omg_win_std_lib_func(void* lib, const OMG_String* func_name);
+OMG_API bool omg_win_std_lib_free(void* lib);
 OMG_API void omg_win_fill_std(OMG_OmegaWin* this);
 #endif
