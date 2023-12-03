@@ -234,7 +234,7 @@ bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add) {
         return true;
     if (omg_string_ensure_free_len(this, 41))
         return true;
-    omg_def_std->ulltoa((uint64_t)pointer_to_add, this->ptr + this->len, 16);
+    omg_def_std->ulltoa((uint64_t)((size_t)pointer_to_add), this->ptr + this->len, 16);
     this->len += omg_def_std->strnlen(this->ptr + this->len, 40);
     return false;
 }
