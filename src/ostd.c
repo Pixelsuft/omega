@@ -1,5 +1,9 @@
+#include <omega/config.h>
 #include <omega/ostd.h>
 #include <omega/memory.h>
+#if OMG_SUPPORT_WIN
+#include <omega/omega_win.h>
+#endif
 #if OMG_HAS_STD
 #include <string.h>
 #endif
@@ -81,6 +85,16 @@ size_t omg_std_strnlen(const char* src, size_t max_len) {
     return (size_t)temp_counter - (size_t)src;
 }
 #endif
+
+size_t omg_std_wcslen(const wchar_t* src) {
+    if (OMG_ISNULL(src))
+        return 0;
+    wchar_t* temp_counter = (wchar_t*)src;
+    while (*temp_counter) {
+        temp_counter++;
+    }
+    return ((size_t)temp_counter - (size_t)src) >> 1;
+}
 
 char* omg_std_strrev(char* str) {
     omg_std_str_reverse(str, omg_def_std->strlen(str));
@@ -233,6 +247,7 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strnlen = strnlen;
 #endif
     // These funcs are not that portable, so let's keep them here
+    this->wcslen = omg_std_wcslen;
     this->strrev = omg_std_strrev;
     this->itoa = omg_std_itoa;
     this->uitoa = omg_std_uitoa;
@@ -385,6 +400,28 @@ bool omg_string_add_char_p(OMG_String* this, const char* str_to_add) {
     omg_def_std->memcpy(this->ptr + this->len, str_to_add, str_len);
     this->len += str_len;
     return false;
+}
+
+bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
+#if OMG_SUPPORT_WIN
+    if (this->type < OMG_STRING_BUFFER || OMG_ISNULL(wstr_to_add))
+        return true;
+    OMG_OmegaWin* omg = (OMG_OmegaWin*)omg_get_default_omega();
+    if (OMG_ISNULL(omg) || (((OMG_Omega*)omg)->type != OMG_OMG_TYPE_WIN))
+        return true;
+    size_t need_len = omg_def_std->wcslen(wstr_to_add);
+    if (omg_string_ensure_free_len(this, need_len))
+        return true;
+    if (omg->k32->WideCharToMultiByte(WIN_CP_UTF8, 0, wstr_to_add, need_len, this->ptr + this->len, need_len, NULL, NULL) > 0) {
+        this->len += need_len;
+        return false;
+    }
+    return true;
+#else
+    // TODO: non-weendoes way
+    UNUSED(this, wstr_to_add);
+    return true;
+#endif
 }
 
 bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {

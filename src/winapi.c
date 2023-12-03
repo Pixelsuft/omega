@@ -35,6 +35,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(FreeConsole);
     LOAD_REQUIRED(AttachConsole);
     LOAD_REQUIRED(MultiByteToWideChar);
+    LOAD_REQUIRED(WideCharToMultiByte);
     LOAD_REQUIRED(WriteConsoleW);
     LOAD_REQUIRED(FormatMessageW);
 #if OMG_WINAPI_DYNAMIC

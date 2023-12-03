@@ -26,8 +26,8 @@ void app_init(App* this, OMG_EntryData* data) {
     }
 #else
 #endif
-    OMG_MALLOC(this->omg->mem, 133333333337);
-    OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    // OMG_MALLOC(this->omg->mem, 133333333337);
+    OMG_INFO(this->omg, 1337.228f, L" 456 ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }
 

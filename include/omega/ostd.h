@@ -24,6 +24,8 @@
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \
     char*: omg_string_add_char_p, \
+    const wchar_t*: omg_string_add_wchar_p, \
+    wchar_t*: omg_string_add_wchar_p, \
     int: omg_string_add_int, \
     unsigned int: omg_string_add_uint, \
     float: omg_string_add_float, \
@@ -159,6 +161,7 @@ typedef struct {
     char* (*ultoa)(unsigned long value, char* buffer, int radix);
     char* (*lltoa)(int64_t value, char* string, int radix);
     char* (*ulltoa)(uint64_t value, char* string, int radix);
+    size_t (*wcslen)(const wchar_t* src);
     void* memory_allocator;
     void* extra;
 } OMG_Std;
@@ -187,4 +190,4 @@ OMG_API bool omg_string_add_pointer(OMG_String* this, const void* pointer_to_add
 OMG_API bool omg_string_add_float(OMG_String* this, const float float_to_add);
 OMG_API bool omg_string_add_double(OMG_String* this, const double double_to_add);
 OMG_API bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);
-// TODO: wchar_t* support (probably windows only)
+OMG_API bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add);
