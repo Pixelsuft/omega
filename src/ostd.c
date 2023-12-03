@@ -2,8 +2,15 @@
 #include <omega/memory.h>
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
 
-// The most is taken from https://github.com/libsdl-org/SDL/blob/main/src/stdlib/SDL_string.c
+// The most of the C std is taken from:
+// https://github.com/libsdl-org/SDL/blob/main/src/stdlib/SDL_string.c
 
+static const char ntoa_table[] = {
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+    'U', 'V', 'W', 'X', 'Y', 'Z'
+};
 static OMG_Std* omg_def_std = NULL;
 
 void* omg_std_memset(void* dst, register int val, register size_t len) {
@@ -111,28 +118,71 @@ char* omg_std_strrev(char* str) {
     return str;
 }
 
-char* omg_std_itoa(int value, char* buffer, int radix) {
-    size_t i = 0;
-    bool isNegative = false;
-    if (value == 0) {
-        buffer[i++] = '0';
-        buffer[i] = '\0';
-        return buffer;
+char* omg_std_itoa(int value, char* string, int radix)
+{
+    return omg_def_std->ltoa((long)value, string, radix);
+}
+
+char* omg_std_uitoa(unsigned int value, char* string, int radix)
+{
+    return omg_def_std->ultoa((unsigned long)value, string, radix);
+}
+
+char* omg_std_ltoa(long value, char* string, int radix)
+{
+    char* bufp = string;
+    if (value < 0) {
+        *bufp++ = '-';
+        omg_def_std->ultoa((unsigned long)(-value), bufp, radix);
+    } else {
+        omg_def_std->ultoa((unsigned long)value, bufp, radix);
     }
-    if (value < 0 && radix == 10) {
-        isNegative = true;
-        value = -value;
+    return string;
+}
+
+char* omg_std_ultoa(unsigned long value, char* string, int radix)
+{
+    char* bufp = string;
+    if (value) {
+        while (value > 0) {
+            *bufp++ = ntoa_table[value % radix];
+            value /= radix;
+        }
+    } else {
+        *bufp++ = '0';
     }
-    while (value != 0) {
-        int rem = value % radix;
-        buffer[i++] = (rem > 9) ? (rem - 10) + 'a' : rem + '0';
-        value = value / radix;
+    *bufp = '\0';
+    // omg_std_str_reverse maybe?
+    omg_def_std->strrev(string);
+    return string;
+}
+
+char* omg_std_lltoa(int64_t value, char* string, int radix)
+{
+    char* bufp = string;
+    if (value < 0) {
+        *bufp++ = '-';
+        omg_def_std->ulltoa((uint64_t)(-value), bufp, radix);
+    } else {
+        omg_def_std->ulltoa((uint64_t)value, bufp, radix);
     }
-    if (isNegative)
-        buffer[i++] = '-';
-    buffer[i] = '\0';
-    omg_std_str_reverse(buffer, i);
-    return buffer;
+    return string;
+}
+
+char* omg_std_ulltoa(uint64_t value, char* string, int radix)
+{
+    char* bufp = string;
+    if (value) {
+        while (value > 0) {
+            *bufp++ = ntoa_table[value % radix];
+            value /= radix;
+        }
+    } else {
+        *bufp++ = '0';
+    }
+    *bufp = '\0';
+    omg_def_std->strrev(string);
+    return string;
 }
 
 OMG_Std* omg_std_get_default_handle(void) {
@@ -172,6 +222,11 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->utf8strnlen = omg_std_utf8strnlen;
     this->strrev = omg_std_strrev;
     this->itoa = omg_std_itoa;
+    this->uitoa = omg_std_uitoa;
+    this->ltoa = omg_std_ltoa;
+    this->ultoa = omg_std_ultoa;
+    this->lltoa = omg_std_lltoa;
+    this->ulltoa = omg_std_ulltoa;
 }
 
 bool omg_string_add_int(OMG_String* this, const int int_to_add) {
@@ -220,6 +275,8 @@ bool omg_string_add_char_p(OMG_String* this, const char* str_to_add) {
 }
 
 bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
+    if (OMG_ISNULL(omg_def_std))
+        return true;
     if (OMG_ISNULL(base)) {
         this->len = 0;
         this->size = OMG_STRING_CHUNK_SIZE;

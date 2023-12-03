@@ -146,6 +146,11 @@ typedef struct {
     size_t (*utf8strnlen)(const char* src, size_t max_len);
     char* (*strrev)(char* str);
     char* (*itoa)(int value, char* buffer, int radix);
+    char* (*ltoa)(long value, char* buffer, int radix);
+    char* (*uitoa)(unsigned int value, char* buffer, int radix);
+    char* (*ultoa)(unsigned long value, char* buffer, int radix);
+    char* (*lltoa)(int64_t value, char* string, int radix);
+    char* (*ulltoa)(uint64_t value, char* string, int radix);
     void* memory_allocator;
     void* extra;
 } OMG_Std;
