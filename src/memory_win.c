@@ -5,6 +5,10 @@
 #if OMG_SUPPORT_WIN
 #include <omega/winapi.h>
 #include <omega/memory_win.h>
+#if OMG_DEBUG
+#include <omega/omega.h>
+#include <omega/omega_win.h>
+#endif
 #define base ((OMG_Memory*)this)
 
 bool omg_memory_win_destroy(OMG_MemoryWin* this) {
@@ -22,6 +26,11 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 #if OMG_DEBUG
     OMG_MemoryExtra* result = this->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
+        OMG_Omega* omg = omg_get_default_omega();
+        if (OMG_ISNOTNULL(omg) && OMG_ISNOTNULL(extra.func)) {
+            DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
+            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", error, ")");
+        }
         return NULL;
     }
     result->filename = extra.filename;
@@ -36,6 +45,10 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
     OMG_UNUSED(extra);
     void* result = this->k32->HeapAlloc(this->heap, 0, (size_t)extra);
     if (OMG_ISNULL(result)) {
+        OMG_Omega* omg = omg_get_default_omega();
+        if (OMG_ISNOTNULL(omg) && OMG_ISNOTNULL(extra.func)) {
+            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory");
+        }
         return NULL;
     }
     return result;

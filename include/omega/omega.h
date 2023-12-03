@@ -31,4 +31,6 @@ typedef struct OMG_Omega {
 } OMG_Omega;
 
 OMG_API OMG_Omega* omg_create(OMG_EntryData* data);
+OMG_API OMG_Omega* omg_get_default_omega(void);
+OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_init(OMG_Omega* this);

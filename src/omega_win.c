@@ -188,6 +188,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
         result = omg_winapi_kernel32_free(this->k32) || result;
         this->k32 = NULL;
     }
+    omg_destroy((OMG_Omega*)this);
     return result;
 }
 
@@ -273,9 +274,9 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_fatal_str = omg_win_log_fatal_str;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
-    _OMG_LOG_INFO(base, "Omega successfully inited");
+    _OMG_LOG_INFO(base, "Omega successfully inited with win32 backend");
     _OMG_LOG_INFO(
-        base, "Win32 backend, running on Windows ",
+        base, "Running on Windows ",
         (this->win_major_ver == 10 && this->win_build_number >= 21996) ? 11 : this->win_major_ver, // Fuck Microsoft
         " build ", this->win_build_number
     );
