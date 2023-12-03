@@ -3,6 +3,7 @@
 .idea
 .cache
 __pycache__
+SDL2
 CMakeCache
 build
 Release
