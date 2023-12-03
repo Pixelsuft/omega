@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <omega/platform.h>
 #if OMG_HAS_STD
+#include <stdlib.h>
 #include <stdio.h>
 #endif
 

@@ -1,5 +1,8 @@
 #include <omega/ostd.h>
 #include <omega/memory.h>
+#if OMG_HAS_STD
+#include <string.h>
+#endif
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
 
 // The most of the C std is taken from:
@@ -13,6 +16,7 @@ static const char ntoa_table[] = {
 };
 static OMG_Std* omg_def_std = NULL;
 
+#if OMG_IMPL_STD_FUNCS
 void* omg_std_memset(void* dst, register int val, register size_t len) {
     register unsigned char *ptr = (unsigned char*)dst;
     while (len-- > 0)
@@ -75,42 +79,6 @@ size_t omg_std_strnlen(const char* src, size_t max_len) {
     while (temp_counter < ptr_limit && *temp_counter)
         temp_counter++;
     return (size_t)temp_counter - (size_t)src;
-}
-
-size_t omg_std_utf8strlen(const char* src) {
-    size_t retval = 0;
-    const char* p = src;
-    unsigned char ch;
-    while ((ch = *(p++)) != 0) {
-        if ((ch & 0xc0) != 0x80) {
-            retval++;
-        }
-    }
-    return retval;
-}
-
-size_t omg_std_utf8strnlen(const char* src, size_t max_len) {
-    size_t retval = 0;
-    const char* p = src;
-    unsigned char ch;
-    while ((ch = *(p++)) != 0 && max_len-- > 0) {
-        if ((ch & 0xc0) != 0x80) {
-            retval++;
-        }
-    }
-    return retval;
-}
-
-void omg_std_str_reverse(char* str, size_t length) {
-    size_t start = 0;
-    size_t end = length - 1;
-    while (start < end) {
-        char temp = str[start];
-        str[start] = str[end];
-        str[end] = temp;
-        end--;
-        start++;
-    }
 }
 
 char* omg_std_strrev(char* str) {
@@ -184,6 +152,43 @@ char* omg_std_ulltoa(uint64_t value, char* string, int radix)
     omg_def_std->strrev(string);
     return string;
 }
+#endif
+
+size_t omg_std_utf8strlen(const char* src) {
+    size_t retval = 0;
+    const char* p = src;
+    unsigned char ch;
+    while ((ch = *(p++)) != 0) {
+        if ((ch & 0xc0) != 0x80) {
+            retval++;
+        }
+    }
+    return retval;
+}
+
+size_t omg_std_utf8strnlen(const char* src, size_t max_len) {
+    size_t retval = 0;
+    const char* p = src;
+    unsigned char ch;
+    while ((ch = *(p++)) != 0 && max_len-- > 0) {
+        if ((ch & 0xc0) != 0x80) {
+            retval++;
+        }
+    }
+    return retval;
+}
+
+void omg_std_str_reverse(char* str, size_t length) {
+    size_t start = 0;
+    size_t end = length - 1;
+    while (start < end) {
+        char temp = str[start];
+        str[start] = str[end];
+        str[end] = temp;
+        end--;
+        start++;
+    }
+}
 
 OMG_Std* omg_std_get_default_handle(void) {
     return omg_def_std;
@@ -218,8 +223,6 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->memcmp = omg_std_memcmp;
     this->strlen = omg_std_strlen;
     this->strnlen = omg_std_strnlen;
-    this->utf8strlen = omg_std_utf8strlen;
-    this->utf8strnlen = omg_std_utf8strnlen;
     this->strrev = omg_std_strrev;
     this->itoa = omg_std_itoa;
     this->uitoa = omg_std_uitoa;
@@ -227,6 +230,21 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->ultoa = omg_std_ultoa;
     this->lltoa = omg_std_lltoa;
     this->ulltoa = omg_std_ulltoa;
+    /*this->memset = memset;
+    this->memcpy = memcpy;
+    this->memmove = memmove;
+    this->memcmp = memcmp;
+    this->strlen = strlen;
+    this->strnlen = strnlen;
+    this->strrev = _strrev;
+    this->itoa = itoa;
+    this->uitoa = _uitoa;
+    this->ltoa = ltoa;
+    this->ultoa = ultoa;
+    this->lltoa = lltoa;
+    this->ulltoa = ulltoa;*/
+    this->utf8strlen = omg_std_utf8strlen;
+    this->utf8strnlen = omg_std_utf8strnlen;
 }
 
 bool omg_string_add_double(OMG_String* this, const double double_to_add) {
