@@ -10,13 +10,41 @@
 #endif
 #define base ((OMG_Omega*)this)
 
+#ifdef STD_OUTPUT_HANDLE
+#define WIN_STD_OUTPUT_HANDLE STD_OUTPUT_HANDLE
+#else
 #define WIN_STD_OUTPUT_HANDLE ((DWORD)-11)
+#endif
+#ifdef STD_ERROR_HANDLE
+#define WIN_STD_ERROR_HANDLE STD_ERROR_HANDLE
+#else
 #define WIN_STD_ERROR_HANDLE ((DWORD)-12)
+#endif
+#ifdef CP_UTF8
+#define WIN_CP_UTF8 CP_UTF8
+#else
 #define WIN_CP_UTF8 65001
+#endif
+#ifdef ATTACH_PARENT_PROCESS
+#define WIN_ATTACH_PARENT_PROCESS ATTACH_PARENT_PROCESS
+#else
 #define WIN_ATTACH_PARENT_PROCESS ((DWORD)-1)
+#endif
+#ifdef ERROR_ACCESS_DENIED
+#define WIN_ERROR_ACCESS_DENIED ERROR_ACCESS_DENIED
+#else
 #define WIN_ERROR_ACCESS_DENIED 0x5
+#endif
+#ifdef ERROR_INVALID_HANDLE
+#define WIN_ERROR_INVALID_HANDLE ERROR_INVALID_HANDLE
+#else
 #define WIN_ERROR_INVALID_HANDLE 0x6
+#endif
+#ifdef ERROR_GEN_FAILURE
+#define WIN_ERROR_GEN_FAILURE ERROR_GEN_FAILURE
+#else
 #define WIN_ERROR_GEN_FAILURE 0x1F
+#endif
 
 #define _OMG_WIN_LOG_MACRO(this, data, type_str, type_len, type_len2, is_error) { \
     omg_win_attach_console(this); \
@@ -62,6 +90,7 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
     this->k32 = NULL;
     base->mem = NULL;
     this->nt = NULL;
+    base->log_level = base->log_level_omg = -1;
 }
 
 void* omg_win_std_lib_load(const OMG_String* fn) {
@@ -244,6 +273,12 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_fatal_str = omg_win_log_fatal_str;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
+    _OMG_LOG_INFO(base, "Omega successfully inited");
+    _OMG_LOG_INFO(
+        base, "Win32 backend, running on Windows ",
+        (this->win_major_ver == 10 && this->win_build_number >= 21996) ? 11 : this->win_major_ver, // Fuck Microsoft
+        " build ", this->win_build_number
+    );
     return false;
 }
 #endif

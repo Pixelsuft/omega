@@ -26,10 +26,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
 #else
 #endif
-    OMG_INFO(
-        this->omg, "Windows ", ((OMG_OmegaWin*)this->omg)->win_major_ver, " build ",
-        ((OMG_OmegaWin*)this->omg)->win_build_number
-    );
+    OMG_MALLOC(this->omg->mem, 133333333337);
     OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }

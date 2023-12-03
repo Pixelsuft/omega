@@ -393,7 +393,7 @@ bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
     if (OMG_ISNULL(base)) {
         this->len = 0;
         this->size = OMG_STRING_CHUNK_SIZE;
-        this->ptr = OMG_MALLOC(mem, OMG_STRING_CHUNK_SIZE);
+        this->ptr = _OMG_INTERNAL_MALLOC(mem, OMG_STRING_CHUNK_SIZE);
         if (OMG_ISNULL(this->ptr)) {
             this->size = 0;
             this->type = OMG_STRING_NONE;
@@ -406,7 +406,7 @@ bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
     this->size = OMG_STRING_CALC_SIZE_BY_LENGTH(this->len);
     if (this->size < OMG_STRING_CHUNK_SIZE)
         this->size = OMG_STRING_CHUNK_SIZE;
-    this->ptr = OMG_MALLOC(mem, this->size);
+    this->ptr = _OMG_INTERNAL_MALLOC(mem, this->size);
     if (OMG_ISNULL(this->ptr)) {
         this->size = 0;
         this->type = OMG_STRING_NONE;
