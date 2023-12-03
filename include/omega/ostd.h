@@ -136,9 +136,15 @@ typedef struct {
     void* (*lib_load)(const OMG_String* fn);
     void* (*lib_func)(void* lib, const OMG_String* func_name);
     bool (*lib_free)(void* lib);
-    void* (*memset)(void *dest, register int val, register size_t len);
-    void* (*memcpy)(void *dest, const void* src, size_t len);
+    void* (*memset)(void* dst, register int val, register size_t len);
+    void* (*memcpy)(void* dst, const void* src, size_t len);
+    void* (*memmove)(void* dst, const void* src, size_t len);
+    int (*memcmp)(const void* s1, const void* s2, size_t len);
     size_t (*strlen)(const char* src);
+    size_t (*strnlen)(const char* src, size_t max_len);
+    size_t (*utf8strlen)(const char* src);
+    size_t (*utf8strnlen)(const char* src, size_t max_len);
+    char* (*strrev)(char* str);
     char* (*itoa)(int value, char* buffer, int radix);
     void* memory_allocator;
     void* extra;

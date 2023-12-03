@@ -27,14 +27,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg, "Windows ", ((OMG_OmegaWin*)this->omg)->win_major_ver, " build ",
         ((OMG_OmegaWin*)this->omg)->win_build_number
     );
-    OMG_String test_str;
-    omg_string_init_dynamic(&test_str, &OMG_STRING_MAKE_STATIC("123"));
-    omg_string_add(&test_str, &OMG_STRING_MAKE_STATIC(" 456\n789"));
-    omg_string_ensure_null(&test_str);
-    omg_string_resize(&test_str, 50);
-    OMG_INFO(this->omg, &test_str);
     OMG_INFO(this->omg, "1", 228, "1");
-    omg_string_destroy(&test_str);
     this->omg->destroy(this->omg);
 }
 

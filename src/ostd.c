@@ -2,22 +2,53 @@
 #include <omega/memory.h>
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
 
+// The most is taken from https://github.com/libsdl-org/SDL/blob/main/src/stdlib/SDL_string.c
+
 static OMG_Std* omg_def_std = NULL;
 
-// TODO: Should we redirect to omg_def_std if not the same?
-void* omg_std_memset(void* dest, register int val, register size_t len) {
-    register unsigned char *ptr = (unsigned char*)dest;
+void* omg_std_memset(void* dst, register int val, register size_t len) {
+    register unsigned char *ptr = (unsigned char*)dst;
     while (len-- > 0)
         *ptr++ = val;
-    return dest;
+    return dst;
 }
 
-void* omg_std_memcpy(void* dest, const void* src, size_t len) {
-    char *d = dest;
+void* omg_std_memmove(void* dst, const void* src, size_t len) {
+    char *srcp = (char *)src;
+    char *dstp = (char *)dst;
+    if (src < dst) {
+        srcp += len - 1;
+        dstp += len - 1;
+        while (len--) {
+            *dstp-- = *srcp--;
+        }
+    } else {
+        while (len--) {
+            *dstp++ = *srcp++;
+        }
+    }
+    return dst;
+}
+
+void* omg_std_memcpy(void* dst, const void* src, size_t len) {
+    char *d = dst;
     const char *s = src;
     while (len--)
         *d++ = *s++;
-    return dest;
+    return dst;
+}
+
+int omg_std_memcmp(const void* s1, const void* s2, size_t len) {
+    char *s1p = (char *)s1;
+    char *s2p = (char *)s2;
+    while (len--) {
+        if (*s1p != *s2p) {
+            return *s1p - *s2p;
+        }
+        ++s1p;
+        ++s2p;
+    }
+    return 0;
 }
 
 size_t omg_std_strlen(const char* src) {
@@ -27,6 +58,40 @@ size_t omg_std_strlen(const char* src) {
     while (*temp_counter)
         temp_counter++;
     return (size_t)temp_counter - (size_t)src;
+}
+
+size_t omg_std_strnlen(const char* src, size_t max_len) {
+    if (OMG_ISNULL(src))
+        return 0;
+    char* ptr_limit = (char*)((size_t)src + max_len);
+    char* temp_counter = (char*)src;
+    while (temp_counter < ptr_limit && *temp_counter)
+        temp_counter++;
+    return (size_t)temp_counter - (size_t)src;
+}
+
+size_t omg_std_utf8strlen(const char* src) {
+    size_t retval = 0;
+    const char* p = src;
+    unsigned char ch;
+    while ((ch = *(p++)) != 0) {
+        if ((ch & 0xc0) != 0x80) {
+            retval++;
+        }
+    }
+    return retval;
+}
+
+size_t omg_std_utf8strnlen(const char* src, size_t max_len) {
+    size_t retval = 0;
+    const char* p = src;
+    unsigned char ch;
+    while ((ch = *(p++)) != 0 && max_len-- > 0) {
+        if ((ch & 0xc0) != 0x80) {
+            retval++;
+        }
+    }
+    return retval;
 }
 
 void omg_std_str_reverse(char* str, size_t length) {
@@ -39,6 +104,11 @@ void omg_std_str_reverse(char* str, size_t length) {
         end--;
         start++;
     }
+}
+
+char* omg_std_strrev(char* str) {
+    omg_std_str_reverse(str, omg_def_std->strlen(str));
+    return str;
 }
 
 char* omg_std_itoa(int value, char* buffer, int radix) {
@@ -94,7 +164,13 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->lib_free = omg_std_lib_free;
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
+    this->memmove = omg_std_memmove;
+    this->memcmp = omg_std_memcmp;
     this->strlen = omg_std_strlen;
+    this->strnlen = omg_std_strnlen;
+    this->utf8strlen = omg_std_utf8strlen;
+    this->utf8strnlen = omg_std_utf8strnlen;
+    this->strrev = omg_std_strrev;
     this->itoa = omg_std_itoa;
 }
 
@@ -104,7 +180,7 @@ bool omg_string_add_int(OMG_String* this, const int int_to_add) {
     if (omg_string_ensure_free_len(this, 11))
         return true;
     omg_def_std->itoa(int_to_add, this->ptr + this->len, 10);
-    this->len += omg_def_std->strlen(this->ptr + this->len);
+    this->len += omg_def_std->strnlen(this->ptr + this->len, 20);
     return false;
 }
 
