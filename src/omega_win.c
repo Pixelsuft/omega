@@ -233,6 +233,12 @@ bool omg_win_init(OMG_OmegaWin* this) {
     else {
         this->should_free_ntdll = false;
     }
+    NTDLL_OSVERSIONINFOEXW os_ver_info;
+    os_ver_info.dwOSVersionInfoSize = sizeof(NTDLL_OSVERSIONINFOEXW);
+    this->nt->RtlGetVersion(&os_ver_info);
+    this->win_major_ver = (int)os_ver_info.dwMajorVersion;
+    this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
+    this->win_build_number = (int)os_ver_info.dwBuildNumber;
     base->log_info_str = omg_win_log_info_str;
     base->log_warn_str = omg_win_log_warn_str;
     base->log_error_str = omg_win_log_error_str;

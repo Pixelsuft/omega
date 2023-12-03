@@ -12,6 +12,9 @@ typedef struct {
     HANDLE stdout_handle;
     HANDLE stderr_handle;
     int con_result;
+    int win_major_ver;
+    int win_minor_ver;
+    int win_build_number;
     bool should_free_k32;
     bool should_free_ntdll;
 } OMG_OmegaWin;

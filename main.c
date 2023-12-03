@@ -23,6 +23,10 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
+    OMG_INFO(
+        this->omg, "Windows ", ((OMG_OmegaWin*)this->omg)->win_major_ver, " build ",
+        ((OMG_OmegaWin*)this->omg)->win_build_number
+    );
     OMG_String test_str;
     omg_string_init_dynamic(&test_str, &OMG_STRING_MAKE_STATIC("123"));
     omg_string_add(&test_str, &OMG_STRING_MAKE_STATIC(" 456\n789"));
