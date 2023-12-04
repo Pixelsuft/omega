@@ -26,24 +26,21 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 #if OMG_DEBUG
     OMG_MemoryExtra* result = this->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
+        // TODO: Copy paste for other
         OMG_Omega* omg = omg_get_default_omega();
-        if (OMG_ISNOTNULL(omg) && OMG_ISNOTNULL(extra.func)) {
+        if (OMG_ISNOTNULL(omg) && omg->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(extra.func)) {
             DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
-            DWORD res = 0;
-            wchar_t* w_error_buffer = _OMG_INTERNAL_MALLOC((OMG_Memory*)this, 128 * 1024);
-            if (OMG_ISNOTNULL(w_error_buffer)) {
-                res = ((OMG_OmegaWin*)omg)->k32->FormatMessageW(
-                    OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM | OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM,
-                    NULL, error, 0, w_error_buffer, 64 * 1024, NULL
-                );
-                if (res > 2) {
-                    w_error_buffer[res - 3] = L'\0';
-                    _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", w_error_buffer, ")");
-                }
-                OMG_FREE((OMG_Memory*)this, w_error_buffer);
+            DWORD res;
+            wchar_t* w_error_buffer;
+            _OMG_WIN_FORMAT_ERROR(omg, error, w_error_buffer, res);
+            if (res > 2) {
+                w_error_buffer[res - 3] = L'\0';
+                _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", w_error_buffer, ")");
             }
-            if (res <= 2)
+            else
                 _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
+            if (OMG_ISNOTNULL(w_error_buffer))
+                OMG_FREE((OMG_Memory*)this, w_error_buffer);
             _OMG_LOG_ERROR(omg, "Allocation failure info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
         }
         return NULL;

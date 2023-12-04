@@ -29,7 +29,7 @@ bool omg_destroy(OMG_Omega* this) {
 }
 
 bool omg_init(OMG_Omega* this) {
-    this->type = OMG_OMG_TYPE_NONE;
+    this->type = OMG_OMEGA_TYPE_NONE;
     this->unused = NULL;
     this->std = NULL;
     this->should_free_mem = false;

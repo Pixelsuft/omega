@@ -12,6 +12,12 @@
 #define OMG_IS_EMSCRIPTEN 0
 #endif
 
+#ifdef __android__
+#define OMG_IS_ANDROID 1
+#else
+#define OMG_IS_ANDROID 0
+#endif
+
 #ifdef _MSC_VER
 #define OMG_IS_VC 1
 #else

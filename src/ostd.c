@@ -407,7 +407,7 @@ bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
     if (this->type < OMG_STRING_BUFFER || OMG_ISNULL(wstr_to_add))
         return true;
     OMG_OmegaWin* omg = (OMG_OmegaWin*)omg_get_default_omega();
-    if (OMG_ISNULL(omg) || (((OMG_Omega*)omg)->type != OMG_OMG_TYPE_WIN))
+    if (OMG_ISNULL(omg) || (((OMG_Omega*)omg)->type != OMG_OMEGA_TYPE_WIN))
         return true;
     size_t need_len = omg_def_std->wcslen(wstr_to_add);
     if (omg_string_ensure_free_len(this, need_len))

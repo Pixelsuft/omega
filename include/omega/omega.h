@@ -4,8 +4,8 @@
 #include <omega/memory.h>
 #include <omega/ostd.h>
 
-#define OMG_OMG_TYPE_NONE 0
-#define OMG_OMG_TYPE_WIN 1
+#define OMG_OMEGA_TYPE_NONE 0
+#define OMG_OMEGA_TYPE_WIN 1
 
 #define OMG_LOG_CATEGORY_INFO 1
 #define OMG_LOG_CATEGORY_WARN 2

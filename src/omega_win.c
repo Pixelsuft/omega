@@ -174,7 +174,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     OMG_BEGIN_POINTER_CAST();
     omg_init(this);
-    base->type = OMG_OMG_TYPE_WIN;
+    base->type = OMG_OMEGA_TYPE_WIN;
     this->con_result = 0;
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_win_create(this->k32);

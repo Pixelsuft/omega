@@ -4,6 +4,18 @@
 #if OMG_SUPPORT_WIN
 #include <omega/winapi.h>
 
+#define _OMG_WIN_FORMAT_ERROR(omg, error, buffer, len_buf) do { \
+    buffer = _OMG_INTERNAL_MALLOC((OMG_Memory*)omg->mem, 128 * 1024); \
+    if (OMG_ISNULL(buffer)) { \
+        len_buf = 0; \
+        break; \
+    } \
+    len_buf = ((OMG_OmegaWin*)omg)->k32->FormatMessageW( \
+        OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM | OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM, \
+        NULL, error, 0, buffer, 32 * 1024, NULL \
+    ); \
+} while (0)
+
 typedef struct {
     OMG_Omega parent;
     OMG_Kernel32 k32_stk;
