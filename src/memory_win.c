@@ -42,7 +42,7 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
                 _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
             if (OMG_ISNOTNULL(w_error_buffer))
                 OMG_FREE((OMG_Memory*)this, w_error_buffer);
-            _OMG_LOG_ERROR(omg_base, "Allocation failure info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
+            _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
         }
         return NULL;
     }
@@ -95,7 +95,7 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
                 _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory (Error Code - ", error, ")");
             if (OMG_ISNOTNULL(w_error_buffer))
                 OMG_FREE((OMG_Memory*)this, w_error_buffer);
-            _OMG_LOG_ERROR(omg_base, "Reallocation failure info: at file ", real_ptr->filename, ", in line ", (uint32_t)real_ptr->line, ", at function ", real_ptr->func);
+            _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", real_ptr->filename, ", in line ", (uint32_t)real_ptr->line, ", at function ", real_ptr->func);
         }
         return NULL;
     }
@@ -105,6 +105,8 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
 #else
     void* result = this->k32->HeapReAlloc(this->heap, 0, ptr, size);
     if (OMG_ISNULL(result)) {
+        DWORD error = this->k32->GetLastError();
+        _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)size, " bytes of memory (Error Code - ", error, ")");
         return NULL;
     }
     return result;
@@ -129,9 +131,30 @@ bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
             base->alloc_count--;
         return false;
     }
+    if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(data.func)) {
+        DWORD error = this->k32->GetLastError();
+        DWORD res;
+        wchar_t* w_error_buffer;
+        _OMG_WIN_FORMAT_ERROR((OMG_Memory*)this, this->k32, error, w_error_buffer, res);
+        if (res > 2) {
+            w_error_buffer[res - 3] = L'\0';
+            _OMG_LOG_ERROR(omg_base, "Failed to free ", (uint32_t)data.size, " bytes of memory (", w_error_buffer, ")");
+        }
+        else
+            _OMG_LOG_ERROR(omg_base, "Failed to free ", (uint32_t)data.size, " bytes of memory (Error Code - ", error, ")");
+        if (OMG_ISNOTNULL(w_error_buffer))
+            OMG_FREE((OMG_Memory*)this, w_error_buffer);
+        _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", data.filename, ", in line ", (uint32_t)data.line, ", at function ", data.func);
+    }
     return true;
 #else
-    return !this->k32->HeapFree(this->heap, 0, ptr);
+    DWORD res = this->k32->HeapFree(this->heap, 0, ptr);
+    if (!res) {
+        DWORD error = this->k32->GetLastError();
+        _OMG_LOG_ERROR(omg_base, "Failed to free some memory (Error Code - ", error, ")");
+        return true;
+    }
+    return false;
 #endif
 }
 

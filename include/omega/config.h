@@ -2,7 +2,7 @@
 #include <omega/platform.h>
 
 #ifndef OMG_DEBUG
-#define OMG_DEBUG 0
+#define OMG_DEBUG 1
 #endif
 #ifndef OMG_ENTRY
 #define OMG_ENTRY 1
