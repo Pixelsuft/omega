@@ -34,6 +34,11 @@
 #define OMG_SUPPORTS_SDL2_MAIN 1
 #endif
 
+#ifndef OMG_EXPORT_SHIT
+// Which should be default?
+#define OMG_EXPORT_SHIT OMG_DEBUG && 0
+#endif
+
 #ifndef OMG_LOG_MIN_LEVEL
 #define OMG_LOG_MIN_LEVEL OMG_LOG_CATEGORY_INFO
 #endif

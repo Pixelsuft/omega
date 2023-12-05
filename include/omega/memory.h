@@ -32,3 +32,9 @@ typedef struct OMG_Memory {
 } OMG_Memory;
 
 OMG_API bool omg_memory_init(OMG_Memory* this);
+#if OMG_EXPORT_SHIT
+OMG_API bool omg_memory_destroy(OMG_Memory* this);
+OMG_API void* omg_memory_alloc(OMG_Memory* this, OMG_MemoryExtra extra);
+OMG_API void* omg_memory_realloc(OMG_Memory* this, void* ptr, size_t size);
+OMG_API bool omg_memory_free(OMG_Memory* this, void* ptr);
+#endif

@@ -34,3 +34,7 @@ OMG_API OMG_Omega* omg_create(OMG_EntryData* data);
 OMG_API OMG_Omega* omg_get_default_omega(void);
 OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_init(OMG_Omega* this);
+#if OMG_EXPORT_SHIT
+OMG_API void omg_log_set_level(struct OMG_Omega* this, const int log_level, const int omg_log_level);
+OMG_API void omg_log_info_str(OMG_Omega* this, const OMG_String* data);
+#endif

@@ -38,7 +38,8 @@ bool omg_init(OMG_Omega* this) {
     if (this->log_level_omg == -1)
         this->log_level_omg = OMG_LOG_OMG_MIN_LEVEL;
     // TODO: probably also handle long functions
-    this->log_info_str = this->log_warn_str = this->log_error_str = this->log_fatal_str = omg_log_info_str;
+    if (OMG_ISNULL(this->log_info_str))
+        this->log_info_str = this->log_warn_str = this->log_error_str = this->log_fatal_str = omg_log_info_str;
     this->log_set_level = omg_log_set_level;
     this->destroy = omg_destroy;
     omg_def_omega = this;

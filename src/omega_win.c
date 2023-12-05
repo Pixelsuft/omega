@@ -55,6 +55,7 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
     base->mem = NULL;
     this->nt = NULL;
     base->log_level = base->log_level_omg = -1;
+    base->log_info_str = NULL;
 }
 
 void* omg_win_std_lib_load(const OMG_String* fn) {
