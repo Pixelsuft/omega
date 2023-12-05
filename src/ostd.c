@@ -9,7 +9,7 @@
 #endif
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
 
-// The most of the C std is taken from:
+// Some of the C std is taken from:
 // https://github.com/libsdl-org/SDL/blob/main/src/stdlib/SDL_string.c
 
 static const char ntoa_table[] = {
@@ -101,18 +101,15 @@ char* omg_std_strrev(char* str) {
     return str;
 }
 
-char* omg_std_itoa(int value, char* string, int radix)
-{
+char* omg_std_itoa(int value, char* string, int radix) {
     return omg_def_std->ltoa((long)value, string, radix);
 }
 
-char* omg_std_uitoa(unsigned int value, char* string, int radix)
-{
+char* omg_std_uitoa(unsigned int value, char* string, int radix) {
     return omg_def_std->ultoa((unsigned long)value, string, radix);
 }
 
-char* omg_std_ltoa(long value, char* string, int radix)
-{
+char* omg_std_ltoa(long value, char* string, int radix) {
     char* bufp = string;
     if (value < 0) {
         *bufp++ = '-';
@@ -123,8 +120,7 @@ char* omg_std_ltoa(long value, char* string, int radix)
     return string;
 }
 
-char* omg_std_ultoa(unsigned long value, char* string, int radix)
-{
+char* omg_std_ultoa(unsigned long value, char* string, int radix) {
     char* bufp = string;
     if (value) {
         while (value > 0) {
@@ -140,8 +136,7 @@ char* omg_std_ultoa(unsigned long value, char* string, int radix)
     return string;
 }
 
-char* omg_std_lltoa(int64_t value, char* string, int radix)
-{
+char* omg_std_lltoa(int64_t value, char* string, int radix) {
     char* bufp = string;
     if (value < 0) {
         *bufp++ = '-';
@@ -152,8 +147,7 @@ char* omg_std_lltoa(int64_t value, char* string, int radix)
     return string;
 }
 
-char* omg_std_ulltoa(uint64_t value, char* string, int radix)
-{
+char* omg_std_ulltoa(uint64_t value, char* string, int radix) {
     char* bufp = string;
     if (value) {
         while (value > 0) {
