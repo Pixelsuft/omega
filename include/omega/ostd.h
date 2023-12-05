@@ -14,12 +14,12 @@
 #define OMG_STRING_STATIC 1
 #define OMG_STRING_BUFFER 2
 #define OMG_STRING_DYNAMIC 3
-// TODO: use << and >> to speedup
-#define OMG_STRING_CHUNK_SIZE 16
+#define OMG_STRING_CHUNK_SIZE_OFFSET 4
+#define OMG_STRING_CHUNK_SIZE (2 << OMG_STRING_CHUNK_SIZE_OFFSET)
 #define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_std_strlen(char_ptr), .size = omg_std_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_strlen(char_ptr), .size = omg_std_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
-#define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? (((str_len) / OMG_STRING_CHUNK_SIZE + 1) * OMG_STRING_CHUNK_SIZE) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
+#define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? ((((str_len) >> OMG_STRING_CHUNK_SIZE_OFFSET) + 1) << OMG_STRING_CHUNK_SIZE_OFFSET) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
 
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \
