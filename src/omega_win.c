@@ -177,7 +177,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->type = OMG_OMEGA_TYPE_WIN;
     this->con_result = 0;
     if (OMG_ISNULL(base->mem)) {
-        base->mem = omg_memory_win_create(this->k32);
+        base->mem = omg_memory_win_create(this, this->k32);
         if (OMG_ISNULL(base->mem)) {
             omg_winapi_kernel32_free(this->k32);
             this->k32 = NULL;

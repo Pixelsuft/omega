@@ -10,11 +10,13 @@
 #include <omega/omega_win.h>
 #endif
 #define base ((OMG_Memory*)this)
+#define omg_base ((OMG_Omega*)this)
+#define omg_win ((OMG_OmegaWin*)this->omg)
 
 bool omg_memory_win_destroy(OMG_MemoryWin* this) {
     bool result = false;
     HANDLE heap = this->heap;
-    OMG_Kernel32* k32 = this->k32;
+    OMG_Kernel32* k32 = omg_win->k32;
     if (!k32->HeapFree(heap, 0, this))
         result = true;
     if (!k32->HeapDestroy(heap))
@@ -24,24 +26,23 @@ bool omg_memory_win_destroy(OMG_MemoryWin* this) {
 
 void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 #if OMG_DEBUG
-    OMG_MemoryExtra* result = this->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
+    OMG_MemoryExtra* result = omg_win->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
         // TODO: Copy paste for other
-        OMG_Omega* omg = omg_get_default_omega();
-        if (OMG_ISNOTNULL(omg) && omg->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(extra.func)) {
-            DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
+        if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(extra.func)) {
+            DWORD error = this->k32->GetLastError();
             DWORD res;
             wchar_t* w_error_buffer;
-            _OMG_WIN_FORMAT_ERROR(omg, error, w_error_buffer, res);
+            _OMG_WIN_FORMAT_ERROR((OMG_Memory*)this, this->k32, error, w_error_buffer, res);
             if (res > 2) {
                 w_error_buffer[res - 3] = L'\0';
-                _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", w_error_buffer, ")");
+                _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (", w_error_buffer, ")");
             }
             else
-                _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
+                _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
             if (OMG_ISNOTNULL(w_error_buffer))
                 OMG_FREE((OMG_Memory*)this, w_error_buffer);
-            _OMG_LOG_ERROR(omg, "Allocation failure info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
+            _OMG_LOG_ERROR(omg_base, "Allocation failure info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
         }
         return NULL;
     }
@@ -122,14 +123,14 @@ bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
 #endif
 }
 
-OMG_MemoryWin* omg_memory_win_create(OMG_Kernel32* data) {
+OMG_MemoryWin* omg_memory_win_create(void* omg, OMG_Kernel32* k32) {
     // TODO: function, that doesn't allocate object (omg_memory_win_init)
-    HANDLE heap = data->HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 0, 0);
+    HANDLE heap = k32->HeapCreate(HEAP_CREATE_ENABLE_EXECUTE, 0, 0);
     if (heap == NULL)
         return NULL;
-    OMG_MemoryWin* this = data->HeapAlloc(heap, 0, sizeof(OMG_MemoryWin));
+    OMG_MemoryWin* this = k32->HeapAlloc(heap, 0, sizeof(OMG_MemoryWin));
     if (this == NULL) {
-        data->HeapDestroy(heap);
+        k32->HeapDestroy(heap);
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();
@@ -139,7 +140,8 @@ OMG_MemoryWin* omg_memory_win_create(OMG_Kernel32* data) {
     base->free = omg_memory_win_free;
     base->destroy = omg_memory_win_destroy;
     OMG_END_POINTER_CAST();
-    this->k32 = data;
+    this->k32 = k32;
+    this->omg = omg;
     this->heap = heap;
     base->alloc_count = 0;
     base->is_allocated = true;

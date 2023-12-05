@@ -8,7 +8,8 @@ typedef struct {
     OMG_Memory parent;
     HANDLE heap;
     OMG_Kernel32* k32;
+    void* omg;
 } OMG_MemoryWin;
 
-OMG_API OMG_MemoryWin* omg_memory_win_create(OMG_Kernel32* data);
+OMG_API OMG_MemoryWin* omg_memory_win_create(void* omg, OMG_Kernel32* k32);
 #endif
