@@ -10,7 +10,7 @@
 #include <omega/omega_win.h>
 #endif
 #define base ((OMG_Memory*)this)
-#define omg_base ((OMG_Omega*)this)
+#define omg_base ((OMG_Omega*)this->omg)
 #define omg_win ((OMG_OmegaWin*)this->omg)
 
 bool omg_memory_win_destroy(OMG_MemoryWin* this) {
@@ -28,7 +28,6 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 #if OMG_DEBUG
     OMG_MemoryExtra* result = omg_win->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
-        // TODO: Copy paste for other
         if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(extra.func)) {
             DWORD error = this->k32->GetLastError();
             DWORD res;
@@ -81,10 +80,25 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
     size_t size_before = real_ptr->size;
     OMG_MemoryExtra* new_ptr = this->k32->HeapReAlloc(this->heap, 0, real_ptr, size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(new_ptr)) {
-        if (base->alloc_size >= size_before)
+        /*if (base->alloc_size >= size_before)
             base->alloc_size -= size_before;
         if (base->alloc_count > 0)
-            base->alloc_count--;
+            base->alloc_count--;*/
+        if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(real_ptr->func)) {
+            DWORD error = this->k32->GetLastError();
+            DWORD res;
+            wchar_t* w_error_buffer;
+            _OMG_WIN_FORMAT_ERROR((OMG_Memory*)this, this->k32, error, w_error_buffer, res);
+            if (res > 2) {
+                w_error_buffer[res - 3] = L'\0';
+                _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory (", w_error_buffer, ")");
+            }
+            else
+                _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory (Error Code - ", error, ")");
+            if (OMG_ISNOTNULL(w_error_buffer))
+                OMG_FREE((OMG_Memory*)this, w_error_buffer);
+            _OMG_LOG_ERROR(omg_base, "Reallocation failure info: at file ", real_ptr->filename, ", in line ", (uint32_t)real_ptr->line, ", at function ", real_ptr->func);
+        }
         return NULL;
     }
     base->alloc_size = base->alloc_size + size - size_before;

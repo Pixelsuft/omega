@@ -27,8 +27,9 @@ void app_init(App* this, OMG_EntryData* data) {
 #else
 #endif
     void* ptr = OMG_MALLOC(this->omg->mem, 1337);
-    void* ptr2 = OMG_REALLOC(this->omg->mem, ptr, 1333333333337);
-    OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " ", ptr2, " 1", 228, "1 0x", (void*)this->omg);
+    // void* ptr2 = OMG_REALLOC(this->omg->mem, ptr, 133333333333337);
+    OMG_FREE(this->omg->mem, NULL);
+    OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }
 
