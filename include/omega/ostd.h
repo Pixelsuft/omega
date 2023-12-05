@@ -41,6 +41,7 @@
 )
 
 #define OMG_STRING_ADD(string, to_add) (_OMG_STRING_GET_ADD_FUNC(to_add)(string, _OMG_STRING_GET_ADD_VALUE(to_add)))
+#define _OMG_STRING_ADD1(s, p1) do { OMG_STRING_ADD(s, p1); } while(0)
 #define _OMG_STRING_ADD2(s, p1, p2) do { OMG_STRING_ADD(s, p1); OMG_STRING_ADD(s, p2); } while(0)
 #define _OMG_STRING_ADD3(s, p1, p2, p3) do { OMG_STRING_ADD(s, p1); OMG_STRING_ADD(s, p2); OMG_STRING_ADD(s, p3); } while(0)
 #define _OMG_STRING_ADD4(s, p1, p2, p3, p4) do { OMG_STRING_ADD(s, p1); OMG_STRING_ADD(s, p2); OMG_STRING_ADD(s, p3); OMG_STRING_ADD(s, p4); } while(0)

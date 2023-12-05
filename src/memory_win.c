@@ -5,6 +5,7 @@
 #if OMG_SUPPORT_WIN
 #include <omega/winapi.h>
 #include <omega/memory_win.h>
+#include <omega/omega.h>
 #if OMG_DEBUG
 #include <omega/omega.h>
 #include <omega/omega_win.h>
@@ -16,7 +17,7 @@
 bool omg_memory_win_destroy(OMG_MemoryWin* this) {
     bool result = false;
     HANDLE heap = this->heap;
-    OMG_Kernel32* k32 = omg_win->k32;
+    OMG_Kernel32* k32 = this->k32;
     if (!k32->HeapFree(heap, 0, this))
         result = true;
     if (!k32->HeapDestroy(heap))
@@ -57,11 +58,8 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
     OMG_UNUSED(extra);
     void* result = this->k32->HeapAlloc(this->heap, 0, (size_t)extra);
     if (OMG_ISNULL(result)) {
-        OMG_Omega* omg = omg_get_default_omega();
-        if (OMG_ISNOTNULL(omg)) {
-            DWORD error = ((OMG_OmegaWin*)omg)->k32->GetLastError();
-            _OMG_LOG_ERROR(omg, "Failed to allocate ", (uint32_t)extra, " bytes of memory (Error Code - ", error, ")");
-        }
+        DWORD error = this->k32->GetLastError();
+        _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra, " bytes of memory (Error Code - ", error, ")");
         return NULL;
     }
     return result;
