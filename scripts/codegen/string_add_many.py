@@ -1,6 +1,6 @@
 to = 25
 
-for i in range(2, to + 1):
+for i in range(1, to + 1):
     res = f'#define _OMG_STRING_ADD{i}(s'
     for j in range(1, i + 1):
         res += f', p{j}'

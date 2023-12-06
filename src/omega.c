@@ -27,8 +27,9 @@ void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_l
         this->log_level_omg = omg_log_level;
 }
 
-void omg_log_info_str(OMG_Omega* this, const OMG_String* data) {
+bool omg_log_info_str(OMG_Omega* this, const OMG_String* data) {
     OMG_UNUSED(this, data);
+    return false;
 }
 
 bool omg_destroy(OMG_Omega* this) {

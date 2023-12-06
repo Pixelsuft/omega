@@ -13,12 +13,12 @@
 #define _OMG_WIN_LOG_MACRO(this, data, type_str, type_len, type_len2, is_error) { \
     omg_win_attach_console(this); \
     if (this->con_result < 0) \
-        return; \
+        return true; \
     if (is_error) { \
         if (OMG_ISNULL(this->stderr_handle)) { \
             this->stderr_handle = this->k32->GetStdHandle(WIN_STD_ERROR_HANDLE); \
             if (OMG_ISNULL(this->stderr_handle)) { \
-                return; \
+                return true; \
             } \
         } \
     } \
@@ -26,17 +26,17 @@
         if (OMG_ISNULL(this->stdout_handle)) { \
             this->stdout_handle = this->k32->GetStdHandle(WIN_STD_OUTPUT_HANDLE); \
             if (OMG_ISNULL(this->stdout_handle)) { \
-                return; \
+                return true; \
             } \
         } \
     } \
     size_t count = data->len; \
     wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20); \
     if (OMG_ISNULL(out_buf)) \
-        return; \
+        return true; \
     if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, (int)count) <= 0) { \
         OMG_FREE(base->mem, out_buf); \
-        return; \
+        return true; \
     } \
     base->std->memcpy(out_buf, type_str, type_len2); \
     if (out_buf[count + type_len - 1] == L'\n') { \
@@ -48,6 +48,7 @@
     DWORD counter = 0; \
     this->k32->WriteConsoleW(is_error ? this->stderr_handle : this->stdout_handle, out_buf, (DWORD)count + 8, &counter, NULL); \
     OMG_FREE(base->mem, out_buf); \
+    return false; \
 }
 
 void omg_win_fill_after_create(OMG_OmegaWin* this) {
@@ -112,19 +113,19 @@ void omg_win_attach_console(OMG_OmegaWin* this) {
     }
 }
 
-void omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data) {
+bool omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data) {
     _OMG_WIN_LOG_MACRO(this, data, L"[INFO]: ", 8, 16, false);
 }
 
-void omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data) {
+bool omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data) {
     _OMG_WIN_LOG_MACRO(this, data, L"[WARN]: ", 8, 16, false);
 }
 
-void omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data) {
+bool omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data) {
     _OMG_WIN_LOG_MACRO(this, data, L"[ERROR]: ", 9, 18, true);
 }
 
-void omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
+bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
     _OMG_WIN_LOG_MACRO(this, data, L"[FATAL]: ", 9, 18, true);
 }
 
