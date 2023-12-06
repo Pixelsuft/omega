@@ -144,7 +144,7 @@ typedef struct {
 } OMG_String;
 
 typedef struct {
-    void* (*lib_load)(const OMG_String* fn);
+    void* (*lib_load)(const OMG_String* fn, const wchar_t* adv_fn);
     void* (*lib_func)(void* lib, const OMG_String* func_name);
     bool (*lib_free)(void* lib);
     void* (*memset)(void* dst, register int val, register size_t len);

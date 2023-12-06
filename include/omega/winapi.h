@@ -135,7 +135,7 @@ OMG_API bool omg_winapi_kernel32_load(OMG_Kernel32* this);
 OMG_API bool omg_winapi_kernel32_free(OMG_Kernel32* this);
 OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
 OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
-OMG_API void* omg_win_std_lib_load(const OMG_String* fn);
+OMG_API void* omg_win_std_lib_load(const OMG_String* fn, const wchar_t* adv_fn);
 OMG_API void* omg_win_std_lib_func(void* lib, const OMG_String* func_name);
 OMG_API bool omg_win_std_lib_free(void* lib);
 #endif

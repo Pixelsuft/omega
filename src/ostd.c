@@ -217,8 +217,8 @@ void omg_std_set_default_handle(OMG_Std* this) {
     omg_def_std = this;
 }
 
-void* omg_std_lib_load(const OMG_String* fn) {
-    OMG_UNUSED(fn);
+void* omg_std_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
+    OMG_UNUSED(fn, adv_fn);
     return NULL;
 }
 

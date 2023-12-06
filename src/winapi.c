@@ -84,8 +84,13 @@ bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
 #endif
 }
 
-void* omg_win_std_lib_load(const OMG_String* fn) {
+void* omg_win_std_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
     void* result = NULL;
+    if (OMG_ISNOTNULL(adv_fn)) {
+        return (void*)LoadLibraryExW(adv_fn, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+    }
+    if (OMG_ISNULL(fn))
+        return NULL;
 #if OMG_WIN_BETTER_LIBRARY_LOAD
     wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
     if (OMG_ISNOTNULL(out_buf)) {
