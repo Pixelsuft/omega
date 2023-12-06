@@ -4,10 +4,6 @@
 #include <omega/omega_win.h>
 #include <omega/ostd.h>
 #include <omega/memory_win.h>
-#if OMG_WIN_BETTER_LIBRARY_LOAD
-#include <stringapiset.h>
-#include <heapapi.h>
-#endif
 #define base ((OMG_Omega*)this)
 
 #define _OMG_WIN_LOG_MACRO(this, data, type_str, type_len, type_len2, is_error) { \
@@ -61,38 +57,6 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
     base->default_init = omg_win_init;
     OMG_END_POINTER_CAST();
     this->nt = NULL;
-}
-
-void* omg_win_std_lib_load(const OMG_String* fn) {
-    void* result = NULL;
-#if OMG_WIN_BETTER_LIBRARY_LOAD
-    wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
-    if (OMG_ISNOTNULL(out_buf)) {
-        int res = MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)(fn->len * 4));
-        if (res > 0) {
-            // TODO: fn->len or res?
-            out_buf[res] = L'\0';
-            result = (void*)LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
-        }
-        HeapFree(GetProcessHeap(), 0, out_buf);
-    }
-#endif
-    if (OMG_ISNULL(result)) {
-        omg_string_ensure_null((OMG_String*)fn);
-        result = (void*)LoadLibraryExA(fn->ptr, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
-    }
-    return result;
-}
-
-void* omg_win_std_lib_func(void* lib, const OMG_String* func_name) {
-    omg_string_ensure_null((OMG_String*)func_name);
-    OMG_BEGIN_POINTER_CAST();
-    return (void*)((size_t)GetProcAddress((HMODULE)lib, func_name->ptr));
-    OMG_END_POINTER_CAST();
-}
-
-bool omg_win_std_lib_free(void* lib) {
-    return (bool)FreeLibrary((HMODULE)lib);
 }
 
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {

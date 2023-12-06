@@ -1,5 +1,12 @@
 #include <omega/winapi.h>
 
+#if OMG_IS_WIN
+
+#if OMG_WIN_BETTER_LIBRARY_LOAD
+#include <stringapiset.h>
+#include <heapapi.h>
+#endif
+
 #define LOAD_SYSTEM_LIBRARY(lib_path) LoadLibraryExW(lib_path, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL | LOAD_LIBRARY_SEARCH_SYSTEM32)
 #if OMG_WINAPI_DYNAMIC
 // TODO: fail check
@@ -13,7 +20,6 @@
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
 #endif
 
-#if OMG_IS_WIN
 bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
 #if OMG_WINAPI_DYNAMIC
     this->handle = LOAD_SYSTEM_LIBRARY(L"kernel32.dll");
@@ -76,5 +82,37 @@ bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
     OMG_UNUSED(this);
     return false;
 #endif
+}
+
+void* omg_win_std_lib_load(const OMG_String* fn) {
+    void* result = NULL;
+#if OMG_WIN_BETTER_LIBRARY_LOAD
+    wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
+    if (OMG_ISNOTNULL(out_buf)) {
+        int res = MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)(fn->len * 4));
+        if (res > 0) {
+            // TODO: fn->len or res?
+            out_buf[res] = L'\0';
+            result = (void*)LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+        }
+        HeapFree(GetProcessHeap(), 0, out_buf);
+    }
+#endif
+    if (OMG_ISNULL(result)) {
+        omg_string_ensure_null((OMG_String*)fn);
+        result = (void*)LoadLibraryExA(fn->ptr, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+    }
+    return result;
+}
+
+void* omg_win_std_lib_func(void* lib, const OMG_String* func_name) {
+    omg_string_ensure_null((OMG_String*)func_name);
+    OMG_BEGIN_POINTER_CAST();
+    return (void*)((size_t)GetProcAddress((HMODULE)lib, func_name->ptr));
+    OMG_END_POINTER_CAST();
+}
+
+bool omg_win_std_lib_free(void* lib) {
+    return (bool)FreeLibrary((HMODULE)lib);
 }
 #endif

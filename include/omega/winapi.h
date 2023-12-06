@@ -10,6 +10,32 @@
 #include <windows.h>
 #endif
 
+#if OMG_WIN_PRECISE_ENCODING
+#define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { \
+    int _omg_temp_count = k32->MultiByteToWideChar(WIN_CP_UTF8, 0, str->ptr, str->len, NULL, 0); \
+    res = (_omg_temp_count > 0) ? (size_t)(_omg_temp_count) : 0; \
+} while (0)
+#define _OMG_WIN_GET_DECODE_SIZE(res, str, k32, n_len) do { \
+    int _omg_temp_count = k32->WideCharToMultiByte(WIN_CP_UTF8, 0, str, n_len, NULL, 0, NULL, NULL); \
+    res = (_omg_temp_count > 0) ? (size_t)(_omg_temp_count) : 0; \
+} while (0)
+#else
+#define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { res = ((size_t)(str->len)); } while (0)
+#define _OMG_WIN_GET_DECODE_SIZE(res, str, k32, n_len) do { res = ((size_t)(n_len) * 4); } while (0)
+#endif
+
+#define _OMG_WIN_FORMAT_ERROR(mem, k32, error, buffer, len_buf) do { \
+    buffer = _OMG_INTERNAL_MALLOC(mem, 128 * 1024); \
+    if (OMG_ISNULL(buffer)) { \
+        len_buf = 0; \
+        break; \
+    } \
+    len_buf = k32->FormatMessageW( \
+        OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM | OMG_WIN_FORMAT_MESSAGE_FROM_SYSTEM, \
+        NULL, error, 0, buffer, 32 * 1024, NULL \
+    ); \
+} while (0)
+
 #ifdef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define WIN_LOAD_IGNORE_CODE_AUTHZ_LEVEL LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #else
@@ -109,4 +135,7 @@ OMG_API bool omg_winapi_kernel32_load(OMG_Kernel32* this);
 OMG_API bool omg_winapi_kernel32_free(OMG_Kernel32* this);
 OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
 OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
+OMG_API void* omg_win_std_lib_load(const OMG_String* fn);
+OMG_API void* omg_win_std_lib_func(void* lib, const OMG_String* func_name);
+OMG_API bool omg_win_std_lib_free(void* lib);
 #endif
