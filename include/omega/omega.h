@@ -6,6 +6,7 @@
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
+#define OMG_OMEGA_TYPE_SDL2 1
 
 #define OMG_LOG_CATEGORY_INFO 1
 #define OMG_LOG_CATEGORY_WARN 2
@@ -17,6 +18,7 @@ typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
     void* unused;
+    bool (*default_init)(struct OMG_Omega* this);
     bool (*destroy)(struct OMG_Omega* this);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level);
     bool (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);

@@ -16,16 +16,17 @@ void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 0;
 #if 1
     this->omg = (OMG_Omega*)omg_win_create(data);
+#else
+    this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
     if (OMG_ISNULL(this->omg)) {
         this->exit_code = 1;
         return;
     }
-    if (omg_win_init((OMG_OmegaWin*)this->omg)) {
+    if (this->omg->default_init(this->omg)) {
         this->exit_code = 1;
         return;
     }
-#else
-#endif
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }

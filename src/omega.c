@@ -18,6 +18,7 @@ void omg_fill_on_create(OMG_Omega* this) {
     this->log_warn_str = NULL;
     this->log_error_str = NULL;
     this->log_fatal_str = NULL;
+    this->default_init = omg_init;
 }
 
 void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level) {
