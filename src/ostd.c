@@ -419,7 +419,7 @@ bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
     _OMG_WIN_GET_DECODE_SIZE(need_count, wstr_to_add, omg->k32, need_len);
     if ((need_count == 0) || omg_string_ensure_free_len(this, need_count))
         return true;
-    int res = omg->k32->WideCharToMultiByte(WIN_CP_UTF8, 0, wstr_to_add, need_len, this->ptr + this->len, need_count, NULL, NULL);
+    int res = omg->k32->WideCharToMultiByte(OMG_WIN_CP_UTF8, 0, wstr_to_add, need_len, this->ptr + this->len, need_count, NULL, NULL);
     if (res > 0) {
         this->len += (size_t)res;
         return false;

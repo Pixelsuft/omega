@@ -126,9 +126,12 @@
 #define OMG_BEGIN_POINTER_CAST() do { \
     _Pragma("GCC diagnostic push") \
     _Pragma("GCC diagnostic ignored \"-Wincompatible-pointer-types\"") \
+    _Pragma("GCC diagnostic push") \
+    _Pragma("GCC diagnostic ignored \"-Wpedantic\"") \
 } while (0)
 
 #define OMG_END_POINTER_CAST() do { \
+    _Pragma("GCC diagnostic pop") \
     _Pragma("GCC diagnostic pop") \
 } while (0)
 

@@ -12,7 +12,7 @@
         return true; \
     if (is_error) { \
         if (OMG_ISNULL(this->stderr_handle)) { \
-            this->stderr_handle = this->k32->GetStdHandle(WIN_STD_ERROR_HANDLE); \
+            this->stderr_handle = this->k32->GetStdHandle(OMG_WIN_STD_ERROR_HANDLE); \
             if (OMG_ISNULL(this->stderr_handle)) { \
                 return true; \
             } \
@@ -20,7 +20,7 @@
     } \
     else { \
         if (OMG_ISNULL(this->stdout_handle)) { \
-            this->stdout_handle = this->k32->GetStdHandle(WIN_STD_OUTPUT_HANDLE); \
+            this->stdout_handle = this->k32->GetStdHandle(OMG_WIN_STD_OUTPUT_HANDLE); \
             if (OMG_ISNULL(this->stdout_handle)) { \
                 return true; \
             } \
@@ -33,7 +33,7 @@
     wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20); \
     if (OMG_ISNULL(out_buf)) \
         return true; \
-    if (this->k32->MultiByteToWideChar(WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, (int)count) <= 0) { \
+    if (this->k32->MultiByteToWideChar(OMG_WIN_CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, (int)count) <= 0) { \
         OMG_FREE(base->mem, out_buf); \
         return true; \
     } \
@@ -68,9 +68,9 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
 
 void omg_win_attach_console(OMG_OmegaWin* this) {
     if (this->con_result == 0) {
-        BOOL attach_res = this->k32->AttachConsole(WIN_ATTACH_PARENT_PROCESS);
+        BOOL attach_res = this->k32->AttachConsole(OMG_WIN_ATTACH_PARENT_PROCESS);
         if (!attach_res) {
-            if (this->k32->GetLastError() == WIN_ERROR_ACCESS_DENIED)
+            if (this->k32->GetLastError() == OMG_WIN_ERROR_ACCESS_DENIED)
                 this->con_result = 1;
             else {
                 if (!this->k32->AllocConsole()) {

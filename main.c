@@ -30,6 +30,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     OMG_Sdl2* sdl2 = OMG_MALLOC(this->omg->mem, sizeof(OMG_Sdl2));
     omg_sdl2_dll_load(sdl2, NULL);
+    OMG_INFO(this->omg, "SDL Version: ", (int)sdl2->ver.major, ".", (int)sdl2->ver.minor, ".", (int)sdl2->ver.patch);
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     omg_sdl2_dll_free(sdl2);
     OMG_FREE(this->omg->mem, sdl2);
