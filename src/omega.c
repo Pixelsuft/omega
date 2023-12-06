@@ -11,7 +11,16 @@ OMG_Omega* omg_create(OMG_EntryData* data) {
     return NULL;
 }
 
-void omg_log_set_level(struct OMG_Omega* this, const int log_level, const int omg_log_level) {
+void omg_fill_on_create(OMG_Omega* this) {
+    this->mem = NULL;
+    this->log_level = this->log_level_omg = -1;
+    this->log_info_str = NULL;
+    this->log_warn_str = NULL;
+    this->log_error_str = NULL;
+    this->log_fatal_str = NULL;
+}
+
+void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level) {
     if (log_level >= 0)
         this->log_level = log_level;
     if (omg_log_level >= 0)
@@ -39,7 +48,13 @@ bool omg_init(OMG_Omega* this) {
         this->log_level_omg = OMG_LOG_OMG_MIN_LEVEL;
     // TODO: probably also handle long functions
     if (OMG_ISNULL(this->log_info_str))
-        this->log_info_str = this->log_warn_str = this->log_error_str = this->log_fatal_str = omg_log_info_str;
+        this->log_info_str = omg_log_info_str;
+    if (OMG_ISNULL(this->log_warn_str))
+        this->log_warn_str = omg_log_info_str;
+    if (OMG_ISNULL(this->log_error_str))
+        this->log_error_str = omg_log_info_str;
+    if (OMG_ISNULL(this->log_fatal_str))
+        this->log_fatal_str = omg_log_info_str;
     this->log_set_level = omg_log_set_level;
     this->destroy = omg_destroy;
     omg_def_omega = this;

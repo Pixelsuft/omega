@@ -136,7 +136,7 @@
 
 typedef struct {
     size_t size;
-     // Technically, we should also include utf-8 size for things like utf-16 convertion, but Microsoft sucks
+    // Technically, we should also include utf-8 size for things like utf-16 convertion, but Microsoft sucks
     size_t len;
     int type;
     char* ptr;
