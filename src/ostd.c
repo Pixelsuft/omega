@@ -404,10 +404,13 @@ bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
     if (OMG_ISNULL(omg) || (((OMG_Omega*)omg)->type != OMG_OMEGA_TYPE_WIN))
         return true;
     size_t need_len = omg_def_std->wcslen(wstr_to_add);
-    if (omg_string_ensure_free_len(this, need_len))
+    size_t need_count;
+    _OMG_WIN_GET_DECODE_SIZE(need_count, wstr_to_add, omg->k32, need_len);
+    if ((need_count == 0) || omg_string_ensure_free_len(this, need_count))
         return true;
-    if (omg->k32->WideCharToMultiByte(WIN_CP_UTF8, 0, wstr_to_add, need_len, this->ptr + this->len, need_len, NULL, NULL) > 0) {
-        this->len += need_len;
+    int res = omg->k32->WideCharToMultiByte(WIN_CP_UTF8, 0, wstr_to_add, need_len, this->ptr + this->len, need_count, NULL, NULL);
+    if (res > 0) {
+        this->len += (size_t)res;
         return false;
     }
     return true;

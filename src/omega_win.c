@@ -30,7 +30,10 @@
             } \
         } \
     } \
-    size_t count = data->len; \
+    size_t count; \
+    _OMG_WIN_GET_ENCODE_SIZE(count, data, this->k32); \
+    if (count == 0) \
+        return true; \
     wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20); \
     if (OMG_ISNULL(out_buf)) \
         return true; \
@@ -60,10 +63,12 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
 void* omg_win_std_lib_load(const OMG_String* fn) {
     void* result = NULL;
 #if OMG_WIN_BETTER_LIBRARY_LOAD
-    wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 2 + 2);
+    wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
     if (OMG_ISNOTNULL(out_buf)) {
-        if (MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)fn->len) > 0) {
-            out_buf[fn->len] = L'\0';
+        int res = MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)(fn->len * 4));
+        if (res > 0) {
+            // TODO: fn->len or res?
+            out_buf[res] = L'\0';
             result = (void*)LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
         }
         HeapFree(GetProcessHeap(), 0, out_buf);

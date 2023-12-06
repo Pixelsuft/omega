@@ -4,6 +4,20 @@
 #if OMG_SUPPORT_WIN
 #include <omega/winapi.h>
 
+#if OMG_WIN_PRECISE_ENCODING
+#define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { \
+    int _omg_temp_count = k32->MultiByteToWideChar(CP_UTF8, 0, str->ptr, str->len, NULL, 0); \
+    res = (_omg_temp_count > 0) ? (size_t)(_omg_temp_count) : 0; \
+} while (0)
+#define _OMG_WIN_GET_DECODE_SIZE(res, str, k32, n_len) do { \
+    int _omg_temp_count = k32->WideCharToMultiByte(WIN_CP_UTF8, 0, str, n_len, NULL, 0, NULL, NULL); \
+    res = (_omg_temp_count > 0) ? (size_t)(_omg_temp_count) : 0; \
+} while (0)
+#else
+#define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { res = ((size_t)(str->len)); } while (0)
+#define _OMG_WIN_GET_DECODE_SIZE(res, str, k32, n_len) do { res = ((size_t)(n_len) * 4); } while (0)
+#endif
+
 #define _OMG_WIN_FORMAT_ERROR(mem, k32, error, buffer, len_buf) do { \
     buffer = _OMG_INTERNAL_MALLOC(mem, 128 * 1024); \
     if (OMG_ISNULL(buffer)) { \
