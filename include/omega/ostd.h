@@ -16,8 +16,8 @@
 #define OMG_STRING_DYNAMIC 3
 #define OMG_STRING_CHUNK_SIZE_OFFSET 4
 #define OMG_STRING_CHUNK_SIZE (2 << OMG_STRING_CHUNK_SIZE_OFFSET)
-#define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_std_strlen(char_ptr), .size = omg_std_strlen(char_ptr) + 1, .ptr = char_ptr })
-#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_strlen(char_ptr), .size = omg_std_strlen(char_ptr) + 1, .ptr = char_ptr })
+#define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = char_ptr })
+#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = char_ptr })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
 #define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? ((((str_len) >> OMG_STRING_CHUNK_SIZE_OFFSET) + 1) << OMG_STRING_CHUNK_SIZE_OFFSET) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
 
@@ -170,6 +170,7 @@ typedef struct {
 OMG_API OMG_Std* omg_std_get_default_handle(void);
 OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
+OMG_API size_t omg_std_static_strlen(const char* src);
 OMG_API size_t omg_std_strlen(const char* src);
 OMG_API void omg_std_str_reverse(char* str, size_t length);
 OMG_API bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base);

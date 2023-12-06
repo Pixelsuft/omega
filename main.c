@@ -3,6 +3,7 @@
 #include <omega/winapi.h>
 #include <omega/omega_win.h>
 #include <omega/memory_win.h>
+#include <omega/sdl2.h>
 
 typedef struct {
     OMG_Omega* omg;
@@ -27,7 +28,11 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
+    OMG_Sdl2* sdl2 = OMG_MALLOC(this->omg->mem, sizeof(OMG_Sdl2));
+    omg_sdl2_dll_load(sdl2, NULL);
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    omg_sdl2_dll_free(sdl2);
+    OMG_FREE(this->omg->mem, sdl2);
     this->omg->destroy(this->omg);
 }
 

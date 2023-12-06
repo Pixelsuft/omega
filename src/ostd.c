@@ -86,6 +86,17 @@ size_t omg_std_strnlen(const char* src, size_t max_len) {
 }
 #endif
 
+size_t omg_std_static_strlen(const char* src) {
+    if (OMG_ISNULL(src))
+        return 0;
+    if (OMG_ISNOTNULL(omg_def_std))
+        return omg_def_std->strlen(src);
+    char* temp_counter = (char*)src;
+    while (*temp_counter)
+        temp_counter++;
+    return (size_t)temp_counter - (size_t)src;
+}
+
 size_t omg_std_wcslen(const wchar_t* src) {
     if (OMG_ISNULL(src))
         return 0;
