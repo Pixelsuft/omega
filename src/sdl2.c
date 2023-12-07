@@ -29,6 +29,28 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
 #endif
     LOAD_REQUIRED(SDL_Init);
     LOAD_REQUIRED(SDL_Quit);
+    LOAD_REQUIRED(SDL_memset);
+    LOAD_REQUIRED(SDL_memcpy);
+    LOAD_REQUIRED(SDL_memmove);
+    LOAD_REQUIRED(SDL_memcmp);
+    LOAD_REQUIRED(SDL_strlen);
+    LOAD_REQUIRED(SDL_utf8strlen);
+    LOAD_REQUIRED(SDL_utf8strnlen);
+    LOAD_REQUIRED(SDL_strrev);
+    LOAD_REQUIRED(SDL_itoa);
+    LOAD_REQUIRED(SDL_ltoa);
+    LOAD_REQUIRED(SDL_uitoa);
+    LOAD_REQUIRED(SDL_ultoa);
+    LOAD_REQUIRED(SDL_lltoa);
+    LOAD_REQUIRED(SDL_ulltoa);
+    LOAD_REQUIRED(SDL_wcslen);
+    LOAD_REQUIRED(SDL_malloc);
+    LOAD_REQUIRED(SDL_realloc);
+    LOAD_REQUIRED(SDL_free);
+    LOAD_REQUIRED(SDL_LogInfo);
+    LOAD_REQUIRED(SDL_LogWarn);
+    LOAD_REQUIRED(SDL_LogError);
+    LOAD_REQUIRED(SDL_LogCritical);
     OMG_END_POINTER_CAST();
     return false;
 }
