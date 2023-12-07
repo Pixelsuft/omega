@@ -129,9 +129,11 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 }
 
 void omg_win_fill_std(OMG_OmegaWin* this) {
-    base->std->lib_load = omg_win_std_lib_load;
+    OMG_UNUSED(this);
+    // TODO
+    /* base->std->lib_load = omg_win_std_lib_load;
     base->std->lib_func = omg_win_std_lib_func;
-    base->std->lib_free = omg_win_std_lib_free;
+    base->std->lib_free = omg_win_std_lib_free; */
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {

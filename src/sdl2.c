@@ -2,10 +2,8 @@
 #if OMG_SUPPORTS_SDL2
 #include <omega/ostd.h>
 #if OMG_SDL2_DYNAMIC
-#if OMG_IS_WIN
-#include <omega/winapi.h>
-#define LOAD_REQUIRED(func_name) this->func_name = (omg_win_std_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
-#endif
+#include <omega/staticapi.h>
+#define LOAD_REQUIRED(func_name) this->func_name = (omg_static_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
@@ -14,9 +12,9 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
 #if OMG_SDL2_DYNAMIC
 #if OMG_IS_WIN
     if (OMG_ISNULL(dll_path))
-        this->handle = omg_win_std_lib_load(&OMG_STRING_MAKE_STATIC("SDL2.dll"), L"SDL2.dll");
+        this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("SDL2.dll"), L"SDL2.dll");
     else
-        this->handle = omg_win_std_lib_load(dll_path, NULL);
+        this->handle = omg_static_lib_load(dll_path, NULL);
 #endif
     if (OMG_ISNULL(this->handle))
         return true;
@@ -37,10 +35,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
 
 bool omg_sdl2_dll_free(OMG_Sdl2* this) {
 #if OMG_SDL2_DYNAMIC
-#if OMG_IS_WIN
-    return omg_win_std_lib_free(this->handle);
-#endif
-    return true;
+    return omg_static_lib_free(this->handle);
 #else
     OMG_UNUSED(this);
     return false;
