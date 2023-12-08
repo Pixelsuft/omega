@@ -129,7 +129,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 }
 
 void omg_win_fill_std(OMG_OmegaWin* this) {
-    OMG_UNUSED(this);
+    base->std->memory_allocator = base->mem;
     // TODO
     /* base->std->lib_load = omg_win_std_lib_load;
     base->std->lib_func = omg_win_std_lib_func;
@@ -153,8 +153,10 @@ bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_win_create(this, this->k32);
         if (OMG_ISNULL(base->mem)) {
-            omg_winapi_kernel32_free(this->k32);
-            this->k32 = NULL;
+            if (this->should_free_k32) {
+                omg_winapi_kernel32_free(this->k32);
+                this->k32 = NULL;
+            }
             return true;
         }
         base->should_free_mem = true;
@@ -165,12 +167,13 @@ bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->std)) {
         base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
         if (OMG_ISNULL(base->std)) {
-            omg_winapi_kernel32_free(this->k32);
-            this->k32 = NULL;
+            if (this->should_free_k32) {
+                omg_winapi_kernel32_free(this->k32);
+                this->k32 = NULL;
+            }
             return true;
         }
         omg_std_fill_defaults(base->std);
-        base->std->memory_allocator = base->mem;
         omg_std_set_default_handle(base->std);
         omg_win_fill_std(this);
         base->should_free_std = true;
