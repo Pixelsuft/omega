@@ -143,9 +143,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
             return true;
         this->should_free_k32 = true;
     }
-    else {
+    else
         this->should_free_k32 = false;
-    }
     OMG_BEGIN_POINTER_CAST();
     omg_init(this);
     base->type = OMG_OMEGA_TYPE_WIN;
@@ -161,9 +160,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
         }
         base->should_free_mem = true;
     }
-    else {
+    else
         base->should_free_mem = false;
-    }
     if (OMG_ISNULL(base->std)) {
         base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
         if (OMG_ISNULL(base->std)) {
@@ -178,9 +176,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
         omg_win_fill_std(this);
         base->should_free_std = true;
     }
-    else {
+    else
         base->should_free_std = false;
-    }
     if (OMG_ISNULL(this->nt)) {
         this->nt = OMG_MALLOC(base->mem, sizeof(OMG_Ntdll));
         if (OMG_ISNULL(this->nt)) {
@@ -200,9 +197,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
         }
         this->should_free_ntdll = true;
     }
-    else {
+    else
         this->should_free_ntdll = false;
-    }
     NTDLL_OSVERSIONINFOEXW os_ver_info;
     os_ver_info.dwOSVersionInfoSize = sizeof(NTDLL_OSVERSIONINFOEXW);
     this->nt->RtlGetVersion(&os_ver_info);

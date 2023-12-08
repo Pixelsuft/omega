@@ -98,12 +98,20 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     }
     else
         this->should_free_sdl2 = false;
+    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
+        if (this->should_free_sdl2) {
+            omg_sdl2_dll_free(this->sdl2);
+            this->sdl2 = NULL;
+        }
+        return true;
+    }
     OMG_BEGIN_POINTER_CAST();
     omg_init(this);
     base->type = OMG_OMEGA_TYPE_SDL2;
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_sdl2_create(this, this->sdl2);
         if (OMG_ISNULL(base->mem)) {
+            this->sdl2->SDL_Quit();
             if (this->should_free_sdl2) {
                 omg_sdl2_dll_free(this->sdl2);
                 this->sdl2 = NULL;
@@ -117,6 +125,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     if (OMG_ISNULL(base->std)) {
         base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
         if (OMG_ISNULL(base->std)) {
+            this->sdl2->SDL_Quit();
             if (this->should_free_sdl2) {
                 omg_sdl2_dll_free(this->sdl2);
                 this->sdl2 = NULL;
@@ -128,17 +137,14 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
         omg_sdl2_fill_std(this);
         base->should_free_std = true;
     }
-    else {
+    else
         base->should_free_std = false;
-    }
     base->log_info_str = omg_sdl2_log_info_str;
     base->log_warn_str = omg_sdl2_log_warn_str;
     base->log_error_str = omg_sdl2_log_error_str;
     base->log_fatal_str = omg_sdl2_log_fatal_str;
     base->destroy = omg_sdl2_destroy;
     OMG_END_POINTER_CAST();
-    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0)
-        return true;
     this->inited = true;
     _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
     return false;
