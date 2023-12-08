@@ -2,6 +2,9 @@
 #include <omega/config.h>
 #include <omega/ostd.h>
 
+#define _OMG_MEMORY_ALLOC_INFO(extra) "Allocation info: at file ", (extra)->filename, ", in line ", (uint32_t)((extra)->line), ", at function ", (extra)->func
+#define _OMG_MEMORY_NULL_FREE_WARN "Attempted to free null ptr"
+
 #if OMG_DEBUG
 typedef struct {
     size_t size;

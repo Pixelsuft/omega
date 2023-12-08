@@ -15,6 +15,7 @@ bool omg_memory_win_destroy(OMG_MemoryWin* this) {
     bool result = false;
     HANDLE heap = this->heap;
     OMG_Kernel32* k32 = this->k32;
+    base->is_allocated = false;
     if (!k32->HeapFree(heap, 0, this))
         result = true;
     if (!k32->HeapDestroy(heap))
@@ -39,7 +40,7 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
                 _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory (Error Code - ", error, ")");
             if (OMG_ISNOTNULL(w_error_buffer))
                 OMG_FREE((OMG_Memory*)this, w_error_buffer);
-            _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
+            _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(&extra));
         }
         return NULL;
     }
@@ -74,10 +75,6 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
     size_t size_before = real_ptr->size;
     OMG_MemoryExtra* new_ptr = this->k32->HeapReAlloc(this->heap, 0, real_ptr, size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(new_ptr)) {
-        /*if (base->alloc_size >= size_before)
-            base->alloc_size -= size_before;
-        if (base->alloc_count > 0)
-            base->alloc_count--;*/
         if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(real_ptr->func)) {
             DWORD error = this->k32->GetLastError();
             DWORD res;
@@ -91,7 +88,7 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
                 _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory (Error Code - ", error, ")");
             if (OMG_ISNOTNULL(w_error_buffer))
                 OMG_FREE((OMG_Memory*)this, w_error_buffer);
-            _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", real_ptr->filename, ", in line ", (uint32_t)real_ptr->line, ", at function ", real_ptr->func);
+            _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(real_ptr));
         }
         return NULL;
     }
@@ -111,13 +108,19 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
 
 bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
 #if OMG_DEBUG
-    if (OMG_ISNULL(ptr))
+    if (OMG_ISNULL(ptr)) {
+        _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
+    }
     OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
-    if (OMG_ISNULL(real_ptr))
+    if (OMG_ISNULL(real_ptr)) {
+        _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
-    if (!real_ptr->is_allocated)
+    }
+    if (!real_ptr->is_allocated) {
+        _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
+    }
     real_ptr->is_allocated = false;
     OMG_MemoryExtra data = *real_ptr;
     if (this->k32->HeapFree(this->heap, 0, real_ptr)) {
@@ -140,7 +143,7 @@ bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
             _OMG_LOG_ERROR(omg_base, "Failed to free ", (uint32_t)data.size, " bytes of memory (Error Code - ", error, ")");
         if (OMG_ISNOTNULL(w_error_buffer))
             OMG_FREE((OMG_Memory*)this, w_error_buffer);
-        _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", data.filename, ", in line ", (uint32_t)data.line, ", at function ", data.func);
+        _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(&data));
     }
     return true;
 #else

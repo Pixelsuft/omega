@@ -37,6 +37,7 @@ void app_init(App* this, OMG_EntryData* data) {
     buf[0] = 1;
     buf[1] = 2;
     buf[2] = 3;
+    OMG_INFO(this->omg, buf[0], ", ", buf[1], ", ", buf[2]);
     OMG_FREE(mem, buf);
     OMG_INFO(this->omg, "SDL Version: ", (int)sdl2->ver.major, ".", (int)sdl2->ver.minor, ".", (int)sdl2->ver.patch);
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);

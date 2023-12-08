@@ -6,6 +6,7 @@
 #define omg_base ((OMG_Omega*)this->omg)
 
 bool omg_memory_sdl2_destroy(OMG_MemorySdl2* this) {
+    base->is_allocated = false;
     this->sdl2->SDL_free(this);
     return false;
 }
@@ -16,7 +17,7 @@ void* omg_memory_sdl2_alloc(OMG_MemorySdl2* this, OMG_MemoryExtra extra) {
     if (OMG_ISNULL(result)) {
         if (OMG_ISNOTNULL(extra.func)) {
             _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory");
-            _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", extra.filename, ", in line ", (uint32_t)extra.line, ", at function ", extra.func);
+            _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(&extra));
         }
         return NULL;
     }
@@ -51,7 +52,7 @@ void* omg_memory_sdl2_realloc(OMG_MemorySdl2* this, void* ptr, size_t size) {
     if (OMG_ISNULL(new_ptr)) {
         if (OMG_ISNOTNULL(real_ptr->func)) {
             _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory");
-            _OMG_LOG_ERROR(omg_base, "Allocation info: at file ", real_ptr->filename, ", in line ", (uint32_t)real_ptr->line, ", at function ", real_ptr->func);
+            _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(real_ptr));
         }
         return NULL;
     }
@@ -69,12 +70,30 @@ void* omg_memory_sdl2_realloc(OMG_MemorySdl2* this, void* ptr, size_t size) {
 }
 
 bool omg_memory_sdl2_free(OMG_MemorySdl2* this, void* ptr) {
+#if OMG_DEBUG
     if (OMG_ISNULL(ptr)) {
-        // TODO: warn
-        return false;
+        _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
+        return true;
     }
+    OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
+    if (OMG_ISNULL(real_ptr)) {
+        _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
+        return true;
+    }
+    if (!real_ptr->is_allocated) {
+        _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
+        return true;
+    }
+    real_ptr->is_allocated = false;
+    OMG_MemoryExtra data = *real_ptr;
+    this->sdl2->SDL_free(real_ptr);
+    if (base->alloc_size >= data.size)
+        base->alloc_size -= data.size;
+    return false;
+#else
     this->sdl2->SDL_free(ptr);
     return false;
+#endif
 }
 
 OMG_MemorySdl2* omg_memory_sdl2_create(void* omg, OMG_Sdl2* sdl2) {
