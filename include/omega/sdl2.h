@@ -54,6 +54,7 @@ typedef struct {
     void (*SDL_LogWarn)(int, const char*, ...);
     void (*SDL_LogError)(int, const char*, ...);
     void (*SDL_LogCritical)(int, const char*, ...);
+    const char* (*SDL_GetError)(void);
     SDL_version ver;
 } OMG_Sdl2;
 

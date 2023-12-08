@@ -51,6 +51,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_LogWarn);
     LOAD_REQUIRED(SDL_LogError);
     LOAD_REQUIRED(SDL_LogCritical);
+    LOAD_REQUIRED(SDL_GetError);
     OMG_END_POINTER_CAST();
     return false;
 }

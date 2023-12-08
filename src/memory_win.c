@@ -52,7 +52,6 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
     base->alloc_size += extra.size;
     return (void*)((size_t)result + sizeof(OMG_MemoryExtra));
 #else
-    OMG_UNUSED(extra);
     void* result = this->k32->HeapAlloc(this->heap, 0, (size_t)extra);
     if (OMG_ISNULL(result)) {
         DWORD error = this->k32->GetLastError();
@@ -175,7 +174,6 @@ OMG_MemoryWin* omg_memory_win_create(void* omg, OMG_Kernel32* k32) {
     this->k32 = k32;
     this->omg = omg;
     this->heap = heap;
-    base->alloc_count = 0;
     base->is_allocated = true;
     return this;
 }
