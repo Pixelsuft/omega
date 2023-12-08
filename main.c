@@ -1,6 +1,5 @@
 #include <omega/omega.h>
 #include <omega/entry.h>
-#include <omega/winapi.h>
 #include <omega/omega_win.h>
 #include <omega/omega_sdl2.h>
 

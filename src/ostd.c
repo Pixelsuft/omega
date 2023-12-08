@@ -20,7 +20,6 @@ static const char ntoa_table[] = {
 };
 static OMG_Std* omg_def_std = NULL;
 
-#if OMG_IMPL_BASIC_STD_FUNCS
 void* omg_std_memset(void* dst, register int val, register size_t len) {
     register unsigned char *ptr = (unsigned char*)dst;
     while (len-- > 0)
@@ -84,7 +83,6 @@ size_t omg_std_strnlen(const char* src, size_t max_len) {
         temp_counter++;
     return (size_t)temp_counter - (size_t)src;
 }
-#endif
 
 size_t omg_std_static_strlen(const char* src) {
     if (OMG_ISNULL(src))
@@ -236,14 +234,13 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->lib_load = omg_std_lib_load; // TODO: these 3
     this->lib_func = omg_std_lib_func;
     this->lib_free = omg_std_lib_free;
-#if OMG_IMPL_BASIC_STD_FUNCS
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
     this->memmove = omg_std_memmove;
     this->memcmp = omg_std_memcmp;
     this->strlen = omg_std_strlen;
     this->strnlen = omg_std_strnlen;
-#else
+#if OMG_HAS_STD
     this->memset = memset;
     this->memcpy = memcpy;
     this->memmove = memmove;
