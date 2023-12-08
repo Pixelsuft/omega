@@ -4,7 +4,7 @@
 
 #if OMG_ENTRY
 // Somewhy SDL2_main doesn't work for me on shitdows with mingw :(
-#if OMG_IS_WIN && !(OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORTS_SDL2_MAIN && OMG_IS_VC)
+#if OMG_IS_WIN && !(OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORT_SDL2_MAIN && OMG_IS_VC)
 #include <omega/winapi.h>
 
 typedef struct {
@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdsh
     return main_func(&entry_data); \
 }
 #else
-#if OMG_IS_WIN && OMG_SUPPORTS_SDL2 && OMG_SUPPORTS_SDL2_MAIN && !OMG_SDL2_DYNAMIC && !OMG_IS_VC && OMG_HAS_STD
+#if OMG_IS_WIN && OMG_SUPPORT_SDL2 && OMG_SUPPORT_SDL2_MAIN && !OMG_SDL2_DYNAMIC && !OMG_IS_VC && OMG_HAS_STD
 #define SDL_MAIN_HANDLED
 #endif
 typedef struct {
