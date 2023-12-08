@@ -4,6 +4,7 @@
 .cache
 __pycache__
 SDL2
+raylib
 CMakeCache
 build
 Release
