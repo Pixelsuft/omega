@@ -65,7 +65,37 @@ bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
     return false;
 }
 
-bool omg_sdl2_init(OMG_OmegaSdl2* this) {
+bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
+    bool result = false;
+    if (base->should_free_std) {
+        result = OMG_FREE(base->mem, base->std) || result;
+        base->std = NULL;
+    }
+    if (base->should_free_mem) {
+        result = base->mem->destroy(base->mem) || result;
+        base->mem = NULL;
+    }
+    if (this->should_free_sdl2) {
+        result = omg_sdl2_dll_free(this->sdl2) || result;
+        this->sdl2 = NULL;
+    }
+    omg_destroy((OMG_Omega*)this);
+    return result;
+}
 
+bool omg_sdl2_init(OMG_OmegaSdl2* this) {
+    if (OMG_ISNULL(this->sdl2)) {
+        this->sdl2 = &this->sdl2_stk;
+        if (omg_sdl2_dll_load(this->sdl2, NULL))
+            return true;
+        this->should_free_sdl2 = true;
+    }
+    else
+        this->should_free_sdl2 = false;
+    OMG_BEGIN_POINTER_CAST();
+    omg_init(this);
+    base->type = OMG_OMEGA_TYPE_SDL2;
+    OMG_END_POINTER_CAST();
+    return false;
 }
 #endif

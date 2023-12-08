@@ -15,6 +15,7 @@ OMG_API OMG_OmegaSdl2* omg_sdl2_create(OMG_EntryData* data);
 OMG_API bool omg_sdl2_init(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_fill_std(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this);
+OMG_API bool omg_sdl2_destroy(OMG_OmegaSdl2* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data);
 OMG_API bool omg_sdl2_log_warn_str(OMG_OmegaSdl2* this, const OMG_String* data);
