@@ -42,11 +42,30 @@ typedef struct {
     char** argv;
 } OMG_EntryData;
 
+#if OMG_IS_UNIX && !OMG_HAS_STD
+// https://stackoverflow.com/questions/2572988/what-can-you-do-in-c-without-std-includes-are-they-part-of-c-or-just-libra
+// https://gist.github.com/tcoppex/443d1dd45f873d96260195d6431b0989
+// https://www.reddit.com/r/C_Programming/comments/se3kgi/hello_world_without_libc/?rdt=49181
+#define OMG_MAKE_MAIN(main_func) void _start(void) { \
+    OMG_EntryData entry_data; \
+    entry_data.argc = 0; \
+    entry_data.argv = NULL; \
+    main_func(&entry_data); \
+    /*asm volatile \
+    ( \
+        "syscall" \
+        :  \
+        : "a"(60), "D"(_omg_exit_code) \
+        : "rcx", "r11", "memory" \
+    ); \*/
+}
+#else
 #define OMG_MAKE_MAIN(main_func) int main(int argc, char* argv[]) { \
     OMG_EntryData entry_data; \
     entry_data.argc = argc; \
     entry_data.argv = argv; \
     return main_func(&entry_data); \
 }
+#endif
 #endif
 #endif

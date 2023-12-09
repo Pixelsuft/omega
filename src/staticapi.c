@@ -7,6 +7,7 @@
 #endif
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
+    return NULL;
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
     OMG_UNUSED(adv_fn);
     omg_string_ensure_null((OMG_String*)fn);
