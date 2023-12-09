@@ -1,9 +1,10 @@
 #include <omega/staticapi.h>
-#if OMG_IS_WIN
-#include <omega/winapi.h>
-#endif
-#if OMG_SUPPORTS_SDL2
+#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
 #include <omega/sdl2.h>
+#elif OMG_IS_WIN
+#include <omega/winapi.h>
+#elif OMG_IS_UNIX && OMG_HAS_STD
+#include <dlfcn.h>
 #endif
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
@@ -36,6 +37,10 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
         result = (void*)LoadLibraryExA(fn->ptr, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
     }
     return result;
+#elif OMG_IS_UNIX && OMG_HAS_STD
+    OMG_UNUSED(adv_fn);
+    omg_string_ensure_null((OMG_String*)fn);
+    return dlopen(fn->ptr, RTLD_GLOBAL);
 #else
     OMG_UNUSED(fn, adv_fn);
     return NULL;
@@ -51,6 +56,9 @@ void* omg_static_lib_func(void* lib, const OMG_String* func_name) {
     OMG_BEGIN_POINTER_CAST();
     return (void*)((size_t)GetProcAddress((HMODULE)lib, func_name->ptr));
     OMG_END_POINTER_CAST();
+#elif OMG_IS_UNIX && OMG_HAS_STD
+    omg_string_ensure_null((OMG_String*)func_name);
+    return dlsym(lib, func_name->ptr);
 #else
     OMG_UNUSED(lib, func_name);
     return NULL;
@@ -63,6 +71,8 @@ bool omg_static_lib_free(void* lib) {
     return false;
 #elif OMG_IS_WIN
     return (bool)FreeLibrary((HMODULE)lib);
+#elif OMG_IS_UNIX && OMG_HAS_STD
+    return (bool)dlclose(lib);
 #else
     OMG_UNUSED(lib);
     return true;
