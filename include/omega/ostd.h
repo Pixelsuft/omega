@@ -6,6 +6,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #endif
+#if OMG_IS_UNIX
+#include <stddef.h>
+#endif
 
 #define OMG_ISNULL(ptr) (ptr == NULL)
 #define OMG_ISNOTNULL(ptr) (ptr != NULL)

@@ -13,6 +13,7 @@ x86
 x64
 x32
 push.bat
+omgapp
 *.stackdump
 *.zip
 *.tar
@@ -20,4 +21,5 @@ push.bat
 *.xz
 *.7z
 *.dll
+*.so
 *.exe

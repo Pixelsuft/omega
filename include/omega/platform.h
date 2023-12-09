@@ -42,17 +42,23 @@
 #define OMG_IS_CMAKE 0
 #endif
 
+#if !OMG_IS_WIN && !OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID
+#define OMG_IS_UNIX 1
+#else
+#define OMG_IS_UNIX 0
+#endif
+
 #if IS_CPP
 #define OMG_C_EXPORT extern "C"
 #else
 #define OMG_C_EXPORT
 #endif
 
-#ifdef OMG_IS_VC
-#ifdef OMG_DLL_BUILD
+#if OMG_IS_WIN
+#if OMG_DLL_BUILD
 #define OMG_API OMG_C_EXPORT __declspec(dllexport)
 #else
-#ifdef OMG_STATIC
+#if OMG_STATIC
 #define OMG_API OMG_C_EXPORT
 #else
 #define OMG_API OMG_C_EXPORT __declspec(dllimport)

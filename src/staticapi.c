@@ -1,5 +1,4 @@
 #include <omega/staticapi.h>
-
 #if OMG_IS_WIN
 #include <omega/winapi.h>
 #endif
@@ -9,6 +8,7 @@
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+    OMG_UNUSED(adv_fn);
     omg_string_ensure_null((OMG_String*)fn);
     return SDL_LoadObject(fn->ptr);
 #elif OMG_IS_WIN
@@ -36,6 +36,7 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
     }
     return result;
 #else
+    OMG_UNUSED(fn, adv_fn);
     return NULL;
 #endif
 }
@@ -50,6 +51,7 @@ void* omg_static_lib_func(void* lib, const OMG_String* func_name) {
     return (void*)((size_t)GetProcAddress((HMODULE)lib, func_name->ptr));
     OMG_END_POINTER_CAST();
 #else
+    OMG_UNUSED(lib, func_name);
     return NULL;
 #endif
 }
@@ -61,6 +63,7 @@ bool omg_static_lib_free(void* lib) {
 #elif OMG_IS_WIN
     return (bool)FreeLibrary((HMODULE)lib);
 #else
+    OMG_UNUSED(lib);
     return true;
 #endif
 }

@@ -424,7 +424,7 @@ bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
     return true;
 #else
     // TODO: non-weendoes way
-    UNUSED(this, wstr_to_add);
+    OMG_UNUSED(this, wstr_to_add);
     return true;
 #endif
 }
