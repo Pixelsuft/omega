@@ -8,7 +8,6 @@
 #endif
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
-    return NULL;
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
     OMG_UNUSED(adv_fn);
     omg_string_ensure_null((OMG_String*)fn);
@@ -40,7 +39,7 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #elif OMG_IS_UNIX && OMG_HAS_STD
     OMG_UNUSED(adv_fn);
     omg_string_ensure_null((OMG_String*)fn);
-    return dlopen(fn->ptr, RTLD_GLOBAL);
+    return dlopen(fn->ptr, RTLD_GLOBAL | RTLD_NOW);
 #else
     OMG_UNUSED(fn, adv_fn);
     return NULL;
