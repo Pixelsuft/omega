@@ -6,7 +6,7 @@ if (WIN32 AND MSVC)
 elseif (WIN32)
     add_compile_options(-municode -Wall -Wextra -Wpedantic)
 else ()
-    add_compile_options(-Wall -Wextra -Wpedantic)
+    add_compile_options(-Wall -Wextra -Wpedantic  -fno-stack-protector -Wno-gnu-zero-variadic-macro-arguments -Wno-empty-translation-unit)
 endif ()
 
 include_directories("include")

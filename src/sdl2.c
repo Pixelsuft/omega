@@ -10,12 +10,14 @@
 
 bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
 #if OMG_SDL2_DYNAMIC
-#if OMG_IS_WIN
     if (OMG_ISNULL(dll_path))
+#if OMG_IS_WIN
         this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("SDL2.dll"), L"SDL2.dll");
+#else
+        this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("libSDL2.so"), NULL);
+#endif
     else
         this->handle = omg_static_lib_load(dll_path, NULL);
-#endif
     if (OMG_ISNULL(this->handle))
         return true;
 #else
