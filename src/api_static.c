@@ -1,4 +1,4 @@
-#include <omega/staticapi.h>
+#include <omega/api_static.h>
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
 #include <omega/sdl2.h>
 #elif OMG_IS_WIN

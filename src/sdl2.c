@@ -2,7 +2,7 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/ostd.h>
 #if OMG_SDL2_DYNAMIC
-#include <omega/staticapi.h>
+#include <omega/api_static.h>
 #define LOAD_REQUIRED(func_name) this->func_name = (omg_static_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
