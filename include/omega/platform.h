@@ -48,7 +48,7 @@
 #define OMG_IS_UNIX 0
 #endif
 
-#if IS_CPP
+#if OMG_IS_CPP
 #define OMG_C_EXPORT extern "C"
 #else
 #define OMG_C_EXPORT
