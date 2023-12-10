@@ -54,6 +54,17 @@
 #define OMG_C_EXPORT
 #endif
 
+#ifndef OMG_SKIP_STD_DETECTION
+#define OMG_HAVE_WCSLEN 0
+#define OMG_HAVE__STRREV 0
+#define OMG_HAVE_ITOA 0
+#define OMG_HAVE__UITOA 0
+#define OMG_HAVE_LTOA 0
+#define OMG_HAVE__ULTOA 0
+#define OMG_HAVE__I64TOA 0
+#define OMG_HAVE__UI64TOA 0
+#endif
+
 #if OMG_IS_WIN
 #if OMG_DLL_BUILD
 #define OMG_API OMG_C_EXPORT __declspec(dllexport)

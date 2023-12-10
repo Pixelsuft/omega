@@ -234,31 +234,64 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->lib_load = omg_std_lib_load; // TODO: these 3
     this->lib_func = omg_std_lib_func;
     this->lib_free = omg_std_lib_free;
-    this->memset = omg_std_memset;
-    this->memcpy = omg_std_memcpy;
-    this->memmove = omg_std_memmove;
-    this->memcmp = omg_std_memcmp;
-    this->strlen = omg_std_strlen;
-    this->strnlen = omg_std_strnlen;
+    this->utf8strlen = omg_std_utf8strlen;
+    this->utf8strnlen = omg_std_utf8strnlen;
 #if OMG_HAS_STD
+    // Lol everyone should have them
     this->memset = memset;
     this->memcpy = memcpy;
     this->memmove = memmove;
     this->memcmp = memcmp;
     this->strlen = strlen;
     this->strnlen = strnlen;
+#else
+    this->memset = omg_std_memset;
+    this->memcpy = omg_std_memcpy;
+    this->memmove = omg_std_memmove;
+    this->memcmp = omg_std_memcmp;
+    this->strlen = omg_std_strlen;
+    this->strnlen = omg_std_strnlen;
 #endif
-    // These funcs are not that portable, so let's keep them here
+#if OMG_HAVE_WCSLEN
+    this->wcslen = wcslen;
+#else
     this->wcslen = omg_std_wcslen;
+#endif
+#if OMG_HAVE__STRREV
+    this->strrev = _strrev;
+#else
     this->strrev = omg_std_strrev;
+#endif
+#if OMG_HAVE_ITOA
+    this->itoa = itoa;
+#else
     this->itoa = omg_std_itoa;
+#endif
+#if OMG_HAVE__UITOA
+    this->itoa = _uitoa;
+#else
     this->uitoa = omg_std_uitoa;
+#endif
+#if OMG_HAVE_LTOA
+    this->ltoa = ltoa;
+#else
     this->ltoa = omg_std_ltoa;
+#endif
+#if OMG_HAVE__ULTOA
+    this->ultoa = _ultoa;
+#else
     this->ultoa = omg_std_ultoa;
+#endif
+#if OMG_HAVE__I64TOA
+    this->lltoa = _i64toa;
+#else
     this->lltoa = omg_std_lltoa;
+#endif
+#if OMG_HAVE__I64TOA
+    this->ulltoa = _ui64toa;
+#else
     this->ulltoa = omg_std_ulltoa;
-    this->utf8strlen = omg_std_utf8strlen;
-    this->utf8strnlen = omg_std_utf8strnlen;
+#endif
 }
 
 bool omg_string_add_double(OMG_String* this, const double double_to_add) {
