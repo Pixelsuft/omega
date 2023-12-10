@@ -40,6 +40,9 @@
 #ifndef OMG_SUPPORT_RAYLIB
 #define OMG_SUPPORT_RAYLIB 1
 #endif
+#ifndef OMG_RAYLIB_DYNAMIC
+#define OMG_RAYLIB_DYNAMIC 1
+#endif
 
 #ifndef OMG_EXPORT_SHIT
 // Which should be default?

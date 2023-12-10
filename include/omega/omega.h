@@ -26,6 +26,7 @@ typedef struct OMG_Omega {
     bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
+    int log_level_lib; // TODO
     int log_level_omg;
     int log_level;
     int type;
