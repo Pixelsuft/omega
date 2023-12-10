@@ -9,6 +9,7 @@
 #else
 #include <windows.h>
 #endif
+#define OMG_STD_PREFIX WINAPI
 
 #if OMG_WIN_PRECISE_ENCODING
 #define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { \
@@ -107,23 +108,23 @@ OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(NTDLL_OSVERSIONINFOEXW* ve
 
 typedef struct {
     HMODULE handle;
-    HMODULE (*LoadLibraryExW)(LPCWSTR, HANDLE, DWORD);
-    BOOL (*FreeLibrary)(HMODULE);
-    FARPROC (*GetProcAddress)(HMODULE, LPCSTR);
-    HANDLE (*HeapCreate)(DWORD, SIZE_T, SIZE_T);
-    BOOL (*HeapDestroy)(HANDLE);
-    LPVOID (*HeapAlloc)(HANDLE, DWORD, SIZE_T);
-    LPVOID (*HeapReAlloc)(HANDLE, DWORD, LPVOID, SIZE_T);
-    BOOL (*HeapFree)(HANDLE, DWORD, LPVOID);
-    DWORD (*GetLastError)(void);
-    HANDLE WINAPI (*GetStdHandle)(DWORD);
-    BOOL WINAPI (*AllocConsole)(void);
-    BOOL WINAPI (*FreeConsole)(void);
-    BOOL WINAPI (*AttachConsole)(DWORD);
-    int (*MultiByteToWideChar)(UINT, DWORD, const char*, int, LPWSTR, int);
-    int (*WideCharToMultiByte)(UINT, DWORD, LPCWCH, int, LPSTR, int, LPCCH, LPBOOL);
-    BOOL WINAPI (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
-    DWORD (*FormatMessageW)(DWORD, LPCVOID, DWORD, DWORD, LPWSTR, DWORD, void* args);
+    HMODULE OMG_STD_PREFIX (*LoadLibraryExW)(LPCWSTR, HANDLE, DWORD);
+    BOOL OMG_STD_PREFIX (*FreeLibrary)(HMODULE);
+    FARPROC OMG_STD_PREFIX (*GetProcAddress)(HMODULE, LPCSTR);
+    HANDLE OMG_STD_PREFIX (*HeapCreate)(DWORD, SIZE_T, SIZE_T);
+    BOOL OMG_STD_PREFIX (*HeapDestroy)(HANDLE);
+    LPVOID OMG_STD_PREFIX (*HeapAlloc)(HANDLE, DWORD, SIZE_T);
+    LPVOID OMG_STD_PREFIX (*HeapReAlloc)(HANDLE, DWORD, LPVOID, SIZE_T);
+    BOOL OMG_STD_PREFIX (*HeapFree)(HANDLE, DWORD, LPVOID);
+    DWORD OMG_STD_PREFIX (*GetLastError)(void);
+    HANDLE OMG_STD_PREFIX (*GetStdHandle)(DWORD);
+    BOOL OMG_STD_PREFIX (*AllocConsole)(void);
+    BOOL OMG_STD_PREFIX (*FreeConsole)(void);
+    BOOL OMG_STD_PREFIX (*AttachConsole)(DWORD);
+    int OMG_STD_PREFIX (*MultiByteToWideChar)(UINT, DWORD, const char*, int, LPWSTR, int);
+    int OMG_STD_PREFIX (*WideCharToMultiByte)(UINT, DWORD, LPCWCH, int, LPSTR, int, LPCCH, LPBOOL);
+    BOOL OMG_STD_PREFIX (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
+    DWORD OMG_STD_PREFIX (*FormatMessageW)(DWORD, LPCVOID, DWORD, DWORD, LPWSTR, DWORD, char** args);
 } OMG_Kernel32;
 
 typedef struct {
