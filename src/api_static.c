@@ -15,10 +15,8 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #elif OMG_IS_WIN
     void* result = NULL;
     if (OMG_ISNOTNULL(adv_fn)) {
-        return (void*)LoadLibraryExW(adv_fn, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+        result = (void*)LoadLibraryExW(adv_fn, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
     }
-    if (OMG_ISNULL(fn))
-        return NULL;
 #if OMG_WIN_BETTER_LIBRARY_LOAD
     wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
     if (OMG_ISNOTNULL(out_buf)) {

@@ -13,7 +13,7 @@ OMG_Omega* omg_create(OMG_EntryData* data) {
 
 void omg_fill_on_create(OMG_Omega* this) {
     this->mem = NULL;
-    this->log_level = this->log_level_omg = -1;
+    this->log_level = this->log_level_omg = this->log_level_lib = -1;
     this->log_info_str = NULL;
     this->log_warn_str = NULL;
     this->log_error_str = NULL;
@@ -21,11 +21,13 @@ void omg_fill_on_create(OMG_Omega* this) {
     this->default_init = omg_init;
 }
 
-void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level) {
+void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level) {
     if (log_level >= 0)
         this->log_level = log_level;
     if (omg_log_level >= 0)
         this->log_level_omg = omg_log_level;
+    if (lib_log_level >= 0)
+        this->log_level_lib = lib_log_level;
 }
 
 bool omg_log_info_str(OMG_Omega* this, const OMG_String* data) {

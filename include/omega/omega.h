@@ -21,12 +21,12 @@ typedef struct OMG_Omega {
     void* unused;
     bool (*default_init)(struct OMG_Omega* this);
     bool (*destroy)(struct OMG_Omega* this);
-    void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level);
+    void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
     bool (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
-    int log_level_lib; // TODO
+    int log_level_lib;
     int log_level_omg;
     int log_level;
     int type;
@@ -40,6 +40,6 @@ OMG_API OMG_Omega* omg_get_default_omega(void);
 OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_init(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
-OMG_API void omg_log_set_level(struct OMG_Omega* this, const int log_level, const int omg_log_level);
+OMG_API void omg_log_set_level(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
 #endif

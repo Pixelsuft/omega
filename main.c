@@ -2,6 +2,8 @@
 #include <omega/entry.h>
 #include <omega/omega_win.h>
 #include <omega/omega_sdl2.h>
+#include <omega/memory_raylib.h>
+#include <omega/omega_raylib.h>
 
 typedef struct {
     OMG_Omega* omg;
@@ -26,7 +28,10 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
-    OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    OMG_Raylib rl;
+    omg_raylib_dll_load(&rl, NULL);
+    OMG_Memory* mem = (OMG_Memory*)omg_memory_raylib_create(this->omg, &rl);
+    OMG_INFO(this->omg, 1337.228f, (void*)mem, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }
 
