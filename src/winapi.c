@@ -1,4 +1,4 @@
-#include <omega/winapi.h>
+#include <omega/api_win.h>
 
 #if OMG_IS_WIN
 

@@ -30,8 +30,15 @@
 #ifndef OMG_SDL2_DYNAMIC
 #define OMG_SDL2_DYNAMIC 1
 #endif
+#ifndef OMG_SDL2_COMPAT_DYNAMIC
+#define OMG_SDL2_COMPAT_DYNAMIC 1
+#endif
 #ifndef OMG_SUPPORT_SDL2_MAIN
 #define OMG_SUPPORT_SDL2_MAIN 1
+#endif
+
+#ifndef OMG_SUPPORT_RAYLIB
+#define OMG_SUPPORT_RAYLIB 1
 #endif
 
 #ifndef OMG_EXPORT_SHIT

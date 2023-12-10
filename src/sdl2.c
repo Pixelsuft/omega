@@ -1,4 +1,4 @@
-#include <omega/sdl2.h>
+#include <omega/api_sdl2.h>
 #if OMG_SUPPORT_SDL2
 #include <omega/ostd.h>
 #if OMG_SDL2_DYNAMIC

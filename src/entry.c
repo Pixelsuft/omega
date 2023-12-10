@@ -1,7 +1,7 @@
 #include <omega/entry.h>
 
 #if OMG_IS_WIN && defined(OMG_DLL_BUILD)
-#include <omega/winapi.h>
+#include <omega/api_winapi.h>
 
 OMG_API BOOL WINAPI DllMain(HINSTANCE const instance, DWORD const reason, LPVOID const reserved) {
     OMG_UNUSED(instance, reason, reserved);

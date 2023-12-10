@@ -1,6 +1,6 @@
 #include <omega/config.h>
 #if OMG_SUPPORT_WIN
-#include <omega/winapi.h>
+#include <omega/api_win.h>
 #include <omega/memory_win.h>
 #include <omega/omega.h>
 #if OMG_DEBUG

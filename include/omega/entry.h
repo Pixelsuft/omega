@@ -5,7 +5,7 @@
 #if OMG_ENTRY
 // Somewhy SDL2_main doesn't work for me on shitdows with mingw :(
 #if OMG_IS_WIN && !(OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORT_SDL2_MAIN && OMG_IS_VC)
-#include <omega/winapi.h>
+#include <omega/api_win.h>
 
 typedef struct {
     HINSTANCE hInst;

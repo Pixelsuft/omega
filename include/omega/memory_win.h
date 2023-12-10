@@ -2,7 +2,7 @@
 #include <omega/memory.h>
 
 #if OMG_SUPPORT_WIN
-#include <omega/winapi.h>
+#include <omega/api_win.h>
 
 typedef struct {
     OMG_Memory parent;
