@@ -149,6 +149,42 @@ typedef struct {
     char buf[];
 } OMG_String;
 
+typedef union {
+    struct {
+        int x;
+        int y;
+    };
+    struct {
+        int w;
+        int h;
+    };
+    int val[2];
+} OMG_Point;
+
+typedef union {
+    struct {
+        float x;
+        float y;
+    };
+    struct {
+        float w;
+        float h;
+    };
+    float val[2];
+} OMG_FPoint;
+
+typedef union {
+    struct {
+        double x;
+        double y;
+    };
+    struct {
+        double w;
+        double h;
+    };
+    double val[2];
+} OMG_DPoint;
+
 typedef struct {
     void* (*lib_load)(const OMG_String* fn, const wchar_t* adv_fn);
     void* (*lib_func)(void* lib, const OMG_String* func_name);

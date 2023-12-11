@@ -3,6 +3,7 @@
 #include <omega/entry.h>
 #include <omega/memory.h>
 #include <omega/ostd.h>
+#include <omega/window.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
@@ -26,6 +27,7 @@ typedef struct OMG_Omega {
     bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
+    OMG_Window* (*window_create)(struct OMG_Omega* this);
     int log_level_lib;
     int log_level_omg;
     int log_level;
@@ -42,4 +44,5 @@ OMG_API bool omg_init(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 OMG_API void omg_log_set_level(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
+OMG_API OMG_Window* omg_window_create(OMG_Omega* this);
 #endif

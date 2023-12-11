@@ -41,6 +41,11 @@ bool omg_destroy(OMG_Omega* this) {
     return false;
 }
 
+OMG_Window* omg_window_create(OMG_Omega* this) {
+    OMG_UNUSED(this);
+    return NULL;
+}
+
 bool omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->unused = NULL;
@@ -61,6 +66,7 @@ bool omg_init(OMG_Omega* this) {
         this->log_fatal_str = omg_log_info_str;
     this->log_set_level = omg_log_set_level;
     this->destroy = omg_destroy;
+    this->window_create = omg_window_create;
     omg_def_omega = this;
     return false;
 }

@@ -15,13 +15,14 @@ OMG_MAKE_MAIN(omega_main)
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 0;
-#if OMG_SUPPORT_RAYLIB
+/*#if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #elif OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #else
     this->omg = (OMG_Omega*)omg_win_create(data);
-#endif
+#endif*/
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
     if (OMG_ISNULL(this->omg)) {
         this->exit_code = 1;
         return;
