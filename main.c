@@ -7,6 +7,7 @@
 
 typedef struct {
     OMG_Omega* omg;
+    OMG_Window* win;
     int exit_code;
 } App;
 
@@ -31,6 +32,14 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
+    this->win = this->omg->window_create(this->omg);
+    if (OMG_ISNULL(this->win)) {
+        // TODO: auto cleanup function
+        this->omg->destroy(this->omg);
+        this->exit_code = 1;
+        return;
+    }
+    OMG_FREE(this->omg->mem, this->win); // Currently it isn't freed
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->omg->destroy(this->omg);
 }
