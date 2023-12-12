@@ -20,7 +20,9 @@ OMG_API bool omg_sdl2_destroy(OMG_OmegaSdl2* this);
 #if OMG_EXPORT_SHIT
 #include <omega/window_sdl2.h>
 
-OMG_API OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_Omega* this)
+OMG_API OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this);
+OMG_API bool omg_sdl2_app_init(OMG_OmegaSdl2* this);
+OMG_API bool omg_sdl2_app_quit(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data);
 OMG_API bool omg_sdl2_log_warn_str(OMG_OmegaSdl2* this, const OMG_String* data);
 OMG_API bool omg_sdl2_log_error_str(OMG_OmegaSdl2* this, const OMG_String* data);

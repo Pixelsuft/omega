@@ -68,24 +68,38 @@ bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
     return false;
 }
 
-OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_Omega* this) {
-    OMG_WindowSdl2* result = OMG_MALLOC(this->mem, sizeof(OMG_WindowSdl2));
+OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this) {
+    OMG_WindowSdl2* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowSdl2));
     if (OMG_ISNULL(result)) {
-        _OMG_LOG_ERROR(this, "Failed to allocate memory for SDL2 Window");
+        _OMG_LOG_ERROR(base, "Failed to allocate memory for SDL2 Window");
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();
-    result->parent.omg = this;
+    result->parent.omg = base;
     result->parent.default_init = omg_window_sdl2_init;
     OMG_END_POINTER_CAST();
     return result;
 }
 
-bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
-    bool result = false;
+bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
+    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
+        _OMG_LOG_INFO(base, "Failed to init SDL2 (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
+    return false;
+}
+
+bool omg_sdl2_app_quit(OMG_OmegaSdl2* this) {
     if (this->inited) {
         this->sdl2->SDL_Quit();
+        this->inited = false;
     }
+    return false;
+}
+
+bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
+    bool result = false;
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -112,20 +126,12 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     }
     else
         this->should_free_sdl2 = false;
-    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
-        if (this->should_free_sdl2) {
-            omg_sdl2_dll_free(this->sdl2);
-            this->sdl2 = NULL;
-        }
-        return true;
-    }
     OMG_BEGIN_POINTER_CAST();
     omg_omg_init(this);
     base->type = OMG_OMEGA_TYPE_SDL2;
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_sdl2_create(this, this->sdl2);
         if (OMG_ISNULL(base->mem)) {
-            this->sdl2->SDL_Quit();
             if (this->should_free_sdl2) {
                 omg_sdl2_dll_free(this->sdl2);
                 this->sdl2 = NULL;
@@ -139,7 +145,6 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     if (OMG_ISNULL(base->std)) {
         base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
         if (OMG_ISNULL(base->std)) {
-            this->sdl2->SDL_Quit();
             if (this->should_free_sdl2) {
                 omg_sdl2_dll_free(this->sdl2);
                 this->sdl2 = NULL;
@@ -153,6 +158,8 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     }
     else
         base->should_free_std = false;
+    base->app_init = omg_sdl2_app_init;
+    base->app_quit = omg_sdl2_app_quit;
     base->log_info_str = omg_sdl2_log_info_str;
     base->log_warn_str = omg_sdl2_log_warn_str;
     base->log_error_str = omg_sdl2_log_error_str;
@@ -161,7 +168,6 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->destroy = omg_sdl2_destroy;
     OMG_END_POINTER_CAST();
     this->inited = true;
-    _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
     return false;
 }
 #endif
