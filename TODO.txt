@@ -1,0 +1,1 @@
+[-] App init in seperate function (Like SDL_Init)
