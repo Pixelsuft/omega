@@ -68,15 +68,15 @@ bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
     return false;
 }
 
-OMG_Window* omg_sdl2_window_create(OMG_Omega* this) {
-    OMG_Window* result = OMG_MALLOC(this->mem, sizeof(OMG_WindowSdl2));
+OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_Omega* this) {
+    OMG_WindowSdl2* result = OMG_MALLOC(this->mem, sizeof(OMG_WindowSdl2));
     if (OMG_ISNULL(result)) {
         _OMG_LOG_ERROR(this, "Failed to allocate memory for SDL2 Window");
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();
-    result->omg = this;
-    result->default_init = omg_window_sdl2_init;
+    result->parent.omg = this;
+    result->parent.default_init = omg_window_sdl2_init;
     OMG_END_POINTER_CAST();
     return result;
 }
@@ -157,7 +157,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->log_warn_str = omg_sdl2_log_warn_str;
     base->log_error_str = omg_sdl2_log_error_str;
     base->log_fatal_str = omg_sdl2_log_fatal_str;
-    base->window_create = omg_sdl2_window_create;
+    base->window_alloc = omg_sdl2_window_alloc;
     base->destroy = omg_sdl2_destroy;
     OMG_END_POINTER_CAST();
     this->inited = true;

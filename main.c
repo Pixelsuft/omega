@@ -32,7 +32,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->exit_code = 1;
         return;
     }
-    this->win = this->omg->window_create(this->omg);
+    this->win = this->omg->window_alloc(this->omg);
     if (OMG_ISNULL(this->win)) {
         // TODO: auto cleanup function
         this->omg->destroy(this->omg);
