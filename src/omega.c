@@ -18,7 +18,7 @@ void omg_fill_on_create(OMG_Omega* this) {
     this->log_warn_str = NULL;
     this->log_error_str = NULL;
     this->log_fatal_str = NULL;
-    this->default_init = omg_init;
+    this->omg_init = omg_omg_init;
 }
 
 void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level) {
@@ -46,13 +46,23 @@ OMG_Window* omg_window_alloc(OMG_Omega* this) {
     return NULL;
 }
 
-OMG_API bool omg_window_free(OMG_Omega* this, OMG_Window* window) {
+bool omg_window_free(OMG_Omega* this, OMG_Window* window) {
     if (OMG_ISNULL(window))
         return true;
     return OMG_FREE(this->mem, window);
 }
 
-bool omg_init(OMG_Omega* this) {
+bool omg_app_init(OMG_Omega* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
+bool omg_app_quit(OMG_Omega* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
+bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->unused = NULL;
     this->std = NULL;
@@ -72,6 +82,8 @@ bool omg_init(OMG_Omega* this) {
         this->log_fatal_str = omg_log_info_str;
     this->log_set_level = omg_log_set_level;
     this->destroy = omg_destroy;
+    this->app_init = omg_app_init;
+    this->app_quit = omg_app_quit;
     this->window_alloc = omg_window_alloc;
     this->window_free = omg_window_free;
     omg_def_omega = this;

@@ -15,7 +15,7 @@ int omega_main(OMG_EntryData* data);
 OMG_MAKE_MAIN(omega_main)
 
 void app_init(App* this, OMG_EntryData* data) {
-    this->exit_code = 0;
+    this->exit_code = 1;
 /*#if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #elif OMG_SUPPORT_SDL2
@@ -25,23 +25,27 @@ void app_init(App* this, OMG_EntryData* data) {
 #endif*/
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
     if (OMG_ISNULL(this->omg)) {
-        this->exit_code = 1;
         return;
     }
-    if (this->omg->default_init(this->omg)) {
-        this->exit_code = 1;
+    if (this->omg->omg_init(this->omg)) {
+        return;
+    }
+    if (this->omg->app_init(this->omg)) {
+        // TODO: auto cleanup function
+        this->omg->destroy(this->omg);
         return;
     }
     this->win = this->omg->window_alloc(this->omg);
     if (OMG_ISNULL(this->win)) {
         // TODO: auto cleanup function
         this->omg->destroy(this->omg);
-        this->exit_code = 1;
         return;
     }
-    OMG_FREE(this->omg->mem, this->win); // Currently it isn't freed
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    this->omg->window_free(this->omg, this->win);
+    this->omg->app_quit(this->omg);
     this->omg->destroy(this->omg);
+    this->exit_code = 0;
 }
 
 int omega_main(OMG_EntryData* data) {

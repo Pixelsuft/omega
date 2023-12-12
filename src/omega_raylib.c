@@ -8,7 +8,7 @@ void omg_raylib_fill_after_create(OMG_OmegaRaylib* this) {
     this->raylib = NULL;
     OMG_BEGIN_POINTER_CAST();
     omg_fill_on_create(this);
-    base->default_init = omg_raylib_init;
+    base->omg_init = omg_raylib_init;
     OMG_END_POINTER_CAST();
 }
 
@@ -79,7 +79,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     else
         this->should_free_raylib = false;
     OMG_BEGIN_POINTER_CAST();
-    omg_init(this);
+    omg_omg_init(this);
     base->type = OMG_OMEGA_TYPE_RAYLIB;
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_raylib_create(this, this->raylib);
