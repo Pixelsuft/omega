@@ -57,6 +57,8 @@ void omg_win_fill_after_create(OMG_OmegaWin* this) {
     base->omg_init = omg_win_init;
     OMG_END_POINTER_CAST();
     this->nt = NULL;
+    this->dwm = NULL;
+    this->uxtheme = NULL;
 }
 
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
@@ -215,6 +217,33 @@ bool omg_win_init(OMG_OmegaWin* this) {
     this->win_major_ver = (int)os_ver_info.dwMajorVersion;
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
     this->win_build_number = (int)os_ver_info.dwBuildNumber;
+    // TODO: cleanups on errors
+    if (OMG_ISNULL(this->dwm)) {
+        this->dwm = OMG_MALLOC(base->mem, sizeof(OMG_Dwmapi));
+        if (OMG_ISNULL(this->dwm)) {
+            return true;
+        }
+        if (omg_winapi_dwmapi_load(this->dwm)) {
+            OMG_FREE(base->mem, this->dwm);
+            return true;
+        }
+        this->should_free_dwm = true;
+    }
+    else
+        this->should_free_dwm = false;
+    if (OMG_ISNULL(this->uxtheme)) {
+        this->uxtheme = OMG_MALLOC(base->mem, sizeof(OMG_Uxtheme));
+        if (OMG_ISNULL(this->uxtheme)) {
+            return true;
+        }
+        if (omg_winapi_uxtheme_load(this->uxtheme)) {
+            OMG_FREE(base->mem, this->uxtheme);
+            return true;
+        }
+        this->should_free_uxtheme = true;
+    }
+    else
+        this->should_free_uxtheme = false;
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
     base->log_info_str = omg_win_log_info_str;

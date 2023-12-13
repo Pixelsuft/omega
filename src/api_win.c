@@ -83,4 +83,48 @@ bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
     return false;
 #endif
 }
+
+bool omg_winapi_dwmapi_load(OMG_Dwmapi* this) {
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    this->handle = LOAD_SYSTEM_LIBRARY(L"dwmapi.dll");
+    if (this->handle == NULL)
+        return true;
+#endif
+    OMG_BEGIN_POINTER_CAST();
+    OMG_END_POINTER_CAST();
+    return false;
+}
+
+bool omg_winapi_dwmapi_free(OMG_Dwmapi* this) {
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    if (this->handle == NULL)
+        return true;
+    return (bool)FreeLibrary(this->handle);
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+bool omg_winapi_uxtheme_load(OMG_Uxtheme* this) {
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    this->handle = LOAD_SYSTEM_LIBRARY(L"uxtheme.dll");
+    if (this->handle == NULL)
+        return true;
+#endif
+    OMG_BEGIN_POINTER_CAST();
+    OMG_END_POINTER_CAST();
+    return false;
+}
+
+bool omg_winapi_uxtheme_free(OMG_Uxtheme* this) {
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    if (this->handle == NULL)
+        return true;
+    return (bool)FreeLibrary(this->handle);
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
 #endif

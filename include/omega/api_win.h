@@ -129,11 +129,25 @@ typedef struct {
 
 typedef struct {
     HANDLE handle;
-    void (*RtlGetVersion)(NTDLL_OSVERSIONINFOEXW*);
+    void OMG_WIN_STD_PREFIX (*RtlGetVersion)(NTDLL_OSVERSIONINFOEXW*);
 } OMG_Ntdll;
+
+typedef struct {
+    HANDLE handle;
+    HRESULT OMG_WIN_STD_PREFIX (*DwmFlush)(void);
+} OMG_Dwmapi;
+
+typedef struct {
+    HANDLE handle;
+    HRESULT OMG_WIN_STD_PREFIX (*DwmFlush)(void);
+} OMG_Uxtheme;
 
 OMG_API bool omg_winapi_kernel32_load(OMG_Kernel32* this);
 OMG_API bool omg_winapi_kernel32_free(OMG_Kernel32* this);
 OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
 OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
+OMG_API bool omg_winapi_dwmapi_load(OMG_Dwmapi* this);
+OMG_API bool omg_winapi_dwmapi_free(OMG_Dwmapi* this);
+OMG_API bool omg_winapi_uxtheme_load(OMG_Uxtheme* this);
+OMG_API bool omg_winapi_uxtheme_free(OMG_Uxtheme* this);
 #endif
