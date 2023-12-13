@@ -26,6 +26,8 @@ OMG_API void omg_win_fill_after_create(OMG_OmegaWin* this);
 OMG_API bool omg_win_destroy(OMG_OmegaWin* this);
 #if OMG_EXPORT_SHIT
 OMG_API void omg_win_attach_console(OMG_OmegaWin* this);
+OMG_API bool omg_win_app_init(OMG_OmegaWin* this);
+OMG_API bool omg_win_app_quit(OMG_OmegaWin* this);
 OMG_API bool omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data);

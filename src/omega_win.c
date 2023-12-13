@@ -101,6 +101,16 @@ bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
     _OMG_WIN_LOG_MACRO(this, data, L"[FATAL]: ", 9, 18, true);
 }
 
+bool omg_win_app_init(OMG_OmegaWin* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
+bool omg_win_app_quit(OMG_OmegaWin* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
 bool omg_win_destroy(OMG_OmegaWin* this) {
     bool result = false;
     if (this->should_free_ntdll) {
@@ -205,6 +215,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
     this->win_major_ver = (int)os_ver_info.dwMajorVersion;
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
     this->win_build_number = (int)os_ver_info.dwBuildNumber;
+    base->app_init = omg_win_app_init;
+    base->app_quit = omg_win_app_quit;
     base->log_info_str = omg_win_log_info_str;
     base->log_warn_str = omg_win_log_warn_str;
     base->log_error_str = omg_win_log_error_str;
