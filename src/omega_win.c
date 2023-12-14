@@ -105,6 +105,7 @@ bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
     OMG_UNUSED(this);
+    // TODO: dark mode, high dpi, etc
     return false;
 }
 
