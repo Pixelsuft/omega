@@ -6,6 +6,7 @@
 #if OMG_WINAPI_DYNAMIC
 #include <libloaderapi.h>
 #include <basetsd.h>
+#include <windows.h>
 #else
 #include <windows.h>
 #endif
@@ -100,7 +101,16 @@ typedef struct {
     USHORT wSuiteMask;
     UCHAR wProductType;
     UCHAR wReserved;
-} NTDLL_OSVERSIONINFOEXW;
+} OMG_NTDLL_OSVERSIONINFOEXW;
+
+typedef enum
+{
+    Default,
+    AllowDark,
+    ForceDark,
+    ForceLight,
+    Max
+} OMG_WinPreferredAppMode;
 
 #if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
 OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(NTDLL_OSVERSIONINFOEXW* version_information);
@@ -129,21 +139,40 @@ typedef struct {
 
 typedef struct {
     HANDLE handle;
-    void OMG_WIN_STD_PREFIX (*RtlGetVersion)(NTDLL_OSVERSIONINFOEXW*);
+    void OMG_WIN_STD_PREFIX (*RtlGetVersion)(OMG_NTDLL_OSVERSIONINFOEXW*);
 } OMG_Ntdll;
 
 typedef struct {
     HANDLE handle;
+    BOOL OMG_WIN_STD_PREFIX (*SetProcessDPIAware)(void);
+    UINT OMG_WIN_STD_PREFIX (*GetDpiForSystem)(void);
+    UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND hwnd);
+    int OMG_WIN_STD_PREFIX (*GetSystemMetricsForDpi)(int index, UINT dpi);
+} OMG_User32;
+
+typedef struct {
+    HANDLE handle;
+    HRESULT OMG_WIN_STD_PREFIX (*DwmSetWindowAttribute)(HWND, DWORD, LPCVOID, DWORD);
     HRESULT OMG_WIN_STD_PREFIX (*DwmFlush)(void);
 } OMG_Dwmapi;
 
 typedef struct {
     HANDLE handle;
-    HRESULT OMG_WIN_STD_PREFIX (*DwmFlush)(void);
+    bool OMG_WIN_STD_PREFIX (*ShouldAppsUseDarkMode)(void);
+    void OMG_WIN_STD_PREFIX (*AllowDarkModeForWindow)(HWND hwnd, bool allow);
+    void OMG_WIN_STD_PREFIX (*AllowDarkModeForApp)(bool allow);
+    void OMG_WIN_STD_PREFIX (*FlushMenuThemes)(void);
+    void OMG_WIN_STD_PREFIX (*RefreshImmersiveColorPolicyState)(void);
+    bool OMG_WIN_STD_PREFIX (*IsDarkModeAllowedForWindow)(HWND hwnd);
+    bool OMG_WIN_STD_PREFIX (*ShouldSystemUseDarkMode)(void);
+    OMG_WinPreferredAppMode OMG_WIN_STD_PREFIX (*SetPreferredAppMode)(OMG_WinPreferredAppMode app_mode);
+    bool OMG_WIN_STD_PREFIX (*IsDarkModeAllowedForApp)(void);
 } OMG_Uxtheme;
 
 OMG_API bool omg_winapi_kernel32_load(OMG_Kernel32* this);
 OMG_API bool omg_winapi_kernel32_free(OMG_Kernel32* this);
+OMG_API bool omg_winapi_user32_load(OMG_User32* this);
+OMG_API bool omg_winapi_user32_free(OMG_User32* this);
 OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
 OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
 OMG_API bool omg_winapi_dwmapi_load(OMG_Dwmapi* this);

@@ -84,6 +84,32 @@ bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
 #endif
 }
 
+bool omg_winapi_user32_load(OMG_User32* this) {
+#if OMG_WINAPI_DYNAMIC
+    this->handle = LOAD_SYSTEM_LIBRARY(L"user32.dll");
+    if (this->handle == NULL)
+        return true;
+#endif
+    OMG_BEGIN_POINTER_CAST();
+    LOAD_REQUIRED(SetProcessDPIAware);
+    LOAD_REQUIRED(GetDpiForSystem);
+    LOAD_REQUIRED(GetDpiForWindow);
+    LOAD_REQUIRED(GetSystemMetricsForDpi);
+    OMG_END_POINTER_CAST();
+    return false;
+}
+
+bool omg_winapi_user32_free(OMG_User32* this) {
+#if OMG_WINAPI_DYNAMIC
+    if (this->handle == NULL)
+        return true;
+    return (bool)FreeLibrary(this->handle);
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
 bool omg_winapi_dwmapi_load(OMG_Dwmapi* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     this->handle = LOAD_SYSTEM_LIBRARY(L"dwmapi.dll");
