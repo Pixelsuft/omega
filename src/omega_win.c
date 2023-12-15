@@ -116,6 +116,21 @@ bool omg_win_app_quit(OMG_OmegaWin* this) {
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
     bool result = false;
+    if (this->should_free_u32) {
+        result = omg_winapi_user32_free(this->u32) || result;
+        result = OMG_FREE(base->mem, this->u32) || result;
+        this->u32 = NULL;
+    }
+    if (this->should_free_uxtheme) {
+        result = omg_winapi_uxtheme_free(this->uxtheme) || result;
+        result = OMG_FREE(base->mem, this->uxtheme) || result;
+        this->uxtheme = NULL;
+    }
+    if (this->should_free_dwm) {
+        result = omg_winapi_dwmapi_free(this->dwm) || result;
+        result = OMG_FREE(base->mem, this->dwm) || result;
+        this->dwm = NULL;
+    }
     if (this->should_free_ntdll) {
         result = omg_winapi_ntdll_free(this->nt) || result;
         result = OMG_FREE(base->mem, this->nt) || result;
@@ -245,6 +260,19 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     else
         this->should_free_uxtheme = false;
+    if (OMG_ISNULL(this->u32)) {
+        this->u32 = OMG_MALLOC(base->mem, sizeof(OMG_User32));
+        if (OMG_ISNULL(this->u32)) {
+            return true;
+        }
+        if (omg_winapi_uxtheme_load(this->u32)) {
+            OMG_FREE(base->mem, this->u32);
+            return true;
+        }
+        this->should_free_u32 = true;
+    }
+    else
+        this->should_free_u32 = false;
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
     base->log_info_str = omg_win_log_info_str;
