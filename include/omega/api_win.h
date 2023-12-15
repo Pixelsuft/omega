@@ -146,8 +146,8 @@ typedef struct {
     HANDLE handle;
     BOOL OMG_WIN_STD_PREFIX (*SetProcessDPIAware)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForSystem)(void);
-    UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND hwnd);
-    int OMG_WIN_STD_PREFIX (*GetSystemMetricsForDpi)(int index, UINT dpi);
+    UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND);
+    int OMG_WIN_STD_PREFIX (*GetSystemMetricsForDpi)(int, UINT);
 } OMG_User32;
 
 typedef struct {
@@ -159,13 +159,13 @@ typedef struct {
 typedef struct {
     HANDLE handle;
     bool OMG_WIN_STD_PREFIX (*ShouldAppsUseDarkMode)(void);
-    void OMG_WIN_STD_PREFIX (*AllowDarkModeForWindow)(HWND hwnd, bool allow);
-    void OMG_WIN_STD_PREFIX (*AllowDarkModeForApp)(bool allow);
+    void OMG_WIN_STD_PREFIX (*AllowDarkModeForWindow)(HWND, bool);
+    void OMG_WIN_STD_PREFIX (*AllowDarkModeForApp)(bool);
     void OMG_WIN_STD_PREFIX (*FlushMenuThemes)(void);
     void OMG_WIN_STD_PREFIX (*RefreshImmersiveColorPolicyState)(void);
-    bool OMG_WIN_STD_PREFIX (*IsDarkModeAllowedForWindow)(HWND hwnd);
+    bool OMG_WIN_STD_PREFIX (*IsDarkModeAllowedForWindow)(HWND);
     bool OMG_WIN_STD_PREFIX (*ShouldSystemUseDarkMode)(void);
-    OMG_WinPreferredAppMode OMG_WIN_STD_PREFIX (*SetPreferredAppMode)(OMG_WinPreferredAppMode app_mode);
+    OMG_WinPreferredAppMode OMG_WIN_STD_PREFIX (*SetPreferredAppMode)(OMG_WinPreferredAppMode);
     bool OMG_WIN_STD_PREFIX (*IsDarkModeAllowedForApp)(void);
 } OMG_Uxtheme;
 
