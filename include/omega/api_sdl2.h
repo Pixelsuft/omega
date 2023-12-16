@@ -11,7 +11,7 @@
 #endif
 
 #if OMG_SDL2_DYNAMIC
-#define OMG_SDL2_STD_PREFIX __stdcall
+#define OMG_SDL2_STD_PREFIX
 #define SDL_INIT_TIMER          0x00000001u
 #define SDL_INIT_VIDEO          0x00000020u
 #define SDL_INIT_EVENTS         0x00004000u
