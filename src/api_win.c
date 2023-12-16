@@ -103,6 +103,10 @@ bool omg_winapi_user32_load(OMG_User32* this) {
         return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
+    LOAD_REQUIRED(RegisterClassExW);
+    LOAD_REQUIRED(UnregisterClassW);
+    LOAD_REQUIRED(CreateWindowExW);
+    LOAD_REQUIRED(DestroyWindow);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(GetDpiForSystem);
     LOAD_REQUIRED_COMPAT(GetDpiForWindow);

@@ -94,6 +94,9 @@
 #define OMG_WIN_ERROR_GEN_FAILURE 0x1F
 #endif
 
+typedef WNDCLASSEXW OMG_WIN_WNDCLASSEXW;
+typedef WNDPROC OMG_WIN_WNDPROC;
+
 typedef struct {
     ULONG dwOSVersionInfoSize;
     ULONG dwMajorVersion;
@@ -149,6 +152,10 @@ typedef struct {
 
 typedef struct {
     HANDLE handle;
+    ATOM OMG_WIN_STD_PREFIX (*RegisterClassExW)(const WNDCLASSEXW*);
+    BOOL (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
+    HWND (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
+    BOOL (*DestroyWindow)(HWND);
     BOOL OMG_WIN_STD_PREFIX (*SetProcessDPIAware)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForSystem)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND);
