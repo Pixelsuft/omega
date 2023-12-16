@@ -23,7 +23,8 @@ void app_init(App* this, OMG_EntryData* data) {
 #else
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif*/
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
+    // this->omg = (OMG_Omega*)omg_sdl2_create(data);
+    this->omg = (OMG_Omega*)omg_win_create(data);
     if (OMG_ISNULL(this->omg)) {
         return;
     }
@@ -35,14 +36,16 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->win = this->omg->window_alloc(this->omg);
+    /* this->win = this->omg->window_alloc(this->omg);
     if (OMG_ISNULL(this->win)) {
         // TODO: auto cleanup function
         this->omg->destroy(this->omg);
         return;
     }
+    this->win->default_init(this->win); */
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
-    this->omg->window_free(this->omg, this->win);
+    // this->win->destroy(this->win);
+    // this->omg->window_free(this->omg, this->win);
     this->omg->app_quit(this->omg);
     this->omg->destroy(this->omg);
     this->exit_code = 0;

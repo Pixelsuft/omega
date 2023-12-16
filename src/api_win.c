@@ -14,16 +14,28 @@
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
+#if OMG_WINAPI_DYNAMIC_COMPAT
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
+#elif OMG_WINAPI_STATIC_COMPAT
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
+#else
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = NULL
+#endif
 #if OMG_WINAPI_DYNAMIC_UGLY
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
 #else
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
 #endif
+#if OMG_WINAPI_DYNAMIC_ORDINAL
+#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = GetProcAddress(this->handle, OMG_WIN_MAKEINTRESOURCEA(func_ord))
+#else
+#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = NULL
+#endif
 
 bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
 #if OMG_WINAPI_DYNAMIC
     this->handle = LOAD_SYSTEM_LIBRARY(L"kernel32.dll");
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
     OMG_BEGIN_POINTER_CAST();
 #endif
@@ -52,7 +64,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
 
 bool omg_winapi_kernel32_free(OMG_Kernel32* this) {
 #if OMG_WINAPI_DYNAMIC
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
     return (bool)FreeLibrary(this->handle);
 #else
@@ -64,7 +76,7 @@ bool omg_winapi_kernel32_free(OMG_Kernel32* this) {
 bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_UGLY
     this->handle = LOAD_SYSTEM_LIBRARY(L"ntdll.dll");
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
@@ -75,7 +87,7 @@ bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
 
 bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_UGLY
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
     return (bool)FreeLibrary(this->handle);
 #else
@@ -85,23 +97,23 @@ bool omg_winapi_ntdll_free(OMG_Ntdll* this) {
 }
 
 bool omg_winapi_user32_load(OMG_User32* this) {
-#if OMG_WINAPI_DYNAMIC
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     this->handle = LOAD_SYSTEM_LIBRARY(L"user32.dll");
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
-    LOAD_REQUIRED(SetProcessDPIAware);
-    LOAD_REQUIRED(GetDpiForSystem);
-    LOAD_REQUIRED(GetDpiForWindow);
-    LOAD_REQUIRED(GetSystemMetricsForDpi);
+    LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
+    LOAD_REQUIRED_COMPAT(GetDpiForSystem);
+    LOAD_REQUIRED_COMPAT(GetDpiForWindow);
+    LOAD_REQUIRED_COMPAT(GetSystemMetricsForDpi);
     OMG_END_POINTER_CAST();
     return false;
 }
 
 bool omg_winapi_user32_free(OMG_User32* this) {
-#if OMG_WINAPI_DYNAMIC
-    if (this->handle == NULL)
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    if (OMG_ISNULL(this->handle))
         return true;
     return (bool)FreeLibrary(this->handle);
 #else
@@ -113,17 +125,19 @@ bool omg_winapi_user32_free(OMG_User32* this) {
 bool omg_winapi_dwmapi_load(OMG_Dwmapi* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     this->handle = LOAD_SYSTEM_LIBRARY(L"dwmapi.dll");
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
+    LOAD_REQUIRED_COMPAT(DwmSetWindowAttribute);
+    LOAD_REQUIRED_COMPAT(DwmFlush);
     OMG_END_POINTER_CAST();
     return false;
 }
 
 bool omg_winapi_dwmapi_free(OMG_Dwmapi* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
     return (bool)FreeLibrary(this->handle);
 #else
@@ -132,20 +146,35 @@ bool omg_winapi_dwmapi_free(OMG_Dwmapi* this) {
 #endif
 }
 
-bool omg_winapi_uxtheme_load(OMG_Uxtheme* this) {
-#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num) {
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_ORDINAL
     this->handle = LOAD_SYSTEM_LIBRARY(L"uxtheme.dll");
-    if (this->handle == NULL)
+    if (OMG_ISNULL(this->handle))
         return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
+    if (build_num >= 17763) {
+        LOAD_REQUIRED_ORD(ShouldAppsUseDarkMode, 132);
+        LOAD_REQUIRED_ORD(AllowDarkModeForWindow, 133);
+        if (build_num < 18362)
+            LOAD_REQUIRED_ORD(AllowDarkModeForApp, 135);
+        else
+            LOAD_REQUIRED_ORD(SetPreferredAppMode, 135);
+        LOAD_REQUIRED_ORD(FlushMenuThemes, 136);
+        LOAD_REQUIRED_ORD(RefreshImmersiveColorPolicyState, 104);
+        LOAD_REQUIRED_ORD(IsDarkModeAllowedForWindow, 137);
+        if (build_num >= 18362) {
+            LOAD_REQUIRED_ORD(ShouldSystemUseDarkMode, 132);
+            LOAD_REQUIRED_ORD(IsDarkModeAllowedForApp, 132);
+        }
+    }
     OMG_END_POINTER_CAST();
     return false;
 }
 
 bool omg_winapi_uxtheme_free(OMG_Uxtheme* this) {
-#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
-    if (this->handle == NULL)
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_ORDINAL
+    if (OMG_ISNULL(this->handle))
         return true;
     return (bool)FreeLibrary(this->handle);
 #else

@@ -252,7 +252,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
         if (OMG_ISNULL(this->uxtheme)) {
             return true;
         }
-        if (omg_winapi_uxtheme_load(this->uxtheme)) {
+        if (omg_winapi_uxtheme_load(this->uxtheme, this->win_build_number)) {
             OMG_FREE(base->mem, this->uxtheme);
             return true;
         }
@@ -265,7 +265,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
         if (OMG_ISNULL(this->u32)) {
             return true;
         }
-        if (omg_winapi_uxtheme_load(this->u32)) {
+        if (omg_winapi_user32_load(this->u32)) {
             OMG_FREE(base->mem, this->u32);
             return true;
         }

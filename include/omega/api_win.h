@@ -38,6 +38,11 @@
     ); \
 } while (0)
 
+#ifdef MAKEINTRESOURCEA
+#define OMG_WIN_MAKEINTRESOURCEA MAKEINTRESOURCEA
+#else
+#define OMG_WIN_MAKEINTRESOURCEA(res_to_make) ((LPSTR)((ULONG_PTR)((WORD)(res_to_make))))
+#endif
 #ifdef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define OMG_WIN_LOAD_IGNORE_CODE_AUTHZ_LEVEL LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #else
@@ -177,6 +182,6 @@ OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
 OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
 OMG_API bool omg_winapi_dwmapi_load(OMG_Dwmapi* this);
 OMG_API bool omg_winapi_dwmapi_free(OMG_Dwmapi* this);
-OMG_API bool omg_winapi_uxtheme_load(OMG_Uxtheme* this);
+OMG_API bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num);
 OMG_API bool omg_winapi_uxtheme_free(OMG_Uxtheme* this);
 #endif
