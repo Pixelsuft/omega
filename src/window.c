@@ -1,7 +1,13 @@
 #include <omega/window.h>
 
+bool omg_window_show(OMG_Window* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
 bool omg_window_init(OMG_Window* this) {
     this->destroy = omg_window_destroy;
+    this->show = omg_window_show;
     return false;
 }
 

@@ -8,6 +8,11 @@
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)this->omg)
 
+bool omg_window_sdl2_show(OMG_WindowSdl2* this) {
+    this->sdl2->SDL_ShowWindow(this->win);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->inited = false;
@@ -18,10 +23,13 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         0
     );
     if (OMG_ISNULL(this->win)) {
-        _OMG_LOG_ERROR(this->omg, "Failed to create window (", this->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 Window (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
     base->inited = true;
+    OMG_BEGIN_POINTER_CAST();
+    base->show = omg_window_sdl2_show;
+    OMG_END_POINTER_CAST();
     return false;
 }
 

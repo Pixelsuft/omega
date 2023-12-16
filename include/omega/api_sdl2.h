@@ -62,6 +62,7 @@ typedef struct {
     const char* OMG_SDL2_STD_PREFIX (*SDL_GetError)(void);
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);
+    void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
     SDL_version ver;
 } OMG_Sdl2;
 

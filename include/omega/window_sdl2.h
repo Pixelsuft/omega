@@ -8,11 +8,13 @@
 typedef struct {
     OMG_Window parent;
     SDL_Window* win;
+    void* omg;
     OMG_Sdl2* sdl2;
 } OMG_WindowSdl2;
 
 OMG_API bool omg_window_sdl2_init(OMG_WindowSdl2* this);
 OMG_API bool omg_window_sdl2_destroy(OMG_WindowSdl2* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_window_sdl2_show(OMG_WindowSdl2* this);
 #endif
 #endif
