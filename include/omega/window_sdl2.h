@@ -2,7 +2,7 @@
 #include <omega/config.h>
 #include <omega/window.h>
 
-#if OMG_SUPPORT_SDL2
+#if OMG_SUPPORT_SDL
 #include <omega/api_sdl2.h>
 
 typedef struct {
