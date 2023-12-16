@@ -6,6 +6,7 @@ typedef struct OMG_Window {
     bool (*destroy)(struct OMG_Window* this);
     void* omg;
     OMG_FPoint size;
+    bool inited;
 } OMG_Window;
 
 OMG_API bool omg_window_init(OMG_Window* this);

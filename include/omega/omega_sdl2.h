@@ -9,7 +9,6 @@ typedef struct {
     OMG_Sdl2 sdl2_stk;
     OMG_Sdl2* sdl2;
     bool should_free_sdl2;
-    bool inited;
 } OMG_OmegaSdl2;
 
 OMG_API OMG_OmegaSdl2* omg_sdl2_create(OMG_EntryData* data);

@@ -11,7 +11,7 @@
 #endif
 
 #if OMG_SDL2_DYNAMIC
-#define OMG_SDL_STD_PREFIX __stdcall
+#define OMG_SDL2_STD_PREFIX __stdcall
 #define SDL_INIT_TIMER          0x00000001u
 #define SDL_INIT_VIDEO          0x00000020u
 #define SDL_INIT_EVENTS         0x00004000u
@@ -29,39 +29,39 @@ typedef struct {
 
 typedef void SDL_Window;
 #else
-#define OMG_SDL_STD_PREFIX SDLCALL
+#define OMG_SDL2_STD_PREFIX SDLCALL
 #endif
 
 typedef struct {
     void* handle;
-    int (*SDL_Init)(uint32_t);
-    void (*SDL_Quit)(void);
-    void (*SDL_GetVersion)(SDL_version*);
-    void* (*SDL_memset)(void*, int, size_t);
-    void* (*SDL_memcpy)(void*, const void*, size_t);
-    void* (*SDL_memmove)(void*, const void*, size_t);
-    int (*SDL_memcmp)(const void*, const void*, size_t);
-    size_t (*SDL_strlen)(const char*);
-    size_t (*SDL_utf8strlen)(const char*);
-    size_t (*SDL_utf8strnlen)(const char*, size_t);
-    char* (*SDL_strrev)(char*);
-    char* (*SDL_itoa)(int, char*, int);
-    char* (*SDL_ltoa)(long, char*, int);
-    char* (*SDL_uitoa)(unsigned int, char*, int);
-    char* (*SDL_ultoa)(unsigned long, char*, int);
-    char* (*SDL_lltoa)(int64_t, char*, int);
-    char* (*SDL_ulltoa)(uint64_t, char*, int);
-    size_t (*SDL_wcslen)(const wchar_t*);
-    void* (*SDL_malloc)(size_t);
-    void* (*SDL_realloc)(void*, size_t size);
-    void (*SDL_free)(void*);
-    void (*SDL_LogInfo)(int, const char*, ...);
-    void (*SDL_LogWarn)(int, const char*, ...);
-    void (*SDL_LogError)(int, const char*, ...);
-    void (*SDL_LogCritical)(int, const char*, ...);
-    const char* (*SDL_GetError)(void);
-    SDL_Window* SDL_CreateWindow(const char*, int, int, int, int, Uint32);
-    void SDL_DestroyWindow(SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_Init)(uint32_t);
+    void OMG_SDL2_STD_PREFIX (*SDL_Quit)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_GetVersion)(SDL_version*);
+    void* OMG_SDL2_STD_PREFIX (*SDL_memset)(void*, int, size_t);
+    void* OMG_SDL2_STD_PREFIX (*SDL_memcpy)(void*, const void*, size_t);
+    void* OMG_SDL2_STD_PREFIX (*SDL_memmove)(void*, const void*, size_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_memcmp)(const void*, const void*, size_t);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_strlen)(const char*);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_utf8strlen)(const char*);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_utf8strnlen)(const char*, size_t);
+    char* OMG_SDL2_STD_PREFIX (*SDL_strrev)(char*);
+    char* OMG_SDL2_STD_PREFIX (*SDL_itoa)(int, char*, int);
+    char* OMG_SDL2_STD_PREFIX (*SDL_ltoa)(long, char*, int);
+    char* OMG_SDL2_STD_PREFIX (*SDL_uitoa)(unsigned int, char*, int);
+    char* OMG_SDL2_STD_PREFIX (*SDL_ultoa)(unsigned long, char*, int);
+    char* OMG_SDL2_STD_PREFIX (*SDL_lltoa)(int64_t, char*, int);
+    char* OMG_SDL2_STD_PREFIX (*SDL_ulltoa)(uint64_t, char*, int);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_wcslen)(const wchar_t*);
+    void* OMG_SDL2_STD_PREFIX (*SDL_malloc)(size_t);
+    void* OMG_SDL2_STD_PREFIX (*SDL_realloc)(void*, size_t size);
+    void OMG_SDL2_STD_PREFIX (*SDL_free)(void*);
+    void OMG_SDL2_STD_PREFIX (*SDL_LogInfo)(int, const char*, ...);
+    void OMG_SDL2_STD_PREFIX (*SDL_LogWarn)(int, const char*, ...);
+    void OMG_SDL2_STD_PREFIX (*SDL_LogError)(int, const char*, ...);
+    void OMG_SDL2_STD_PREFIX (*SDL_LogCritical)(int, const char*, ...);
+    const char* OMG_SDL2_STD_PREFIX (*SDL_GetError)(void);
+    SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);
+    void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);
     SDL_version ver;
 } OMG_Sdl2;
 

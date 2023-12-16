@@ -91,9 +91,9 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_app_quit(OMG_OmegaSdl2* this) {
-    if (this->inited) {
+    if (base->inited) {
         this->sdl2->SDL_Quit();
-        this->inited = false;
+        base->inited = false;
     }
     return false;
 }
@@ -117,7 +117,7 @@ bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
-    this->inited = false;
+    base->inited = false;
     if (OMG_ISNULL(this->sdl2)) {
         this->sdl2 = &this->sdl2_stk;
         if (omg_sdl2_dll_load(this->sdl2, NULL))
@@ -167,7 +167,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->window_alloc = omg_sdl2_window_alloc;
     base->destroy = omg_sdl2_destroy;
     OMG_END_POINTER_CAST();
-    this->inited = true;
+    base->inited = true;
     return false;
 }
 #endif

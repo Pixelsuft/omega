@@ -42,6 +42,7 @@ typedef struct OMG_Omega {
     int type;
     bool should_free_mem;
     bool should_free_std;
+    bool inited;
 } OMG_Omega;
 
 OMG_API OMG_Omega* omg_create(OMG_EntryData* data);
