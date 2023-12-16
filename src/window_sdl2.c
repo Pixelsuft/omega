@@ -1,6 +1,9 @@
 #include <omega/window_sdl2.h>
 
 #if OMG_SUPPORT_SDL2
+#include <omega/config.h>
+#include <omega/window.h>
+#include <omega/ostd.h>
 #include <omega/omega.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)this->omg)
@@ -15,7 +18,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         0
     );
     if (OMG_ISNULL(this->win)) {
-        _OMG_LOG_ERROR(omg_base, "Failed to create window (", this->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_ERROR(this->omg, "Failed to create window (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
     base->inited = true;
