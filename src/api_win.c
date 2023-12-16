@@ -15,11 +15,11 @@
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC_COMPAT
-#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, #func_name))
 #elif OMG_WINAPI_STATIC_COMPAT
-#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
-#else
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = NULL
+#else
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC_UGLY
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
@@ -27,7 +27,7 @@
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC_ORDINAL
-#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = GetProcAddress(this->handle, OMG_WIN_MAKEINTRESOURCEA(func_ord))
+#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, OMG_WIN_MAKEINTRESOURCEA(func_ord)))
 #else
 #define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = NULL
 #endif
@@ -129,14 +129,12 @@ bool omg_winapi_user32_free(OMG_User32* this) {
 bool omg_winapi_dwmapi_load(OMG_Dwmapi* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     this->handle = LOAD_SYSTEM_LIBRARY(L"dwmapi.dll");
-    if (OMG_ISNULL(this->handle))
-        return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
     LOAD_REQUIRED_COMPAT(DwmSetWindowAttribute);
     LOAD_REQUIRED_COMPAT(DwmFlush);
     OMG_END_POINTER_CAST();
-    return false;
+    return (OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT) && OMG_ISNULL(this->handle);
 }
 
 bool omg_winapi_dwmapi_free(OMG_Dwmapi* this) {
@@ -153,8 +151,6 @@ bool omg_winapi_dwmapi_free(OMG_Dwmapi* this) {
 bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_ORDINAL
     this->handle = LOAD_SYSTEM_LIBRARY(L"uxtheme.dll");
-    if (OMG_ISNULL(this->handle))
-        return true;
 #endif
     OMG_BEGIN_POINTER_CAST();
     if (build_num >= 17763) {
@@ -196,7 +192,7 @@ bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num) {
         this->IsDarkModeAllowedForApp = NULL;
     }
     OMG_END_POINTER_CAST();
-    return false;
+    return (OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT) && OMG_ISNULL(this->handle);
 }
 
 bool omg_winapi_uxtheme_free(OMG_Uxtheme* this) {

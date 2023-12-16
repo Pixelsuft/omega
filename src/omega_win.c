@@ -273,10 +273,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
         if (OMG_ISNULL(this->dwm)) {
             return true;
         }
-        if (omg_winapi_dwmapi_load(this->dwm)) {
-            OMG_FREE(base->mem, this->dwm);
-            return true;
-        }
+        omg_winapi_dwmapi_load(this->dwm);
         this->should_free_dwm = true;
     }
     else
@@ -286,10 +283,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
         if (OMG_ISNULL(this->uxtheme)) {
             return true;
         }
-        if (omg_winapi_uxtheme_load(this->uxtheme, this->win_build_number)) {
-            OMG_FREE(base->mem, this->uxtheme);
-            return true;
-        }
+        omg_winapi_uxtheme_load(this->uxtheme, this->win_build_number);
         this->should_free_uxtheme = true;
     }
     else
@@ -317,6 +311,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Win32 backend");
+    // TODO: correct version by check build number
     _OMG_LOG_INFO(
         base, "Running on Windows ",
         (this->win_major_ver == 10 && this->win_build_number >= 21996) ? 11 : this->win_major_ver, // Fuck Microsoft
