@@ -1,5 +1,10 @@
 #include <omega/window.h>
 
+void omg_window_fill_on_create(OMG_Window* this) {
+    this->size.w = 800.0f;
+    this->size.h = 600.0f;
+}
+
 bool omg_window_show(OMG_Window* this) {
     OMG_UNUSED(this);
     return false;

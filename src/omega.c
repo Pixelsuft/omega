@@ -18,6 +18,8 @@ void omg_fill_on_create(OMG_Omega* this) {
     this->log_warn_str = NULL;
     this->log_error_str = NULL;
     this->log_fatal_str = NULL;
+    this->support_highdpi = true;
+    this->app_theme = OMG_THEME_AUTO;
     this->omg_init = omg_omg_init;
 }
 
@@ -67,6 +69,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->unused = NULL;
     this->std = NULL;
     this->should_free_mem = false;
+    this->theme = OMG_THEME_NONE;
     if (this->log_level == -1)
         this->log_level = OMG_LOG_MIN_LEVEL;
     if (this->log_level_omg == -1)

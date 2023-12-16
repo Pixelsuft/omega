@@ -40,6 +40,9 @@ typedef struct OMG_Omega {
     int log_level_omg;
     int log_level;
     int type;
+    int theme;
+    int app_theme;
+    bool support_highdpi;
     bool should_free_mem;
     bool should_free_std;
     bool inited;
