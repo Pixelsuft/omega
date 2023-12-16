@@ -11,6 +11,7 @@
 #endif
 
 #if OMG_SDL2_DYNAMIC
+#define OMG_SDL_STD_PREFIX __stdcall
 #define SDL_INIT_TIMER          0x00000001u
 #define SDL_INIT_VIDEO          0x00000020u
 #define SDL_INIT_EVENTS         0x00004000u
@@ -25,6 +26,10 @@ typedef struct {
     uint8_t minor;
     uint8_t patch;
 } SDL_version;
+
+typedef void SDL_Window;
+#else
+#define OMG_SDL_STD_PREFIX SDLCALL
 #endif
 
 typedef struct {
@@ -55,6 +60,8 @@ typedef struct {
     void (*SDL_LogError)(int, const char*, ...);
     void (*SDL_LogCritical)(int, const char*, ...);
     const char* (*SDL_GetError)(void);
+    SDL_Window* SDL_CreateWindow(const char*, int, int, int, int, Uint32);
+    void SDL_DestroyWindow(SDL_Window*);
     SDL_version ver;
 } OMG_Sdl2;
 

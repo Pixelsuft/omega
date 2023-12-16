@@ -7,6 +7,7 @@
 
 typedef struct {
     OMG_Window parent;
+    SDL_Window* win;
 } OMG_WindowSdl2;
 
 OMG_API bool omg_window_sdl2_init(OMG_WindowSdl2* this);
