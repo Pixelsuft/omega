@@ -4,6 +4,7 @@
 #include <omega/omega_win.h>
 #include <omega/ostd.h>
 #include <omega/memory_win.h>
+#include <omega/window_win.h>
 #define base ((OMG_Omega*)this)
 
 #define _OMG_WIN_LOG_MACRO(this, data, type_str, type_len, type_len2, is_error) { \
@@ -164,6 +165,20 @@ void omg_win_fill_std(OMG_OmegaWin* this) {
     base->std->lib_free = omg_win_std_lib_free; */
 }
 
+OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
+    OMG_WindowWin* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowWin));
+    if (OMG_ISNULL(result)) {
+        _OMG_LOG_ERROR(base, "Failed to allocate memory for Win32 Window");
+        return NULL;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    result->parent.omg = base;
+    result->omg = this;
+    result->parent.default_init = omg_window_win_init;
+    OMG_END_POINTER_CAST();
+    return result;
+}
+
 bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
@@ -279,6 +294,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_warn_str = omg_win_log_warn_str;
     base->log_error_str = omg_win_log_error_str;
     base->log_fatal_str = omg_win_log_fatal_str;
+    base->window_alloc = omg_win_window_alloc;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Win32 backend");

@@ -1,0 +1,18 @@
+#pragma once
+#include <omega/config.h>
+#include <omega/window.h>
+
+#if OMG_SUPPORT_SDL2
+#include <omega/api_win.h>
+
+typedef struct {
+    OMG_Window parent;
+    void* omg;
+} OMG_WindowWin;
+
+OMG_API bool omg_window_win_init(OMG_WindowWin* this);
+OMG_API bool omg_window_win_destroy(OMG_WindowWin* this);
+#if OMG_EXPORT_SHIT
+OMG_API bool omg_window_win_show(OMG_WindowWin* this);
+#endif
+#endif

@@ -1,9 +1,6 @@
 #include <omega/window_sdl2.h>
 
 #if OMG_SUPPORT_SDL2
-#include <omega/config.h>
-#include <omega/window.h>
-#include <omega/ostd.h>
 #include <omega/omega.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)this->omg)

@@ -36,17 +36,17 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    /* this->win = this->omg->window_alloc(this->omg);
+    this->win = this->omg->window_alloc(this->omg);
     if (OMG_ISNULL(this->win)) {
         // TODO: auto cleanup function
         this->omg->destroy(this->omg);
         return;
     }
     this->win->default_init(this->win);
-    this->win->show(this->win) */
+    this->win->show(this->win);
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
-    // this->win->destroy(this->win);
-    // this->omg->window_free(this->omg, this->win);
+    this->win->destroy(this->win);
+    this->omg->window_free(this->omg, this->win);
     this->omg->app_quit(this->omg);
     this->omg->destroy(this->omg);
     this->exit_code = 0;
