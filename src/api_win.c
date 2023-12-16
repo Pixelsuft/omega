@@ -156,17 +156,40 @@ bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num) {
     if (build_num >= 17763) {
         LOAD_REQUIRED_ORD(ShouldAppsUseDarkMode, 132);
         LOAD_REQUIRED_ORD(AllowDarkModeForWindow, 133);
-        if (build_num < 18362)
+        if (build_num < 18362) {
+            this->SetPreferredAppMode = NULL;
             LOAD_REQUIRED_ORD(AllowDarkModeForApp, 135);
-        else
+        }
+        else {
+            this->AllowDarkModeForApp = NULL;
             LOAD_REQUIRED_ORD(SetPreferredAppMode, 135);
+        }
         LOAD_REQUIRED_ORD(FlushMenuThemes, 136);
         LOAD_REQUIRED_ORD(RefreshImmersiveColorPolicyState, 104);
         LOAD_REQUIRED_ORD(IsDarkModeAllowedForWindow, 137);
-        if (build_num >= 18362) {
-            LOAD_REQUIRED_ORD(ShouldSystemUseDarkMode, 132);
-            LOAD_REQUIRED_ORD(IsDarkModeAllowedForApp, 132);
+        if (build_num >= 18290) {
+            LOAD_REQUIRED_ORD(ShouldSystemUseDarkMode, 138);
         }
+        else {
+            this->ShouldSystemUseDarkMode = NULL;
+        }
+        if (build_num >= 18334) {
+            LOAD_REQUIRED_ORD(IsDarkModeAllowedForApp, 139);
+        }
+        else {
+            this->IsDarkModeAllowedForApp = NULL;
+        }
+    }
+    else {
+        this->ShouldAppsUseDarkMode = NULL;
+        this->AllowDarkModeForWindow = NULL;
+        this->AllowDarkModeForApp = NULL;
+        this->SetPreferredAppMode = NULL;
+        this->FlushMenuThemes = NULL;
+        this->RefreshImmersiveColorPolicyState = NULL;
+        this->IsDarkModeAllowedForWindow = NULL;
+        this->ShouldAppsUseDarkMode = NULL;
+        this->IsDarkModeAllowedForApp = NULL;
     }
     OMG_END_POINTER_CAST();
     return false;

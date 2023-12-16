@@ -105,8 +105,27 @@ bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
 }
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
-    OMG_UNUSED(this);
-    // TODO: dark mode, high dpi, etc
+    if (base->support_highdpi) {
+        if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
+            if (!this->u32->SetProcessDPIAware()) {
+                _OMG_LOG_WARN(base, "Failed to set dpi awareness for app");
+            }
+        }
+    }
+    if (OMG_ISNOTNULL(this->uxtheme->AllowDarkModeForApp))
+        this->uxtheme->AllowDarkModeForApp((base->app_theme == OMG_THEME_DARK) || (base->app_theme == OMG_THEME_AUTO));
+    if (OMG_ISNOTNULL(this->uxtheme->SetPreferredAppMode)) {
+        if (base->app_theme == OMG_THEME_AUTO)
+            this->uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_ALLOW_DARK);
+        else if (base->app_theme == OMG_THEME_NONE)
+            this->uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_DEFAULT);
+        else if (base->app_theme == OMG_THEME_LIGHT)
+            this->uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_FORCE_LIGHT);
+        else if (base->app_theme == OMG_THEME_DARK)
+            this->uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_FORCE_DARK);
+    }
+    if (OMG_ISNOTNULL(this->uxtheme->ShouldSystemUseDarkMode))
+        base->theme = this->uxtheme->ShouldSystemUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT;
     return false;
 }
 

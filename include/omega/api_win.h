@@ -110,11 +110,11 @@ typedef struct {
 
 typedef enum
 {
-    Default,
-    AllowDark,
-    ForceDark,
-    ForceLight,
-    Max
+    OMG_WIN_APPMODE_DEFAULT,
+    OMG_WIN_APPMODE_ALLOW_DARK,
+    OMG_WIN_APPMODE_FORCE_DARK,
+    OMG_WIN_APPMODE_FORCE_LIGHT,
+    OMG_WIN_APPMODE_MAX
 } OMG_WinPreferredAppMode;
 
 #if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
