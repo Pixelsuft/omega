@@ -192,7 +192,7 @@ bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num) {
         this->FlushMenuThemes = NULL;
         this->RefreshImmersiveColorPolicyState = NULL;
         this->IsDarkModeAllowedForWindow = NULL;
-        this->ShouldAppsUseDarkMode = NULL;
+        this->ShouldSystemUseDarkMode = NULL;
         this->IsDarkModeAllowedForApp = NULL;
     }
     OMG_END_POINTER_CAST();
