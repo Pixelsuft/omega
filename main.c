@@ -23,7 +23,6 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->omg->app_quit(this->omg);
     this->omg->destroy(this->omg);
     this->exit_code = 0;
-    // TODO: fix it
 }
 
 void app_on_update(OMG_EventUpdate* event) {

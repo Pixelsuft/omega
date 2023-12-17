@@ -124,7 +124,7 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
     while (base->looping) {
         omg_win_poll_events(this);
         if (!base->looping)
-            return;
+            break;
         OMG_EventUpdate u_event;
         MAKE_EVENT(&u_event);
         base->on_update(&u_event);
