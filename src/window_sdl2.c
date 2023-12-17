@@ -12,6 +12,7 @@ bool omg_window_sdl2_show(OMG_WindowSdl2* this) {
 
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
+    base->type = OMG_WIN_TYPE_SDL2;
     base->inited = false;
     this->win = this->sdl2->SDL_CreateWindow(
         "OMG Window",

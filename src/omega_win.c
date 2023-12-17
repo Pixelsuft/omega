@@ -196,6 +196,8 @@ OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
     result->omg = this;
     result->u32 = this->u32;
     result->k32 = this->k32;
+    result->dwm = this->dwm;
+    result->uxtheme = this->uxtheme;
     result->parent.default_init = omg_window_win_init;
     OMG_END_POINTER_CAST();
     return result;

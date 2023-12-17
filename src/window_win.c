@@ -10,8 +10,27 @@ bool omg_window_win_show(OMG_WindowWin* this) {
     return false;
 }
 
+void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
+    if (OMG_ISNOTNULL(this->uxtheme->ShouldAppsUseDarkMode) && (true || (omg_base->theme == OMG_THEME_NONE))) {
+        omg_base->theme = this->uxtheme->ShouldAppsUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT;
+    }
+    if (OMG_ISNOTNULL(this->uxtheme->AllowDarkModeForWindow)) {
+        this->uxtheme->AllowDarkModeForWindow(
+            this->hwnd,
+            ((omg_base->app_theme == OMG_THEME_DARK) || (omg_base->app_theme == OMG_THEME_AUTO)) && (omg_base->theme != OMG_THEME_LIGHT)
+        );
+    }
+    if (OMG_ISNOTNULL(this->dwm->DwmSetWindowAttribute)) {
+        DWORD val = (DWORD)omg_base->theme;
+        this->dwm->DwmSetWindowAttribute(this->hwnd, 19, &val, sizeof(DWORD));
+        val = (DWORD)omg_base->theme;
+        this->dwm->DwmSetWindowAttribute(this->hwnd, 20, &val, sizeof(DWORD));
+    }
+}
+
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
+    base->type = OMG_WIN_TYPE_WIN;
     base->inited = false;
     this->wc.cbSize = sizeof(OMG_WIN_WNDCLASSEXW);
     this->wc.style = OMG_WIN_CS_HREDRAW | OMG_WIN_CS_VREDRAW;
@@ -47,10 +66,10 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->hwnd = this->u32->CreateWindowExW(
         OMG_WIN_WS_EX_COMPOSITED | OMG_WIN_WS_EX_LAYERED | OMG_WIN_WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window",
-        OMG_WIN_WS_OVERLAPPEDWINDOW, // TODO: cusomize
+        OMG_WIN_WS_OVERLAPPEDWINDOW, // TODO: customize
         OMG_WIN_CW_USEDEFAULT, OMG_WIN_CW_USEDEFAULT,
         (int)base->size.w, (int)base->size.h,
-        NULL, NULL, this->wc.hInstance, NULL
+        NULL, NULL, this->wc.hInstance, this
     );
     if (OMG_ISNULL(this->hwnd) && 0) {
         DWORD error = this->k32->GetLastError();
@@ -68,6 +87,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         this->u32->UnregisterClassW(this->wc.lpszClassName, this->wc.hInstance);
         return true;
     }
+    omg_window_win_check_dark_mode(this);
     base->inited = true;
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_win_show;
