@@ -52,6 +52,10 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_window_win_check_dark_mode(this);
             return RET_DEF_PROC();
         }
+        case OMG_WIN_WM_DESTROY: {
+            omg_base->auto_loop_stop(omg_base); // TODO: it's temporary here
+            return RET_DEF_PROC();
+        }
         default: {
             if (OMG_ISNOTNULL(this)) {
                 _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);

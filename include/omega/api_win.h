@@ -193,6 +193,11 @@
 #else
 #define OMG_WIN_GWLP_USERDATA (-21)
 #endif
+#ifdef PM_REMOVE
+#define OMG_WIN_PM_REMOVE PM_REMOVE
+#else
+#define OMG_WIN_PM_REMOVE 0x0001
+#endif
 #ifdef WM_NCCREATE
 #define OMG_WIN_WM_NCCREATE WM_NCCREATE
 #else
@@ -202,6 +207,11 @@
 #define OMG_WIN_WM_THEMECHANGED WM_THEMECHANGED
 #else
 #define OMG_WIN_WM_THEMECHANGED 0x031A
+#endif
+#ifdef WM_DESTROY
+#define OMG_WIN_WM_DESTROY WM_DESTROY
+#else
+#define OMG_WIN_WM_DESTROY 0x0002
 #endif
 
 typedef WNDCLASSEXW OMG_WIN_WNDCLASSEXW;
@@ -281,6 +291,11 @@ typedef struct {
     LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
 #endif
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
+    BOOL OMG_WIN_STD_PREFIX (*PeekMessageW)(LPMSG, HWND, UINT, UINT, UINT);
+    BOOL OMG_WIN_STD_PREFIX (*TranslateMessage)(const MSG*);
+    LRESULT OMG_WIN_STD_PREFIX (*DispatchMessageW)(const MSG*);
+    BOOL OMG_WIN_STD_PREFIX (*InvalidateRect)(HWND, const RECT*, BOOL);
+    BOOL OMG_WIN_STD_PREFIX (*UpdateWindow)(HWND);
     LRESULT OMG_WIN_STD_PREFIX (*DefWindowProcW)(HWND, UINT, WPARAM, LPARAM);
     HBRUSH OMG_WIN_STD_PREFIX (*GetSysColorBrush)(int);
     HANDLE OMG_WIN_STD_PREFIX (*LoadImageW)(HINSTANCE, LPCWSTR, UINT, int, int, UINT);

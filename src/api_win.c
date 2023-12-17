@@ -119,6 +119,11 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(SetWindowLongW);
     LOAD_REQUIRED(GetWindowLongW);
     LOAD_REQUIRED(ShowWindow);
+    LOAD_REQUIRED(PeekMessageW);
+    LOAD_REQUIRED(TranslateMessage);
+    LOAD_REQUIRED(DispatchMessageW);
+    LOAD_REQUIRED(InvalidateRect);
+    LOAD_REQUIRED(UpdateWindow);
     LOAD_REQUIRED(DefWindowProcW);
     LOAD_REQUIRED(GetSysColorBrush);
     LOAD_REQUIRED(LoadImageW);

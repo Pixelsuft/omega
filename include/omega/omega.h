@@ -41,6 +41,8 @@ typedef struct OMG_Omega {
     bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
+    void (*auto_loop_run)(struct OMG_Omega* this);
+    void (*auto_loop_stop)(struct OMG_Omega* this);
     OMG_Window* (*window_alloc)(struct OMG_Omega* this);
     bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
     int log_level_lib;
@@ -49,6 +51,7 @@ typedef struct OMG_Omega {
     int type;
     int theme;
     int app_theme;
+    bool looping;
     bool support_highdpi;
     bool should_free_mem;
     bool should_free_std;
@@ -66,6 +69,8 @@ OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, float seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
+OMG_API void omg_auto_loop_run(OMG_Omega* this);
+OMG_API void omg_auto_loop_stop(OMG_Omega* this);
 OMG_API OMG_Window* omg_window_alloc(OMG_Omega* this);
 OMG_API bool omg_window_free(OMG_Omega* this, OMG_Window* window);
 #endif

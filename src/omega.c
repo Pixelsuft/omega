@@ -69,10 +69,19 @@ bool omg_app_quit(OMG_Omega* this) {
     return false;
 }
 
+void omg_auto_loop_run(OMG_Omega* this) {
+    this->looping = false;
+}
+
+void omg_auto_loop_stop(OMG_Omega* this) {
+    this->looping = false;
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
     this->std = NULL;
+    this->looping = false;
     this->should_free_mem = false;
     this->theme = OMG_THEME_NONE;
     if (this->log_level == -1)
@@ -92,6 +101,8 @@ bool omg_omg_init(OMG_Omega* this) {
     this->destroy = omg_destroy;
     this->app_init = omg_app_init;
     this->app_quit = omg_app_quit;
+    this->auto_loop_run = omg_auto_loop_run;
+    this->auto_loop_stop = omg_auto_loop_stop;
     this->window_alloc = omg_window_alloc;
     this->window_free = omg_window_free;
     this->delay = omg_delay;
