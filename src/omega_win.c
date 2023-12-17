@@ -70,7 +70,7 @@ OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
 
 void omg_win_attach_console(OMG_OmegaWin* this) {
     if (this->con_result == 0) {
-        BOOL attach_res = OMG_ISNULL(this->k32->AttachConsole) ? 1 : this->k32->AttachConsole(OMG_WIN_ATTACH_PARENT_PROCESS);
+        BOOL attach_res = OMG_ISNULL(this->k32->AttachConsole) ? 0 : this->k32->AttachConsole(OMG_WIN_ATTACH_PARENT_PROCESS);
         if (!attach_res) {
             if (this->k32->GetLastError() == OMG_WIN_ERROR_ACCESS_DENIED)
                 this->con_result = 1;

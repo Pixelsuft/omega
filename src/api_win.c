@@ -14,14 +14,14 @@
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
-#if OMG_WINAPI_DYNAMIC_COMPAT
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, #func_name))
 #elif OMG_WINAPI_STATIC_COMPAT
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = NULL
 #else
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
 #endif
-#if OMG_WINAPI_DYNAMIC_UGLY
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_UGLY
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
 #else
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
