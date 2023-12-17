@@ -110,6 +110,7 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(DestroyWindow);
     LOAD_REQUIRED(ShowWindow);
     LOAD_REQUIRED(DefWindowProcW);
+    LOAD_REQUIRED(GetSysColorBrush);
     LOAD_REQUIRED(LoadImageW);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(GetDpiForSystem);

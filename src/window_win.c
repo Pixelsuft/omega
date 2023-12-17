@@ -14,7 +14,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->inited = false;
     this->wc.cbSize = sizeof(OMG_WIN_WNDCLASSEXW);
-    this->wc.style = 0;
+    this->wc.style = OMG_WIN_CS_HREDRAW | OMG_WIN_CS_VREDRAW;
     this->wc.lpfnWndProc = omg_win_wnd_proc;
     this->wc.cbClsExtra = 0;
     this->wc.cbWndExtra = 0;
@@ -24,7 +24,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         NULL, (LPCWSTR)OMG_WIN_IDC_ARROW,
         OMG_WIN_IMAGE_CURSOR, 0, 0, OMG_WIN_LR_DEFAULTSIZE | OMG_WIN_LR_SHARED
     );
-    this->wc.hbrBackground = NULL;
+    this->wc.hbrBackground = this->u32->GetSysColorBrush(COLOR_3DFACE);
     this->wc.lpszMenuName = NULL;
     this->wc.lpszClassName = L"OMG_App"; // TODO: custom name to support multiple windows
     this->wc.hIconSm = NULL;
@@ -47,12 +47,12 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->hwnd = this->u32->CreateWindowExW(
         OMG_WIN_WS_EX_COMPOSITED | OMG_WIN_WS_EX_LAYERED | OMG_WIN_WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window",
-        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        CW_USEDEFAULT, CW_USEDEFAULT,
+        OMG_WIN_WS_OVERLAPPEDWINDOW, // TODO: cusomize
+        OMG_WIN_CW_USEDEFAULT, OMG_WIN_CW_USEDEFAULT,
         (int)base->size.w, (int)base->size.h,
         NULL, NULL, this->wc.hInstance, NULL
     );
-    if (OMG_ISNULL(this->hwnd)) {
+    if (OMG_ISNULL(this->hwnd) && 0) {
         DWORD error = this->k32->GetLastError();
         DWORD res;
         wchar_t* w_error_buffer;

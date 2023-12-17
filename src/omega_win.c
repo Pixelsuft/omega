@@ -191,7 +191,7 @@ OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();
-    omg_window_fill_on_create(this);
+    omg_window_fill_on_create(result);
     result->parent.omg = base;
     result->omg = this;
     result->u32 = this->u32;

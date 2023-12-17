@@ -75,7 +75,7 @@ OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this) {
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();
-    omg_window_fill_on_create(this);
+    omg_window_fill_on_create(result);
     result->parent.omg = base;
     result->sdl2 = this->sdl2;
     result->omg = this;
