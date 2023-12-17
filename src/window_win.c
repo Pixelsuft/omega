@@ -58,6 +58,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case OMG_WIN_WM_DESTROY: {
+            // TODO: it's not really quit, but should work for atleast one window
             OMG_EventQuit event;
             MAKE_EVENT(&event);
             omg_base->on_quit(&event);

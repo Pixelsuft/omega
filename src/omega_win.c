@@ -134,10 +134,6 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
     base->on_loop_stop(&ls_event);
 }
 
-void omg_win_auto_loop_stop(OMG_OmegaWin* this) {
-    base->looping = false;
-}
-
 bool omg_win_app_init(OMG_OmegaWin* this) {
     if (base->support_highdpi) {
         if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
@@ -353,7 +349,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_error_str = omg_win_log_error_str;
     base->log_fatal_str = omg_win_log_fatal_str;
     base->auto_loop_run = omg_win_auto_loop_run;
-    base->auto_loop_stop = omg_win_auto_loop_stop;
     base->window_alloc = omg_win_window_alloc;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();

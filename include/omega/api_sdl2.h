@@ -34,6 +34,96 @@ typedef struct {
 
 typedef enum
 {
+    SDL_FIRSTEVENT = 0,
+    SDL_QUIT = 0x100,
+    SDL_APP_TERMINATING,
+    SDL_APP_LOWMEMORY,
+    SDL_APP_WILLENTERBACKGROUND,
+    SDL_APP_DIDENTERBACKGROUND,
+    SDL_APP_WILLENTERFOREGROUND,
+    SDL_APP_DIDENTERFOREGROUND,
+    SDL_LOCALECHANGED,
+    SDL_DISPLAYEVENT = 0x150,
+    SDL_WINDOWEVENT = 0x200,
+    SDL_SYSWMEVENT,
+    SDL_KEYDOWN = 0x300,
+    SDL_KEYUP,
+    SDL_TEXTEDITING,
+    SDL_TEXTINPUT,
+    SDL_KEYMAPCHANGED,
+    SDL_TEXTEDITING_EXT,
+    SDL_MOUSEMOTION = 0x400,
+    SDL_MOUSEBUTTONDOWN,
+    SDL_MOUSEBUTTONUP,
+    SDL_MOUSEWHEEL,
+    SDL_JOYAXISMOTION = 0x600,
+    SDL_JOYBALLMOTION,
+    SDL_JOYHATMOTION,
+    SDL_JOYBUTTONDOWN,
+    SDL_JOYBUTTONUP,
+    SDL_JOYDEVICEADDED,
+    SDL_JOYDEVICEREMOVED,
+    SDL_JOYBATTERYUPDATED,
+    SDL_CONTROLLERAXISMOTION = 0x650,
+    SDL_CONTROLLERBUTTONDOWN,
+    SDL_CONTROLLERBUTTONUP,
+    SDL_CONTROLLERDEVICEADDED,
+    SDL_CONTROLLERDEVICEREMOVED,
+    SDL_CONTROLLERDEVICEREMAPPED,
+    SDL_CONTROLLERTOUCHPADDOWN,
+    SDL_CONTROLLERTOUCHPADMOTION,
+    SDL_CONTROLLERTOUCHPADUP,
+    SDL_CONTROLLERSENSORUPDATE,
+    SDL_FINGERDOWN = 0x700,
+    SDL_FINGERUP,
+    SDL_FINGERMOTION,
+    SDL_DOLLARGESTURE = 0x800,
+    SDL_DOLLARRECORD,
+    SDL_MULTIGESTURE,
+    SDL_CLIPBOARDUPDATE = 0x900,
+    SDL_DROPFILE = 0x1000,
+    SDL_DROPTEXT,
+    SDL_DROPBEGIN,
+    SDL_DROPCOMPLETE,
+    SDL_AUDIODEVICEADDED = 0x1100,
+    SDL_AUDIODEVICEREMOVED,
+    SDL_SENSORUPDATE = 0x1200,
+    SDL_RENDER_TARGETS_RESET = 0x2000,
+    SDL_RENDER_DEVICE_RESET,
+    SDL_POLLSENTINEL = 0x7F00,
+    SDL_USEREVENT = 0x8000,
+    SDL_LASTEVENT = 0xFFFF
+} SDL_EventType;
+
+typedef struct SDL_CommonEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+} SDL_CommonEvent;
+
+typedef struct SDL_WindowEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    uint8_t event;
+    uint8_t padding1;
+    uint8_t padding2;
+    uint8_t padding3;
+    int32_t data1;
+    int32_t data2;
+} SDL_WindowEvent;
+
+typedef union SDL_Event
+{
+    uint32_t type;
+    SDL_CommonEvent common;
+    SDL_WindowEvent window;
+    uint8_t padding[sizeof(void *) <= 8 ? 56 : sizeof(void *) == 16 ? 64 : 3 * sizeof(void *)];
+} SDL_Event;
+
+typedef enum
+{
     SDL_WINDOW_FULLSCREEN = 0x00000001,
     SDL_WINDOW_OPENGL = 0x00000002,
     SDL_WINDOW_SHOWN = 0x00000004,
@@ -97,6 +187,7 @@ typedef struct {
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
     SDL_version ver;
 } OMG_Sdl2;
 

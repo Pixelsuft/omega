@@ -4,6 +4,11 @@
 #include <omega/memory_sdl2.h>
 #include <omega/window_sdl2.h>
 #define base ((OMG_Omega*)this)
+#define MAKE_EVENT(event) do { \
+    ((OMG_Event*)event)->omg = this; \
+    ((OMG_Event*)event)->data = base->event_arg; \
+    ((OMG_Event*)event)->time = (uint64_t)(this->ev.common.timestamp); \
+} while (0)
 
 void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;
@@ -69,6 +74,34 @@ bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
 
 void omg_sdl2_delay(OMG_OmegaSdl2* this, float seconds) {
     this->sdl2->SDL_Delay((uint32_t)(seconds * 1000.0f));
+}
+
+void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
+    while (this->sdl2->SDL_PollEvent(&this->ev)) {
+        switch (this->ev.type) {
+            case SDL_QUIT: {
+                OMG_EventQuit event;
+                MAKE_EVENT(&event);
+                base->on_quit(&event);
+                break;
+            }
+        }
+    }
+}
+
+void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
+    base->looping = true;
+    while (base->looping) {
+        omg_sdl2_poll_events(this);
+        if (!base->looping)
+            break;
+        OMG_EventUpdate u_event;
+        MAKE_EVENT(&u_event);
+        base->on_update(&u_event);
+    }
+    OMG_EventLoopStop ls_event;
+    MAKE_EVENT(&ls_event);
+    base->on_loop_stop(&ls_event);
 }
 
 OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this) {
@@ -171,6 +204,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->log_warn_str = omg_sdl2_log_warn_str;
     base->log_error_str = omg_sdl2_log_error_str;
     base->log_fatal_str = omg_sdl2_log_fatal_str;
+    base->auto_loop_run = omg_sdl2_auto_loop_run;
     base->window_alloc = omg_sdl2_window_alloc;
     base->destroy = omg_sdl2_destroy;
     OMG_END_POINTER_CAST();
