@@ -56,6 +56,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(WideCharToMultiByte);
     LOAD_REQUIRED(WriteConsoleW);
     LOAD_REQUIRED(FormatMessageW);
+    LOAD_REQUIRED(GetModuleHandleW);
 #if OMG_WINAPI_DYNAMIC
     OMG_END_POINTER_CAST();
 #endif

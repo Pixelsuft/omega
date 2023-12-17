@@ -10,6 +10,7 @@ typedef struct {
     OMG_WIN_WNDCLASSEXW wc;
     HWND hwnd;
     OMG_User32* u32;
+    OMG_Kernel32* k32;
     void* omg;
 } OMG_WindowWin;
 

@@ -143,6 +143,7 @@ typedef struct {
     int OMG_WIN_STD_PREFIX (*WideCharToMultiByte)(UINT, DWORD, LPCWCH, int, LPSTR, int, LPCCH, LPBOOL);
     BOOL OMG_WIN_STD_PREFIX (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
     DWORD OMG_WIN_STD_PREFIX (*FormatMessageW)(DWORD, LPCVOID, DWORD, DWORD, LPWSTR, DWORD, char** args);
+    HMODULE OMG_WIN_STD_PREFIX (*GetModuleHandleW)(LPCWSTR);
 } OMG_Kernel32;
 
 typedef struct {
