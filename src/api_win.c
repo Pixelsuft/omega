@@ -33,7 +33,7 @@
 #endif
 
 bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
-#if OMG_WINAPI_DYNAMIC
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     this->handle = LOAD_SYSTEM_LIBRARY(L"kernel32.dll");
     if (OMG_ISNULL(this->handle))
         return true;
@@ -49,16 +49,16 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(HeapFree);
     LOAD_REQUIRED(Sleep);
     LOAD_REQUIRED(GetLastError);
-    LOAD_REQUIRED(GetStdHandle);
-    LOAD_REQUIRED(AllocConsole);
-    LOAD_REQUIRED(FreeConsole);
-    LOAD_REQUIRED(AttachConsole);
     LOAD_REQUIRED(MultiByteToWideChar);
     LOAD_REQUIRED(WideCharToMultiByte);
     LOAD_REQUIRED(WriteConsoleW);
     LOAD_REQUIRED(FormatMessageW);
     LOAD_REQUIRED(GetModuleHandleW);
-#if OMG_WINAPI_DYNAMIC
+    LOAD_REQUIRED(GetStdHandle);
+    LOAD_REQUIRED(AllocConsole);
+    LOAD_REQUIRED(FreeConsole);
+    LOAD_REQUIRED_COMPAT(AttachConsole);
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     OMG_END_POINTER_CAST();
 #endif
     return false;
