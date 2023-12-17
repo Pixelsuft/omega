@@ -71,7 +71,7 @@ bool omg_app_quit(OMG_Omega* this) {
 
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
-    this->unused = NULL;
+    this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
     this->std = NULL;
     this->should_free_mem = false;
     this->theme = OMG_THEME_NONE;

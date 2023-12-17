@@ -25,7 +25,12 @@ typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
     OMG_EntryData* entry_data;
-    void* unused;
+    void* extra1;
+    void* extra2;
+    void* extra3;
+    void* extra4;
+    void* extra5;
+    void* event_arg;
     bool (*omg_init)(struct OMG_Omega* this);
     bool (*app_init)(struct OMG_Omega* this);
     bool (*app_quit)(struct OMG_Omega* this);
