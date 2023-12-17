@@ -30,6 +30,7 @@ OMG_API bool omg_win_init(OMG_OmegaWin* this);
 OMG_API void omg_win_fill_std(OMG_OmegaWin* this);
 OMG_API void omg_win_fill_after_create(OMG_OmegaWin* this);
 OMG_API bool omg_win_destroy(OMG_OmegaWin* this);
+OMG_API LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 #if OMG_EXPORT_SHIT
 #include <omega/window_win.h>
 OMG_API void omg_win_attach_console(OMG_OmegaWin* this);

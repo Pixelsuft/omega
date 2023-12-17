@@ -7,6 +7,9 @@
 
 typedef struct {
     OMG_Window parent;
+    OMG_WIN_WNDCLASSEXW wc;
+    HWND hwnd;
+    OMG_User32* u32;
     void* omg;
 } OMG_WindowWin;
 

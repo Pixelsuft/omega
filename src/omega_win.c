@@ -193,9 +193,19 @@ OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
     OMG_BEGIN_POINTER_CAST();
     result->parent.omg = base;
     result->omg = this;
+    result->u32 = this->u32;
     result->parent.default_init = omg_window_win_init;
     OMG_END_POINTER_CAST();
     return result;
+}
+
+LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+    OMG_UNUSED(hwnd, wparam, lparam);
+    switch (msg) {
+        default: {
+            return 0;
+        }
+    }
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {

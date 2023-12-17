@@ -153,9 +153,10 @@ typedef struct {
 typedef struct {
     HANDLE handle;
     ATOM OMG_WIN_STD_PREFIX (*RegisterClassExW)(const WNDCLASSEXW*);
-    BOOL (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
-    HWND (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
-    BOOL (*DestroyWindow)(HWND);
+    BOOL OMG_WIN_STD_PREFIX (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
+    HWND OMG_WIN_STD_PREFIX (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
+    BOOL OMG_WIN_STD_PREFIX (*DestroyWindow)(HWND);
+    LRESULT OMG_WIN_STD_PREFIX (*DefWindowProcW)(HWND, UINT, WPARAM, LPARAM);
     BOOL OMG_WIN_STD_PREFIX (*SetProcessDPIAware)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForSystem)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND);

@@ -38,7 +38,6 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->win = this->omg->window_alloc(this->omg);
     if (OMG_ISNULL(this->win)) {
-        // TODO: auto cleanup function
         this->omg->destroy(this->omg);
         return;
     }
