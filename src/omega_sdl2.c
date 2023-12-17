@@ -5,18 +5,17 @@
 #include <omega/window_sdl2.h>
 #define base ((OMG_Omega*)this)
 
-void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this) {
+void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;
     OMG_BEGIN_POINTER_CAST();
-    omg_fill_on_create(this);
+    omg_fill_on_create(this, data);
     base->omg_init = omg_sdl2_init;
     OMG_END_POINTER_CAST();
 }
 
 OMG_OmegaSdl2* omg_sdl2_create(OMG_EntryData* data) {
-    OMG_UNUSED(data);
     static OMG_OmegaSdl2 result;
-    omg_sdl2_fill_after_create(&result);
+    omg_sdl2_fill_after_create(&result, data);
     return &result;
 }
 

@@ -24,6 +24,7 @@
 typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
+    OMG_EntryData* entry_data;
     void* unused;
     bool (*omg_init)(struct OMG_Omega* this);
     bool (*app_init)(struct OMG_Omega* this);
@@ -50,7 +51,7 @@ typedef struct OMG_Omega {
 } OMG_Omega;
 
 OMG_API OMG_Omega* omg_create(OMG_EntryData* data);
-OMG_API void omg_fill_on_create(OMG_Omega* this);
+OMG_API void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data);
 OMG_API OMG_Omega* omg_get_default_omega(void);
 OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_omg_init(OMG_Omega* this);

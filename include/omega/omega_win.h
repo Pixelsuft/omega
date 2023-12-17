@@ -28,7 +28,7 @@ typedef struct {
 OMG_API OMG_OmegaWin* omg_win_create(OMG_EntryData* data);
 OMG_API bool omg_win_init(OMG_OmegaWin* this);
 OMG_API void omg_win_fill_std(OMG_OmegaWin* this);
-OMG_API void omg_win_fill_after_create(OMG_OmegaWin* this);
+OMG_API void omg_win_fill_after_create(OMG_OmegaWin* this, OMG_EntryData* data);
 OMG_API bool omg_win_destroy(OMG_OmegaWin* this);
 #if OMG_EXPORT_SHIT
 #include <omega/window_win.h>

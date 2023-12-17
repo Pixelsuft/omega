@@ -75,7 +75,11 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->wc.lpfnWndProc = (WNDPROC)omg_win_wnd_proc;
     this->wc.cbClsExtra = 0;
     this->wc.cbWndExtra = 0;
-    this->wc.hInstance = (HINSTANCE)this->k32->GetModuleHandleW(NULL); // TODO: get from OMG_EntryData
+#if _OMG_ENTRY_DATA_TYPE == 2
+    this->wc.hInstance = ((OMG_Omega*)this->omg)->entry_data->hInst;
+#else
+    this->wc.hInstance = (HINSTANCE)this->k32->GetModuleHandleW(NULL);
+#endif
     this->wc.hIcon = NULL;
     this->wc.hCursor = (HCURSOR)this->u32->LoadImageW(
         NULL, (LPCWSTR)OMG_WIN_IDC_ARROW,

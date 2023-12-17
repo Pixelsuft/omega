@@ -7,6 +7,7 @@
 #if OMG_IS_WIN && !(OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORT_SDL2_MAIN && OMG_IS_VC)
 #include <omega/api_win.h>
 
+#define _OMG_ENTRY_DATA_TYPE 2
 typedef struct {
     HINSTANCE hInst;
     PWSTR cmdline;
@@ -37,6 +38,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdsh
 #if OMG_IS_WIN && OMG_SUPPORT_SDL2 && OMG_SUPPORT_SDL2_MAIN && !OMG_SDL2_DYNAMIC && !OMG_IS_VC && OMG_HAS_STD
 #define SDL_MAIN_HANDLED
 #endif
+#define _OMG_ENTRY_DATA_TYPE 1
 typedef struct {
     int argc;
     char** argv;

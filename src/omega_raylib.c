@@ -4,18 +4,17 @@
 #include <omega/memory_raylib.h>
 #define base ((OMG_Omega*)this)
 
-void omg_raylib_fill_after_create(OMG_OmegaRaylib* this) {
+void omg_raylib_fill_after_create(OMG_OmegaRaylib* this, OMG_EntryData* data) {
     this->raylib = NULL;
     OMG_BEGIN_POINTER_CAST();
-    omg_fill_on_create(this);
+    omg_fill_on_create(this, data);
     base->omg_init = omg_raylib_init;
     OMG_END_POINTER_CAST();
 }
 
 OMG_OmegaRaylib* omg_raylib_create(OMG_EntryData* data) {
-    OMG_UNUSED(data);
     static OMG_OmegaRaylib result;
-    omg_raylib_fill_after_create(&result);
+    omg_raylib_fill_after_create(&result, data);
     return &result;
 }
 

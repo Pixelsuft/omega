@@ -15,7 +15,8 @@ void omg_delay(OMG_Omega* this, float seconds) {
     OMG_UNUSED(this, seconds);
 }
 
-void omg_fill_on_create(OMG_Omega* this) {
+void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
+    this->entry_data = data;
     this->mem = NULL;
     this->log_level = this->log_level_omg = this->log_level_lib = -1;
     this->log_info_str = NULL;

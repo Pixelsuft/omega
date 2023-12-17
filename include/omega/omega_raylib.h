@@ -14,7 +14,7 @@ typedef struct {
 OMG_API OMG_OmegaRaylib* omg_raylib_create(OMG_EntryData* data);
 OMG_API bool omg_raylib_init(OMG_OmegaRaylib* this);
 OMG_API void omg_raylib_fill_std(OMG_OmegaRaylib* this);
-OMG_API void omg_raylib_fill_after_create(OMG_OmegaRaylib* this);
+OMG_API void omg_raylib_fill_after_create(OMG_OmegaRaylib* this, OMG_EntryData* data);
 OMG_API bool omg_raylib_destroy(OMG_OmegaRaylib* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_raylib_log_info_str(OMG_OmegaRaylib* this, const OMG_String* data);
