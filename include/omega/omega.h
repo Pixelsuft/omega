@@ -4,6 +4,7 @@
 #include <omega/memory.h>
 #include <omega/ostd.h>
 #include <omega/window.h>
+#include <omega/events.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
@@ -45,6 +46,7 @@ typedef struct OMG_Omega {
     void (*auto_loop_stop)(struct OMG_Omega* this);
     OMG_Window* (*window_alloc)(struct OMG_Omega* this);
     bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
+    void (*on_quit)(OMG_EventQuit* event);
     int log_level_lib;
     int log_level_omg;
     int log_level;

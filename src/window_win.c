@@ -5,6 +5,11 @@
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)this->omg)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
+#define MAKE_EVENT(event) do { \
+    ((OMG_EventBase*)event)->omg = this->omg; \
+    ((OMG_EventBase*)event)->data = omg_base->event_arg; \
+    ((OMG_EventBase*)event)->time = 0; \
+} while (0)
 
 bool omg_window_win_show(OMG_WindowWin* this) {
     this->u32->ShowWindow(this->hwnd, OMG_WIN_SW_SHOWNORMAL);
@@ -53,7 +58,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case OMG_WIN_WM_DESTROY: {
-            omg_base->auto_loop_stop(omg_base); // TODO: it's temporary here
+            OMG_EventQuit event;
+            MAKE_EVENT(&event);
+            omg_base->on_quit(&event);
             return RET_DEF_PROC();
         }
         default: {

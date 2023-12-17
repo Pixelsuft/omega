@@ -77,6 +77,11 @@ void omg_auto_loop_stop(OMG_Omega* this) {
     this->looping = false;
 }
 
+void omg_event_on_quit(OMG_EventQuit* event) {
+    OMG_Omega* this = (OMG_Omega*)(((OMG_EventBase*)event)->omg);
+    this->auto_loop_stop(this);
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
@@ -106,6 +111,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->window_alloc = omg_window_alloc;
     this->window_free = omg_window_free;
     this->delay = omg_delay;
+    this->on_quit = omg_event_on_quit;
     omg_def_omega = this;
     return false;
 }

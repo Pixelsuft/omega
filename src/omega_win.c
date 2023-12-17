@@ -103,13 +103,21 @@ bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
     _OMG_WIN_LOG_MACRO(this, data, L"[FATAL]: ", 9, 18, true);
 }
 
+void omg_win_poll_events(OMG_OmegaWin* this) {
+    while (this->u32->PeekMessageW(&this->msg, NULL, 0, 0, OMG_WIN_PM_REMOVE)) {
+        this->u32->TranslateMessage(&this->msg);
+        this->u32->DispatchMessageW(&this->msg);
+        if (!base->looping)
+            return;
+    }
+}
+
 void omg_win_auto_loop_run(OMG_OmegaWin* this) {
     base->looping = true;
     while (base->looping) {
-        while (this->u32->PeekMessageW(&this->msg, NULL, 0, 0, OMG_WIN_PM_REMOVE)) {
-            this->u32->TranslateMessage(&this->msg);
-            this->u32->DispatchMessageW(&this->msg);
-        }
+        omg_win_poll_events(this);
+        if (!base->looping)
+            return;
     }
 }
 
