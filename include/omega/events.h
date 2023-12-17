@@ -15,3 +15,7 @@ typedef struct {
 typedef struct {
     OMG_Event parent;
 } OMG_EventUpdate;
+
+typedef struct {
+    OMG_Event parent;
+} OMG_EventLoopStop;

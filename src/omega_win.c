@@ -6,6 +6,11 @@
 #include <omega/memory_win.h>
 #include <omega/window_win.h>
 #define base ((OMG_Omega*)this)
+#define MAKE_EVENT(event) do { \
+    ((OMG_Event*)event)->omg = this; \
+    ((OMG_Event*)event)->data = base->event_arg; \
+    ((OMG_Event*)event)->time = 0; \
+} while (0)
 
 #define _OMG_WIN_LOG_MACRO(this, data, type_str, type_len, type_len2, is_error) { \
     omg_win_attach_console(this); \
@@ -104,11 +109,13 @@ bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
 }
 
 void omg_win_poll_events(OMG_OmegaWin* this) {
-    while (this->u32->PeekMessageW(&this->msg, NULL, 0, 0, OMG_WIN_PM_REMOVE)) {
-        this->u32->TranslateMessage(&this->msg);
-        this->u32->DispatchMessageW(&this->msg);
+    while (base->looping && this->u32->PeekMessageW(&this->msg, NULL, 0, 0, OMG_WIN_PM_REMOVE)) {
         if (!base->looping)
             return;
+        this->u32->TranslateMessage(&this->msg);
+        if (!base->looping)
+            return;
+        this->u32->DispatchMessageW(&this->msg);
     }
 }
 
@@ -118,7 +125,13 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
         omg_win_poll_events(this);
         if (!base->looping)
             return;
+        OMG_EventUpdate u_event;
+        MAKE_EVENT(&u_event);
+        base->on_update(&u_event);
     }
+    OMG_EventLoopStop ls_event;
+    MAKE_EVENT(&ls_event);
+    base->on_loop_stop(&ls_event);
 }
 
 void omg_win_auto_loop_stop(OMG_OmegaWin* this) {

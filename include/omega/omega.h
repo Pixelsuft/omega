@@ -46,8 +46,10 @@ typedef struct OMG_Omega {
     void (*auto_loop_stop)(struct OMG_Omega* this);
     OMG_Window* (*window_alloc)(struct OMG_Omega* this);
     bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
+    void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
+    void (*on_loop_stop)(OMG_EventLoopStop* event);
     int log_level_lib;
     int log_level_omg;
     int log_level;
@@ -66,10 +68,12 @@ OMG_API void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data);
 OMG_API OMG_Omega* omg_get_default_omega(void);
 OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_omg_init(OMG_Omega* this);
+OMG_API void omg_reset_event_handlers(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
+OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
 OMG_API bool omg_app_init(OMG_Omega* this);
 OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, float seconds);

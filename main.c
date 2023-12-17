@@ -15,6 +15,17 @@ typedef struct {
 int omega_main(OMG_EntryData* data);
 OMG_MAKE_MAIN(omega_main)
 
+void app_on_destroy(OMG_EventLoopStop* event) {
+    App* this = (App*)(((OMG_Event*)event)->data);
+    OMG_INFO(this->omg, "bye!!!");
+    this->win->destroy(this->win);
+    this->omg->window_free(this->omg, this->win);
+    this->omg->app_quit(this->omg);
+    this->omg->destroy(this->omg);
+    this->exit_code = 0;
+    // TODO: fix it
+}
+
 void app_on_update(OMG_EventUpdate* event) {
 #if OMG_SUPPORT_WIN
     App* this = (App*)(((OMG_Event*)event)->data);
@@ -60,16 +71,9 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->default_init(this->win);
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
+    this->omg->on_loop_stop = app_on_destroy;
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win);
-    this->omg->auto_loop_run(this->omg);
-    /*
-    TODO: on destroy event (to not crash after freeing everything)
-    */
-    this->win->destroy(this->win);
-    this->omg->window_free(this->omg, this->win);
-    this->omg->app_quit(this->omg);
-    this->omg->destroy(this->omg);
     this->exit_code = 0;
 }
 
@@ -78,5 +82,6 @@ int omega_main(OMG_EntryData* data) {
     app_init(&app, data);
     if (app.exit_code)
         return app.exit_code;
+    app.omg->auto_loop_run(app.omg);
     return app.exit_code;
 }
