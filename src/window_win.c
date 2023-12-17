@@ -23,9 +23,10 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return 0;
         }
         default: {
-            if (OMG_ISNOTNULL(this))
+            if (OMG_ISNOTNULL(this)) {
                 _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);
-            return 0;
+                return this->u32->DefWindowProcW(hwnd, msg, wparam, lparam);
+            }
         }
     }
     return 0;
