@@ -20,6 +20,10 @@ bool omg_memory_free(OMG_Memory* this, void* ptr) {
     return false;
 }
 
+size_t omg_memory_get_alloc_count(OMG_Memory* this) {
+    return this->alloc_count;
+}
+
 bool omg_memory_init(OMG_Memory* this) {
     this->alloc_count = this->alloc_size = 0;
     this->is_allocated = false;
@@ -27,5 +31,6 @@ bool omg_memory_init(OMG_Memory* this) {
     this->alloc = omg_memory_alloc;
     this->realloc = omg_memory_realloc;
     this->free = omg_memory_free;
+    this->get_alloc_count = omg_memory_get_alloc_count;
     return false;
 }

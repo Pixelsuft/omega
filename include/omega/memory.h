@@ -31,6 +31,7 @@ typedef struct OMG_Memory {
     void* (*alloc)(struct OMG_Memory* this, OMG_MemoryExtra extra);
     void* (*realloc)(struct OMG_Memory* this, void* ptr, size_t size);
     bool (*free)(struct OMG_Memory* this, void* ptr);
+    size_t (*get_alloc_count)(struct OMG_Memory* this);
     bool is_allocated;
 } OMG_Memory;
 
@@ -40,4 +41,5 @@ OMG_API bool omg_memory_destroy(OMG_Memory* this);
 OMG_API void* omg_memory_alloc(OMG_Memory* this, OMG_MemoryExtra extra);
 OMG_API void* omg_memory_realloc(OMG_Memory* this, void* ptr, size_t size);
 OMG_API bool omg_memory_free(OMG_Memory* this, void* ptr);
+OMG_API size_t omg_memory_get_alloc_count(OMG_Memory* this);;
 #endif
