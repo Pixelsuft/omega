@@ -13,7 +13,7 @@ bool omg_window_win_show(OMG_WindowWin* this) {
 static LONG_PTR OMG_WIN_STD_PREFIX (*OMG_WIN_CB_GetWindowLongPtrW)(HWND, int);
 
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-    OMG_UNUSED(hwnd, wparam, lparam);
+    OMG_UNUSED(wparam);
     OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA);
     switch (msg) {
         case OMG_WIN_WM_NCCREATE: {
