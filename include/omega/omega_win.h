@@ -35,6 +35,7 @@ OMG_API bool omg_win_destroy(OMG_OmegaWin* this);
 OMG_API void omg_win_attach_console(OMG_OmegaWin* this);
 OMG_API bool omg_win_app_init(OMG_OmegaWin* this);
 OMG_API bool omg_win_app_quit(OMG_OmegaWin* this);
+OMG_API void omg_win_delay(OMG_OmegaWin* this, float seconds);
 OMG_API bool omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data);

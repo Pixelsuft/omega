@@ -245,6 +245,7 @@ typedef struct {
     LPVOID OMG_WIN_STD_PREFIX (*HeapAlloc)(HANDLE, DWORD, SIZE_T);
     LPVOID OMG_WIN_STD_PREFIX (*HeapReAlloc)(HANDLE, DWORD, LPVOID, SIZE_T);
     BOOL OMG_WIN_STD_PREFIX (*HeapFree)(HANDLE, DWORD, LPVOID);
+    void OMG_WIN_STD_PREFIX (*Sleep)(DWORD);
     DWORD OMG_WIN_STD_PREFIX (*GetLastError)(void);
     HANDLE OMG_WIN_STD_PREFIX (*GetStdHandle)(DWORD);
     BOOL OMG_WIN_STD_PREFIX (*AllocConsole)(void);

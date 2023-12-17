@@ -11,6 +11,10 @@ OMG_Omega* omg_create(OMG_EntryData* data) {
     return NULL;
 }
 
+void omg_delay(OMG_Omega* this, float seconds) {
+    OMG_UNUSED(this, seconds);
+}
+
 void omg_fill_on_create(OMG_Omega* this) {
     this->mem = NULL;
     this->log_level = this->log_level_omg = this->log_level_lib = -1;
@@ -89,6 +93,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->app_quit = omg_app_quit;
     this->window_alloc = omg_window_alloc;
     this->window_free = omg_window_free;
+    this->delay = omg_delay;
     omg_def_omega = this;
     return false;
 }

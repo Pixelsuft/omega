@@ -68,6 +68,10 @@ bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
     return false;
 }
 
+void omg_sdl2_delay(OMG_OmegaSdl2* this, float seconds) {
+    this->sdl2->SDL_Delay((uint32_t)(seconds * 1000.0f));
+}
+
 OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this) {
     OMG_WindowSdl2* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowSdl2));
     if (OMG_ISNULL(result)) {
@@ -163,6 +167,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
         base->should_free_std = false;
     base->app_init = omg_sdl2_app_init;
     base->app_quit = omg_sdl2_app_quit;
+    base->delay = omg_sdl2_delay;
     base->log_info_str = omg_sdl2_log_info_str;
     base->log_warn_str = omg_sdl2_log_warn_str;
     base->log_error_str = omg_sdl2_log_error_str;

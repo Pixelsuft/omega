@@ -70,6 +70,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_Init)(uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_Quit)(void);
     void OMG_SDL2_STD_PREFIX (*SDL_GetVersion)(SDL_version*);
+    void OMG_SDL2_STD_PREFIX (*SDL_Delay)(uint32_t);
     void* OMG_SDL2_STD_PREFIX (*SDL_memset)(void*, int, size_t);
     void* OMG_SDL2_STD_PREFIX (*SDL_memcpy)(void*, const void*, size_t);
     void* OMG_SDL2_STD_PREFIX (*SDL_memmove)(void*, const void*, size_t);

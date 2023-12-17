@@ -29,6 +29,7 @@ typedef struct OMG_Omega {
     bool (*app_init)(struct OMG_Omega* this);
     bool (*app_quit)(struct OMG_Omega* this);
     bool (*destroy)(struct OMG_Omega* this);
+    void (*delay)(struct OMG_Omega* this, float delay);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
     bool (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
@@ -56,6 +57,7 @@ OMG_API bool omg_omg_init(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_app_init(OMG_Omega* this);
 OMG_API bool omg_app_quit(OMG_Omega* this);
+OMG_API void omg_delay(OMG_Omega* this, float seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
 OMG_API OMG_Window* omg_window_alloc(OMG_Omega* this);

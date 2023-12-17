@@ -129,7 +129,12 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
     return false;
 }
 
+void omg_win_delay(OMG_OmegaWin* this, float seconds) {
+    this->k32->Sleep((DWORD)(seconds * 1000.0f));
+}
+
 bool omg_win_app_quit(OMG_OmegaWin* this) {
+    // Auto-free everything allocated like windows
     OMG_UNUSED(this);
     return false;
 }
@@ -308,6 +313,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
         this->should_free_u32 = false;
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
+    base->delay = omg_win_delay;
     base->log_info_str = omg_win_log_info_str;
     base->log_warn_str = omg_win_log_warn_str;
     base->log_error_str = omg_win_log_error_str;
