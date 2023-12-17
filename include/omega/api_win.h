@@ -263,14 +263,23 @@ typedef struct {
     void OMG_WIN_STD_PREFIX (*RtlGetVersion)(OMG_WIN_NTDLL_OSVERSIONINFOEXW*);
 } OMG_Ntdll;
 
+#ifdef SetWindowLongW
+// TODO: fuck microsoft
+#undef SetWindowLongW
+#endif
+
 typedef struct {
     HANDLE handle;
     ATOM OMG_WIN_STD_PREFIX (*RegisterClassExW)(const WNDCLASSEXW*);
     BOOL OMG_WIN_STD_PREFIX (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
     HWND OMG_WIN_STD_PREFIX (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
     BOOL OMG_WIN_STD_PREFIX (*DestroyWindow)(HWND);
+    LONG OMG_WIN_STD_PREFIX (*SetWindowLongW)(HWND, int, LONG);
+    LONG OMG_WIN_STD_PREFIX (*GetWindowLongW)(HWND, int);
+#ifndef SetWindowLongPtrW
     LONG_PTR OMG_WIN_STD_PREFIX (*SetWindowLongPtrW)(HWND, int, LONG_PTR);
     LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
+#endif
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
     LRESULT OMG_WIN_STD_PREFIX (*DefWindowProcW)(HWND, UINT, WPARAM, LPARAM);
     HBRUSH OMG_WIN_STD_PREFIX (*GetSysColorBrush)(int);

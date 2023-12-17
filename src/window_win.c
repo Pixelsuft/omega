@@ -4,14 +4,15 @@
 #include <omega/omega.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)this->omg)
-#define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam);
+#define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
 
 bool omg_window_win_show(OMG_WindowWin* this) {
     this->u32->ShowWindow(this->hwnd, OMG_WIN_SW_SHOWNORMAL);
     return false;
 }
 
-static LONG_PTR OMG_WIN_STD_PREFIX (*OMG_WIN_CB_GetWindowLongPtrW)(HWND, int);
+static LONG OMG_WIN_STD_PREFIX (*OMG_WIN_CB_GetWindowLongW)(HWND, int) = NULL;
+static LONG_PTR OMG_WIN_STD_PREFIX (*OMG_WIN_CB_GetWindowLongPtrW)(HWND, int) = NULL;
 
 void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
     if (OMG_ISNOTNULL(this->uxtheme->ShouldAppsUseDarkMode) && (true || (omg_base->theme == OMG_THEME_NONE))) {
@@ -32,12 +33,17 @@ void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
 }
 
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA);
+    OMG_WindowWin* this = OMG_ISNULL(OMG_WIN_CB_GetWindowLongPtrW) ?
+        ((OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA)) :
+        ((OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA));
     switch (msg) {
         case OMG_WIN_WM_NCCREATE: {
             OMG_WIN_LPCREATESTRUCTW lps = (OMG_WIN_LPCREATESTRUCTW)lparam;
             this = (OMG_WindowWin*)lps->lpCreateParams;
-            this->u32->SetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA, (LONG_PTR)this);
+            if (OMG_ISNULL(this->u32->SetWindowLongPtrW))
+                this->u32->SetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA, (LONG_PTR)this);
+            else
+                this->u32->SetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA, (LONG_PTR)this);
             return RET_DEF_PROC();
         }
         case OMG_WIN_WM_THEMECHANGED: {
@@ -49,9 +55,13 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);
                 return RET_DEF_PROC();
             }
+            return 0;
         }
     }
-    return 0;
+    if (OMG_ISNOTNULL(this))
+        return RET_DEF_PROC();
+    else
+        return 0;
 }
 
 bool omg_window_win_init(OMG_WindowWin* this) {
@@ -60,7 +70,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->inited = false;
     this->wc.cbSize = sizeof(OMG_WIN_WNDCLASSEXW);
     this->wc.style = OMG_WIN_CS_HREDRAW | OMG_WIN_CS_VREDRAW;
-    this->wc.lpfnWndProc = omg_win_wnd_proc;
+    this->wc.lpfnWndProc = (WNDPROC)omg_win_wnd_proc;
     this->wc.cbClsExtra = 0;
     this->wc.cbWndExtra = 0;
     this->wc.hInstance = (HINSTANCE)this->k32->GetModuleHandleW(NULL); // TODO: get from OMG_EntryData
@@ -73,6 +83,10 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->wc.lpszMenuName = NULL;
     this->wc.lpszClassName = L"OMG_App"; // TODO: custom name to support multiple windows
     this->wc.hIconSm = NULL;
+    if (OMG_ISNOTNULL(this->u32->GetWindowLongPtrW))
+        OMG_WIN_CB_GetWindowLongPtrW = this->u32->GetWindowLongPtrW;
+    if (OMG_ISNOTNULL(this->u32->GetWindowLongW))
+        OMG_WIN_CB_GetWindowLongW = this->u32->GetWindowLongW;
     this->class_atom = this->u32->RegisterClassExW(&this->wc);
     if (!this->class_atom) {
         DWORD error = this->k32->GetLastError();
@@ -89,8 +103,6 @@ bool omg_window_win_init(OMG_WindowWin* this) {
             OMG_FREE(omg_base->mem, w_error_buffer);
         return true;
     }
-    if (OMG_ISNOTNULL(this->u32->GetWindowLongPtrW))
-        OMG_WIN_CB_GetWindowLongPtrW = this->u32->GetWindowLongPtrW;
     this->hwnd = this->u32->CreateWindowExW(
         WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window",
