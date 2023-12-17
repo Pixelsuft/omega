@@ -108,6 +108,8 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(UnregisterClassW);
     LOAD_REQUIRED(CreateWindowExW);
     LOAD_REQUIRED(DestroyWindow);
+    LOAD_REQUIRED(SetWindowLongPtrW);
+    LOAD_REQUIRED(GetWindowLongPtrW);
     LOAD_REQUIRED(ShowWindow);
     LOAD_REQUIRED(DefWindowProcW);
     LOAD_REQUIRED(GetSysColorBrush);

@@ -203,15 +203,6 @@ OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
     return result;
 }
 
-LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-    OMG_UNUSED(hwnd, wparam, lparam);
-    switch (msg) {
-        default: {
-            return 0;
-        }
-    }
-}
-
 bool omg_win_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
@@ -275,8 +266,8 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     else
         this->should_free_ntdll = false;
-    OMG_NTDLL_OSVERSIONINFOEXW os_ver_info;
-    os_ver_info.dwOSVersionInfoSize = sizeof(OMG_NTDLL_OSVERSIONINFOEXW);
+    OMG_WIN_NTDLL_OSVERSIONINFOEXW os_ver_info;
+    os_ver_info.dwOSVersionInfoSize = sizeof(OMG_WIN_NTDLL_OSVERSIONINFOEXW);
     this->nt->RtlGetVersion(&os_ver_info);
     this->win_major_ver = (int)os_ver_info.dwMajorVersion;
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;

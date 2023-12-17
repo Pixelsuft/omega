@@ -188,9 +188,20 @@
 #else
 #define OMG_WIN_WS_OVERLAPPEDWINDOW (OMG_WIN_WS_OVERLAPPED | OMG_WIN_WS_CAPTION | OMG_WIN_WS_SYSMENU | OMG_WIN_WS_THICKFRAME | OMG_WIN_WS_MINIMIZEBOX | OMG_WIN_WS_MAXIMIZEBOX)
 #endif
+#ifdef GWLP_USERDATA
+#define OMG_WIN_GWLP_USERDATA GWLP_USERDATA
+#else
+#define OMG_WIN_GWLP_USERDATA (-21)
+#endif
+#ifdef WM_NCCREATE
+#define OMG_WIN_WM_NCCREATE WM_NCCREATE
+#else
+#define OMG_WIN_WM_NCCREATE 0x0081
+#endif
 
 typedef WNDCLASSEXW OMG_WIN_WNDCLASSEXW;
 typedef WNDPROC OMG_WIN_WNDPROC;
+typedef LPCREATESTRUCTW OMG_WIN_LPCREATESTRUCTW;
 
 typedef struct {
     ULONG dwOSVersionInfoSize;
@@ -204,7 +215,7 @@ typedef struct {
     USHORT wSuiteMask;
     UCHAR wProductType;
     UCHAR wReserved;
-} OMG_NTDLL_OSVERSIONINFOEXW;
+} OMG_WIN_NTDLL_OSVERSIONINFOEXW;
 
 typedef enum
 {
@@ -243,7 +254,7 @@ typedef struct {
 
 typedef struct {
     HANDLE handle;
-    void OMG_WIN_STD_PREFIX (*RtlGetVersion)(OMG_NTDLL_OSVERSIONINFOEXW*);
+    void OMG_WIN_STD_PREFIX (*RtlGetVersion)(OMG_WIN_NTDLL_OSVERSIONINFOEXW*);
 } OMG_Ntdll;
 
 typedef struct {
@@ -252,6 +263,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
     HWND OMG_WIN_STD_PREFIX (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
     BOOL OMG_WIN_STD_PREFIX (*DestroyWindow)(HWND);
+    LONG_PTR OMG_WIN_STD_PREFIX (*SetWindowLongPtrW)(HWND, int, LONG_PTR);
+    LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
     LRESULT OMG_WIN_STD_PREFIX (*DefWindowProcW)(HWND, UINT, WPARAM, LPARAM);
     HBRUSH OMG_WIN_STD_PREFIX (*GetSysColorBrush)(int);

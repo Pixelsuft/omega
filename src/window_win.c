@@ -1,13 +1,34 @@
 #include <omega/window_win.h>
 
 #if OMG_SUPPORT_WIN
-#include <omega/omega_win.h>
+#include <omega/omega.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)this->omg)
 
 bool omg_window_win_show(OMG_WindowWin* this) {
     this->u32->ShowWindow(this->hwnd, OMG_WIN_SW_SHOWNORMAL);
     return false;
+}
+
+static LONG_PTR OMG_WIN_STD_PREFIX (*OMG_WIN_CB_GetWindowLongPtrW)(HWND, int);
+
+LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+    OMG_UNUSED(hwnd, wparam, lparam);
+    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA);
+    switch (msg) {
+        case OMG_WIN_WM_NCCREATE: {
+            OMG_WIN_LPCREATESTRUCTW lps = (OMG_WIN_LPCREATESTRUCTW)lparam;
+            this = (OMG_WindowWin*)lps->lpCreateParams;
+            this->u32->SetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA, (LONG_PTR)this);
+            return 0;
+        }
+        default: {
+            if (OMG_ISNOTNULL(this))
+                _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);
+            return 0;
+        }
+    }
+    return 0;
 }
 
 void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
@@ -63,6 +84,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
             OMG_FREE(omg_base->mem, w_error_buffer);
         return true;
     }
+    if (OMG_ISNOTNULL(this->u32->GetWindowLongPtrW))
+        OMG_WIN_CB_GetWindowLongPtrW = this->u32->GetWindowLongPtrW;
     this->hwnd = this->u32->CreateWindowExW(
         OMG_WIN_WS_EX_COMPOSITED | OMG_WIN_WS_EX_LAYERED | OMG_WIN_WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window",
