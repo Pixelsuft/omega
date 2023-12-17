@@ -6,9 +6,9 @@
 #define omg_base ((OMG_Omega*)this->omg)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
 #define MAKE_EVENT(event) do { \
-    ((OMG_EventBase*)event)->omg = this->omg; \
-    ((OMG_EventBase*)event)->data = omg_base->event_arg; \
-    ((OMG_EventBase*)event)->time = 0; \
+    ((OMG_Event*)event)->omg = this->omg; \
+    ((OMG_Event*)event)->data = omg_base->event_arg; \
+    ((OMG_Event*)event)->time = 0; \
 } while (0)
 
 bool omg_window_win_show(OMG_WindowWin* this) {
@@ -65,7 +65,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         }
         default: {
             if (OMG_ISNOTNULL(this)) {
-                _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);
+                // _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);
                 return RET_DEF_PROC();
             }
             return 0;

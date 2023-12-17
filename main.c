@@ -4,6 +4,7 @@
 #include <omega/omega_sdl2.h>
 #include <omega/memory_raylib.h>
 #include <omega/omega_raylib.h>
+#include <omega/window_win.h>
 
 typedef struct {
     OMG_Omega* omg;
@@ -13,6 +14,21 @@ typedef struct {
 
 int omega_main(OMG_EntryData* data);
 OMG_MAKE_MAIN(omega_main)
+
+void app_on_update(OMG_EventUpdate* event) {
+#if OMG_SUPPORT_WIN
+    App* this = (App*)(((OMG_Event*)event)->data);
+    if (this->omg->type == OMG_OMEGA_TYPE_WIN) {
+        OMG_OmegaWin* omg = ((OMG_OmegaWin*)this->omg);
+        OMG_WindowWin* win = ((OMG_WindowWin*)this->win);
+        omg->u32->InvalidateRect(win->hwnd, NULL, TRUE);
+        omg->u32->UpdateWindow(win->hwnd);
+        omg->k32->Sleep(5);
+    }
+#else
+    OMG_UNUSED(event);
+#endif
+}
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
@@ -43,11 +59,13 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->win->default_init(this->win);
     this->omg->event_arg = this;
-    OMG_BEGIN_POINTER_CAST();
-    OMG_END_POINTER_CAST();
+    this->omg->on_update = app_on_update;
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win);
     this->omg->auto_loop_run(this->omg);
+    /*
+    TODO: on destroy event (to not crash after freeing everything)
+    */
     this->win->destroy(this->win);
     this->omg->window_free(this->omg, this->win);
     this->omg->app_quit(this->omg);

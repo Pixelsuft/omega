@@ -78,8 +78,12 @@ void omg_auto_loop_stop(OMG_Omega* this) {
 }
 
 void omg_event_on_quit(OMG_EventQuit* event) {
-    OMG_Omega* this = (OMG_Omega*)(((OMG_EventBase*)event)->omg);
+    OMG_Omega* this = OMG_FROM_EVENT(event);
     this->auto_loop_stop(this);
+}
+
+void omg_event_on_update(OMG_EventUpdate* event) {
+    OMG_UNUSED(event);
 }
 
 bool omg_omg_init(OMG_Omega* this) {
@@ -111,7 +115,9 @@ bool omg_omg_init(OMG_Omega* this) {
     this->window_alloc = omg_window_alloc;
     this->window_free = omg_window_free;
     this->delay = omg_delay;
+    // TODO: function that resets event handlers to defaults (func ptr)
     this->on_quit = omg_event_on_quit;
+    this->on_update = omg_event_on_update;
     omg_def_omega = this;
     return false;
 }
