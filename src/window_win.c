@@ -33,9 +33,11 @@ void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
 }
 
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-    OMG_WindowWin* this = OMG_ISNULL(OMG_WIN_CB_GetWindowLongPtrW) ?
-        ((OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA)) :
-        ((OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA));
+#ifdef SetWindowLongPtrW
+    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA);
+#else
+    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA);
+#endif
     switch (msg) {
         case OMG_WIN_WM_NCCREATE: {
             OMG_WIN_LPCREATESTRUCTW lps = (OMG_WIN_LPCREATESTRUCTW)lparam;
