@@ -232,7 +232,7 @@ typedef enum
 } OMG_WinPreferredAppMode;
 
 #if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
-OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(NTDLL_OSVERSIONINFOEXW* version_information);
+OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(OMG_WIN_NTDLL_OSVERSIONINFOEXW* version_information);
 #endif
 
 typedef struct {
