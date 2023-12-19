@@ -12,7 +12,6 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->inited = false;
     OMG_BEGIN_POINTER_CAST();
     OMG_END_POINTER_CAST();
-    _OMG_LOG_INFO(omg_base, "test");
     this->raylib->InitWindow((int)base->size.w, (int)base->size.h, "OMG Window");
     base->inited = true;
     return false;
