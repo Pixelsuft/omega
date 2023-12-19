@@ -24,10 +24,10 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 Window (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
-    base->inited = true;
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_sdl2_show;
     OMG_END_POINTER_CAST();
+    base->inited = true;
     return false;
 }
 

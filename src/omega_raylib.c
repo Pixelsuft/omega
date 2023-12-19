@@ -128,6 +128,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->log_warn_str = omg_raylib_log_warn_str;
     base->log_error_str = omg_raylib_log_error_str;
     base->log_fatal_str = omg_raylib_log_fatal_str;
+    base->window_alloc = omg_raylib_window_alloc;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Raylib backend");

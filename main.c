@@ -42,16 +42,15 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-/*#if OMG_SUPPORT_RAYLIB
-    this->omg = (OMG_Omega*)omg_raylib_create(data);
-#elif OMG_SUPPORT_SDL2
+#if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#else
+#endif
+#if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
-#endif*/
-    //this->omg = (OMG_Omega*)omg_sdl2_create(data);
-    this->omg = (OMG_Omega*)omg_win_create(data);
-    //this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
     if (OMG_ISNULL(this->omg)) {
         return;
     }
