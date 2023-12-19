@@ -66,6 +66,34 @@ OMG_WindowRaylib* omg_raylib_window_alloc(OMG_OmegaRaylib* this) {
     return result;
 }
 
+void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
+    while (this->sdl2->SDL_PollEvent(&this->ev)) {
+        switch (this->ev.type) {
+            case SDL_QUIT: {
+                OMG_EventQuit event;
+                MAKE_EVENT(&event);
+                base->on_quit(&event);
+                break;
+            }
+        }
+    }
+}
+
+void omg_sdl2_auto_loop_run(OMG_OmegaRaylib* this) {
+    base->looping = true;
+    while (base->looping) {
+        omg_sdl2_poll_events(this);
+        if (!base->looping)
+            break;
+        OMG_EventUpdate u_event;
+        MAKE_EVENT(&u_event);
+        base->on_update(&u_event);
+    }
+    OMG_EventLoopStop ls_event;
+    MAKE_EVENT(&ls_event);
+    base->on_loop_stop(&ls_event);
+}
+
 bool omg_raylib_destroy(OMG_OmegaRaylib* this) {
     bool result = false;
     if (base->should_free_std) {
