@@ -3,10 +3,10 @@
 #if OMG_SUPPORT_WIN
 #include <omega/omega.h>
 #define base ((OMG_Window*)this)
-#define omg_base ((OMG_Omega*)this->omg)
+#define omg_base ((OMG_Omega*)base->omg)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
 #define MAKE_EVENT(event) do { \
-    ((OMG_Event*)event)->omg = this->omg; \
+    ((OMG_Event*)event)->omg = base->omg; \
     ((OMG_Event*)event)->data = omg_base->event_arg; \
     ((OMG_Event*)event)->time = 0; \
 } while (0)
@@ -88,7 +88,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->wc.cbClsExtra = 0;
     this->wc.cbWndExtra = 0;
 #if _OMG_ENTRY_DATA_TYPE == 2
-    this->wc.hInstance = ((OMG_Omega*)this->omg)->entry_data->hInst;
+    this->wc.hInstance = omg_base->entry_data->hInst;
 #else
     this->wc.hInstance = (HINSTANCE)this->k32->GetModuleHandleW(NULL);
 #endif

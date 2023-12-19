@@ -228,7 +228,6 @@ OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_window_fill_on_create(result);
     result->parent.omg = base;
-    result->omg = this;
     result->u32 = this->u32;
     result->k32 = this->k32;
     result->dwm = this->dwm;

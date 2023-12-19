@@ -2,6 +2,7 @@
 
 #if OMG_SUPPORT_RAYLIB
 #include <omega/memory_raylib.h>
+#include <omega/window_raylib.h>
 #define base ((OMG_Omega*)this)
 
 void omg_raylib_fill_after_create(OMG_OmegaRaylib* this, OMG_EntryData* data) {
@@ -48,6 +49,20 @@ bool omg_raylib_log_fatal_str(OMG_OmegaRaylib* this, const OMG_String* data) {
         return true;
     this->raylib->TraceLog(LOG_FATAL, data->ptr);
     return false;
+}
+
+OMG_WindowRaylib* omg_raylib_window_alloc(OMG_OmegaRaylib* this) {
+    OMG_WindowRaylib* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowRaylib));
+    if (OMG_ISNULL(result)) {
+        _OMG_LOG_ERROR(base, "Failed to allocate memory for Raylib Window");
+        return NULL;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    omg_window_fill_on_create(result);
+    result->parent.omg = base;
+    result->parent.default_init = omg_window_raylib_init;
+    OMG_END_POINTER_CAST();
+    return result;
 }
 
 bool omg_raylib_destroy(OMG_OmegaRaylib* this) {

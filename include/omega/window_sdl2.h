@@ -8,7 +8,6 @@
 typedef struct {
     OMG_Window parent;
     SDL_Window* win;
-    void* omg;
     OMG_Sdl2* sdl2;
 } OMG_WindowSdl2;
 
