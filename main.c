@@ -50,7 +50,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif*/
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
-    // this->omg = (OMG_Omega*)omg_win_create(data);
+    this->omg = (OMG_Omega*)omg_win_create(data);
     if (OMG_ISNULL(this->omg)) {
         return;
     }

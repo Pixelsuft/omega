@@ -30,9 +30,9 @@ void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
         );
     }
     if (OMG_ISNOTNULL(this->dwm->DwmSetWindowAttribute)) {
-        DWORD val = (DWORD)omg_base->theme;
+        DWORD val = (omg_base->theme == OMG_THEME_DARK) ? 1 : 0;
         this->dwm->DwmSetWindowAttribute(this->hwnd, 19, &val, sizeof(DWORD));
-        val = (DWORD)omg_base->theme;
+        val = (omg_base->theme == OMG_THEME_DARK) ? 1 : 0;
         this->dwm->DwmSetWindowAttribute(this->hwnd, 20, &val, sizeof(DWORD));
     }
 }
