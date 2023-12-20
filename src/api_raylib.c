@@ -27,8 +27,10 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(InitWindow);
     LOAD_REQUIRED(CloseWindow);
     LOAD_REQUIRED(WindowShouldClose);
+    LOAD_REQUIRED(IsWindowReady);
     LOAD_REQUIRED(IsWindowState);
     LOAD_REQUIRED(SetWindowState);
+    LOAD_REQUIRED(SetConfigFlags);
     LOAD_REQUIRED(ClearWindowState);
     LOAD_REQUIRED(EnableEventWaiting);
     LOAD_REQUIRED(DisableEventWaiting);

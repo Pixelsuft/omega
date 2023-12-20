@@ -46,8 +46,10 @@ typedef struct {
     void RAYLIB_API (*InitWindow)(int, int, const char*);
     void RAYLIB_API (*CloseWindow)(void);
     bool RAYLIB_API (*WindowShouldClose)(void);
+    bool RAYLIB_API (*IsWindowReady)(void);
     bool RAYLIB_API (*IsWindowState)(unsigned int);
     void RAYLIB_API (*SetWindowState)(unsigned int);
+    void RAYLIB_API (*SetConfigFlags)(unsigned int flags);
     void RAYLIB_API (*ClearWindowState)(unsigned int);
     void RAYLIB_API (*EnableEventWaiting)(void);
     void RAYLIB_API (*DisableEventWaiting)(void);
