@@ -5,6 +5,7 @@
 #if !OMG_RAYLIB_DYNAMIC
 #include <raylib.h>
 #endif
+#define RAYLIB_API
 
 #if OMG_RAYLIB_DYNAMIC
 typedef enum {
@@ -42,20 +43,22 @@ typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);
 
 typedef struct {
     void* handle;
-    void (*InitWindow)(int, int, const char*);
-    void (*CloseWindow)(void);
-    bool (*WindowShouldClose)(void);
-    bool (*IsWindowState)(unsigned int);
-    void (*SetWindowState)(unsigned int);
-    void (*ClearWindowState)(unsigned int);
-    void (*EnableEventWaiting)(void);
-    void (*DisableEventWaiting)(void);
-    void (*TraceLog)(int, const char*, ...);
-    void (*SetTraceLogLevel)(int);
-    void* (*MemAlloc)(unsigned int);
-    void* (*MemRealloc)(void*, unsigned int);
-    void (*MemFree)(void*);
-    void (*SetTraceLogCallback)(TraceLogCallback);
+    void RAYLIB_API (*InitWindow)(int, int, const char*);
+    void RAYLIB_API (*CloseWindow)(void);
+    bool RAYLIB_API (*WindowShouldClose)(void);
+    bool RAYLIB_API (*IsWindowState)(unsigned int);
+    void RAYLIB_API (*SetWindowState)(unsigned int);
+    void RAYLIB_API (*ClearWindowState)(unsigned int);
+    void RAYLIB_API (*EnableEventWaiting)(void);
+    void RAYLIB_API (*DisableEventWaiting)(void);
+    void RAYLIB_API (*TraceLog)(int, const char*, ...);
+    void RAYLIB_API (*SetTraceLogLevel)(int);
+    void* RAYLIB_API (*MemAlloc)(unsigned int);
+    void* RAYLIB_API (*MemRealloc)(void*, unsigned int);
+    void RAYLIB_API (*MemFree)(void*);
+    void RAYLIB_API (*SetTraceLogCallback)(TraceLogCallback);
+    void RAYLIB_API (*BeginDrawing)(void);
+    void RAYLIB_API (*EndDrawing)(void);
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);

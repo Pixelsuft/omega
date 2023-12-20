@@ -38,6 +38,8 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(MemRealloc);
     LOAD_REQUIRED(MemFree);
     LOAD_REQUIRED(SetTraceLogCallback);
+    LOAD_REQUIRED(BeginDrawing);
+    LOAD_REQUIRED(EndDrawing);
     OMG_END_POINTER_CAST();
     return false;
 }
