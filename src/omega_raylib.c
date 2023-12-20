@@ -4,6 +4,11 @@
 #include <omega/memory_raylib.h>
 #include <omega/window_raylib.h>
 #define base ((OMG_Omega*)this)
+#define MAKE_EVENT(event) do { \
+    ((OMG_Event*)event)->omg = this; \
+    ((OMG_Event*)event)->data = base->event_arg; \
+    ((OMG_Event*)event)->time = 0; \
+} while (0)
 
 void omg_raylib_fill_after_create(OMG_OmegaRaylib* this, OMG_EntryData* data) {
     this->raylib = NULL;
@@ -67,22 +72,17 @@ OMG_WindowRaylib* omg_raylib_window_alloc(OMG_OmegaRaylib* this) {
 }
 
 void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
-    while (this->sdl2->SDL_PollEvent(&this->ev)) {
-        switch (this->ev.type) {
-            case SDL_QUIT: {
-                OMG_EventQuit event;
-                MAKE_EVENT(&event);
-                base->on_quit(&event);
-                break;
-            }
-        }
+    if (this->raylib->WindowShouldClose()) {
+        OMG_EventQuit event;
+        MAKE_EVENT(&event);
+        base->on_quit(&event);
     }
 }
 
-void omg_sdl2_auto_loop_run(OMG_OmegaRaylib* this) {
+void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
     base->looping = true;
     while (base->looping) {
-        omg_sdl2_poll_events(this);
+        omg_raylib_poll_events(this);
         if (!base->looping)
             break;
         OMG_EventUpdate u_event;
@@ -157,6 +157,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->log_warn_str = omg_raylib_log_warn_str;
     base->log_error_str = omg_raylib_log_error_str;
     base->log_fatal_str = omg_raylib_log_fatal_str;
+    base->auto_loop_run = omg_raylib_auto_loop_run;
     base->window_alloc = omg_raylib_window_alloc;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
