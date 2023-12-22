@@ -95,8 +95,27 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
     base->on_loop_stop(&ls_event);
 }
 
+bool omg_raylib_app_init(OMG_Raylib* this) {
+    _OMG_WINDOW_ALLOC_CACHE();
+    if (OMG_ISNULL(base->omg_window_cache)) {
+        return true;
+    }
+    _OMG_LOG_INFO(base, "Omega successfully inited with Raylib backend");
+    base->inited = true;
+    return false;
+}
+
+bool omg_raylib_app_quit(OMG_Raylib* this) {
+    if (base->inited) {
+        omg_clean_up_windows((OMG_Omega*)this);
+        _OMG_WINDOW_FREE_CACHE();
+        base->inited = false;
+    }
+    return false;
+}
+
 bool omg_raylib_destroy(OMG_OmegaRaylib* this) {
-    bool result = false;
+    bool result = base->app_quit((OMG_Omega*)this);
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -159,10 +178,11 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->log_error_str = omg_raylib_log_error_str;
     base->log_fatal_str = omg_raylib_log_fatal_str;
     base->auto_loop_run = omg_raylib_auto_loop_run;
+    base->app_init = omg_raylib_app_init;
+    base->app_quit = omg_raylib_app_quit;
     base->window_alloc = omg_raylib_window_alloc;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
-    _OMG_LOG_INFO(base, "Omega successfully inited with Raylib backend");
     return false;
 }
 #endif

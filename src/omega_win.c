@@ -160,6 +160,7 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
     }
     if (OMG_ISNOTNULL(this->uxtheme->ShouldSystemUseDarkMode))
         base->theme = this->uxtheme->ShouldSystemUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT;
+    base->inited = true;
     return false;
 }
 
@@ -168,13 +169,16 @@ void omg_win_delay(OMG_OmegaWin* this, float seconds) {
 }
 
 bool omg_win_app_quit(OMG_OmegaWin* this) {
-    omg_app_quit((OMG_Omega*)this);
-    _OMG_WINDOW_FREE_CACHE();
+    if (base->inited) {
+        omg_clean_up_windows((OMG_Omega*)this);
+        _OMG_WINDOW_FREE_CACHE();
+        base->inited = false;
+    }
     return false;
 }
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
-    bool result = false;
+    bool result = base->app_quit((OMG_Omega*)this);
     if (this->should_free_u32) {
         result = omg_winapi_user32_free(this->u32) || result;
         result = OMG_FREE(base->mem, this->u32) || result;

@@ -43,11 +43,11 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
@@ -59,12 +59,12 @@ void app_init(App* this, OMG_EntryData* data) {
         return;
     }
     if (this->omg->app_init(this->omg)) {
-        // TODO: auto cleanup function
         this->omg->destroy(this->omg);
         return;
     }
     this->win = this->omg->window_alloc(this->omg);
     if (OMG_ISNULL(this->win)) {
+        this->omg->app_quit(this->omg);
         this->omg->destroy(this->omg);
         return;
     }

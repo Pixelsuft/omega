@@ -19,6 +19,8 @@ OMG_API bool omg_raylib_destroy(OMG_OmegaRaylib* this);
 #if OMG_EXPORT_SHIT
 OMG_API void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this);
 OMG_API void omg_raylib_poll_events(OMG_OmegaRaylib* this);
+OMG_API bool omg_raylib_app_init(OMG_Raylib* this);
+OMG_API bool omg_raylib_app_quit(OMG_Raylib* this);
 OMG_API bool omg_raylib_log_info_str(OMG_OmegaRaylib* this, const OMG_String* data);
 OMG_API bool omg_raylib_log_warn_str(OMG_OmegaRaylib* this, const OMG_String* data);
 OMG_API bool omg_raylib_log_error_str(OMG_OmegaRaylib* this, const OMG_String* data);
