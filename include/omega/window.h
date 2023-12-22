@@ -14,6 +14,7 @@ typedef struct OMG_Window {
     OMG_FPoint size;
     int type;
     bool inited;
+    bool was_allocated;
 } OMG_Window;
 
 OMG_API bool omg_window_init(OMG_Window* this);

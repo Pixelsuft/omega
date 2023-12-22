@@ -67,6 +67,7 @@ OMG_WindowRaylib* omg_raylib_window_alloc(OMG_OmegaRaylib* this) {
     result->parent.omg = base;
     result->parent.default_init = omg_window_raylib_init;
     result->raylib = this->raylib;
+    result->parent.was_allocated = true;
     OMG_END_POINTER_CAST();
     return result;
 }

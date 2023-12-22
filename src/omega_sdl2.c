@@ -115,11 +115,16 @@ OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this) {
     result->parent.omg = base;
     result->sdl2 = this->sdl2;
     result->parent.default_init = omg_window_sdl2_init;
+    result->parent.was_allocated = true;
     OMG_END_POINTER_CAST();
     return result;
 }
 
 bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
+    _OMG_WINDOW_ALLOC_CACHE();
+    if (OMG_ISNULL(base->omg_window_cache)) {
+        return true;
+    }
     if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
         _OMG_LOG_INFO(base, "Failed to init SDL2 (", this->sdl2->SDL_GetError(), ")");
         return true;
@@ -129,6 +134,7 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_app_quit(OMG_OmegaSdl2* this) {
+    _OMG_WINDOW_FREE_CACHE();
     if (base->inited) {
         this->sdl2->SDL_Quit();
         base->inited = false;

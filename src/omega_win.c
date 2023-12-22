@@ -135,6 +135,10 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
 }
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
+    _OMG_WINDOW_ALLOC_CACHE();
+    if (OMG_ISNULL(base->omg_window_cache)) {
+        return true;
+    }
     if (base->support_highdpi) {
         if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
             if (!this->u32->SetProcessDPIAware()) {
@@ -164,8 +168,7 @@ void omg_win_delay(OMG_OmegaWin* this, float seconds) {
 }
 
 bool omg_win_app_quit(OMG_OmegaWin* this) {
-    // Auto-free everything allocated like windows
-    OMG_UNUSED(this);
+    _OMG_WINDOW_FREE_CACHE();
     return false;
 }
 
@@ -232,12 +235,14 @@ OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
     result->k32 = this->k32;
     result->dwm = this->dwm;
     result->uxtheme = this->uxtheme;
+    result->parent.was_allocated = true;
     result->parent.default_init = omg_window_win_init;
     OMG_END_POINTER_CAST();
     return result;
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {
+    // TODO: cleanups on errors
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
         if (omg_winapi_kernel32_load(this->k32))
@@ -306,7 +311,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
     this->win_major_ver = (int)os_ver_info.dwMajorVersion;
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
     this->win_build_number = (int)os_ver_info.dwBuildNumber;
-    // TODO: cleanups on errors
     if (OMG_ISNULL(this->dwm)) {
         this->dwm = OMG_MALLOC(base->mem, sizeof(OMG_Dwmapi));
         if (OMG_ISNULL(this->dwm)) {

@@ -6,6 +6,9 @@
 #include <omega/window.h>
 #include <omega/events.h>
 
+#define _OMG_WINDOW_ALLOC_CACHE() base->omg_window_cache = OMG_MALLOC(base->mem, sizeof(OMG_Window*) * OMG_MAX_WINDOWS)
+#define _OMG_WINDOW_FREE_CACHE() if (OMG_ISNOTNULL(base->omg_window_cache)) OMG_FREE(base->mem, base->omg_window_cache)
+
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
 #define OMG_OMEGA_TYPE_SDL2 2
@@ -26,6 +29,7 @@ typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
     OMG_EntryData* entry_data;
+    OMG_Window** omg_window_cache;
     void* extra1;
     void* extra2;
     void* extra3;
