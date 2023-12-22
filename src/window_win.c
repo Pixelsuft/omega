@@ -166,6 +166,7 @@ bool omg_window_win_destroy(OMG_WindowWin* this) {
         }
         base->inited = false;
     }
+    omg_destroy((OMG_Omega*)this);
     return result;
 }
 #endif

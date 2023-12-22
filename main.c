@@ -17,8 +17,9 @@ OMG_MAKE_MAIN(omega_main)
 
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
-    this->win->destroy(this->win);
-    this->omg->window_free(this->omg, this->win);
+    // everything will be cleaned up automaticly
+    // this->win->destroy(this->win);
+    // this->omg->window_free(this->omg, this->win);
     this->omg->app_quit(this->omg);
     OMG_INFO(this->omg, "Exit. Number of allocations: ", (int)this->omg->mem->get_alloc_count(this->omg->mem));
     this->omg->destroy(this->omg);

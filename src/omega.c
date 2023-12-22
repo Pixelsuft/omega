@@ -65,7 +65,16 @@ bool omg_app_init(OMG_Omega* this) {
 }
 
 bool omg_app_quit(OMG_Omega* this) {
-    OMG_UNUSED(this);
+    // TODO: use seperate function
+    for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+        OMG_Window* win = this->omg_window_cache[i];
+        if (OMG_ISNULL(win))
+            continue;
+        _OMG_LOG_INFO(this, "123 ", (int)i);
+        win->destroy(win);
+        if (win->was_allocated)
+            this->window_free(this, win);
+    }
     return false;
 }
 

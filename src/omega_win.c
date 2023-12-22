@@ -168,6 +168,7 @@ void omg_win_delay(OMG_OmegaWin* this, float seconds) {
 }
 
 bool omg_win_app_quit(OMG_OmegaWin* this) {
+    omg_app_quit((OMG_Omega*)this);
     _OMG_WINDOW_FREE_CACHE();
     return false;
 }

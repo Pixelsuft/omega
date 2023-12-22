@@ -134,6 +134,7 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_app_quit(OMG_OmegaSdl2* this) {
+    omg_app_quit((OMG_Omega*)this);
     _OMG_WINDOW_FREE_CACHE();
     if (base->inited) {
         this->sdl2->SDL_Quit();

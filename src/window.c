@@ -1,4 +1,6 @@
+#include <omega/omega.h>
 #include <omega/window.h>
+#define omg_base ((OMG_Omega*)this->omg)
 
 void omg_window_fill_on_create(OMG_Window* this) {
     this->type = OMG_WIN_TYPE_NONE;
@@ -15,10 +17,20 @@ bool omg_window_show(OMG_Window* this) {
 bool omg_window_init(OMG_Window* this) {
     this->destroy = omg_window_destroy;
     this->show = omg_window_show;
+    for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+        if (OMG_ISNULL(omg_base->omg_window_cache[i])) {
+            omg_base->omg_window_cache[i] = this;
+            break;
+        }
+    }
     return false;
 }
 
 bool omg_window_destroy(OMG_Window* this) {
-    OMG_UNUSED(this);
+    for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+        if (omg_base->omg_window_cache[i] == this) {
+            omg_base->omg_window_cache[i] = NULL;
+        }
+    }
     return false;
 }

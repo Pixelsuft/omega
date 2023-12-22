@@ -37,6 +37,7 @@ bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
         this->sdl2->SDL_DestroyWindow(this->win);
         base->inited = false;
     }
+    omg_destroy((OMG_Omega*)this);
     return false;
 }
 #endif
