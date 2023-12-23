@@ -3,6 +3,7 @@
 #include <omega/entry.h>
 #include <omega/memory.h>
 #include <omega/ostd.h>
+#include <omega/winmgr.h>
 #include <omega/window.h>
 #include <omega/events.h>
 
@@ -33,6 +34,7 @@ typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
     OMG_EntryData* entry_data;
+    OMG_Winmgr* winmgr;
     OMG_Window** omg_window_cache;
     void* extra1;
     void* extra2;
@@ -44,6 +46,8 @@ typedef struct OMG_Omega {
     bool (*app_init)(struct OMG_Omega* this);
     bool (*app_quit)(struct OMG_Omega* this);
     bool (*destroy)(struct OMG_Omega* this);
+    bool (*winmgr_free)(struct OMG_Omega* this);
+    bool (*winmgr_alloc)(struct OMG_Omega* this);
     void (*delay)(struct OMG_Omega* this, float delay);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
     bool (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
@@ -78,6 +82,7 @@ OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_omg_init(OMG_Omega* this);
 OMG_API bool omg_clean_up_windows(OMG_Omega* this);
 OMG_API void omg_reset_event_handlers(OMG_Omega* this);
+OMG_API bool omg_alloc_winmgr(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);

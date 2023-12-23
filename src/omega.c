@@ -18,6 +18,7 @@ void omg_delay(OMG_Omega* this, float seconds) {
 void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->entry_data = data;
     this->mem = NULL;
+    this->winmgr = NULL;
     this->log_level = this->log_level_omg = this->log_level_lib = -1;
     this->log_info_str = NULL;
     this->log_warn_str = NULL;
@@ -64,6 +65,15 @@ bool omg_app_init(OMG_Omega* this) {
     return false;
 }
 
+bool omg_alloc_winmgr(OMG_Omega* this) {
+    if (OMG_ISNULL(this->winmgr))
+        return false;
+    this->winmgr->omg = this;
+    this->winmgr->was_allocated = true;
+    this->winmgr->init = omg_winmgr_init;
+    return false;
+}
+
 bool omg_clean_up_windows(OMG_Omega* this) {
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         OMG_Window* win = this->omg_window_cache[i];
@@ -78,6 +88,13 @@ bool omg_clean_up_windows(OMG_Omega* this) {
 
 bool omg_app_quit(OMG_Omega* this) {
     omg_clean_up_windows(this);
+    if (OMG_ISNOTNULL(this->winmgr)) {
+        this->winmgr->destroy(this->winmgr);
+        if (this->winmgr->was_allocated) {
+            OMG_FREE(this->mem, this->winmgr);
+            this->winmgr = NULL;
+        }
+    }
     return false;
 }
 
@@ -138,6 +155,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->window_free = omg_window_free;
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
+    this->winmgr_alloc = omg_alloc_winmgr;
     omg_reset_event_handlers(this);
     omg_def_omega = this;
     return false;

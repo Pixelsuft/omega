@@ -52,19 +52,14 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
-    if (OMG_ISNULL(this->omg)) {
+    if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
     }
-    if (this->omg->omg_init(this->omg)) {
-        return;
-    }
-    if (this->omg->app_init(this->omg)) {
-        this->omg->destroy(this->omg);
-        return;
-    }
-    this->win = this->omg->window_alloc(this->omg);
-    if (OMG_ISNULL(this->win)) {
-        this->omg->app_quit(this->omg);
+    if (
+        this->omg->app_init(this->omg) ||
+        this->omg->winmgr_alloc(this->omg) ||
+        (OMG_ISNULL(this->win = this->omg->window_alloc(this->omg)))
+    ) {
         this->omg->destroy(this->omg);
         return;
     }

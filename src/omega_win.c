@@ -5,6 +5,7 @@
 #include <omega/ostd.h>
 #include <omega/memory_win.h>
 #include <omega/window_win.h>
+#include <omega/winmgr_win.h>
 #define base ((OMG_Omega*)this)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
@@ -227,6 +228,14 @@ void omg_win_fill_std(OMG_OmegaWin* this) {
     base->std->lib_free = omg_win_std_lib_free; */
 }
 
+bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
+    base->winmgr = OMG_MALLOC(base->mem, sizeof(OMG_WinmgrWin));
+    if (OMG_ISNULL(base->winmgr))
+        return true;
+    omg_alloc_winmgr((OMG_Omega*)this);
+    return false;
+}
+
 OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
     OMG_WindowWin* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowWin));
     if (OMG_ISNULL(result)) {
@@ -358,6 +367,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_fatal_str = omg_win_log_fatal_str;
     base->auto_loop_run = omg_win_auto_loop_run;
     base->window_alloc = omg_win_window_alloc;
+    base->winmgr_alloc = omg_win_alloc_winmgr;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Win32 backend");

@@ -10,8 +10,8 @@
 #include <stddef.h>
 #endif
 
-#define OMG_ISNULL(ptr) (ptr == NULL)
-#define OMG_ISNOTNULL(ptr) (ptr != NULL)
+#define OMG_ISNULL(ptr) ((ptr) == NULL)
+#define OMG_ISNOTNULL(ptr) ((ptr) != NULL)
 
 #define OMG_STRING_NONE 0
 #define OMG_STRING_STATIC 1
