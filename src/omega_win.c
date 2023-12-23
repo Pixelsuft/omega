@@ -7,6 +7,7 @@
 #include <omega/window_win.h>
 #include <omega/winmgr_win.h>
 #define base ((OMG_Omega*)this)
+#define winmgr_win ((OMG_WinmgrWin*)base->winmgr)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
     ((OMG_Event*)event)->data = base->event_arg; \
@@ -233,6 +234,11 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->winmgr))
         return true;
     omg_alloc_winmgr((OMG_Omega*)this);
+    winmgr_win->u32 = this->u32;
+    winmgr_win->k32 = this->k32;
+    winmgr_win->dwm = this->dwm;
+    winmgr_win->uxtheme = this->uxtheme;
+    base->winmgr->init = omg_winmgr_win_init;
     return false;
 }
 

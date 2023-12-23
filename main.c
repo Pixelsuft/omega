@@ -58,7 +58,8 @@ void app_init(App* this, OMG_EntryData* data) {
     if (
         this->omg->app_init(this->omg) ||
         this->omg->winmgr_alloc(this->omg) ||
-        (OMG_ISNULL(this->win = this->omg->window_alloc(this->omg)))
+        this->omg->winmgr->init(this->omg->winmgr) ||
+        (OMG_ISNULL(this->win = this->omg->winmgr->window_alloc(this->omg->winmgr)))
     ) {
         this->omg->destroy(this->omg);
         return;
