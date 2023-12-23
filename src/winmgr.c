@@ -15,6 +15,14 @@ bool omg_winmgr_window_free(OMG_Winmgr* this, OMG_Window* window) {
 
 bool omg_winmgr_destroy(OMG_Winmgr* this) {
     if (OMG_ISNOTNULL(this->cache)) {
+        for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+            OMG_Window* win = this->cache[i];
+            if (OMG_ISNULL(win))
+                continue;
+            win->destroy(win);
+            if (win->was_allocated)
+                this->window_free(this, win);
+        }
         OMG_FREE(omg_base->mem, this->cache);
         this->cache = NULL;
     }

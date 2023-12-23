@@ -83,13 +83,13 @@ OMG_API bool omg_omg_init(OMG_Omega* this);
 OMG_API bool omg_clean_up_windows(OMG_Omega* this);
 OMG_API void omg_reset_event_handlers(OMG_Omega* this);
 OMG_API bool omg_alloc_winmgr(OMG_Omega* this);
+OMG_API bool omg_app_init(OMG_Omega* this);
+OMG_API bool omg_app_quit(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
 OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
-OMG_API bool omg_app_init(OMG_Omega* this);
-OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, float seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);

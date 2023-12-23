@@ -137,10 +137,6 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
 }
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
-    _OMG_WINDOW_ALLOC_CACHE();
-    if (OMG_ISNULL(base->omg_window_cache)) {
-        return true;
-    }
     if (base->support_highdpi) {
         if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
             if (!this->u32->SetProcessDPIAware()) {
@@ -172,8 +168,7 @@ void omg_win_delay(OMG_OmegaWin* this, float seconds) {
 
 bool omg_win_app_quit(OMG_OmegaWin* this) {
     if (base->inited) {
-        omg_clean_up_windows((OMG_Omega*)this);
-        _OMG_WINDOW_FREE_CACHE();
+        omg_app_quit((OMG_Omega*)this);
         base->inited = false;
     }
     return false;
@@ -238,7 +233,9 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
     winmgr_win->k32 = this->k32;
     winmgr_win->dwm = this->dwm;
     winmgr_win->uxtheme = this->uxtheme;
+    OMG_BEGIN_POINTER_CAST();
     base->winmgr->init = omg_winmgr_win_init;
+    OMG_END_POINTER_CAST();
     return false;
 }
 

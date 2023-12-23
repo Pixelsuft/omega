@@ -87,7 +87,6 @@ bool omg_clean_up_windows(OMG_Omega* this) {
 }
 
 bool omg_app_quit(OMG_Omega* this) {
-    omg_clean_up_windows(this);
     if (OMG_ISNOTNULL(this->winmgr)) {
         this->winmgr->destroy(this->winmgr);
         if (this->winmgr->was_allocated) {

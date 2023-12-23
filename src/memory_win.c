@@ -51,6 +51,8 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
     result->is_allocated = true;
     base->alloc_count++;
     base->alloc_size += extra.size;
+    // if (OMG_ISNOTNULL(result->func))
+    //     printf("%s:%i alloc\n", result->func, (int)result->line);
     return (void*)((size_t)result + sizeof(OMG_MemoryExtra));
 #else
     void* result = this->k32->HeapAlloc(this->heap, 0, (size_t)extra);
@@ -121,6 +123,8 @@ bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
     }
+    // if (OMG_ISNOTNULL(real_ptr->func))
+    //     printf("%s:%i free\n", real_ptr->func, (int)real_ptr->line);
     real_ptr->is_allocated = false;
     OMG_MemoryExtra data = *real_ptr;
     if (this->k32->HeapFree(this->heap, 0, real_ptr)) {
