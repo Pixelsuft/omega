@@ -239,25 +239,6 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
     return false;
 }
 
-OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this) {
-    OMG_WindowWin* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowWin));
-    if (OMG_ISNULL(result)) {
-        _OMG_LOG_ERROR(base, "Failed to allocate memory for Win32 Window");
-        return NULL;
-    }
-    OMG_BEGIN_POINTER_CAST();
-    omg_window_fill_on_create(result);
-    result->parent.omg = base;
-    result->u32 = this->u32;
-    result->k32 = this->k32;
-    result->dwm = this->dwm;
-    result->uxtheme = this->uxtheme;
-    result->parent.was_allocated = true;
-    result->parent.default_init = omg_window_win_init;
-    OMG_END_POINTER_CAST();
-    return result;
-}
-
 bool omg_win_init(OMG_OmegaWin* this) {
     // TODO: cleanups on errors
     if (OMG_ISNULL(this->k32)) {
@@ -369,7 +350,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->log_error_str = omg_win_log_error_str;
     base->log_fatal_str = omg_win_log_fatal_str;
     base->auto_loop_run = omg_win_auto_loop_run;
-    base->window_alloc = omg_win_window_alloc;
     base->winmgr_alloc = omg_win_alloc_winmgr;
     base->destroy = omg_win_destroy;
     OMG_END_POINTER_CAST();

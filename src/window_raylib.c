@@ -25,8 +25,11 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
 }
 
 bool omg_window_raylib_destroy(OMG_WindowRaylib* this) {
-    this->raylib->CloseWindow();
-    omg_destroy((OMG_Omega*)this);
+    if (base->inited) {
+        this->raylib->CloseWindow();
+        omg_window_destroy((OMG_Window*)this);
+        base->inited = false;
+    }
     return false;
 }
 #endif

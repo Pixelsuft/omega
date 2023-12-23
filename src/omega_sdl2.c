@@ -3,7 +3,9 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/memory_sdl2.h>
 #include <omega/window_sdl2.h>
+#include <omega/winmgr_sdl2.h>
 #define base ((OMG_Omega*)this)
+#define winmgr_sdl2 ((OMG_WinmgrSdl2*)base->winmgr)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
     ((OMG_Event*)event)->data = base->event_arg; \
@@ -104,30 +106,9 @@ void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
     base->on_loop_stop(&ls_event);
 }
 
-OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this) {
-    OMG_WindowSdl2* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowSdl2));
-    if (OMG_ISNULL(result)) {
-        _OMG_LOG_ERROR(base, "Failed to allocate memory for SDL2 Window");
-        return NULL;
-    }
-    OMG_BEGIN_POINTER_CAST();
-    omg_window_fill_on_create(result);
-    result->parent.omg = base;
-    result->sdl2 = this->sdl2;
-    result->parent.default_init = omg_window_sdl2_init;
-    result->parent.was_allocated = true;
-    OMG_END_POINTER_CAST();
-    return result;
-}
-
 bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
     if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
         _OMG_LOG_INFO(base, "Failed to init SDL2 (", this->sdl2->SDL_GetError(), ")");
-        return true;
-    }
-    _OMG_WINDOW_ALLOC_CACHE();
-    if (OMG_ISNULL(base->omg_window_cache)) {
-        this->sdl2->SDL_Quit();
         return true;
     }
     _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
@@ -137,11 +118,21 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
 
 bool omg_sdl2_app_quit(OMG_OmegaSdl2* this) {
     if (base->inited) {
-        omg_clean_up_windows((OMG_Omega*)this);
-        _OMG_WINDOW_FREE_CACHE();
         this->sdl2->SDL_Quit();
         base->inited = false;
     }
+    return false;
+}
+
+bool omg_sdl2_alloc_winmgr(OMG_OmegaSdl2* this) {
+    base->winmgr = OMG_MALLOC(base->mem, sizeof(OMG_WinmgrSdl2));
+    if (OMG_ISNULL(base->winmgr))
+        return true;
+    omg_alloc_winmgr((OMG_Omega*)this);
+    winmgr_sdl2->sdl2 = this->sdl2;
+    OMG_BEGIN_POINTER_CAST();
+    base->winmgr->init = omg_winmgr_sdl2_init;
+    OMG_END_POINTER_CAST();
     return false;
 }
 
@@ -213,7 +204,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->log_error_str = omg_sdl2_log_error_str;
     base->log_fatal_str = omg_sdl2_log_fatal_str;
     base->auto_loop_run = omg_sdl2_auto_loop_run;
-    base->window_alloc = omg_sdl2_window_alloc;
+    base->winmgr_alloc = omg_sdl2_alloc_winmgr;
     base->destroy = omg_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

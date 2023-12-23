@@ -32,12 +32,11 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
 }
 
 bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
-    OMG_UNUSED(this);
     if (base->inited) {
         this->sdl2->SDL_DestroyWindow(this->win);
         base->inited = false;
     }
-    omg_destroy((OMG_Omega*)this);
+    omg_window_destroy((OMG_Window*)this);
     return false;
 }
 #endif

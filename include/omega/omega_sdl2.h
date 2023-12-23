@@ -21,7 +21,7 @@ OMG_API void omg_sdl2_poll_events(OMG_OmegaSdl2* this);
 #if OMG_EXPORT_SHIT
 #include <omega/window_sdl2.h>
 
-OMG_API OMG_WindowSdl2* omg_sdl2_window_alloc(OMG_OmegaSdl2* this);
+OMG_API bool omg_sdl2_alloc_winmgr(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_app_init(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_app_quit(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_delay(OMG_OmegaSdl2* this, float seconds);

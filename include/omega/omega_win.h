@@ -45,6 +45,5 @@ OMG_API bool omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data);
-OMG_API OMG_WindowWin* omg_win_window_alloc(OMG_OmegaWin* this);
 #endif
 #endif
