@@ -14,9 +14,15 @@ bool omg_window_show(OMG_Window* this) {
     return false;
 }
 
+bool omg_window_set_title(OMG_Window* this, const OMG_String* new_title) {
+    OMG_UNUSED(this, new_title);
+    return false;
+}
+
 bool omg_window_init(OMG_Window* this) {
     this->destroy = omg_window_destroy;
     this->show = omg_window_show;
+    this->set_title = omg_window_set_title;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;

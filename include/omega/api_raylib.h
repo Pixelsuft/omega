@@ -5,7 +5,7 @@
 #if !OMG_RAYLIB_DYNAMIC
 #include <raylib.h>
 #endif
-#define OMG_RAYLIB_API
+#define OMG_RAYLIB_PREFIX
 
 #if OMG_RAYLIB_DYNAMIC
 typedef enum {
@@ -43,24 +43,24 @@ typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);
 
 typedef struct {
     void* handle;
-    void OMG_RAYLIB_API (*InitWindow)(int, int, const char*);
-    void OMG_RAYLIB_API (*CloseWindow)(void);
-    bool OMG_RAYLIB_API (*WindowShouldClose)(void);
-    bool OMG_RAYLIB_API (*IsWindowReady)(void);
-    bool OMG_RAYLIB_API (*IsWindowState)(unsigned int);
-    void OMG_RAYLIB_API (*SetWindowState)(unsigned int);
-    void OMG_RAYLIB_API (*SetConfigFlags)(unsigned int flags);
-    void OMG_RAYLIB_API (*ClearWindowState)(unsigned int);
-    void OMG_RAYLIB_API (*EnableEventWaiting)(void);
-    void OMG_RAYLIB_API (*DisableEventWaiting)(void);
-    void OMG_RAYLIB_API (*TraceLog)(int, const char*, ...);
-    void OMG_RAYLIB_API (*SetTraceLogLevel)(int);
-    void* OMG_RAYLIB_API (*MemAlloc)(unsigned int);
-    void* OMG_RAYLIB_API (*MemRealloc)(void*, unsigned int);
-    void OMG_RAYLIB_API (*MemFree)(void*);
-    void OMG_RAYLIB_API (*SetTraceLogCallback)(TraceLogCallback);
-    void OMG_RAYLIB_API (*BeginDrawing)(void);
-    void OMG_RAYLIB_API (*EndDrawing)(void);
+    void OMG_RAYLIB_PREFIX (*InitWindow)(int, int, const char*);
+    void OMG_RAYLIB_PREFIX (*CloseWindow)(void);
+    bool OMG_RAYLIB_PREFIX (*WindowShouldClose)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowReady)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowState)(unsigned int);
+    void OMG_RAYLIB_PREFIX (*SetWindowState)(unsigned int);
+    void OMG_RAYLIB_PREFIX (*SetConfigFlags)(unsigned int flags);
+    void OMG_RAYLIB_PREFIX (*ClearWindowState)(unsigned int);
+    void OMG_RAYLIB_PREFIX (*EnableEventWaiting)(void);
+    void OMG_RAYLIB_PREFIX (*DisableEventWaiting)(void);
+    void OMG_RAYLIB_PREFIX (*TraceLog)(int, const char*, ...);
+    void OMG_RAYLIB_PREFIX (*SetTraceLogLevel)(int);
+    void* OMG_RAYLIB_PREFIX (*MemAlloc)(unsigned int);
+    void* OMG_RAYLIB_PREFIX (*MemRealloc)(void*, unsigned int);
+    void OMG_RAYLIB_PREFIX (*MemFree)(void*);
+    void OMG_RAYLIB_PREFIX (*SetTraceLogCallback)(TraceLogCallback);
+    void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
+    void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);

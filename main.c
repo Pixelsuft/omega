@@ -2,7 +2,6 @@
 #include <omega/entry.h>
 #include <omega/omega_win.h>
 #include <omega/omega_sdl2.h>
-#include <omega/memory_raylib.h>
 #include <omega/omega_raylib.h>
 #include <omega/window_win.h>
 
@@ -43,14 +42,14 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -68,6 +67,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
     this->omg->on_loop_stop = app_on_destroy;
+    this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win);
     this->exit_code = 0;
