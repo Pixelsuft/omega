@@ -2,8 +2,10 @@
 
 #if OMG_SUPPORT_RAYLIB
 #include <omega/memory_raylib.h>
+#include <omega/winmgr_raylib.h>
 #include <omega/window_raylib.h>
 #define base ((OMG_Omega*)this)
+#define winmgr_raylib ((OMG_WinmgrRaylib*)base->winmgr)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
     ((OMG_Event*)event)->data = base->event_arg; \
@@ -56,20 +58,16 @@ bool omg_raylib_log_fatal_str(OMG_OmegaRaylib* this, const OMG_String* data) {
     return false;
 }
 
-OMG_WindowRaylib* omg_raylib_window_alloc(OMG_OmegaRaylib* this) {
-    OMG_WindowRaylib* result = OMG_MALLOC(base->mem, sizeof(OMG_WindowRaylib));
-    if (OMG_ISNULL(result)) {
-        _OMG_LOG_ERROR(base, "Failed to allocate memory for Raylib Window");
-        return NULL;
-    }
+bool omg_raylib_alloc_winmgr(OMG_OmegaRaylib* this) {
+    base->winmgr = OMG_MALLOC(base->mem, sizeof(OMG_WinmgrRaylib));
+    if (OMG_ISNULL(base->winmgr))
+        return true;
+    omg_alloc_winmgr((OMG_Omega*)this);
+    winmgr_raylib->raylib = this->raylib;
     OMG_BEGIN_POINTER_CAST();
-    omg_window_fill_on_create(result);
-    result->parent.omg = base;
-    result->parent.default_init = omg_window_raylib_init;
-    result->raylib = this->raylib;
-    result->parent.was_allocated = true;
+    base->winmgr->init = omg_winmgr_raylib_init;
     OMG_END_POINTER_CAST();
-    return result;
+    return false;
 }
 
 void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
@@ -180,7 +178,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->auto_loop_run = omg_raylib_auto_loop_run;
     base->app_init = omg_raylib_app_init;
     base->app_quit = omg_raylib_app_quit;
-    base->window_alloc = omg_raylib_window_alloc;
+    base->winmgr_alloc = omg_raylib_alloc_winmgr;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
     return false;

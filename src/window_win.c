@@ -123,7 +123,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     }
     this->hwnd = this->u32->CreateWindowExW(
         WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_NOINHERITLAYOUT,
-        this->wc.lpszClassName, L"OMG Window",
+        this->wc.lpszClassName, L"OMG Window [Win32]",
         WS_OVERLAPPEDWINDOW, // TODO: customize
         CW_USEDEFAULT, CW_USEDEFAULT,
         (int)base->size.w, (int)base->size.h,

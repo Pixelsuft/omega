@@ -17,6 +17,7 @@ OMG_API void omg_raylib_fill_std(OMG_OmegaRaylib* this);
 OMG_API void omg_raylib_fill_after_create(OMG_OmegaRaylib* this, OMG_EntryData* data);
 OMG_API bool omg_raylib_destroy(OMG_OmegaRaylib* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_raylib_alloc_winmgr(OMG_OmegaRaylib* this);
 OMG_API void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this);
 OMG_API void omg_raylib_poll_events(OMG_OmegaRaylib* this);
 OMG_API bool omg_raylib_app_init(OMG_Raylib* this);

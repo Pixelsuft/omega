@@ -8,7 +8,7 @@
 OMG_WindowSdl2* omg_winmgr_sdl2_window_alloc(OMG_WinmgrSdl2* this) {
     OMG_WindowSdl2* result = OMG_MALLOC(omg_base->mem, sizeof(OMG_WindowSdl2));
     if (OMG_ISNULL(result)) {
-        _OMG_LOG_ERROR(omg_base, "Failed to allocate memory for Win32 Window");
+        _OMG_LOG_ERROR(omg_base, "Failed to allocate memory for SDL2 Window");
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();

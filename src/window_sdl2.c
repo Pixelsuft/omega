@@ -15,7 +15,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->type = OMG_WIN_TYPE_SDL2;
     base->inited = false;
     this->win = this->sdl2->SDL_CreateWindow(
-        "OMG Window",
+        "OMG Window [SDL2]",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         (int)base->size.w, (int)base->size.h,
         SDL_WINDOW_HIDDEN | (omg_base->support_highdpi ? SDL_WINDOW_ALLOW_HIGHDPI : 0)
