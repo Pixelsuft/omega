@@ -118,6 +118,7 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
 
 bool omg_sdl2_app_quit(OMG_OmegaSdl2* this) {
     if (base->inited) {
+        omg_app_quit((OMG_Omega*)this);
         this->sdl2->SDL_Quit();
         base->inited = false;
     }

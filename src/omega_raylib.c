@@ -101,6 +101,7 @@ bool omg_raylib_app_init(OMG_Raylib* this) {
 
 bool omg_raylib_app_quit(OMG_Raylib* this) {
     if (base->inited) {
+        omg_app_quit((OMG_Omega*)this);
         base->inited = false;
     }
     return false;
