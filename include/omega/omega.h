@@ -7,13 +7,6 @@
 #include <omega/window.h>
 #include <omega/events.h>
 
-#define _OMG_WINDOW_ALLOC_CACHE() do { \
-    base->omg_window_cache = OMG_MALLOC(base->mem, sizeof(OMG_Window*) * OMG_MAX_WINDOWS); \
-    if (OMG_ISNOTNULL(base->omg_window_cache)) \
-        base->std->memset(base->omg_window_cache, 0, sizeof(OMG_Window*) * OMG_MAX_WINDOWS); \
-} while (0)
-#define _OMG_WINDOW_FREE_CACHE() if (OMG_ISNOTNULL(base->omg_window_cache)) OMG_FREE(base->mem, base->omg_window_cache)
-
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
 #define OMG_OMEGA_TYPE_SDL2 2
@@ -80,7 +73,6 @@ OMG_API void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data);
 OMG_API OMG_Omega* omg_get_default_omega(void);
 OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_omg_init(OMG_Omega* this);
-OMG_API bool omg_clean_up_windows(OMG_Omega* this);
 OMG_API void omg_reset_event_handlers(OMG_Omega* this);
 OMG_API bool omg_alloc_winmgr(OMG_Omega* this);
 OMG_API bool omg_app_init(OMG_Omega* this);
@@ -90,11 +82,10 @@ OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
 OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
+OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, float seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
 OMG_API void omg_auto_loop_run(OMG_Omega* this);
 OMG_API void omg_auto_loop_stop(OMG_Omega* this);
-OMG_API OMG_Window* omg_window_alloc(OMG_Omega* this);
-OMG_API bool omg_window_free(OMG_Omega* this, OMG_Window* window);
 #endif

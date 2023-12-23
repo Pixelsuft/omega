@@ -25,7 +25,9 @@ bool omg_winmgr_sdl2_window_free(OMG_WinmgrSdl2* this, OMG_WindowSdl2* window) {
     if (OMG_ISNULL(window))
         return true;
     ((OMG_Window*)window)->destroy((OMG_Window*)window);
-    return OMG_FREE(omg_base->mem, window);
+    if (((OMG_Window*)window)->was_allocated)
+        return OMG_FREE(omg_base->mem, window);
+    return false;
 }
 
 bool omg_winmgr_sdl2_destroy(OMG_WinmgrSdl2* this) {

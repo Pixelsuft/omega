@@ -28,7 +28,9 @@ bool omg_winmgr_win_window_free(OMG_WinmgrWin* this, OMG_WindowWin* window) {
     if (OMG_ISNULL(window))
         return true;
     ((OMG_Window*)window)->destroy((OMG_Window*)window);
-    return OMG_FREE(omg_base->mem, window);
+    if (((OMG_Window*)window)->was_allocated)
+        return OMG_FREE(omg_base->mem, window);
+    return false;
 }
 
 bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {

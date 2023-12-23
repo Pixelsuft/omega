@@ -94,10 +94,6 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
 }
 
 bool omg_raylib_app_init(OMG_Raylib* this) {
-    _OMG_WINDOW_ALLOC_CACHE();
-    if (OMG_ISNULL(base->omg_window_cache)) {
-        return true;
-    }
     _OMG_LOG_INFO(base, "Omega successfully inited with Raylib backend");
     base->inited = true;
     return false;
@@ -105,8 +101,6 @@ bool omg_raylib_app_init(OMG_Raylib* this) {
 
 bool omg_raylib_app_quit(OMG_Raylib* this) {
     if (base->inited) {
-        omg_clean_up_windows((OMG_Omega*)this);
-        _OMG_WINDOW_FREE_CACHE();
         base->inited = false;
     }
     return false;

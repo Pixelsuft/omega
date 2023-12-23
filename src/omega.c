@@ -49,17 +49,6 @@ bool omg_destroy(OMG_Omega* this) {
     return false;
 }
 
-OMG_Window* omg_window_alloc(OMG_Omega* this) {
-    OMG_UNUSED(this);
-    return NULL;
-}
-
-bool omg_window_free(OMG_Omega* this, OMG_Window* window) {
-    if (OMG_ISNULL(window))
-        return true;
-    return OMG_FREE(this->mem, window);
-}
-
 bool omg_app_init(OMG_Omega* this) {
     OMG_UNUSED(this);
     return false;
@@ -74,26 +63,19 @@ bool omg_alloc_winmgr(OMG_Omega* this) {
     return false;
 }
 
-bool omg_clean_up_windows(OMG_Omega* this) {
-    for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
-        OMG_Window* win = this->omg_window_cache[i];
-        if (OMG_ISNULL(win))
-            continue;
-        win->destroy(win);
-        if (win->was_allocated)
-            this->window_free(this, win);
+bool omg_free_winmgr(OMG_Omega* this) {
+    if (OMG_ISNULL(this->winmgr))
+        return false;
+    this->winmgr->destroy(this->winmgr);
+    if (this->winmgr->was_allocated) {
+        OMG_FREE(this->mem, this->winmgr);
+        this->winmgr = NULL;
     }
     return false;
 }
 
 bool omg_app_quit(OMG_Omega* this) {
-    if (OMG_ISNOTNULL(this->winmgr)) {
-        this->winmgr->destroy(this->winmgr);
-        if (this->winmgr->was_allocated) {
-            OMG_FREE(this->mem, this->winmgr);
-            this->winmgr = NULL;
-        }
-    }
+    omg_free_winmgr(this);
     return false;
 }
 
@@ -150,8 +132,6 @@ bool omg_omg_init(OMG_Omega* this) {
     this->app_quit = omg_app_quit;
     this->auto_loop_run = omg_auto_loop_run;
     this->auto_loop_stop = omg_auto_loop_stop;
-    this->window_alloc = omg_window_alloc;
-    this->window_free = omg_window_free;
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
     this->winmgr_alloc = omg_alloc_winmgr;
