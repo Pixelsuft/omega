@@ -5,7 +5,7 @@
 #if !OMG_RAYLIB_DYNAMIC
 #include <raylib.h>
 #endif
-#define RAYLIB_API
+#define OMG_RAYLIB_API
 
 #if OMG_RAYLIB_DYNAMIC
 typedef enum {
@@ -43,24 +43,24 @@ typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);
 
 typedef struct {
     void* handle;
-    void RAYLIB_API (*InitWindow)(int, int, const char*);
-    void RAYLIB_API (*CloseWindow)(void);
-    bool RAYLIB_API (*WindowShouldClose)(void);
-    bool RAYLIB_API (*IsWindowReady)(void);
-    bool RAYLIB_API (*IsWindowState)(unsigned int);
-    void RAYLIB_API (*SetWindowState)(unsigned int);
-    void RAYLIB_API (*SetConfigFlags)(unsigned int flags);
-    void RAYLIB_API (*ClearWindowState)(unsigned int);
-    void RAYLIB_API (*EnableEventWaiting)(void);
-    void RAYLIB_API (*DisableEventWaiting)(void);
-    void RAYLIB_API (*TraceLog)(int, const char*, ...);
-    void RAYLIB_API (*SetTraceLogLevel)(int);
-    void* RAYLIB_API (*MemAlloc)(unsigned int);
-    void* RAYLIB_API (*MemRealloc)(void*, unsigned int);
-    void RAYLIB_API (*MemFree)(void*);
-    void RAYLIB_API (*SetTraceLogCallback)(TraceLogCallback);
-    void RAYLIB_API (*BeginDrawing)(void);
-    void RAYLIB_API (*EndDrawing)(void);
+    void OMG_RAYLIB_API (*InitWindow)(int, int, const char*);
+    void OMG_RAYLIB_API (*CloseWindow)(void);
+    bool OMG_RAYLIB_API (*WindowShouldClose)(void);
+    bool OMG_RAYLIB_API (*IsWindowReady)(void);
+    bool OMG_RAYLIB_API (*IsWindowState)(unsigned int);
+    void OMG_RAYLIB_API (*SetWindowState)(unsigned int);
+    void OMG_RAYLIB_API (*SetConfigFlags)(unsigned int flags);
+    void OMG_RAYLIB_API (*ClearWindowState)(unsigned int);
+    void OMG_RAYLIB_API (*EnableEventWaiting)(void);
+    void OMG_RAYLIB_API (*DisableEventWaiting)(void);
+    void OMG_RAYLIB_API (*TraceLog)(int, const char*, ...);
+    void OMG_RAYLIB_API (*SetTraceLogLevel)(int);
+    void* OMG_RAYLIB_API (*MemAlloc)(unsigned int);
+    void* OMG_RAYLIB_API (*MemRealloc)(void*, unsigned int);
+    void OMG_RAYLIB_API (*MemFree)(void*);
+    void OMG_RAYLIB_API (*SetTraceLogCallback)(TraceLogCallback);
+    void OMG_RAYLIB_API (*BeginDrawing)(void);
+    void OMG_RAYLIB_API (*EndDrawing)(void);
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);
