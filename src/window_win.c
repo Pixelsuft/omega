@@ -37,6 +37,22 @@ void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
     }
 }
 
+bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) {
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, new_title, this->k32);
+    if (count == 0)
+        return true;
+    wchar_t* out_buf = OMG_MALLOC(omg_base->mem, (size_t)count * 2);
+    if (OMG_ISNULL(out_buf))
+        return true;
+    bool result = true;
+    if (this->k32->MultiByteToWideChar(OMG_WIN_CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count) > 0) {
+        result = !this->u32->SetWindowTextW(this->hwnd, out_buf);
+    }
+    OMG_FREE(omg_base->mem, out_buf);
+    return result;
+}
+
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef SetWindowLongPtrW
     OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA);
@@ -148,6 +164,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_win_check_dark_mode(this);
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_win_show;
+    base->set_title = omg_window_win_set_title;
+    base->destroy = omg_window_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;

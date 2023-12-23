@@ -17,6 +17,15 @@ bool omg_window_sdl2_set_title(OMG_WindowSdl2* this, const OMG_String* new_title
     return false;
 }
 
+bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
+    if (base->inited) {
+        this->sdl2->SDL_DestroyWindow(this->win);
+        base->inited = false;
+    }
+    omg_window_destroy((OMG_Window*)this);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -34,17 +43,9 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_sdl2_show;
     base->set_title = omg_window_sdl2_set_title;
+    base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;
-    return false;
-}
-
-bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
-    if (base->inited) {
-        this->sdl2->SDL_DestroyWindow(this->win);
-        base->inited = false;
-    }
-    omg_window_destroy((OMG_Window*)this);
     return false;
 }
 #endif

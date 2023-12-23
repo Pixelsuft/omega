@@ -20,12 +20,20 @@ bool omg_window_raylib_destroy(OMG_WindowRaylib* this) {
     return false;
 }
 
+bool omg_window_raylib_set_title(OMG_WindowRaylib* this, const OMG_String* new_title) {
+    if (omg_string_ensure_null((OMG_String*)new_title))
+        return true;
+    this->raylib->SetWindowTitle(new_title->ptr);
+    return false;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
     base->inited = false;
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_raylib_show;
+    base->set_title = omg_window_raylib_set_title;
     base->destroy = omg_window_raylib_destroy;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(FLAG_WINDOW_HIDDEN | (omg_base->support_highdpi ? FLAG_WINDOW_HIGHDPI : 0));

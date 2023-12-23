@@ -49,7 +49,8 @@ typedef struct {
     bool OMG_RAYLIB_PREFIX (*IsWindowReady)(void);
     bool OMG_RAYLIB_PREFIX (*IsWindowState)(unsigned int);
     void OMG_RAYLIB_PREFIX (*SetWindowState)(unsigned int);
-    void OMG_RAYLIB_PREFIX (*SetConfigFlags)(unsigned int flags);
+    void OMG_RAYLIB_PREFIX (*SetWindowTitle)(const char*);
+    void OMG_RAYLIB_PREFIX (*SetConfigFlags)(unsigned int);
     void OMG_RAYLIB_PREFIX (*ClearWindowState)(unsigned int);
     void OMG_RAYLIB_PREFIX (*EnableEventWaiting)(void);
     void OMG_RAYLIB_PREFIX (*DisableEventWaiting)(void);

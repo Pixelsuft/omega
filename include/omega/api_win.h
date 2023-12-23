@@ -291,6 +291,7 @@ typedef struct {
     LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
 #endif
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
+    BOOL OMG_WIN_STD_PREFIX (*SetWindowTextW)(HWND, LPCWSTR);
     BOOL OMG_WIN_STD_PREFIX (*PeekMessageW)(LPMSG, HWND, UINT, UINT, UINT);
     BOOL OMG_WIN_STD_PREFIX (*TranslateMessage)(const MSG*);
     LRESULT OMG_WIN_STD_PREFIX (*DispatchMessageW)(const MSG*);
