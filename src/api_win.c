@@ -27,7 +27,7 @@
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC_ORDINAL
-#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, OMG_WIN_MAKEINTRESOURCEA(func_ord)))
+#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, MAKEINTRESOURCEA(func_ord)))
 #else
 #define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = NULL
 #endif

@@ -14,7 +14,7 @@
 } while (0)
 
 bool omg_window_win_show(OMG_WindowWin* this, bool show) {
-    this->u32->ShowWindow(this->hwnd, show ? OMG_WIN_SW_SHOWNORMAL : OMG_WIN_SW_HIDE);
+    this->u32->ShowWindow(this->hwnd, show ? SW_SHOWNORMAL : SW_HIDE);
     return false;
 }
 
@@ -48,7 +48,7 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     if (OMG_ISNULL(out_buf))
         return true;
     bool result = true;
-    if (this->k32->MultiByteToWideChar(OMG_WIN_CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count) > 0) {
+    if (this->k32->MultiByteToWideChar(CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count) > 0) {
         result = !this->u32->SetWindowTextW(this->hwnd, out_buf);
     }
     OMG_FREE(omg_base->mem, out_buf);
@@ -125,32 +125,32 @@ bool omg_window_win_renderer_free(OMG_WindowWin* this) {
 
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef SetWindowLongPtrW
-    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA);
+    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, GWLP_USERDATA);
 #else
-    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA);
+    OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, GWLP_USERDATA);
 #endif
     switch (msg) {
-        case OMG_WIN_WM_PAINT: {
+        case WM_PAINT: {
             OMG_EventPaint p_event;
             MAKE_EVENT(&p_event);
             p_event.win = this;
             omg_base->on_paint(&p_event);
             return RET_DEF_PROC();
         }
-        case OMG_WIN_WM_NCCREATE: {
-            OMG_WIN_LPCREATESTRUCTW lps = (OMG_WIN_LPCREATESTRUCTW)lparam;
+        case WM_NCCREATE: {
+            LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
             this = (OMG_WindowWin*)lps->lpCreateParams;
             if (OMG_ISNULL(this->u32->SetWindowLongPtrW))
-                this->u32->SetWindowLongW(hwnd, OMG_WIN_GWLP_USERDATA, (LONG_PTR)this);
+                this->u32->SetWindowLongW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
             else
-                this->u32->SetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA, (LONG_PTR)this);
+                this->u32->SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
             return RET_DEF_PROC();
         }
-        case OMG_WIN_WM_THEMECHANGED: {
+        case WM_THEMECHANGED: {
             omg_window_win_check_dark_mode(this);
             return RET_DEF_PROC();
         }
-        case OMG_WIN_WM_DESTROY: {
+        case WM_DESTROY: {
             // TODO: it's not really quit, but should work for atleast one window
             OMG_EventQuit event;
             MAKE_EVENT(&event);
@@ -192,8 +192,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
     base->inited = false;
-    this->wc.cbSize = sizeof(OMG_WIN_WNDCLASSEXW);
-    this->wc.style = OMG_WIN_CS_HREDRAW | OMG_WIN_CS_VREDRAW;
+    this->wc.cbSize = sizeof(WNDCLASSEXW);
+    this->wc.style = CS_HREDRAW | CS_VREDRAW;
     this->wc.lpfnWndProc = (WNDPROC)omg_win_wnd_proc;
     this->wc.cbClsExtra = 0;
     this->wc.cbWndExtra = 0;
@@ -204,8 +204,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
 #endif
     this->wc.hIcon = NULL;
     this->wc.hCursor = (HCURSOR)this->u32->LoadImageW(
-        NULL, (LPCWSTR)OMG_WIN_IDC_ARROW,
-        OMG_WIN_IMAGE_CURSOR, 0, 0, OMG_WIN_LR_DEFAULTSIZE | OMG_WIN_LR_SHARED
+        NULL, (LPCWSTR)IDC_ARROW,
+        IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED
     );
     this->wc.hbrBackground = this->u32->GetSysColorBrush(COLOR_3DFACE);
     this->wc.lpszMenuName = NULL;

@@ -7,7 +7,7 @@
 
 typedef struct {
     OMG_Window parent;
-    OMG_WIN_WNDCLASSEXW wc;
+    WNDCLASSEXW wc;
     ATOM class_atom;
     HWND hwnd;
     OMG_User32* u32;
