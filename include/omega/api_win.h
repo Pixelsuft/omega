@@ -223,6 +223,9 @@ typedef struct {
     LONG_PTR OMG_WIN_STD_PREFIX (*SetWindowLongPtrW)(HWND, int, LONG_PTR);
     LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
 #endif
+    BOOL OMG_WIN_STD_PREFIX (*GetWindowRect)(HWND, LPRECT);
+    BOOL OMG_WIN_STD_PREFIX (*GetClientRect)(HWND, LPRECT);
+    BOOL OMG_WIN_STD_PREFIX (*MoveWindow)(HWND, int, int, int, int, BOOL);
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
     BOOL OMG_WIN_STD_PREFIX (*SetWindowTextW)(HWND, LPCWSTR);
     BOOL OMG_WIN_STD_PREFIX (*PeekMessageW)(LPMSG, HWND, UINT, UINT, UINT);
@@ -236,7 +239,11 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*SetProcessDPIAware)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForSystem)(void);
     UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND);
+    int OMG_WIN_STD_PREFIX (*GetSystemMetrics)(int);
     int OMG_WIN_STD_PREFIX (*GetSystemMetricsForDpi)(int, UINT);
+    HDC OMG_WIN_STD_PREFIX (*GetDC)(HWND);
+    HDC OMG_WIN_STD_PREFIX (*GetWindowDC)(HWND);
+    int OMG_WIN_STD_PREFIX (*ReleaseDC)(HWND, HDC);
 } OMG_User32;
 
 typedef struct {

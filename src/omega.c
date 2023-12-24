@@ -119,6 +119,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->looping = false;
     this->should_free_mem = false;
     this->theme = OMG_THEME_NONE;
+    this->scale.x = this->scale.y = 1.0f;
     if (this->log_level == -1)
         this->log_level = OMG_LOG_MIN_LEVEL;
     if (this->log_level_omg == -1)

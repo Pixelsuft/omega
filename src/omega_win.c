@@ -143,6 +143,8 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
                 _OMG_LOG_WARN(base, "Failed to set dpi awareness for app");
             }
         }
+        if (OMG_ISNOTNULL(this->u32->GetDpiForSystem))
+            base->scale.x = base->scale.y = (float)this->u32->GetDpiForSystem() / 96.0f;
     }
     if (OMG_ISNOTNULL(this->uxtheme->AllowDarkModeForApp))
         this->uxtheme->AllowDarkModeForApp((base->app_theme == OMG_THEME_DARK) || (base->app_theme == OMG_THEME_AUTO));

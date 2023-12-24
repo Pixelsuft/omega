@@ -57,6 +57,7 @@ typedef struct OMG_Omega {
     void (*on_update)(OMG_EventUpdate* event);
     void (*on_paint)(OMG_EventPaint* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
+    OMG_FPoint scale;
     int log_level_lib;
     int log_level_omg;
     int log_level;

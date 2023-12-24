@@ -23,6 +23,7 @@ typedef struct OMG_Window {
     void* extra5;
     void* omg;
     OMG_FPoint size;
+    OMG_FPoint scale;
     int type;
     int ren_type;
     bool vsync;

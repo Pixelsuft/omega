@@ -119,6 +119,9 @@ bool omg_winapi_user32_load(OMG_User32* this) {
 #endif
     LOAD_REQUIRED(SetWindowLongW);
     LOAD_REQUIRED(GetWindowLongW);
+    LOAD_REQUIRED(GetWindowRect);
+    LOAD_REQUIRED(GetClientRect);
+    LOAD_REQUIRED(MoveWindow);
     LOAD_REQUIRED(ShowWindow);
     LOAD_REQUIRED(SetWindowTextW);
     LOAD_REQUIRED(PeekMessageW);
@@ -132,7 +135,11 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(GetDpiForSystem);
     LOAD_REQUIRED_COMPAT(GetDpiForWindow);
+    LOAD_REQUIRED_COMPAT(GetSystemMetrics);
     LOAD_REQUIRED_COMPAT(GetSystemMetricsForDpi);
+    LOAD_REQUIRED_COMPAT(GetDC);
+    LOAD_REQUIRED_COMPAT(GetWindowDC);
+    LOAD_REQUIRED_COMPAT(ReleaseDC);
     OMG_END_POINTER_CAST();
     return false;
 }

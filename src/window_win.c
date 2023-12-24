@@ -256,6 +256,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         return true;
     }
     omg_window_win_check_dark_mode(this);
+    if (omg_base->support_highdpi && OMG_ISNOTNULL(this->u32->GetDpiForWindow))
+        base->scale.x = base->scale.y = (float)this->u32->GetDpiForWindow(this->hwnd) / 96.0f;
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_win_show;
     base->set_title = omg_window_win_set_title;

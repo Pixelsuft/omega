@@ -48,6 +48,7 @@ bool omg_window_destroy(OMG_Window* this) {
 }
 
 bool omg_window_init(OMG_Window* this) {
+    this->scale.x = this->scale.y = 1.0f;
     this->ren = NULL;
     this->ren_type = OMG_REN_TYPE_AUTO;
     this->destroy = omg_window_destroy;
