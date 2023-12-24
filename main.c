@@ -22,8 +22,8 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
-        "Exit. Number of extra allocations: ",
-        (int)this->omg->mem->get_alloc_count(this->omg->mem) - 6
+        "Exit. Number of allocations: ",
+        (int)this->omg->mem->get_alloc_count(this->omg->mem)
     );
     this->omg->destroy(this->omg);
     this->exit_code = 0;
@@ -38,14 +38,14 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_WIN
-    this->omg = (OMG_Omega*)omg_win_create(data);
-#endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
+#if OMG_SUPPORT_WIN
+    this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;

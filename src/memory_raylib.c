@@ -28,6 +28,8 @@ void* omg_memory_raylib_alloc(OMG_MemoryRaylib* this, OMG_MemoryExtra extra) {
     result->is_allocated = true;
     base->alloc_size += extra.size;
     base->alloc_count += 1;
+    // if (OMG_ISNOTNULL(extra.filename))
+    //     printf("Alloc: %s:%i\n", extra.func, (int)extra.line);
     return (void*)((size_t)result + sizeof(OMG_MemoryExtra));
 #else
     void* result = this->raylib->MemAlloc((size_t)extra);
@@ -86,6 +88,8 @@ bool omg_memory_raylib_free(OMG_MemoryRaylib* this, void* ptr) {
         return true;
     }
     real_ptr->is_allocated = false;
+    // if (OMG_ISNOTNULL(real_ptr->filename))
+    //     printf("Free: %s:%i\n", real_ptr->func, (int)real_ptr->line);
     OMG_MemoryExtra data = *real_ptr;
     this->raylib->MemFree(real_ptr);
     if (base->alloc_size >= data.size)
