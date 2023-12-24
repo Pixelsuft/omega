@@ -52,6 +52,7 @@ bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
+    base->_on_update_window_size = omg_renderer_sdl2_update_scale;
     base->destroy = omg_renderer_sdl2_destroy;
     base->clear = omg_renderer_sdl2_clear;
     base->flip = omg_renderer_sdl2_flip;

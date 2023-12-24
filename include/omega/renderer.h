@@ -13,6 +13,7 @@ typedef struct OMG_Renderer {
     bool (*clear)(struct OMG_Renderer* this, const OMG_Color* col);
     bool (*begin)(struct OMG_Renderer* this);
     bool (*flip)(struct OMG_Renderer* this);
+    void (*_on_update_window_size)(struct OMG_Renderer* this);
     void* omg;
     void* win;
     OMG_FPoint scale;
@@ -26,6 +27,7 @@ OMG_API bool omg_renderer_init(OMG_Renderer* this);
 OMG_API bool omg_renderer_destroy(OMG_Renderer* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_renderer_clear(OMG_Renderer* this, const OMG_Color* col);
+OMG_API void omg_on_update_window_size(OMG_Renderer* this);
 OMG_API bool omg_renderer_begin(OMG_Renderer* this);
 OMG_API bool omg_renderer_flip(OMG_Renderer* this);
 #endif

@@ -81,6 +81,30 @@ void omg_sdl2_delay(OMG_OmegaSdl2* this, float seconds) {
 void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
     while (this->sdl2->SDL_PollEvent(&this->ev)) {
         switch (this->ev.type) {
+            case SDL_WINDOWEVENT: {
+                OMG_Window* win = NULL;
+                for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+                    if (OMG_ISNOTNULL(base->winmgr->cache[i]) && (((OMG_WindowSdl2*)base->winmgr->cache[i])->id == this->ev.window.windowID)) {
+                        win = base->winmgr->cache[i];
+                        break;
+                    }
+                }
+                if (OMG_ISNULL(win))
+                    break;
+                switch (this->ev.window.event) {
+                    case SDL_WINDOWEVENT_RESIZED: {
+                        if (OMG_ISNOTNULL(win->ren))
+                            win->ren->_on_update_window_size(win->ren);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                        if (OMG_ISNOTNULL(win->ren))
+                            win->ren->_on_update_window_size(win->ren);
+                        break;
+                    }
+                }
+                break;
+            }
             case SDL_QUIT: {
                 OMG_EventQuit event;
                 MAKE_EVENT(&event);

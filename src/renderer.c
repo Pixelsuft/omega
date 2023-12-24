@@ -24,6 +24,10 @@ bool omg_renderer_flip(OMG_Renderer* this) {
     return false;
 }
 
+void omg_on_update_window_size(OMG_Renderer* this) {
+    OMG_UNUSED(this);
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -32,6 +36,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->scale.y = win_base->scale.y;
     this->size.w = win_base->size.w;
     this->size.h = win_base->size.h;
+    this->_on_update_window_size = omg_on_update_window_size;
     this->destroy = omg_renderer_destroy;
     this->clear = omg_renderer_clear;
     this->begin = omg_renderer_begin;

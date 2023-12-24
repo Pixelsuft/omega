@@ -69,6 +69,11 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 Window (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
+    this->id = this->sdl2->SDL_GetWindowID(this->win);
+    if (this->id == 0) {
+        _OMG_LOG_ERROR(omg_base, "Failed to get window id (", this->sdl2->SDL_GetError(), ")");
+        this->id = 1;
+    }
     OMG_BEGIN_POINTER_CAST();
     base->renderer_alloc = omg_window_sdl2_renderer_alloc;
     base->show = omg_window_sdl2_show;

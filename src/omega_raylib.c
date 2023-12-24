@@ -76,6 +76,13 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         MAKE_EVENT(&event);
         base->on_quit(&event);
     }
+    OMG_Window* win = base->winmgr->cache[0];
+    if (OMG_ISNULL(win))
+        return;
+    if (this->raylib->IsWindowResized()) {
+        if (OMG_ISNOTNULL(win->ren))
+            win->ren->_on_update_window_size(win->ren);
+    }
 }
 
 void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
