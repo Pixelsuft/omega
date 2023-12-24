@@ -29,6 +29,7 @@ typedef struct OMG_Omega {
     OMG_EntryData* entry_data;
     OMG_Winmgr* winmgr;
     OMG_Window** omg_window_cache;
+    OMG_String* sdl2_dll_path;
     void* extra1;
     void* extra2;
     void* extra3;

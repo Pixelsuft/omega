@@ -2,8 +2,10 @@
 
 #if OMG_SUPPORT_WIN
 #include <omega/omega.h>
+#include <omega/renderer_sdl2.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
+#define ren_sdl2 ((OMG_RendererSdl2*)base->ren)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
@@ -51,6 +53,67 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     }
     OMG_FREE(omg_base->mem, out_buf);
     return result;
+}
+
+bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
+    if (base->ren_type != OMG_REN_TYPE_SDL2)
+        base->ren_type = OMG_REN_TYPE_AUTO;
+    if (base->ren_type == OMG_REN_TYPE_AUTO) {
+        base->ren_type = OMG_SUPPORT_SDL2 ? OMG_REN_TYPE_SDL2 : OMG_REN_TYPE_NONE;
+        if (base->ren_type == OMG_REN_TYPE_NONE)
+            return true;
+        bool res = omg_window_win_renderer_alloc(this);
+        if (res) {
+            base->ren_type = OMG_REN_TYPE_AUTO;
+        }
+        return res;
+    }
+#if OMG_SUPPORT_SDL2
+    if (base->ren_type == OMG_REN_TYPE_SDL2) {
+        base->ren = OMG_MALLOC(omg_base->mem, sizeof(OMG_RendererSdl2) + sizeof(OMG_Sdl2));
+        if (OMG_ISNULL(base->ren))
+            return true;
+        ren_sdl2->sdl2 = (void*)((size_t)base->ren + sizeof(OMG_RendererSdl2));
+        if (omg_sdl2_dll_load(ren_sdl2->sdl2, omg_base->sdl2_dll_path)) {
+            OMG_FREE(omg_base->mem, base->ren);
+            return true;
+        }
+        base->ren->was_allocated = true;
+        base->ren->win = this;
+        base->ren->omg = omg_base;
+        OMG_BEGIN_POINTER_CAST();
+        base->ren->init = omg_renderer_sdl2_init;
+        OMG_END_POINTER_CAST();
+        if (ren_sdl2->sdl2->SDL_Init(SDL_INIT_VIDEO) < 0) {
+            // TODO: cleanup
+            return true;
+        }
+        ren_sdl2->win = ren_sdl2->sdl2->SDL_CreateWindowFrom((const void*)this->hwnd);
+        if (OMG_ISNULL(ren_sdl2->win)) {
+            // TODO: cleanup
+            return true;
+        }
+        return false;
+    }
+#endif
+    return true;
+}
+
+bool omg_window_win_renderer_free(OMG_WindowWin* this) {
+    if (OMG_ISNULL(base->ren))
+        return true;
+    bool res = base->ren->destroy(base->ren);
+#if OMG_SUPPORT_SDL2
+    if (base->ren->type == OMG_REN_TYPE_SDL2) {
+        if (OMG_ISNOTNULL(base->ren)) {
+            ren_sdl2->sdl2->SDL_Quit();
+            res = omg_sdl2_dll_free(ren_sdl2->sdl2) || res;
+            ren_sdl2->sdl2 = NULL;
+        }
+    }
+#endif
+    omg_window_renderer_free((OMG_Window*)this);
+    return res;
 }
 
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
@@ -183,6 +246,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->show = omg_window_win_show;
     base->set_title = omg_window_win_set_title;
     base->destroy = omg_window_destroy;
+    base->renderer_alloc = omg_window_win_renderer_alloc;
+    base->renderer_free = omg_window_win_renderer_free;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;
