@@ -123,6 +123,13 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
     OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongPtrW(hwnd, OMG_WIN_GWLP_USERDATA);
 #endif
     switch (msg) {
+        case OMG_WIN_WM_PAINT: {
+            // TODO: paint event
+            OMG_EventUpdate u_event;
+            MAKE_EVENT(&u_event);
+            omg_base->on_update(&u_event);
+            return RET_DEF_PROC();
+        }
         case OMG_WIN_WM_NCCREATE: {
             OMG_WIN_LPCREATESTRUCTW lps = (OMG_WIN_LPCREATESTRUCTW)lparam;
             this = (OMG_WindowWin*)lps->lpCreateParams;

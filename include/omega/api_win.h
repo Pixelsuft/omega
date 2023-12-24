@@ -218,6 +218,11 @@
 #else
 #define OMG_WIN_WM_DESTROY 0x0002
 #endif
+#ifdef WM_PAINT
+#define OMG_WIN_WM_PAINT WM_PAINT
+#else
+#define OMG_WIN_WM_PAINT 0x000F
+#endif
 
 typedef WNDCLASSEXW OMG_WIN_WNDCLASSEXW;
 typedef WNDPROC OMG_WIN_WNDPROC;
