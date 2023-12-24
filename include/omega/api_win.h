@@ -137,6 +137,12 @@
 #ifndef PM_REMOVE
 #define PM_REMOVE 0x0001
 #endif
+#ifndef LOGPIXELSX
+#define LOGPIXELSX 88
+#endif
+#ifndef LOGPIXELSY
+#define LOGPIXELSY 90
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
@@ -223,6 +229,7 @@ typedef struct {
     LONG_PTR OMG_WIN_STD_PREFIX (*SetWindowLongPtrW)(HWND, int, LONG_PTR);
     LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
 #endif
+    HWND OMG_WIN_STD_PREFIX (*GetDesktopWindow)(void);
     BOOL OMG_WIN_STD_PREFIX (*GetWindowRect)(HWND, LPRECT);
     BOOL OMG_WIN_STD_PREFIX (*GetClientRect)(HWND, LPRECT);
     BOOL OMG_WIN_STD_PREFIX (*MoveWindow)(HWND, int, int, int, int, BOOL);
@@ -241,6 +248,7 @@ typedef struct {
     UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND);
     int OMG_WIN_STD_PREFIX (*GetSystemMetrics)(int);
     int OMG_WIN_STD_PREFIX (*GetSystemMetricsForDpi)(int, UINT);
+    int OMG_WIN_STD_PREFIX (*GetDeviceCaps)(HDC, int);
     HDC OMG_WIN_STD_PREFIX (*GetDC)(HWND);
     HDC OMG_WIN_STD_PREFIX (*GetWindowDC)(HWND);
     int OMG_WIN_STD_PREFIX (*ReleaseDC)(HWND, HDC);

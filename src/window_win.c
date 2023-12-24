@@ -188,6 +188,50 @@ bool omg_window_win_destroy(OMG_WindowWin* this) {
     return result;
 }
 
+void omg_window_win_update_scale(OMG_WindowWin* this) {
+    OMG_FPoint new_scale;
+    if (omg_base->support_highdpi) {
+        if (OMG_ISNULL(this->u32->GetDpiForWindow)) {
+            HDC hdc = this->u32->GetWindowDC(this->hwnd);
+            new_scale.x = (float)this->u32->GetDeviceCaps(hdc, LOGPIXELSX) / 96.0f;
+            new_scale.y = (float)this->u32->GetDeviceCaps(hdc, LOGPIXELSY) / 96.0f;
+            this->u32->ReleaseDC(this->hwnd, hdc);
+        }
+        else {
+            new_scale.x = new_scale.y = (float)this->u32->GetDpiForWindow(this->hwnd) / 96.0f;
+        }
+    }
+    else {
+        new_scale.x = new_scale.y = 1.0f;
+    }
+    if (new_scale.x == base->scale.x && new_scale.y == base->scale.y)
+        return;
+    if (base->scale.x == 0.0f)
+        base->scale.x = 1.0f;
+    RECT desktop_rect;
+    RECT rect;
+    RECT c_rect;
+    HWND hwnd_d = this->u32->GetDesktopWindow();
+    if (!this->u32->GetClientRect(hwnd_d, &desktop_rect) || !this->u32->GetWindowRect(this->hwnd, &rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
+        return;
+    /*
+    float new_w = (float)(rect.right - rect.left) * new_scale.x / base->scale.x;
+    float new_h = (float)(rect.bottom - rect.top) * new_scale.y / base->scale.y;
+    */
+    float new_w = base->size.w * new_scale.x + (float)(rect.right - rect.left - c_rect.right);
+    float new_h = base->size.h * new_scale.y + (float)(rect.bottom - rect.top - c_rect.bottom);
+    this->u32->MoveWindow(
+        this->hwnd,
+        (int)(((float)desktop_rect.right - new_w) / 2.0f),
+        (int)(((float)desktop_rect.bottom - new_h) / 2.0f),
+        (int)new_w,
+        (int)new_h,
+        TRUE
+    );
+    base->scale.x = new_scale.x;
+    base->scale.y = new_scale.y;
+}
+
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
@@ -236,7 +280,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         this->wc.lpszClassName, L"OMG Window [Win32]",
         WS_OVERLAPPEDWINDOW, // TODO: customize
         CW_USEDEFAULT, CW_USEDEFAULT,
-        (int)base->size.w, (int)base->size.h,
+        (int)(base->size.w * base->scale.x), (int)(base->size.h * base->scale.y),
         NULL, NULL, this->wc.hInstance, this
     );
     if (OMG_ISNULL(this->hwnd)) {
@@ -256,8 +300,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         return true;
     }
     omg_window_win_check_dark_mode(this);
-    if (omg_base->support_highdpi && OMG_ISNOTNULL(this->u32->GetDpiForWindow))
-        base->scale.x = base->scale.y = (float)this->u32->GetDpiForWindow(this->hwnd) / 96.0f;
+    base->scale.x = 0.0f; // Hack
+    omg_window_win_update_scale(this);
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_win_show;
     base->set_title = omg_window_win_set_title;

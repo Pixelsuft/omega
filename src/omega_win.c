@@ -136,6 +136,15 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
     base->on_loop_stop(&ls_event);
 }
 
+void omg_win_update_scale(OMG_OmegaWin* this) {
+    if (!base->support_highdpi) {
+        base->scale.x = base->scale.y = 1.0f;
+        return;
+    }
+    if (OMG_ISNOTNULL(this->u32->GetDpiForSystem))
+        base->scale.x = base->scale.y = (float)this->u32->GetDpiForSystem() / 96.0f;
+}
+
 bool omg_win_app_init(OMG_OmegaWin* this) {
     if (base->support_highdpi) {
         if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
@@ -143,8 +152,7 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
                 _OMG_LOG_WARN(base, "Failed to set dpi awareness for app");
             }
         }
-        if (OMG_ISNOTNULL(this->u32->GetDpiForSystem))
-            base->scale.x = base->scale.y = (float)this->u32->GetDpiForSystem() / 96.0f;
+        omg_win_update_scale(this);
     }
     if (OMG_ISNOTNULL(this->uxtheme->AllowDarkModeForApp))
         this->uxtheme->AllowDarkModeForApp((base->app_theme == OMG_THEME_DARK) || (base->app_theme == OMG_THEME_AUTO));

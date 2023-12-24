@@ -28,6 +28,8 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
     this->omg = win_base->omg;
+    this->scale.x = win_base->scale.x;
+    this->scale.y = win_base->scale.y;
     this->destroy = omg_renderer_destroy;
     this->clear = omg_renderer_clear;
     this->begin = omg_renderer_begin;

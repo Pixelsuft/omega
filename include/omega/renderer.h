@@ -15,6 +15,7 @@ typedef struct OMG_Renderer {
     bool (*flip)(struct OMG_Renderer* this);
     void* omg;
     void* win;
+    OMG_FPoint scale;
     int type;
     bool inited;
     bool was_allocated;
