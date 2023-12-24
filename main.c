@@ -62,12 +62,16 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->app_init(this->omg) ||
         this->omg->winmgr_alloc(this->omg) ||
         this->omg->winmgr->init(this->omg->winmgr) ||
-        (OMG_ISNULL(this->win = this->omg->winmgr->window_alloc(this->omg->winmgr)))
+        (OMG_ISNULL(this->win = this->omg->winmgr->window_alloc(this->omg->winmgr))) ||
+        this->win->default_init(this->win)
     ) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->win->default_init(this->win);
+    if (this->win->renderer_alloc(this->win)) {
+        this->omg->destroy(this->omg);
+        return;
+    }
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
     this->omg->on_loop_stop = app_on_destroy;

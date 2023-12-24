@@ -2,8 +2,9 @@
 #include <omega/ostd.h>
 
 #define OMG_REN_TYPE_NONE 0
-#define OMG_REN_TYPE_WIN 1
-#define OMG_REN_TYPE_SDL2 2
+#define OMG_REN_TYPE_AUTO 1
+#define OMG_REN_TYPE_WIN 2
+#define OMG_REN_TYPE_SDL2 3
 
 typedef struct {
     void* omg;
