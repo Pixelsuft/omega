@@ -18,4 +18,9 @@ typedef struct {
 
 typedef struct {
     OMG_Event parent;
+    void* win;
+} OMG_EventPaint;
+
+typedef struct {
+    OMG_Event parent;
 } OMG_EventLoopStop;

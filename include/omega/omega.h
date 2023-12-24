@@ -55,6 +55,7 @@ typedef struct OMG_Omega {
     void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
+    void (*on_paint)(OMG_EventPaint* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
     int log_level_lib;
     int log_level_omg;
@@ -82,6 +83,7 @@ OMG_API bool omg_app_quit(OMG_Omega* this);
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
+OMG_API void omg_event_on_paint(OMG_EventPaint* event);
 OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, float seconds);

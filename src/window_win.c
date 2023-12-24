@@ -124,10 +124,10 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #endif
     switch (msg) {
         case OMG_WIN_WM_PAINT: {
-            // TODO: paint event
-            OMG_EventUpdate u_event;
-            MAKE_EVENT(&u_event);
-            omg_base->on_update(&u_event);
+            OMG_EventPaint p_event;
+            MAKE_EVENT(&p_event);
+            p_event.win = this;
+            omg_base->on_paint(&p_event);
             return RET_DEF_PROC();
         }
         case OMG_WIN_WM_NCCREATE: {

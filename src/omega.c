@@ -97,6 +97,10 @@ void omg_event_on_update(OMG_EventUpdate* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_paint(OMG_EventPaint* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_event_on_loop_stop(OMG_EventLoopStop* event) {
     OMG_UNUSED(event);
 }
@@ -104,6 +108,7 @@ void omg_event_on_loop_stop(OMG_EventLoopStop* event) {
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
+    this->on_paint = omg_event_on_paint;
     this->on_loop_stop = omg_event_on_loop_stop;
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <omega/ostd.h>
+#include <omega/events.h>
 #include <omega/renderer.h>
 
 #define OMG_WIN_TYPE_NONE 0

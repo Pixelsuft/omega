@@ -93,13 +93,17 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
 
 void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
     base->looping = true;
+    OMG_EventUpdate u_event;
+    OMG_EventPaint p_event;
     while (base->looping) {
         omg_sdl2_poll_events(this);
         if (!base->looping)
             break;
-        OMG_EventUpdate u_event;
         MAKE_EVENT(&u_event);
         base->on_update(&u_event);
+        MAKE_EVENT(&p_event);
+        p_event.win = NULL;
+        base->on_paint(&p_event);
     }
     OMG_EventLoopStop ls_event;
     MAKE_EVENT(&ls_event);
