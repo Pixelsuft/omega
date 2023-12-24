@@ -196,11 +196,13 @@ typedef struct {
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindowFrom)(const void*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);
+    void OMG_SDL2_STD_PREFIX (*SDL_GetWindowSize)(SDL_Window*, int*, int*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
     SDL_Renderer* OMG_SDL2_STD_PREFIX (*SDL_CreateRenderer)(SDL_Window*, int, uint32_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetRendererOutputSize)(SDL_Renderer*, int*, int*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyRenderer)(SDL_Renderer*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);

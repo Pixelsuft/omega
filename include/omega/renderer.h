@@ -16,6 +16,7 @@ typedef struct OMG_Renderer {
     void* omg;
     void* win;
     OMG_FPoint scale;
+    OMG_FPoint size;
     int type;
     bool inited;
     bool was_allocated;

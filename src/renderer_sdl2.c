@@ -7,6 +7,21 @@
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
 
+void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
+    if (!omg_base->support_highdpi)
+        return;
+    int win_w, win_h, ren_w, ren_h;
+    this->sdl2->SDL_GetWindowSize(this->win, &win_w, &win_h);
+    if (this->sdl2->SDL_GetRendererOutputSize(this->ren, &ren_w, &ren_h) < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to get renderer size (", this->sdl2->SDL_GetError(), ")");
+        return;
+    }
+    base->size.w = (float)ren_w;
+    base->size.h = (float)ren_h;
+    base->scale.x = base->size.w / (float)win_w;
+    base->scale.y = base->size.h / (float)win_h;
+}
+
 bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this) {
     if (base->inited) {
         this->sdl2->SDL_DestroyRenderer(this->ren);
@@ -52,6 +67,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 renderer (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
+    omg_renderer_sdl2_update_scale(this);
     base->inited = true;
     return false;
 }
