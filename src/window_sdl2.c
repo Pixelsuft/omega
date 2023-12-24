@@ -35,7 +35,7 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
         if (OMG_ISNULL(base->ren))
             return true;
         base->ren->was_allocated = true;
-        base->ren->window = this;
+        base->ren->win = this;
         OMG_BEGIN_POINTER_CAST();
         base->ren->init = omg_renderer_sdl2_init;
         OMG_END_POINTER_CAST();

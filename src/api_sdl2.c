@@ -62,6 +62,11 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_HideWindow);
     LOAD_REQUIRED(SDL_SetWindowTitle);
     LOAD_REQUIRED(SDL_PollEvent);
+    LOAD_REQUIRED(SDL_CreateRenderer);
+    LOAD_REQUIRED(SDL_DestroyRenderer);
+    LOAD_REQUIRED(SDL_RenderClear);
+    LOAD_REQUIRED(SDL_SetRenderDrawColor);
+    LOAD_REQUIRED(SDL_RenderPresent);
     OMG_END_POINTER_CAST();
     return false;
 }

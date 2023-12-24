@@ -150,6 +150,14 @@ typedef enum
     SDL_WINDOW_INPUT_GRABBED = SDL_WINDOW_MOUSE_GRABBED
 } SDL_WindowFlags;
 
+typedef enum
+{
+    SDL_RENDERER_SOFTWARE = 0x00000001,
+    SDL_RENDERER_ACCELERATED = 0x00000002,
+    SDL_RENDERER_PRESENTVSYNC = 0x00000004,
+    SDL_RENDERER_TARGETTEXTURE = 0x00000008
+} SDL_RendererFlags;
+
 typedef void SDL_Window;
 typedef void SDL_Renderer;
 #else
@@ -192,6 +200,11 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
+    SDL_Renderer* OMG_SDL2_STD_PREFIX (*SDL_CreateRenderer)(SDL_Window*, int, uint32_t);
+    void OMG_SDL2_STD_PREFIX (*SDL_DestroyRenderer)(SDL_Renderer*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);
+    void OMG_SDL2_STD_PREFIX (*SDL_RenderPresent)(SDL_Renderer*);
     SDL_version ver;
 } OMG_Sdl2;
 

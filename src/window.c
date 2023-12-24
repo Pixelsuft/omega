@@ -5,6 +5,7 @@
 void omg_window_fill_on_create(OMG_Window* this) {
     this->type = OMG_WIN_TYPE_NONE;
     this->was_allocated = false;
+    this->vsync = true;
     this->size.w = 800.0f;
     this->size.h = 600.0f;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;

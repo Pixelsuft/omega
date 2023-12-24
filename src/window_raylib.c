@@ -36,7 +36,11 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->set_title = omg_window_raylib_set_title;
     base->destroy = omg_window_raylib_destroy;
     OMG_END_POINTER_CAST();
-    this->raylib->SetConfigFlags(FLAG_WINDOW_HIDDEN | (omg_base->support_highdpi ? FLAG_WINDOW_HIGHDPI : 0));
+    this->raylib->SetConfigFlags(
+        FLAG_WINDOW_HIDDEN |
+        (omg_base->support_highdpi ? FLAG_WINDOW_HIGHDPI : 0) |
+        (base->vsync ? FLAG_VSYNC_HINT : 0)
+    );
     this->raylib->InitWindow((int)base->size.w, (int)base->size.h, "OMG Window [Raylib]");
     base->inited = this->raylib->IsWindowReady();
     return !base->inited;

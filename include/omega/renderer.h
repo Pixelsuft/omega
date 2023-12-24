@@ -10,7 +10,7 @@ typedef struct OMG_Renderer {
     bool (*init)(struct OMG_Renderer* this);
     bool (*destroy)(struct OMG_Renderer* this);
     void* omg;
-    void* window;
+    void* win;
     int type;
     bool inited;
     bool was_allocated;

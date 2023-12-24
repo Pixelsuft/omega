@@ -24,6 +24,7 @@ typedef struct OMG_Window {
     OMG_FPoint size;
     int type;
     int ren_type;
+    bool vsync;
     bool inited;
     bool was_allocated;
 } OMG_Window;
