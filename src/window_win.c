@@ -76,6 +76,7 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
         ren_sdl2->sdl2 = (void*)((size_t)base->ren + sizeof(OMG_RendererSdl2));
         if (omg_sdl2_dll_load(ren_sdl2->sdl2, omg_base->sdl2_dll_path)) {
             OMG_FREE(omg_base->mem, base->ren);
+            base->ren = NULL;
             return true;
         }
         base->ren->was_allocated = true;
@@ -87,6 +88,7 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
         if (ren_sdl2->sdl2->SDL_Init(SDL_INIT_VIDEO) < 0) {
             omg_sdl2_dll_free(ren_sdl2->sdl2);
             OMG_FREE(omg_base->mem, base->ren);
+            base->ren = NULL;
             return true;
         }
         ren_sdl2->win = ren_sdl2->sdl2->SDL_CreateWindowFrom((const void*)this->hwnd);
@@ -94,6 +96,7 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
             ren_sdl2->sdl2->SDL_Quit();
             omg_sdl2_dll_free(ren_sdl2->sdl2);
             OMG_FREE(omg_base->mem, base->ren);
+            base->ren = NULL;
             return true;
         }
         return false;
