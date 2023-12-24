@@ -25,6 +25,11 @@ void app_on_destroy(OMG_EventLoopStop* event) {
         "Exit. Number of allocations: ",
         (int)this->omg->mem->get_alloc_count(this->omg->mem)
     );
+#if OMG_SUPPORT_WIN && !OMG_HAS_STD
+    // Fuck microsoft
+    if (this->omg->type == OMG_OMEGA_TYPE_WIN)
+        ((OMG_OmegaWin*)this->omg)->k32->ExitProcess((UINT)this->exit_code);
+#endif
     this->omg->destroy(this->omg);
     this->exit_code = 0;
 }

@@ -85,12 +85,15 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
         base->ren->init = omg_renderer_sdl2_init;
         OMG_END_POINTER_CAST();
         if (ren_sdl2->sdl2->SDL_Init(SDL_INIT_VIDEO) < 0) {
-            // TODO: cleanup
+            omg_sdl2_dll_free(ren_sdl2->sdl2);
+            OMG_FREE(omg_base->mem, base->ren);
             return true;
         }
         ren_sdl2->win = ren_sdl2->sdl2->SDL_CreateWindowFrom((const void*)this->hwnd);
         if (OMG_ISNULL(ren_sdl2->win)) {
-            // TODO: cleanup
+            ren_sdl2->sdl2->SDL_Quit();
+            omg_sdl2_dll_free(ren_sdl2->sdl2);
+            OMG_FREE(omg_base->mem, base->ren);
             return true;
         }
         return false;
@@ -106,6 +109,7 @@ bool omg_window_win_renderer_free(OMG_WindowWin* this) {
 #if OMG_SUPPORT_SDL2
     if (base->ren->type == OMG_REN_TYPE_SDL2) {
         if (OMG_ISNOTNULL(base->ren)) {
+            ren_sdl2->sdl2->SDL_DestroyWindow(ren_sdl2->win);
             ren_sdl2->sdl2->SDL_Quit();
             res = omg_sdl2_dll_free(ren_sdl2->sdl2) || res;
             ren_sdl2->sdl2 = NULL;
@@ -169,7 +173,7 @@ bool omg_window_win_destroy(OMG_WindowWin* this) {
     if (base->inited) {
         omg_window_destroy((OMG_Window*)this);
         if (!this->u32->DestroyWindow(this->hwnd)) {
-            _OMG_LOG_WARN(omg_base, "Failed to destroy window");
+            // _OMG_LOG_WARN(omg_base, "Failed to destroy window");
             result = true;
         }
         if (!this->u32->UnregisterClassW(this->wc.lpszClassName, this->wc.hInstance)) {
@@ -252,7 +256,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_win_show;
     base->set_title = omg_window_win_set_title;
-    base->destroy = omg_window_destroy;
+    base->destroy = omg_window_win_destroy;
     base->renderer_alloc = omg_window_win_renderer_alloc;
     base->renderer_free = omg_window_win_renderer_free;
     OMG_END_POINTER_CAST();

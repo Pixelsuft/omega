@@ -259,6 +259,7 @@ typedef struct {
     HMODULE handle;
     HMODULE OMG_WIN_STD_PREFIX (*LoadLibraryExW)(LPCWSTR, HANDLE, DWORD);
     BOOL OMG_WIN_STD_PREFIX (*FreeLibrary)(HMODULE);
+    void OMG_WIN_STD_PREFIX (*ExitProcess)(UINT);
     FARPROC OMG_WIN_STD_PREFIX (*GetProcAddress)(HMODULE, LPCSTR);
     HANDLE OMG_WIN_STD_PREFIX (*HeapCreate)(DWORD, SIZE_T, SIZE_T);
     BOOL OMG_WIN_STD_PREFIX (*HeapDestroy)(HANDLE);

@@ -40,6 +40,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     OMG_BEGIN_POINTER_CAST();
 #endif
     LOAD_REQUIRED(LoadLibraryExW);
+    LOAD_REQUIRED(ExitProcess);
     LOAD_REQUIRED(GetProcAddress);
     LOAD_REQUIRED(FreeLibrary);
     LOAD_REQUIRED(HeapCreate);
