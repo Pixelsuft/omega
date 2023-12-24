@@ -8,6 +8,7 @@
 typedef struct {
     OMG_Omega* omg;
     OMG_Window* win;
+    OMG_Renderer* ren;
     int exit_code;
 } App;
 
@@ -17,8 +18,7 @@ OMG_MAKE_MAIN(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
     // everything will be cleaned up automaticly
-    // this->win->destroy(this->win);
-    // this->omg->window_free(this->omg, this->win);
+    this->ren->destroy(this->ren);
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
@@ -68,10 +68,11 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    if (this->win->renderer_alloc(this->win)) {
+    if (this->win->renderer_alloc(this->win) || this->win->ren->init(this->win->ren)) {
         this->omg->destroy(this->omg);
         return;
     }
+    this->ren = this->win->ren;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
     this->omg->on_loop_stop = app_on_destroy;

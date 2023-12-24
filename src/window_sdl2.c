@@ -36,6 +36,10 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
             return true;
         base->ren->was_allocated = true;
         base->ren->window = this;
+        OMG_BEGIN_POINTER_CAST();
+        base->ren->init = omg_renderer_sdl2_init;
+        OMG_END_POINTER_CAST();
+        ren_sdl2->win = this->win;
         ren_sdl2->sdl2 = this->sdl2;
         return false;
     }
@@ -44,10 +48,10 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
 
 bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
     if (base->inited) {
+        omg_window_destroy((OMG_Window*)this);
         this->sdl2->SDL_DestroyWindow(this->win);
         base->inited = false;
     }
-    omg_window_destroy((OMG_Window*)this);
     return false;
 }
 

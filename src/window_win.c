@@ -94,6 +94,23 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         return 0;
 }
 
+bool omg_window_win_destroy(OMG_WindowWin* this) {
+    bool result = false;
+    if (base->inited) {
+        omg_window_destroy((OMG_Window*)this);
+        if (!this->u32->DestroyWindow(this->hwnd)) {
+            _OMG_LOG_WARN(omg_base, "Failed to destroy window");
+            result = true;
+        }
+        if (!this->u32->UnregisterClassW(this->wc.lpszClassName, this->wc.hInstance)) {
+            _OMG_LOG_WARN(omg_base, "Failed to unregister class");
+            result = true;
+        }
+        base->inited = false;
+    }
+    return result;
+}
+
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
@@ -169,22 +186,5 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;
-}
-
-bool omg_window_win_destroy(OMG_WindowWin* this) {
-    bool result = false;
-    if (base->inited) {
-        if (!this->u32->DestroyWindow(this->hwnd)) {
-            _OMG_LOG_WARN(omg_base, "Failed to destroy window");
-            result = true;
-        }
-        if (!this->u32->UnregisterClassW(this->wc.lpszClassName, this->wc.hInstance)) {
-            _OMG_LOG_WARN(omg_base, "Failed to unregister class");
-            result = true;
-        }
-        base->inited = false;
-    }
-    omg_window_destroy((OMG_Window*)this);
-    return result;
 }
 #endif

@@ -13,8 +13,8 @@ bool omg_window_raylib_show(OMG_WindowRaylib* this, bool show) {
 
 bool omg_window_raylib_destroy(OMG_WindowRaylib* this) {
     if (base->inited) {
-        this->raylib->CloseWindow();
         omg_window_destroy((OMG_Window*)this);
+        this->raylib->CloseWindow();
         base->inited = false;
     }
     return false;
