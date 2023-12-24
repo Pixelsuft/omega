@@ -3,6 +3,7 @@
 
 #if OMG_SUPPORT_SDL2
 #include <omega/renderer.h>
+#define _OMG_SDL2_DRAW_COLOR_WARN() _OMG_LOG_WARN(omg_base, "Failed to set draw color (", this->sdl2->SDL_GetError(), ")")
 
 typedef struct {
     OMG_Renderer parent;
@@ -13,4 +14,8 @@ typedef struct {
 
 OMG_API bool omg_renderer_sdl2_init(OMG_RendererSdl2* this);
 OMG_API bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this);
+#if OMG_EXPORT_SHIT
+OMG_API bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col);
+OMG_API bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this);
+#endif
 #endif

@@ -24,6 +24,9 @@
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
 #define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? ((((str_len) >> OMG_STRING_CHUNK_SIZE_OFFSET) + 1) << OMG_STRING_CHUNK_SIZE_OFFSET) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
 
+#define OMG_COLOR_MAKE_RGB(c_r, c_g, c_b) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)255 })
+#define OMG_COLOR_MAKE_RGBA(c_r, c_g, c_b, c_a) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)(c_a) })
+
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \
     char*: omg_string_add_char_p, \
@@ -148,6 +151,17 @@ typedef struct {
     char* ptr;
     char buf[];
 } OMG_String;
+
+typedef float omg_color_t;
+typedef union {
+    struct {
+        omg_color_t r;
+        omg_color_t g;
+        omg_color_t b;
+        omg_color_t a;
+    };
+    omg_color_t val[4];
+} OMG_Color;
 
 typedef union {
     struct {

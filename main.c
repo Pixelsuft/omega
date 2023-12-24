@@ -30,18 +30,9 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 }
 
 void app_on_update(OMG_EventUpdate* event) {
-#if OMG_SUPPORT_WIN
     App* this = (App*)(((OMG_Event*)event)->data);
-    if (this->omg->type == OMG_OMEGA_TYPE_WIN) {
-        OMG_OmegaWin* omg = ((OMG_OmegaWin*)this->omg);
-        OMG_WindowWin* win = ((OMG_WindowWin*)this->win);
-        omg->u32->InvalidateRect(win->hwnd, NULL, TRUE);
-        omg->u32->UpdateWindow(win->hwnd);
-        omg->k32->Sleep(5);
-    }
-#else
-    OMG_UNUSED(event);
-#endif
+    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(0, 0, 0));
+    this->ren->flip(this->ren);
 }
 
 void app_init(App* this, OMG_EntryData* data) {
