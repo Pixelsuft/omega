@@ -3,8 +3,10 @@
 #if OMG_SUPPORT_RAYLIB
 #include <omega/omega.h>
 #include <omega/window_raylib.h>
+#include <omega/renderer_raylib.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
+#define ren_raylib ((OMG_RendererRaylib*)base->ren)
 
 bool omg_window_raylib_show(OMG_WindowRaylib* this, bool show) {
     (show ? this->raylib->ClearWindowState : this->raylib->SetWindowState)(FLAG_WINDOW_HIDDEN);
@@ -27,6 +29,20 @@ bool omg_window_raylib_set_title(OMG_WindowRaylib* this, const OMG_String* new_t
     return false;
 }
 
+bool omg_window_raylib_renderer_alloc(OMG_WindowRaylib* this) {
+    base->ren_type = OMG_REN_TYPE_RAYLIB;
+    base->ren = OMG_MALLOC(omg_base->mem, sizeof(OMG_RendererRaylib));
+    if (OMG_ISNULL(base->ren))
+        return true;
+    base->ren->was_allocated = true;
+    base->ren->win = this;
+    OMG_BEGIN_POINTER_CAST();
+    base->ren->init = omg_renderer_raylib_init;
+    OMG_END_POINTER_CAST();
+    ren_raylib->raylib = this->raylib;
+    return false;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
@@ -35,6 +51,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->show = omg_window_raylib_show;
     base->set_title = omg_window_raylib_set_title;
     base->destroy = omg_window_raylib_destroy;
+    base->renderer_alloc = omg_window_raylib_renderer_alloc;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(
         FLAG_WINDOW_HIDDEN |

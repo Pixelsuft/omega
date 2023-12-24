@@ -27,6 +27,13 @@ typedef enum {
     FLAG_INTERLACED_HINT    = 0x00010000
 } ConfigFlags;
 
+typedef struct Color {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
+} Color;
+
 typedef enum {
     LOG_ALL = 0,
     LOG_TRACE,
@@ -62,6 +69,7 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*SetTraceLogCallback)(TraceLogCallback);
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
+    void OMG_RAYLIB_PREFIX (*ClearBackground)(Color color);
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);

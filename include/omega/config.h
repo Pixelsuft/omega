@@ -66,7 +66,7 @@
 #endif
 
 #ifndef OMG_MAX_WINDOWS
-#define OMG_MAX_WINDOWS 25
+#define OMG_MAX_WINDOWS 5
 #endif
 
 #ifndef OMG_WIN_PRECISE_ENCODING
