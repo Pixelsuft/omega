@@ -6,8 +6,8 @@
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 
-bool omg_window_raylib_show(OMG_WindowRaylib* this) {
-    this->raylib->ClearWindowState(FLAG_WINDOW_HIDDEN);
+bool omg_window_raylib_show(OMG_WindowRaylib* this, bool show) {
+    (show ? this->raylib->ClearWindowState : this->raylib->SetWindowState)(FLAG_WINDOW_HIDDEN);
     return false;
 }
 

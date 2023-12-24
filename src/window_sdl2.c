@@ -5,8 +5,8 @@
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 
-bool omg_window_sdl2_show(OMG_WindowSdl2* this) {
-    this->sdl2->SDL_ShowWindow(this->win);
+bool omg_window_sdl2_show(OMG_WindowSdl2* this, bool show) {
+    (show ? this->sdl2->SDL_ShowWindow : this->sdl2->SDL_HideWindow)(this->win);
     return false;
 }
 

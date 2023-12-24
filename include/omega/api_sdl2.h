@@ -151,6 +151,7 @@ typedef enum
 } SDL_WindowFlags;
 
 typedef void SDL_Window;
+typedef void SDL_Renderer;
 #else
 #define OMG_SDL2_STD_PREFIX SDLCALL
 #endif
@@ -185,8 +186,10 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_LogCritical)(int, const char*, ...);
     const char* OMG_SDL2_STD_PREFIX (*SDL_GetError)(void);
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);
+    SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindowFrom)(const void*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
+    void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
     SDL_version ver;

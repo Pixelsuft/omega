@@ -128,6 +128,11 @@
 #else
 #define OMG_WIN_IDC_ARROW OMG_WIN_MAKEINTRESOURCEW(32512)
 #endif
+#ifdef SW_HIDE
+#define OMG_WIN_SW_HIDE SW_HIDE
+#else
+#define OMG_WIN_SW_HIDE 0
+#endif
 #ifdef SW_SHOWNORMAL
 #define OMG_WIN_SW_SHOWNORMAL SW_SHOWNORMAL
 #else

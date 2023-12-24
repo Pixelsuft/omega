@@ -11,8 +11,8 @@
     ((OMG_Event*)event)->time = 0; \
 } while (0)
 
-bool omg_window_win_show(OMG_WindowWin* this) {
-    this->u32->ShowWindow(this->hwnd, OMG_WIN_SW_SHOWNORMAL);
+bool omg_window_win_show(OMG_WindowWin* this, bool show) {
+    this->u32->ShowWindow(this->hwnd, show ? OMG_WIN_SW_SHOWNORMAL : OMG_WIN_SW_HIDE);
     return false;
 }
 

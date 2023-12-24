@@ -21,7 +21,7 @@ OMG_API bool omg_window_win_destroy(OMG_WindowWin* this);
 OMG_API LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 #if OMG_EXPORT_SHIT
 OMG_API void omg_window_win_check_dark_mode(OMG_WindowWin* this);
-OMG_API bool omg_window_win_show(OMG_WindowWin* this);
+OMG_API bool omg_window_win_show(OMG_WindowWin* this, bool show);
 OMG_API bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title);
 #endif
 #endif
