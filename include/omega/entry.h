@@ -22,7 +22,10 @@ typedef struct {
     entry_data.cmdline = cmdline; \
     entry_data.cmdline_s = NULL; \
     entry_data.cmdshow = cmdshow; \
-    return main_func(&entry_data); \
+    int _omg_exit_code = main_func(&entry_data); \
+    if (!OMG_HAS_STD) \
+        ExitProcess((UINT)_omg_exit_code); /* Fuck Microsoft */ \
+    return _omg_exit_code; \
 } \
 \
 int OMG_WIN_STD_PREFIX WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmdshow) { \
@@ -32,7 +35,10 @@ int OMG_WIN_STD_PREFIX WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdlin
     entry_data.cmdline = NULL; \
     entry_data.cmdline_s = cmdline; \
     entry_data.cmdshow = cmdshow; \
-    return main_func(&entry_data); \
+    int _omg_exit_code = main_func(&entry_data); \
+    if (!OMG_HAS_STD) \
+        ExitProcess((UINT)_omg_exit_code); \
+    return _omg_exit_code; \
 }
 #else
 #if OMG_IS_WIN && OMG_SUPPORT_SDL2 && OMG_SUPPORT_SDL2_MAIN && !OMG_SDL2_DYNAMIC && !OMG_IS_VC && OMG_HAS_STD
