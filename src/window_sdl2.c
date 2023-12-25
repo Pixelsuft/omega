@@ -47,6 +47,18 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
 }
 
 bool omg_window_sdl2_set_state(OMG_WindowSdl2* this, int state) {
+    if (state & OMG_WIN_STATE_MINIMIZED) {
+        state &= (~OMG_WIN_STATE_MAXIMIZED) | (~OMG_WIN_STATE_RESTORED);
+        this->sdl2->SDL_RestoreWindow(this->win);
+    }
+    else if (state & OMG_WIN_STATE_MAXIMIZED) {
+        state &= (~OMG_WIN_STATE_MINIMIZED) | (~OMG_WIN_STATE_RESTORED);
+        this->sdl2->SDL_RestoreWindow(this->win);
+    }
+    else if (/*state & OMG_WIN_STATE_RESTORED*/ !(base->state & OMG_WIN_STATE_RESTORED)) {
+        state = OMG_WIN_STATE_RESTORED;
+        this->sdl2->SDL_RestoreWindow(this->win);
+    }
     base->state = state;
     return false;
 }
@@ -58,16 +70,21 @@ bool omg_window_sdl2_set_sys_button(OMG_WindowSdl2* this, int id, bool enabled) 
 
 bool omg_window_sdl2_set_resizable(OMG_WindowSdl2* this, bool enabled) {
     base->resizable = enabled;
+    if (OMG_ISNOTNULL(this->sdl2->SDL_SetWindowResizable))
+        this->sdl2->SDL_SetWindowResizable(this->win, enabled ? SDL_TRUE : SDL_FALSE);
     return false;
 }
 
-bool omg_window_sdl2_set_border(OMG_WindowSdl2* this, bool enabled) {
-    base->has_border = enabled;
+bool omg_window_sdl2_set_bordered(OMG_WindowSdl2* this, bool enabled) {
+    base->bordered = enabled;
+    this->sdl2->SDL_SetWindowBordered(this->win, enabled ? SDL_TRUE : SDL_FALSE);
     return false;
 }
 
 bool omg_window_sdl2_set_always_on_top(OMG_WindowSdl2* this, bool enabled) {
     base->always_on_top = enabled;
+    if (OMG_ISNOTNULL(this->sdl2->SDL_SetWindowAlwaysOnTop))
+        this->sdl2->SDL_SetWindowAlwaysOnTop(this, enabled ? SDL_TRUE : SDL_FALSE);
     return false;
 }
 
@@ -91,7 +108,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         (int)base->size.w, (int)base->size.h,
         SDL_WINDOW_HIDDEN |
         (omg_base->support_highdpi ? SDL_WINDOW_ALLOW_HIGHDPI : 0) |
-        (base->has_border ? 0 : SDL_WINDOW_BORDERLESS) |
+        (base->bordered ? 0 : SDL_WINDOW_BORDERLESS) |
         (base->resizable ? SDL_WINDOW_RESIZABLE : 0) |
         ((base->state & OMG_WIN_STATE_MINIMIZED) ? SDL_WINDOW_MINIMIZED : 0) |
         ((base->state & OMG_WIN_STATE_MAXIMIZED) ? SDL_WINDOW_MAXIMIZED : 0) |
@@ -110,7 +127,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_state = omg_window_sdl2_set_title;
     base->set_sys_button = omg_window_sdl2_set_title;
     base->set_resizable = omg_window_sdl2_set_resizable;
-    base->set_border = omg_window_sdl2_set_border;
+    base->set_bordered = omg_window_sdl2_set_bordered;
     base->set_always_on_top = omg_window_sdl2_set_always_on_top;
     base->renderer_alloc = omg_window_sdl2_renderer_alloc;
     base->show = omg_window_sdl2_show;

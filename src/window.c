@@ -8,7 +8,7 @@ void omg_window_fill_on_create(OMG_Window* this) {
     this->vsync = true;
     this->resizable = false;
     this->thick = false;
-    this->has_border = true;
+    this->bordered = true;
     this->centered = true;
     this->state = OMG_WIN_STATE_RESTORED;
     this->always_on_top = false;
@@ -75,8 +75,8 @@ bool omg_window_set_resizable(OMG_Window* this, bool enabled) {
     return false;
 }
 
-bool omg_window_set_border(OMG_Window* this, bool enabled) {
-    this->has_border = enabled;
+bool omg_window_set_bordered(OMG_Window* this, bool enabled) {
+    this->bordered = enabled;
     return false;
 }
 
@@ -98,7 +98,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_state = omg_window_set_state;
     this->set_sys_button = omg_window_set_sys_button;
     this->set_resizable = omg_window_set_resizable;
-    this->set_border = omg_window_set_border;
+    this->set_bordered = omg_window_set_bordered;
     this->set_thick = omg_window_set_thick;
     this->set_always_on_top = omg_window_set_always_on_top;
     this->show = omg_window_show;

@@ -30,7 +30,7 @@ typedef struct OMG_Window {
     bool (*set_state)(struct OMG_Window* this, int state);
     bool (*set_sys_button)(struct OMG_Window* this, int id, bool enabled);
     bool (*set_resizable)(struct OMG_Window* this, bool enabled);
-    bool (*set_border)(struct OMG_Window* this, bool enabled);
+    bool (*set_bordered)(struct OMG_Window* this, bool enabled);
     bool (*set_thick)(struct OMG_Window* this, bool enabled);
     bool (*set_always_on_top)(struct OMG_Window* this, bool enabled);
     OMG_Renderer* ren;
@@ -50,8 +50,8 @@ typedef struct OMG_Window {
     bool vsync;
     bool resizable;
     bool thick;
-    bool has_border;
-    bool sys_buttons[3];
+    bool bordered;
+    bool sys_buttons[3]; // TODO: use bitmasks instead of arrays
     bool always_on_top;
     bool inited;
     bool centered;
@@ -67,7 +67,7 @@ OMG_API bool omg_window_renderer_free(OMG_Window* this);
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);
 OMG_API bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled);
 OMG_API bool omg_window_set_resizable(OMG_Window* this, bool enabled);
-OMG_API bool omg_window_set_border(OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_bordered(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_thick(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_always_on_top(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_title(OMG_Window* this, const OMG_String* new_title);

@@ -12,6 +12,19 @@
 
 #if OMG_SDL2_DYNAMIC
 #define OMG_SDL2_STD_PREFIX
+
+#ifdef __CC_ARM
+#define SDL_FALSE 0
+#define SDL_TRUE 1
+typedef int SDL_bool;
+#else
+typedef enum
+{
+    SDL_FALSE = 0,
+    SDL_TRUE = 1
+} SDL_bool;
+#endif
+
 #define SDL_INIT_TIMER          0x00000001u
 #define SDL_INIT_VIDEO          0x00000020u
 #define SDL_INIT_EVENTS         0x00004000u
@@ -228,6 +241,13 @@ typedef struct {
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetWindowID)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
+    // TODO: this and probably more require new versions
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowResizable)(SDL_Window*, SDL_bool);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowBordered)(SDL_Window*, SDL_bool);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowAlwaysOnTop)(SDL_Window*, SDL_bool);
+    void OMG_SDL2_STD_PREFIX (*SDL_MinimizeWindow)(SDL_Window*);
+    void OMG_SDL2_STD_PREFIX (*SDL_MaximizeWindow)(SDL_Window*);
+    void OMG_SDL2_STD_PREFIX (*SDL_RestoreWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
     SDL_Renderer* OMG_SDL2_STD_PREFIX (*SDL_CreateRenderer)(SDL_Window*, int, uint32_t);
