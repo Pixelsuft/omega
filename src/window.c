@@ -10,7 +10,7 @@ void omg_window_fill_on_create(OMG_Window* this) {
     this->thick = false;
     this->has_border = true;
     this->centered = true;
-    this->minimized = this->maximized = false;
+    this->state = OMG_WIN_STATE_RESTORED;
     this->always_on_top = false;
     this->window_mode = OMG_WIN_MODE_WINDOW;
     this->sys_buttons[OMG_WIN_SYS_BUTTON_CLOSE] = true;
@@ -60,11 +60,47 @@ bool omg_window_destroy(OMG_Window* this) {
     return result;
 }
 
+bool omg_window_set_state(struct OMG_Window* this, int state) {
+    this->state = state;
+    return false;
+}
+
+bool omg_window_set_sys_button(struct OMG_Window* this, int id, bool enabled) {
+    this->sys_buttons[id] = enabled;
+    return false;
+}
+
+bool omg_window_set_resizable(struct OMG_Window* this, bool enabled) {
+    this->resizable = enabled;
+    return false;
+}
+
+bool omg_window_set_border(struct OMG_Window* this, bool enabled) {
+    this->has_border = enabled;
+    return false;
+}
+
+bool omg_window_set_thick(struct OMG_Window* this, bool enabled) {
+    this->thick = enabled;
+    return false;
+}
+
+bool omg_window_set_always_on_top(struct OMG_Window* this, bool enabled) {
+    this->always_on_top = enabled;
+    return false;
+}
+
 bool omg_window_init(OMG_Window* this) {
     this->scale.x = this->scale.y = 1.0f;
     this->ren = NULL;
     this->ren_type = OMG_REN_TYPE_AUTO;
     this->destroy = omg_window_destroy;
+    this->set_state = omg_window_set_state;
+    this->set_sys_button = omg_window_set_sys_button;
+    this->set_resizable = omg_window_set_resizable;
+    this->set_border = omg_window_set_border;
+    this->set_thick = omg_window_set_thick;
+    this->set_always_on_top = omg_window_set_always_on_top;
     this->show = omg_window_show;
     this->set_title = omg_window_set_title;
     this->renderer_alloc = omg_window_renderer_alloc;

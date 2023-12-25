@@ -16,6 +16,10 @@
 #define OMG_WIN_MODE_FULLSCREEN 0
 #define OMG_WIN_MODE_DESKTOP_FULLSCREEN 0
 
+#define OMG_WIN_STATE_RESTORED (1 << 2)
+#define OMG_WIN_STATE_MINIMIZED (2 << 2)
+#define OMG_WIN_STATE_MAXIMIZED (3 << 2)
+
 typedef struct OMG_Window {
     bool (*default_init)(struct OMG_Window* this);
     bool (*destroy)(struct OMG_Window* this);
@@ -23,6 +27,12 @@ typedef struct OMG_Window {
     bool (*set_title)(struct OMG_Window* this, const OMG_String* new_title);
     bool (*renderer_alloc)(struct OMG_Window* this);
     bool (*renderer_free)(struct OMG_Window* this);
+    bool (*set_state)(struct OMG_Window* this, int state);
+    bool (*set_sys_button)(struct OMG_Window* this, int id, bool enabled);
+    bool (*set_resizable)(struct OMG_Window* this, bool enabled);
+    bool (*set_border)(struct OMG_Window* this, bool enabled);
+    bool (*set_thick)(struct OMG_Window* this, bool enabled);
+    bool (*set_always_on_top)(struct OMG_Window* this, bool enabled);
     OMG_Renderer* ren;
     void* extra1;
     void* extra2;
@@ -34,6 +44,7 @@ typedef struct OMG_Window {
     OMG_FPoint size;
     OMG_FPoint scale;
     int type;
+    int state;
     int ren_type;
     int window_mode;
     bool vsync;
@@ -41,8 +52,6 @@ typedef struct OMG_Window {
     bool thick;
     bool has_border;
     bool sys_buttons[3];
-    bool minimized;
-    bool maximized;
     bool always_on_top;
     bool inited;
     bool centered;
@@ -55,6 +64,12 @@ OMG_API bool omg_window_destroy(OMG_Window* this);
 OMG_API bool omg_window_renderer_alloc(OMG_Window* this);
 OMG_API bool omg_window_renderer_free(OMG_Window* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_window_set_state(struct OMG_Window* this, int state);
+OMG_API bool omg_window_set_sys_button(struct OMG_Window* this, int id, bool enabled);
+OMG_API bool omg_window_set_resizable(struct OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_border(struct OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_thick(struct OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_always_on_top(struct OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_title(OMG_Window* this, const OMG_String* new_title);
 OMG_API bool omg_window_show(OMG_Window* this, bool show);
 #endif

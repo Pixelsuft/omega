@@ -68,8 +68,8 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         (omg_base->support_highdpi ? SDL_WINDOW_ALLOW_HIGHDPI : 0) |
         (base->has_border ? 0 : SDL_WINDOW_BORDERLESS) |
         (base->resizable ? SDL_WINDOW_RESIZABLE : 0) |
-        (base->minimized ? SDL_WINDOW_MINIMIZED : 0) |
-        (base->maximized ? SDL_WINDOW_MAXIMIZED : 0) |
+        ((base->state & OMG_WIN_STATE_MINIMIZED) ? SDL_WINDOW_MINIMIZED : 0) |
+        ((base->state & OMG_WIN_STATE_MAXIMIZED) ? SDL_WINDOW_MAXIMIZED : 0) |
         (base->always_on_top ? SDL_WINDOW_ALWAYS_ON_TOP : 0)
     );
     if (OMG_ISNULL(this->win)) {
