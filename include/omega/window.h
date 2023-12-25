@@ -8,6 +8,10 @@
 #define OMG_WIN_TYPE_SDL2 2
 #define OMG_WIN_TYPE_RAYLIB 3
 
+#define OMG_WIN_SYS_BUTTON_CLOSE 0
+#define OMG_WIN_SYS_BUTTON_MAXIMIZE 1
+#define OMG_WIN_SYS_BUTTON_MINIMIZE 2
+
 typedef struct OMG_Window {
     bool (*default_init)(struct OMG_Window* this);
     bool (*destroy)(struct OMG_Window* this);
@@ -22,11 +26,15 @@ typedef struct OMG_Window {
     void* extra4;
     void* extra5;
     void* omg;
+    size_t array_pos;
     OMG_FPoint size;
     OMG_FPoint scale;
     int type;
     int ren_type;
     bool vsync;
+    bool resizable;
+    bool thick;
+    bool sys_buttons[3];
     bool inited;
     bool was_allocated;
 } OMG_Window;

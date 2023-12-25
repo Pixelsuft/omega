@@ -6,6 +6,12 @@ void omg_window_fill_on_create(OMG_Window* this) {
     this->type = OMG_WIN_TYPE_NONE;
     this->was_allocated = false;
     this->vsync = true;
+    this->resizable = false;
+    this->thick = false;
+    this->sys_buttons[OMG_WIN_SYS_BUTTON_CLOSE] = true;
+    this->sys_buttons[OMG_WIN_SYS_BUTTON_MAXIMIZE] = true;
+    this->sys_buttons[OMG_WIN_SYS_BUTTON_MINIMIZE] = true;
+    this->array_pos = 0;
     this->size.w = 800.0f;
     this->size.h = 600.0f;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
@@ -38,11 +44,13 @@ bool omg_window_renderer_free(OMG_Window* this) {
 }
 
 bool omg_window_destroy(OMG_Window* this) {
+    if (OMG_ISNULL(this))
+        return true;
     bool result = this->renderer_free(this);
-    for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
-        if (omg_base->winmgr->cache[i] == this) {
-            omg_base->winmgr->cache[i] = NULL;
-        }
+    if (OMG_ISNULL(omg_base->winmgr))
+        return true;
+    if (omg_base->winmgr->cache[this->array_pos] == this) {
+        omg_base->winmgr->cache[this->array_pos] = NULL;
     }
     return result;
 }
@@ -59,6 +67,7 @@ bool omg_window_init(OMG_Window* this) {
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;
+            this->array_pos = i;
             break;
         }
     }
