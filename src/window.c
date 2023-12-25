@@ -60,32 +60,32 @@ bool omg_window_destroy(OMG_Window* this) {
     return result;
 }
 
-bool omg_window_set_state(struct OMG_Window* this, int state) {
+bool omg_window_set_state(OMG_Window* this, int state) {
     this->state = state;
     return false;
 }
 
-bool omg_window_set_sys_button(struct OMG_Window* this, int id, bool enabled) {
+bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled) {
     this->sys_buttons[id] = enabled;
     return false;
 }
 
-bool omg_window_set_resizable(struct OMG_Window* this, bool enabled) {
+bool omg_window_set_resizable(OMG_Window* this, bool enabled) {
     this->resizable = enabled;
     return false;
 }
 
-bool omg_window_set_border(struct OMG_Window* this, bool enabled) {
+bool omg_window_set_border(OMG_Window* this, bool enabled) {
     this->has_border = enabled;
     return false;
 }
 
-bool omg_window_set_thick(struct OMG_Window* this, bool enabled) {
+bool omg_window_set_thick(OMG_Window* this, bool enabled) {
     this->thick = enabled;
     return false;
 }
 
-bool omg_window_set_always_on_top(struct OMG_Window* this, bool enabled) {
+bool omg_window_set_always_on_top(OMG_Window* this, bool enabled) {
     this->always_on_top = enabled;
     return false;
 }

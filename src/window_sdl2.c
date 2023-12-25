@@ -46,6 +46,31 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
     return true;
 }
 
+bool omg_window_sdl2_set_state(OMG_WindowSdl2* this, int state) {
+    base->state = state;
+    return false;
+}
+
+bool omg_window_sdl2_set_sys_button(OMG_WindowSdl2* this, int id, bool enabled) {
+    base->sys_buttons[id] = enabled;
+    return false;
+}
+
+bool omg_window_sdl2_set_resizable(OMG_WindowSdl2* this, bool enabled) {
+    base->resizable = enabled;
+    return false;
+}
+
+bool omg_window_sdl2_set_border(OMG_WindowSdl2* this, bool enabled) {
+    base->has_border = enabled;
+    return false;
+}
+
+bool omg_window_sdl2_set_always_on_top(OMG_WindowSdl2* this, bool enabled) {
+    base->always_on_top = enabled;
+    return false;
+}
+
 bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
     if (base->inited) {
         omg_window_destroy((OMG_Window*)this);
@@ -82,6 +107,11 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         this->id = 1;
     }
     OMG_BEGIN_POINTER_CAST();
+    base->set_state = omg_window_sdl2_set_title;
+    base->set_sys_button = omg_window_sdl2_set_title;
+    base->set_resizable = omg_window_sdl2_set_resizable;
+    base->set_border = omg_window_sdl2_set_border;
+    base->set_always_on_top = omg_window_sdl2_set_always_on_top;
     base->renderer_alloc = omg_window_sdl2_renderer_alloc;
     base->show = omg_window_sdl2_show;
     base->set_title = omg_window_sdl2_set_title;

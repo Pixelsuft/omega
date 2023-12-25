@@ -64,12 +64,12 @@ OMG_API bool omg_window_destroy(OMG_Window* this);
 OMG_API bool omg_window_renderer_alloc(OMG_Window* this);
 OMG_API bool omg_window_renderer_free(OMG_Window* this);
 #if OMG_EXPORT_SHIT
-OMG_API bool omg_window_set_state(struct OMG_Window* this, int state);
-OMG_API bool omg_window_set_sys_button(struct OMG_Window* this, int id, bool enabled);
-OMG_API bool omg_window_set_resizable(struct OMG_Window* this, bool enabled);
-OMG_API bool omg_window_set_border(struct OMG_Window* this, bool enabled);
-OMG_API bool omg_window_set_thick(struct OMG_Window* this, bool enabled);
-OMG_API bool omg_window_set_always_on_top(struct OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_state(OMG_Window* this, int state);
+OMG_API bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled);
+OMG_API bool omg_window_set_resizable(OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_border(OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_thick(OMG_Window* this, bool enabled);
+OMG_API bool omg_window_set_always_on_top(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_title(OMG_Window* this, const OMG_String* new_title);
 OMG_API bool omg_window_show(OMG_Window* this, bool show);
 #endif
