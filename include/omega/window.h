@@ -12,6 +12,10 @@
 #define OMG_WIN_SYS_BUTTON_MAXIMIZE 1
 #define OMG_WIN_SYS_BUTTON_MINIMIZE 2
 
+#define OMG_WIN_MODE_WINDOW 0
+#define OMG_WIN_MODE_FULLSCREEN 0
+#define OMG_WIN_MODE_DESKTOP_FULLSCREEN 0
+
 typedef struct OMG_Window {
     bool (*default_init)(struct OMG_Window* this);
     bool (*destroy)(struct OMG_Window* this);
@@ -31,11 +35,17 @@ typedef struct OMG_Window {
     OMG_FPoint scale;
     int type;
     int ren_type;
+    int window_mode;
     bool vsync;
     bool resizable;
     bool thick;
+    bool has_border;
     bool sys_buttons[3];
+    bool minimized;
+    bool maximized;
+    bool always_on_top;
     bool inited;
+    bool centered;
     bool was_allocated;
 } OMG_Window;
 

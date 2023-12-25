@@ -61,9 +61,16 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->inited = false;
     this->win = this->sdl2->SDL_CreateWindow(
         "OMG Window [SDL2]",
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        base->centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED,
+        base->centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED,
         (int)base->size.w, (int)base->size.h,
-        SDL_WINDOW_HIDDEN | (omg_base->support_highdpi ? SDL_WINDOW_ALLOW_HIGHDPI : 0)
+        SDL_WINDOW_HIDDEN |
+        (omg_base->support_highdpi ? SDL_WINDOW_ALLOW_HIGHDPI : 0) |
+        (base->has_border ? 0 : SDL_WINDOW_BORDERLESS) |
+        (base->resizable ? SDL_WINDOW_RESIZABLE : 0) |
+        (base->minimized ? SDL_WINDOW_MINIMIZED : 0) |
+        (base->maximized ? SDL_WINDOW_MAXIMIZED : 0) |
+        (base->always_on_top ? SDL_WINDOW_ALWAYS_ON_TOP : 0)
     );
     if (OMG_ISNULL(this->win)) {
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 Window (", this->sdl2->SDL_GetError(), ")");

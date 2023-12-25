@@ -8,6 +8,11 @@ void omg_window_fill_on_create(OMG_Window* this) {
     this->vsync = true;
     this->resizable = false;
     this->thick = false;
+    this->has_border = true;
+    this->centered = true;
+    this->minimized = this->maximized = false;
+    this->always_on_top = false;
+    this->window_mode = OMG_WIN_MODE_WINDOW;
     this->sys_buttons[OMG_WIN_SYS_BUTTON_CLOSE] = true;
     this->sys_buttons[OMG_WIN_SYS_BUTTON_MAXIMIZE] = true;
     this->sys_buttons[OMG_WIN_SYS_BUTTON_MINIMIZE] = true;
