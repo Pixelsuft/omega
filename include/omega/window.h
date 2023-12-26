@@ -8,9 +8,9 @@
 #define OMG_WIN_TYPE_SDL2 2
 #define OMG_WIN_TYPE_RAYLIB 3
 
-#define OMG_WIN_SYS_BUTTON_CLOSE 0
-#define OMG_WIN_SYS_BUTTON_MAXIMIZE 1
-#define OMG_WIN_SYS_BUTTON_MINIMIZE 2
+#define OMG_WIN_SYS_BUTTON_CLOSE (1 << 2)
+#define OMG_WIN_SYS_BUTTON_MAXIMIZE (2 << 2)
+#define OMG_WIN_SYS_BUTTON_MINIMIZE (3 << 2)
 
 #define OMG_WIN_MODE_WINDOW 0
 #define OMG_WIN_MODE_FULLSCREEN 0
@@ -47,11 +47,11 @@ typedef struct OMG_Window {
     int state;
     int ren_type;
     int window_mode;
+    int sys_buttons;
     bool vsync;
     bool resizable;
     bool thick;
     bool bordered;
-    bool sys_buttons[3]; // TODO: use bitmasks instead of arrays
     bool always_on_top;
     bool inited;
     bool centered;

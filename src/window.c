@@ -13,9 +13,7 @@ void omg_window_fill_on_create(OMG_Window* this) {
     this->state = OMG_WIN_STATE_RESTORED;
     this->always_on_top = false;
     this->window_mode = OMG_WIN_MODE_WINDOW;
-    this->sys_buttons[OMG_WIN_SYS_BUTTON_CLOSE] = true;
-    this->sys_buttons[OMG_WIN_SYS_BUTTON_MAXIMIZE] = true;
-    this->sys_buttons[OMG_WIN_SYS_BUTTON_MINIMIZE] = true;
+    this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MAXIMIZE | OMG_WIN_SYS_BUTTON_MINIMIZE;
     this->array_pos = 0;
     this->size.w = 800.0f;
     this->size.h = 600.0f;
@@ -66,7 +64,10 @@ bool omg_window_set_state(OMG_Window* this, int state) {
 }
 
 bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled) {
-    this->sys_buttons[id] = enabled;
+    if (enabled)
+        this->sys_buttons |= id;
+    else
+        this->sys_buttons &= ~id;
     return false;
 }
 

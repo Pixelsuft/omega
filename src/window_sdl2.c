@@ -64,12 +64,17 @@ bool omg_window_sdl2_set_state(OMG_WindowSdl2* this, int state) {
 }
 
 bool omg_window_sdl2_set_sys_button(OMG_WindowSdl2* this, int id, bool enabled) {
-    base->sys_buttons[id] = enabled;
+    OMG_UNUSED(this, id, enabled);
+    // base->sys_buttons[id] = enabled;
     return false;
 }
 
 bool omg_window_sdl2_set_resizable(OMG_WindowSdl2* this, bool enabled) {
     base->resizable = enabled;
+    if (base->resizable)
+        base->sys_buttons |= OMG_WIN_SYS_BUTTON_MAXIMIZE;
+    else
+        base->sys_buttons &= ~OMG_WIN_SYS_BUTTON_MAXIMIZE;
     if (OMG_ISNOTNULL(this->sdl2->SDL_SetWindowResizable))
         this->sdl2->SDL_SetWindowResizable(this->win, enabled ? SDL_TRUE : SDL_FALSE);
     return false;
@@ -101,6 +106,8 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
     base->inited = false;
+    if (!base->resizable)
+        base->sys_buttons &= ~OMG_WIN_SYS_BUTTON_MAXIMIZE;
     this->win = this->sdl2->SDL_CreateWindow(
         "OMG Window [SDL2]",
         base->centered ? SDL_WINDOWPOS_CENTERED : SDL_WINDOWPOS_UNDEFINED,
