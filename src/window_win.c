@@ -305,10 +305,16 @@ bool omg_window_win_init(OMG_WindowWin* this) {
             OMG_FREE(omg_base->mem, w_error_buffer);
         return true;
     }
+    // TODO: default states (maximized, minimized)
     this->hwnd = this->u32->CreateWindowExW(
         WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window [Win32]",
-        WS_OVERLAPPEDWINDOW, // TODO: customize
+        (base->bordered ? WS_CAPTION : WS_POPUP) |
+        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : 0) |
+        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0) |
+        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) |
+        (base->thick ? WS_THICKFRAME : 0) |
+        WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
         (int)(base->size.w * base->scale.x), (int)(base->size.h * base->scale.y),
         NULL, NULL, this->wc.hInstance, this
