@@ -7,6 +7,13 @@
 #define omg_base ((OMG_Omega*)base->omg)
 #define ren_sdl2 ((OMG_RendererSdl2*)base->ren)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
+#define STYLE_MACRO ((base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : 0) | \
+    ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0) | \
+    ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) | \
+    ((base->state & OMG_WIN_STATE_MAXIMIZED) ? WS_MAXIMIZE : 0) | \
+    ((base->state & OMG_WIN_STATE_MINIMIZED) ? WS_MINIMIZE : 0) | \
+    (base->resizable ? 0 : WS_THICKFRAME) | \
+    WS_OVERLAPPED
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
     ((OMG_Event*)event)->data = omg_base->event_arg; \
@@ -55,29 +62,42 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     return result;
 }
 
+bool omg_window_win_apply_style(OMG_WindowWin* this) {
+    // TODO: use correct style for every func (get, set)
+    if (OMG_ISNULL(this->u32->SetWindowLongPtrW)) {
+        return !this->u32->SetWindowLongW(this->hwnd, GWL_STYLE, (LONG)(STYLE_MACRO));
+    }
+    else {
+        return !this->u32->SetWindowLongPtrW(this->hwnd, GWL_STYLE, (LONG_PTR)(STYLE_MACRO));
+    }
+}
+
 bool omg_window_win_set_state(OMG_WindowWin* this, int state) {
-    OMG_UNUSED(this, state);
-    return false;
+    base->state = state;
+    return omg_window_win_apply_style(this);
 }
 
 bool omg_window_win_set_sys_button(OMG_WindowWin* this, int id, bool enabled) {
-    OMG_UNUSED(this, id, enabled);
-    return false;
+    if (enabled)
+        base->sys_buttons |= id;
+    else
+        base->sys_buttons &= ~id;
+    return omg_window_win_apply_style(this);
 }
 
 bool omg_window_win_set_resizable(OMG_WindowWin* this, bool enabled) {
-    OMG_UNUSED(this, enabled);
-    return false;
+    base->resizable = enabled;
+    return omg_window_win_apply_style(this);
 }
 
 bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled) {
-    OMG_UNUSED(this, enabled);
-    return false;
+    base->bordered = enabled;
+    return omg_window_win_apply_style(this);
 }
 
 bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
-    OMG_UNUSED(this, enabled);
-    return false;
+    base->always_on_top = enabled;
+    return omg_window_win_apply_style(this);
 }
 
 bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
@@ -306,13 +326,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window [Win32]",
         (base->bordered ? WS_CAPTION : WS_POPUP) |
-        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : 0) |
-        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0) |
-        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) |
-        ((base->state & OMG_WIN_STATE_MAXIMIZED) ? WS_MAXIMIZE : 0) |
-        ((base->state & OMG_WIN_STATE_MINIMIZED) ? WS_MINIMIZE : 0) |
-        (base->resizable ? 0 : WS_THICKFRAME) |
-        WS_OVERLAPPED,
+        STYLE_MACRO,
         CW_USEDEFAULT, CW_USEDEFAULT,
         (int)(base->size.w * base->scale.x), (int)(base->size.h * base->scale.y),
         NULL, NULL, this->wc.hInstance, this
