@@ -313,6 +313,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         ((base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : 0) |
         ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0) |
         ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) |
+        ((base->state & OMG_WIN_STATE_MAXIMIZED) ? WS_MAXIMIZE : 0) |
+        ((base->state & OMG_WIN_STATE_MINIMIZED) ? WS_MINIMIZE : 0) |
         (base->thick ? WS_THICKFRAME : 0) |
         WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
