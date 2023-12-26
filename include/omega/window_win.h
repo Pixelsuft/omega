@@ -21,6 +21,12 @@ OMG_API bool omg_window_win_destroy(OMG_WindowWin* this);
 OMG_API LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 OMG_API void omg_window_win_update_scale(OMG_WindowWin* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_window_win_set_state(OMG_WindowWin* this, int state);
+OMG_API bool omg_window_win_set_sys_button(OMG_WindowWin* this, int id, bool enabled);
+OMG_API bool omg_window_win_set_resizable(OMG_WindowWin* this, bool enabled);
+OMG_API bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled);
+OMG_API bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled);
+OMG_API bool omg_window_win_set_thick(OMG_WindowWin* this, bool enabled);
 OMG_API void omg_window_win_check_dark_mode(OMG_WindowWin* this);
 OMG_API bool omg_window_win_show(OMG_WindowWin* this, bool show);
 OMG_API bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title);

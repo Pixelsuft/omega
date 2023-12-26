@@ -55,6 +55,36 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     return result;
 }
 
+bool omg_window_win_set_state(OMG_WindowWin* this, int state) {
+    OMG_UNUSED(this, state);
+    return false;
+}
+
+bool omg_window_win_set_sys_button(OMG_WindowWin* this, int id, bool enabled) {
+    OMG_UNUSED(this, id, enabled);
+    return false;
+}
+
+bool omg_window_win_set_resizable(OMG_WindowWin* this, bool enabled) {
+    OMG_UNUSED(this, enabled);
+    return false;
+}
+
+bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled) {
+    OMG_UNUSED(this, enabled);
+    return false;
+}
+
+bool omg_window_win_set_thick(OMG_WindowWin* this, bool enabled) {
+    OMG_UNUSED(this, enabled);
+    return false;
+}
+
+bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
+    OMG_UNUSED(this, enabled);
+    return false;
+}
+
 bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
     if (base->ren_type != OMG_REN_TYPE_SDL2)
         base->ren_type = OMG_REN_TYPE_AUTO;
@@ -303,6 +333,12 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->scale.x = 0.0f; // Hack
     omg_window_win_update_scale(this);
     OMG_BEGIN_POINTER_CAST();
+    base->set_state = omg_window_win_set_title;
+    base->set_sys_button = omg_window_win_set_title;
+    base->set_resizable = omg_window_win_set_resizable;
+    base->set_bordered = omg_window_win_set_bordered;
+    base->set_thick = omg_window_win_set_thick;
+    base->set_always_on_top = omg_window_win_set_always_on_top;
     base->show = omg_window_win_show;
     base->set_title = omg_window_win_set_title;
     base->destroy = omg_window_win_destroy;
