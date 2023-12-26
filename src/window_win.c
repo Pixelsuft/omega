@@ -75,11 +75,6 @@ bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled) {
     return false;
 }
 
-bool omg_window_win_set_thick(OMG_WindowWin* this, bool enabled) {
-    OMG_UNUSED(this, enabled);
-    return false;
-}
-
 bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
     OMG_UNUSED(this, enabled);
     return false;
@@ -316,7 +311,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) |
         ((base->state & OMG_WIN_STATE_MAXIMIZED) ? WS_MAXIMIZE : 0) |
         ((base->state & OMG_WIN_STATE_MINIMIZED) ? WS_MINIMIZE : 0) |
-        (base->thick ? WS_THICKFRAME : 0) |
+        (base->resizable ? 0 : WS_THICKFRAME) |
         WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
         (int)(base->size.w * base->scale.x), (int)(base->size.h * base->scale.y),
@@ -346,7 +341,6 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->set_sys_button = omg_window_win_set_title;
     base->set_resizable = omg_window_win_set_resizable;
     base->set_bordered = omg_window_win_set_bordered;
-    base->set_thick = omg_window_win_set_thick;
     base->set_always_on_top = omg_window_win_set_always_on_top;
     base->show = omg_window_win_show;
     base->set_title = omg_window_win_set_title;

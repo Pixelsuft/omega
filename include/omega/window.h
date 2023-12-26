@@ -50,7 +50,7 @@ typedef struct OMG_Window {
     int sys_buttons;
     bool vsync;
     bool resizable;
-    bool thick;
+    bool thick; // Unused
     bool bordered;
     bool always_on_top;
     bool inited;
