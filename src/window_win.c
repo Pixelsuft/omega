@@ -252,12 +252,13 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     float new_h = base->size.h * new_scale.y + (float)(rect.bottom - rect.top - c_rect.bottom);
     this->u32->MoveWindow(
         this->hwnd,
-        (int)(((float)desktop_rect.right - new_w) / 2.0f),
-        (int)(((float)desktop_rect.bottom - new_h) / 2.0f),
+        base->centered ? (int)(((float)desktop_rect.right - new_w) / 2.0f) : rect.right,
+        base->centered ? (int)(((float)desktop_rect.bottom - new_h) / 2.0f) : rect.bottom,
         (int)new_w,
         (int)new_h,
         TRUE
     );
+    _OMG_LOG_INFO(omg_base, (int)GetLastError());
     base->scale.x = new_scale.x;
     base->scale.y = new_scale.y;
 }
