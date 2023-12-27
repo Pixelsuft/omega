@@ -80,10 +80,20 @@ bool omg_window_win_set_sys_button(OMG_WindowWin* this, int id, bool enabled) {
     int64_t style = GET_WIN_STYLE();
     if (!style)
         return true;
-    if (enabled)
+    int64_t index = (id & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : (
+        (id & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : (
+            (id & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0
+        )
+    );
+    if (enabled) {
         base->sys_buttons |= id;
-    else
+        style |= index;
+    }
+    else {
         base->sys_buttons &= ~id;
+        style &= ~index;
+    }
+    // TODO: fuck microsoft because of close button
     return !SET_WIN_STYLE(style);
 }
 
@@ -110,6 +120,14 @@ bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled) {
     if (!style)
         return true;
     base->bordered = enabled;
+    if (enabled) {
+        style &= ~WS_POPUP;
+        style |= WS_CAPTION;
+    }
+    else {
+        style |= WS_POPUP;
+        style &= ~WS_CAPTION;
+    }
     return !SET_WIN_STYLE(style);
 }
 
@@ -118,6 +136,7 @@ bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
     if (!style)
         return true;
     base->always_on_top = enabled;
+    // TODO
     return !SET_WIN_STYLE(style);
 }
 
@@ -286,13 +305,21 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     */
     float new_w = base->size.w * new_scale.x + (float)(rect.right - rect.left - c_rect.right);
     float new_h = base->size.h * new_scale.y + (float)(rect.bottom - rect.top - c_rect.bottom);
-    this->u32->MoveWindow(
+    /*this->u32->MoveWindow(
         this->hwnd,
         base->centered ? (int)(((float)desktop_rect.right - new_w) / 2.0f) : rect.right,
         base->centered ? (int)(((float)desktop_rect.bottom - new_h) / 2.0f) : rect.bottom,
         (int)new_w,
         (int)new_h,
         TRUE
+    );*/
+    this->u32->SetWindowPos(
+        this->hwnd,
+        NULL,
+        (int)(((float)desktop_rect.right - new_w) / 2.0f),
+        (int)(((float)desktop_rect.bottom - new_h) / 2.0f),
+        (int)new_w, (int)new_h,
+        SWP_NOZORDER | SWP_NOACTIVATE | (base->centered ? 0 : SWP_NOMOVE) | SWP_FRAMECHANGED
     );
     // Why???
     // _OMG_LOG_INFO(omg_base, (int)GetLastError());

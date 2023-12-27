@@ -81,8 +81,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
-    this->win->set_resizable(this->win, true);
-    // this->win->set_state(this->win, OMG_WIN_STATE_MAXIMIZED);
+    this->win->set_sys_button(this->win, OMG_WIN_SYS_BUTTON_CLOSE, false);
     this->exit_code = 0;
 }
 
