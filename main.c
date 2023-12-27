@@ -59,9 +59,13 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->app_init(this->omg) ||
         this->omg->winmgr_alloc(this->omg) ||
         this->omg->winmgr->init(this->omg->winmgr) ||
-        (OMG_ISNULL(this->win = this->omg->winmgr->window_alloc(this->omg->winmgr))) ||
-        this->win->default_init(this->win)
+        (OMG_ISNULL(this->win = this->omg->winmgr->window_alloc(this->omg->winmgr)))
     ) {
+        this->omg->destroy(this->omg);
+        return;
+    }
+    this->win->resizable = false;
+    if (this->win->default_init(this->win)) {
         this->omg->destroy(this->omg);
         return;
     }
@@ -77,6 +81,8 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
+    this->win->set_resizable(this->win, true);
+    // this->win->set_state(this->win, OMG_WIN_STATE_MAXIMIZED);
     this->exit_code = 0;
 }
 

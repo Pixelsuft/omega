@@ -7,13 +7,13 @@
 #define omg_base ((OMG_Omega*)base->omg)
 #define ren_sdl2 ((OMG_RendererSdl2*)base->ren)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
-#define STYLE_MACRO ((base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : 0) | \
-    ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0) | \
-    ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) | \
-    ((base->state & OMG_WIN_STATE_MAXIMIZED) ? WS_MAXIMIZE : 0) | \
-    ((base->state & OMG_WIN_STATE_MINIMIZED) ? WS_MINIMIZE : 0) | \
-    (base->resizable ? 0 : WS_THICKFRAME) | \
-    WS_OVERLAPPED
+#ifdef SetWindowLongPtrW
+#define GET_WIN_STYLE() (int64_t)this->u32->GetWindowLongW(this->hwnd, GWL_STYLE)
+#define SET_WIN_STYLE(value) this->u32->SetWindowLongW(this->hwnd, GWL_STYLE, (LONG)(value))
+#else
+#define GET_WIN_STYLE() (int64_t)this->u32->GetWindowLongPtrW(this->hwnd, GWL_STYLE)
+#define SET_WIN_STYLE(value) this->u32->SetWindowLongPtrW(this->hwnd, GWL_STYLE, (LONG_PTR)(value))
+#endif
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
     ((OMG_Event*)event)->data = omg_base->event_arg; \
@@ -62,42 +62,63 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     return result;
 }
 
-bool omg_window_win_apply_style(OMG_WindowWin* this) {
-    // TODO: use correct style for every func (get, set)
-    if (OMG_ISNULL(this->u32->SetWindowLongPtrW)) {
-        return !this->u32->SetWindowLongW(this->hwnd, GWL_STYLE, (LONG)(STYLE_MACRO));
-    }
-    else {
-        return !this->u32->SetWindowLongPtrW(this->hwnd, GWL_STYLE, (LONG_PTR)(STYLE_MACRO));
-    }
-}
-
 bool omg_window_win_set_state(OMG_WindowWin* this, int state) {
-    base->state = state;
-    return omg_window_win_apply_style(this);
+    if (state & OMG_WIN_STATE_MAXIMIZED)
+        this->u32->ShowWindow(this->hwnd, SW_SHOWMAXIMIZED);
+    if (state & OMG_WIN_STATE_MINIMIZED)
+        this->u32->ShowWindow(this->hwnd, SW_MINIMIZE);
+    if (state & OMG_WIN_STATE_RESTORED)
+        this->u32->ShowWindow(this->hwnd, SW_RESTORE);
+    this->u32->SetWindowPos(
+        this->hwnd, NULL, 0, 0, 0, 0,
+        SWP_NOZORDER | ((state & OMG_WIN_STATE_RESTORED) ? 0 : SWP_NOACTIVATE) | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED
+    );
+    return false;
 }
 
 bool omg_window_win_set_sys_button(OMG_WindowWin* this, int id, bool enabled) {
+    int64_t style = GET_WIN_STYLE();
+    if (!style)
+        return true;
     if (enabled)
         base->sys_buttons |= id;
     else
         base->sys_buttons &= ~id;
-    return omg_window_win_apply_style(this);
+    return !SET_WIN_STYLE(style);
 }
 
 bool omg_window_win_set_resizable(OMG_WindowWin* this, bool enabled) {
+    int64_t style = GET_WIN_STYLE();
+    if (!style)
+        return true;
     base->resizable = enabled;
-    return omg_window_win_apply_style(this);
+    if (enabled)
+        style |= WS_THICKFRAME;
+    else
+        style &= ~WS_THICKFRAME;
+    bool res = !SET_WIN_STYLE(style);
+    // IDK show this shit works, so let's fuck Microsoft again
+    res = !this->u32->SetWindowPos(
+        this->hwnd, NULL, 0, 0, 0, 0,
+        SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED
+    ) || true;
+    return res;
 }
 
 bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled) {
+    int64_t style = GET_WIN_STYLE();
+    if (!style)
+        return true;
     base->bordered = enabled;
-    return omg_window_win_apply_style(this);
+    return !SET_WIN_STYLE(style);
 }
 
 bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
+    int64_t style = GET_WIN_STYLE();
+    if (!style)
+        return true;
     base->always_on_top = enabled;
-    return omg_window_win_apply_style(this);
+    return !SET_WIN_STYLE(style);
 }
 
 bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
@@ -273,7 +294,8 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
         (int)new_h,
         TRUE
     );
-    _OMG_LOG_INFO(omg_base, (int)GetLastError());
+    // Why???
+    // _OMG_LOG_INFO(omg_base, (int)GetLastError());
     base->scale.x = new_scale.x;
     base->scale.y = new_scale.y;
 }
@@ -321,12 +343,17 @@ bool omg_window_win_init(OMG_WindowWin* this) {
             OMG_FREE(omg_base->mem, w_error_buffer);
         return true;
     }
-    // TODO: default states (maximized, minimized)
     this->hwnd = this->u32->CreateWindowExW(
         WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_NOINHERITLAYOUT,
         this->wc.lpszClassName, L"OMG Window [Win32]",
         (base->bordered ? WS_CAPTION : WS_POPUP) |
-        STYLE_MACRO,
+        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE) ? WS_SYSMENU : 0) | \
+        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE) ? WS_MINIMIZEBOX : 0) | \
+        ((base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE) ? WS_MAXIMIZEBOX : 0) | \
+        ((base->state & OMG_WIN_STATE_MAXIMIZED) ? WS_MAXIMIZE : 0) | \
+        ((base->state & OMG_WIN_STATE_MINIMIZED) ? WS_MINIMIZE : 0) | \
+        (base->resizable ? WS_THICKFRAME : 0) | \
+        WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
         (int)(base->size.w * base->scale.x), (int)(base->size.h * base->scale.y),
         NULL, NULL, this->wc.hInstance, this
@@ -351,8 +378,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->scale.x = 0.0f; // Hack
     omg_window_win_update_scale(this);
     OMG_BEGIN_POINTER_CAST();
-    base->set_state = omg_window_win_set_title;
-    base->set_sys_button = omg_window_win_set_title;
+    base->set_state = omg_window_win_set_state;
+    base->set_sys_button = omg_window_win_set_sys_button;
     base->set_resizable = omg_window_win_set_resizable;
     base->set_bordered = omg_window_win_set_bordered;
     base->set_always_on_top = omg_window_win_set_always_on_top;

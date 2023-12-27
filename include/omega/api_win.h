@@ -98,6 +98,33 @@
 #ifndef SW_SHOWNORMAL
 #define SW_SHOWNORMAL 1
 #endif
+#ifndef SW_SHOWMINIMIZED
+#define SW_SHOWMINIMIZED 2
+#endif
+#ifndef SW_SHOWMAXIMIZE
+#define SW_SHOWMAXIMIZE 3
+#endif
+#ifndef SW_MINIMIZE
+#define SW_MINIMIZE 6
+#endif
+#ifndef SW_RESTORE
+#define SW_RESTORE 9
+#endif
+#ifndef SWP_NOSIZE
+#define SWP_NOSIZE 0x0001
+#endif
+#ifndef SWP_NOMOVE
+#define SWP_NOMOVE 0x0002
+#endif
+#ifndef SWP_FRAMECHANGED
+#define SWP_FRAMECHANGED 0x020
+#endif
+#ifndef SWP_NOZORDER
+#define SWP_NOZORDER 0x0004
+#endif
+#ifndef SWP_NOACTIVATE
+#define SWP_NOACTIVATE 0x0010
+#endif
 #ifndef WS_EX_COMPOSITED
 #define WS_EX_COMPOSITED 0x02000000
 #endif
@@ -250,6 +277,7 @@ typedef struct {
     HWND OMG_WIN_STD_PREFIX (*GetDesktopWindow)(void);
     BOOL OMG_WIN_STD_PREFIX (*GetWindowRect)(HWND, LPRECT);
     BOOL OMG_WIN_STD_PREFIX (*GetClientRect)(HWND, LPRECT);
+    BOOL OMG_WIN_STD_PREFIX (*SetWindowPos)(HWND, HWND, int, int, int, int, UINT);
     BOOL OMG_WIN_STD_PREFIX (*MoveWindow)(HWND, int, int, int, int, BOOL);
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
     BOOL OMG_WIN_STD_PREFIX (*SetWindowTextW)(HWND, LPCWSTR);

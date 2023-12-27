@@ -8,17 +8,17 @@
 #define OMG_WIN_TYPE_SDL2 2
 #define OMG_WIN_TYPE_RAYLIB 3
 
-#define OMG_WIN_SYS_BUTTON_CLOSE (1 << 2)
-#define OMG_WIN_SYS_BUTTON_MAXIMIZE (2 << 2)
-#define OMG_WIN_SYS_BUTTON_MINIMIZE (3 << 2)
+#define OMG_WIN_SYS_BUTTON_CLOSE (1 << 1)
+#define OMG_WIN_SYS_BUTTON_MAXIMIZE (1 << 2)
+#define OMG_WIN_SYS_BUTTON_MINIMIZE (1 << 3)
 
 #define OMG_WIN_MODE_WINDOW 0
 #define OMG_WIN_MODE_FULLSCREEN 0
 #define OMG_WIN_MODE_DESKTOP_FULLSCREEN 0
 
-#define OMG_WIN_STATE_RESTORED (1 << 2)
-#define OMG_WIN_STATE_MINIMIZED (2 << 2)
-#define OMG_WIN_STATE_MAXIMIZED (3 << 2)
+#define OMG_WIN_STATE_RESTORED (1 << 1)
+#define OMG_WIN_STATE_MINIMIZED (1 << 2)
+#define OMG_WIN_STATE_MAXIMIZED (1 << 3)
 
 typedef struct OMG_Window {
     bool (*default_init)(struct OMG_Window* this);
