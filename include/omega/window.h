@@ -13,8 +13,8 @@
 #define OMG_WIN_SYS_BUTTON_MINIMIZE (1 << 3)
 
 #define OMG_WIN_MODE_WINDOW 0
-#define OMG_WIN_MODE_FULLSCREEN 0
-#define OMG_WIN_MODE_DESKTOP_FULLSCREEN 0
+#define OMG_WIN_MODE_FULLSCREEN 1
+#define OMG_WIN_MODE_DESKTOP_FULLSCREEN 2
 
 #define OMG_WIN_STATE_RESTORED (1 << 1)
 #define OMG_WIN_STATE_MINIMIZED (1 << 2)
@@ -28,6 +28,7 @@ typedef struct OMG_Window {
     bool (*renderer_alloc)(struct OMG_Window* this);
     bool (*renderer_free)(struct OMG_Window* this);
     bool (*set_state)(struct OMG_Window* this, int state);
+    bool (*set_window_mode)(struct OMG_Window* this, int mode);
     bool (*set_sys_button)(struct OMG_Window* this, int id, bool enabled);
     bool (*set_resizable)(struct OMG_Window* this, bool enabled);
     bool (*set_bordered)(struct OMG_Window* this, bool enabled);
@@ -65,6 +66,7 @@ OMG_API bool omg_window_renderer_alloc(OMG_Window* this);
 OMG_API bool omg_window_renderer_free(OMG_Window* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);
+OMG_API bool omg_window_set_window_mode(OMG_Window* this, int mode);
 OMG_API bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled);
 OMG_API bool omg_window_set_resizable(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_bordered(OMG_Window* this, bool enabled);
