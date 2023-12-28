@@ -50,14 +50,17 @@ int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name)
 }
 
 int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
+    if (this->id_cache[0] >= 0)
+        return this->id_cache[8];
     int res = OMG_REN_DRIVER_NONE;
     int num_drivers = this->sdl2->SDL_GetNumRenderDrivers();
     if (num_drivers < 0) {
         _OMG_LOG_ERROR(omg_base, "Failed to get num render drivers (", this->sdl2->SDL_GetError(), ")");
         return res;
     }
-    if (num_drivers > 9)
-        num_drivers = 9;
+    if (num_drivers > 8)
+        num_drivers = 8;
+    this->id_cache[9] = num_drivers;
     SDL_RendererInfo info;
     for (int i = 0; i < num_drivers; i++) {
         if (this->sdl2->SDL_GetRenderDriverInfo(i, &info) < 0) {
@@ -65,7 +68,9 @@ int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
             continue;
         }
         this->id_cache[i] = omg_renderer_sdl2_driver_from_name(this, info.name);
+        res |= this->id_cache[i];
     }
+    this->id_cache[8] = res;
     return res;
 }
 
@@ -90,8 +95,7 @@ bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
-    if (this->id_cache[0] < 0)
-        omg_renderer_sdl2_get_supported_drivers(this);
+    omg_renderer_sdl2_get_supported_drivers(this);
     base->_on_update_window_size = omg_renderer_sdl2_update_scale;
     base->destroy = omg_renderer_sdl2_destroy;
     base->clear = omg_renderer_sdl2_clear;
