@@ -34,6 +34,7 @@ bool omg_window_raylib_renderer_alloc(OMG_WindowRaylib* this) {
     base->ren = OMG_MALLOC(omg_base->mem, sizeof(OMG_RendererRaylib));
     if (OMG_ISNULL(base->ren))
         return true;
+    omg_renderer_fill_on_create(base->ren);
     base->ren->was_allocated = true;
     base->ren->win = this;
     OMG_BEGIN_POINTER_CAST();

@@ -164,6 +164,7 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
             base->ren = NULL;
             return true;
         }
+        omg_renderer_fill_on_create(base->ren);
         base->ren->was_allocated = true;
         base->ren->win = this;
         base->ren->omg = omg_base;

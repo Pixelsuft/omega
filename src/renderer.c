@@ -28,6 +28,18 @@ void omg_on_update_window_size(OMG_Renderer* this) {
     OMG_UNUSED(this);
 }
 
+int omg_renderer_get_supported_drivers(OMG_Renderer* this) {
+    OMG_UNUSED(this);
+    return OMG_REN_DRIVER_NONE;
+}
+
+void omg_renderer_fill_on_create(OMG_Renderer* this) {
+    this->driver = OMG_REN_DRIVER_AUTO;
+    this->was_allocated = false;
+    this->init = omg_renderer_init;
+    this->get_supported_drivers = omg_renderer_get_supported_drivers;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
