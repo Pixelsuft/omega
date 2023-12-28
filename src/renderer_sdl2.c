@@ -55,7 +55,7 @@ int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
     int res = OMG_REN_DRIVER_NONE;
     int num_drivers = this->sdl2->SDL_GetNumRenderDrivers();
     if (num_drivers < 0) {
-        _OMG_LOG_ERROR(omg_base, "Failed to get num render drivers (", this->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_ERROR(omg_base, "Failed to get number of render drivers (", this->sdl2->SDL_GetError(), ")");
         return res;
     }
     if (num_drivers > 8)
