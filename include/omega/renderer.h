@@ -18,6 +18,7 @@
 #define OMG_REN_DRIVER_VULKAN (1 << 8)
 #define OMG_REN_DRIVER_RESERVED (1 << 9)
 #define OMG_REN_DRIVER_SOFTWARE (1 << 10)
+#define OMG_REN_DRIVER_UNKNOWN (1 << 11)
 
 typedef struct OMG_Renderer {
     bool (*init)(struct OMG_Renderer* this);

@@ -51,11 +51,13 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     _OMG_WIN_GET_ENCODE_SIZE(count, new_title, this->k32);
     if (count == 0)
         return true;
-    wchar_t* out_buf = OMG_MALLOC(omg_base->mem, (size_t)count * 2);
+    wchar_t* out_buf = OMG_MALLOC(omg_base->mem, (size_t)count * 2 + 2);
     if (OMG_ISNULL(out_buf))
         return true;
     bool result = true;
-    if (this->k32->MultiByteToWideChar(CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count) > 0) {
+    int out_len = this->k32->MultiByteToWideChar(CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count);
+    if (out_len > 0) {
+        out_buf[out_len] = L'\0';
         result = !this->u32->SetWindowTextW(this->hwnd, out_buf);
     }
     OMG_FREE(omg_base->mem, out_buf);
@@ -165,11 +167,13 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
             return true;
         }
         omg_renderer_fill_on_create(base->ren);
+        ren_sdl2->id_cache[0] = -1;
         base->ren->was_allocated = true;
         base->ren->win = this;
         base->ren->omg = omg_base;
         OMG_BEGIN_POINTER_CAST();
         base->ren->init = omg_renderer_sdl2_init;
+        base->ren->get_supported_drivers = omg_renderer_sdl2_get_supported_drivers;
         OMG_END_POINTER_CAST();
         if (ren_sdl2->sdl2->SDL_Init(SDL_INIT_VIDEO) < 0) {
             omg_sdl2_dll_free(ren_sdl2->sdl2);

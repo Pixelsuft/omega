@@ -38,6 +38,7 @@ bool omg_window_raylib_renderer_alloc(OMG_WindowRaylib* this) {
     base->ren->was_allocated = true;
     base->ren->win = this;
     OMG_BEGIN_POINTER_CAST();
+    base->ren->get_supported_drivers = omg_renderer_raylib_get_supported_drivers;
     base->ren->init = omg_renderer_raylib_init;
     OMG_END_POINTER_CAST();
     ren_raylib->raylib = this->raylib;

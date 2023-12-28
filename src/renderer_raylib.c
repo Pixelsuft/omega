@@ -29,6 +29,11 @@ bool omg_renderer_raylib_flip(OMG_RendererRaylib* this) {
     return false;
 }
 
+int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
+    OMG_UNUSED(this);
+    return OMG_REN_DRIVER_OPENGL;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);

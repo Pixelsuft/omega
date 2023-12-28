@@ -70,6 +70,9 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_RestoreWindow);
     LOAD_REQUIRED(SDL_SetWindowTitle);
     LOAD_REQUIRED(SDL_PollEvent);
+    LOAD_REQUIRED(SDL_GetNumRenderDrivers);
+    LOAD_REQUIRED(SDL_GetRenderDriverInfo);
+    LOAD_REQUIRED(SDL_GetRendererInfo);
     LOAD_REQUIRED(SDL_CreateRenderer);
     LOAD_REQUIRED(SDL_GetRendererOutputSize);
     LOAD_REQUIRED(SDL_DestroyRenderer);

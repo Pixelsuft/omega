@@ -160,7 +160,7 @@ typedef union SDL_Event
     uint32_t type;
     SDL_CommonEvent common;
     SDL_WindowEvent window;
-    uint8_t padding[sizeof(void *) <= 8 ? 56 : sizeof(void *) == 16 ? 64 : 3 * sizeof(void *)];
+    uint8_t padding[sizeof(void*) <= 8 ? 56 : sizeof(void*) == 16 ? 64 : 3 * sizeof(void*)];
 } SDL_Event;
 
 typedef enum
@@ -198,6 +198,16 @@ typedef enum
     SDL_RENDERER_PRESENTVSYNC = 0x00000004,
     SDL_RENDERER_TARGETTEXTURE = 0x00000008
 } SDL_RendererFlags;
+
+typedef struct SDL_RendererInfo
+{
+    const char* name;
+    uint32_t flags;
+    uint32_t num_texture_formats;
+    uint32_t texture_formats[16];
+    int max_texture_width;
+    int max_texture_height;
+} SDL_RendererInfo;
 
 typedef void SDL_Window;
 typedef void SDL_Renderer;
@@ -250,6 +260,9 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_RestoreWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetNumRenderDrivers)(void);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetRenderDriverInfo)(int, SDL_RendererInfo*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetRendererInfo)(SDL_Renderer*, SDL_RendererInfo*);
     SDL_Renderer* OMG_SDL2_STD_PREFIX (*SDL_CreateRenderer)(SDL_Window*, int, uint32_t);
     int OMG_SDL2_STD_PREFIX (*SDL_GetRendererOutputSize)(SDL_Renderer*, int*, int*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyRenderer)(SDL_Renderer*);

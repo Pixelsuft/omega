@@ -35,10 +35,12 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
         if (OMG_ISNULL(base->ren))
             return true;
         omg_renderer_fill_on_create(base->ren);
+        ren_sdl2->id_cache[0] = -1;
         base->ren->was_allocated = true;
         base->ren->win = this;
         OMG_BEGIN_POINTER_CAST();
         base->ren->init = omg_renderer_sdl2_init;
+        base->ren->get_supported_drivers = omg_renderer_sdl2_get_supported_drivers;
         OMG_END_POINTER_CAST();
         ren_sdl2->win = this->win;
         ren_sdl2->sdl2 = this->sdl2;
