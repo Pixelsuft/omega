@@ -36,6 +36,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_memcpy);
     LOAD_REQUIRED(SDL_memmove);
     LOAD_REQUIRED(SDL_memcmp);
+    LOAD_REQUIRED(SDL_strcmp);
     LOAD_REQUIRED(SDL_strlen);
     LOAD_REQUIRED(SDL_utf8strlen);
     LOAD_REQUIRED(SDL_utf8strnlen);

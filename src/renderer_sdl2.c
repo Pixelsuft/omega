@@ -32,7 +32,21 @@ bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this) {
 }
 
 int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name) {
-    return OMG_REN_DRIVER_AUTO;
+    if (!omg_base->std->strcmp(name, "direct3d"))
+        return OMG_REN_DRIVER_D3D9;
+    if (!omg_base->std->strcmp(name, "direct3d11"))
+        return OMG_REN_DRIVER_D3D11;
+    if (!omg_base->std->strcmp(name, "direct3d12"))
+        return OMG_REN_DRIVER_D3D12;
+    if (!omg_base->std->strcmp(name, "opengl"))
+        return OMG_REN_DRIVER_OPENGL;
+    if (!omg_base->std->strcmp(name, "opengles"))
+        return OMG_REN_DRIVER_OPENGLES;
+    if (!omg_base->std->strcmp(name, "opengles2"))
+        return OMG_REN_DRIVER_OPENGLES;
+    if (!omg_base->std->strcmp(name, "software"))
+        return OMG_REN_DRIVER_SOFTWARE;
+    return OMG_REN_DRIVER_UNKNOWN;
 }
 
 int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
@@ -50,7 +64,7 @@ int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
             this->id_cache[i] = OMG_REN_DRIVER_NONE;
             continue;
         }
-        _OMG_LOG_INFO(omg_base, info.name);
+        this->id_cache[i] = omg_renderer_sdl2_driver_from_name(this, info.name);
     }
     return res;
 }

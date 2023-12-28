@@ -65,6 +65,19 @@ int omg_std_memcmp(const void* s1, const void* s2, size_t len) {
     return 0;
 }
 
+int omg_std_strcmp(const char* str1, const char* str2) {
+    int result;
+    while (1) {
+        result = ((unsigned char)*str1 - (unsigned char)*str2);
+        if (result != 0 || (*str1 == '\0')) {
+            break;
+        }
+        ++str1;
+        ++str2;
+    }
+    return result;
+}
+
 size_t omg_std_strlen(const char* src) {
     if (OMG_ISNULL(src))
         return 0;
@@ -243,12 +256,14 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->memmove = memmove;
     this->memcmp = memcmp;
     this->strlen = strlen;
+    this->strcmp = strcmp;
     this->strnlen = strnlen;
 #else
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
     this->memmove = omg_std_memmove;
     this->memcmp = omg_std_memcmp;
+    this->strcmp = omg_std_strcmp;
     this->strlen = omg_std_strlen;
     this->strnlen = omg_std_strnlen;
 #endif

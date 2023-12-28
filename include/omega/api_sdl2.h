@@ -225,6 +225,7 @@ typedef struct {
     void* OMG_SDL2_STD_PREFIX (*SDL_memcpy)(void*, const void*, size_t);
     void* OMG_SDL2_STD_PREFIX (*SDL_memmove)(void*, const void*, size_t);
     int OMG_SDL2_STD_PREFIX (*SDL_memcmp)(const void*, const void*, size_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_strcmp)(const char*, const char*);
     size_t OMG_SDL2_STD_PREFIX (*SDL_strlen)(const char*);
     size_t OMG_SDL2_STD_PREFIX (*SDL_utf8strlen)(const char*);
     size_t OMG_SDL2_STD_PREFIX (*SDL_utf8strnlen)(const char*, size_t);

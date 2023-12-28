@@ -32,6 +32,7 @@ void omg_sdl2_fill_std(OMG_OmegaSdl2* this) {
     base->std->memcpy = this->sdl2->SDL_memcpy;
     base->std->memmove = this->sdl2->SDL_memmove;
     base->std->memcmp = this->sdl2->SDL_memcmp;
+    base->std->strcmp = this->sdl2->SDL_strcmp;
     base->std->strlen = this->sdl2->SDL_strlen;
     // base->std->strnlen = this->sdl2->SDL_strnlen;
     base->std->wcslen = this->sdl2->SDL_wcslen;
