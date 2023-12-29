@@ -61,6 +61,7 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_on_paint(OMG_EventPaint* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
+    OMG_INFO(this->omg, "paint!!!");
     if (event->win != this->win)
         return;
     this->ren->begin(this->ren);

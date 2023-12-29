@@ -150,6 +150,17 @@ void omg_win_update_scale(OMG_OmegaWin* this) {
 }
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
+    if (OMG_ISNULL(base->clock)) {
+        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_Clock));
+        if (OMG_ISNULL(base->clock)) {
+            return true;
+        }
+        base->clock->was_allocated = true;
+        base->clock->omg = this;
+        OMG_BEGIN_POINTER_CAST();
+        base->clock->init = omg_clock_init;
+        OMG_END_POINTER_CAST();
+    }
     if (base->support_highdpi) {
         if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
             if (!this->u32->SetProcessDPIAware()) {

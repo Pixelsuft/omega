@@ -77,6 +77,11 @@ bool omg_free_winmgr(OMG_Omega* this) {
 
 bool omg_app_quit(OMG_Omega* this) {
     omg_free_winmgr(this);
+    if (OMG_ISNOTNULL(this->clock) && this->clock->was_allocated) {
+        this->clock->destroy(this->clock);
+        OMG_FREE(this->mem, this->clock);
+        this->clock = NULL;
+    }
     return false;
 }
 
