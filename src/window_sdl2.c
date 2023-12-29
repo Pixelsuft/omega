@@ -74,7 +74,7 @@ bool omg_window_sdl2_set_sys_button(OMG_WindowSdl2* this, int id, bool enabled) 
 
 bool omg_window_sdl2_set_resizable(OMG_WindowSdl2* this, bool enabled) {
     base->resizable = enabled;
-    if (base->resizable)
+    if (enabled)
         base->sys_buttons |= OMG_WIN_SYS_BUTTON_MAXIMIZE;
     else
         base->sys_buttons &= ~OMG_WIN_SYS_BUTTON_MAXIMIZE;
@@ -112,6 +112,7 @@ bool omg_window_sdl2_set_window_mode(OMG_WindowSdl2* this, int mode) {
         _OMG_LOG_WARN(omg_base, "Failed to set window mode (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
+    base->window_mode = mode;
     return false;
 }
 

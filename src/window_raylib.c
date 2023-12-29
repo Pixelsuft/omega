@@ -37,7 +37,7 @@ bool omg_window_raylib_set_sys_button(OMG_WindowRaylib* this, int id, bool enabl
 
 bool omg_window_raylib_set_resizable(OMG_WindowRaylib* this, bool enabled) {
     base->resizable = enabled;
-    if (base->resizable) {
+    if (enabled) {
         base->sys_buttons |= OMG_WIN_SYS_BUTTON_MAXIMIZE;
         this->raylib->SetWindowState(FLAG_WINDOW_RESIZABLE);
     }
@@ -45,6 +45,51 @@ bool omg_window_raylib_set_resizable(OMG_WindowRaylib* this, bool enabled) {
         base->sys_buttons &= ~OMG_WIN_SYS_BUTTON_MAXIMIZE;
         this->raylib->ClearWindowState(FLAG_WINDOW_RESIZABLE);
     }
+    return false;
+}
+
+bool omg_window_raylib_set_bordered(OMG_WindowRaylib* this, bool enabled) {
+    base->bordered = enabled;
+    if (enabled)
+        this->raylib->ClearWindowState(FLAG_WINDOW_UNDECORATED);
+    else
+        this->raylib->SetWindowState(FLAG_WINDOW_UNDECORATED);
+    return false;
+}
+
+bool omg_window_raylib_set_always_on_top(OMG_WindowRaylib* this, bool enabled) {
+    base->always_on_top = enabled;
+    if (enabled)
+        this->raylib->SetWindowState(FLAG_WINDOW_TOPMOST);
+    else
+        this->raylib->ClearWindowState(FLAG_WINDOW_TOPMOST);
+    return false;
+}
+
+bool omg_window_raylib_set_window_mode(OMG_WindowRaylib* this, int mode) {
+    if (mode == OMG_WIN_MODE_WINDOW) {
+        if (base->window_mode == OMG_WIN_MODE_FULLSCREEN)
+            this->raylib->ToggleFullscreen();
+        else if (base->window_mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN)
+            this->raylib->ToggleBorderlessWindowed();
+    }
+    else if (mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN) {
+        if (base->window_mode == OMG_WIN_MODE_WINDOW)
+            this->raylib->ToggleBorderlessWindowed();
+        else if (base->window_mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN) {
+            this->raylib->ToggleFullscreen();
+            this->raylib->ToggleBorderlessWindowed();
+        }
+    }
+    else if (mode == OMG_WIN_MODE_FULLSCREEN) {
+        if (base->window_mode == OMG_WIN_MODE_WINDOW)
+            this->raylib->ToggleFullscreen();
+        else if (base->window_mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN) {
+            this->raylib->ToggleBorderlessWindowed();
+            this->raylib->ToggleFullscreen();
+        }
+    }
+    base->window_mode = mode;
     return false;
 }
 
@@ -90,6 +135,11 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->destroy = omg_window_raylib_destroy;
     base->renderer_alloc = omg_window_raylib_renderer_alloc;
     base->set_state = omg_window_raylib_set_state;
+    base->set_sys_button = omg_window_raylib_set_sys_button;
+    base->set_resizable = omg_window_raylib_set_resizable;
+    base->set_bordered = omg_window_raylib_set_bordered;
+    base->set_always_on_top = omg_window_raylib_set_always_on_top;
+    base->set_bordered = omg_window_raylib_set_bordered;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(
         FLAG_WINDOW_HIDDEN |
