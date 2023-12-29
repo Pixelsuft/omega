@@ -252,6 +252,8 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 this->u32->SetWindowLongW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
             else
                 this->u32->SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
+            if (omg_base->support_highdpi && OMG_ISNOTNULL(this->u32->EnableNonClientDpiScaling))
+                this->u32->EnableNonClientDpiScaling(hwnd);
             return RET_DEF_PROC();
         }
         case WM_THEMECHANGED: {

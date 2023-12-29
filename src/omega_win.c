@@ -172,7 +172,13 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
         OMG_END_POINTER_CAST();
     }
     if (base->support_highdpi) {
-        if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
+        if (OMG_ISNOTNULL(this->u32->SetProcessDpiAwarenessContext)) {
+            this->u32->SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+        }
+        else if (OMG_ISNOTNULL(this->u32->SetProcessDpiAwareness)) {
+            this->u32->SetProcessDpiAwareness(OMG_WIN_PROCESS_PER_MONITOR_DPI_AWARE);
+        }
+        else if (OMG_ISNOTNULL(this->u32->SetProcessDPIAware)) {
             if (!this->u32->SetProcessDPIAware()) {
                 _OMG_LOG_WARN(base, "Failed to set dpi awareness for app");
             }
