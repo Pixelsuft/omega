@@ -56,6 +56,7 @@ typedef struct OMG_Window {
     bool always_on_top;
     bool inited;
     bool centered;
+    bool enable_paint;
     bool was_allocated;
 } OMG_Window;
 

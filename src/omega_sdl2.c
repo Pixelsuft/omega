@@ -140,7 +140,7 @@ void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
         base->on_update(&u_event);
         if (base->enable_paint) {
             for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
-                if (OMG_ISNULL(base->winmgr->cache[i]))
+                if (OMG_ISNULL(base->winmgr->cache[i]) || !base->winmgr->cache[i]->enable_paint)
                     continue;
                 MAKE_EVENT_STATIC(&p_event);
                 p_event.win = base->winmgr->cache[i];

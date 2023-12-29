@@ -102,6 +102,7 @@ bool omg_window_init(OMG_Window* this) {
     }
     this->scale.x = this->scale.y = 1.0f;
     this->ren = NULL;
+    this->enable_paint = true;
     this->ren_type = OMG_REN_TYPE_AUTO;
     this->destroy = omg_window_destroy;
     this->set_state = omg_window_set_state;
