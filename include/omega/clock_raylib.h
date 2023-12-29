@@ -2,7 +2,7 @@
 #include <omega/api_raylib.h>
 #include <omega/clock.h>
 
-#if OMG_SUPPORT_SDL2
+#if OMG_SUPPORT_RAYLIB
 typedef struct {
     OMG_Clock parent;
     OMG_Raylib* raylib;

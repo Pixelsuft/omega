@@ -1,6 +1,6 @@
 #include <omega/clock_raylib.h>
 
-#if OMG_SUPPORT_SDL2
+#if OMG_SUPPORT_RAYLIB
 #define base ((OMG_Clock*)this)
 
 bool omg_clock_raylib_reset(OMG_ClockRaylib* this) {
