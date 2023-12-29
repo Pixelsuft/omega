@@ -12,9 +12,16 @@ bool omg_clock_sdl2_reset(OMG_ClockSdl2* this) {
 }
 
 bool omg_clock_sdl2_update(OMG_ClockSdl2* this) {
-    // TODO: fps limit
     uint64_t now = this->sdl2->SDL_GetTicks64();
     base->dt = (double)(now - base->last_tick) * base->speed / 1000.0;
+    if ((base->fps_limit >= 0.0) && (base->dt < (base->dt_limit * base->speed))) {
+        if (!base->wait_for_limit)
+            return true;
+        while (base->dt < (base->dt_limit * base->speed)) {
+            now = this->sdl2->SDL_GetTicks64();
+            base->dt = (double)(now - base->last_tick) * base->speed / 1000.0;
+        }
+    }
     base->last_tick = now;
     return false;
 }
@@ -22,6 +29,14 @@ bool omg_clock_sdl2_update(OMG_ClockSdl2* this) {
 bool omg_clock_sdl2_update_hp(OMG_ClockSdl2* this) {
     uint64_t now = this->sdl2->SDL_GetPerformanceCounter();
     base->dt = (double)(now - base->last_tick) * base->speed / this->freq;
+    if ((base->fps_limit >= 0.0) && (base->dt < (base->dt_limit * base->speed))) {
+        if (!base->wait_for_limit)
+            return true;
+        while (base->dt < (base->dt_limit * base->speed)) {
+            now = this->sdl2->SDL_GetPerformanceCounter();
+            base->dt = (double)(now - base->last_tick) * base->speed / this->freq;
+        }
+    }
     base->last_tick = now;
     return false;
 }

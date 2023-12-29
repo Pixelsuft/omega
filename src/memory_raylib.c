@@ -94,6 +94,8 @@ bool omg_memory_raylib_free(OMG_MemoryRaylib* this, void* ptr) {
     this->raylib->MemFree(real_ptr);
     if (base->alloc_size >= data.size)
         base->alloc_size -= data.size;
+    if (base->alloc_count > 0)
+        base->alloc_count--;
     return false;
 #else
     this->raylib->MemFree(ptr);

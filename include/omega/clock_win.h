@@ -4,7 +4,7 @@
 
 #if OMG_SUPPORT_SDL2
 typedef struct {
-    OMG_Clock base;
+    OMG_Clock parent;
     OMG_WIN_LARGE_INTEGER temp_int;
     double freq;
     OMG_Kernel32* k32;

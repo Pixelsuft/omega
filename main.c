@@ -70,14 +70,14 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
+#if OMG_SUPPORT_RAYLIB
+    this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
-#endif
-#if OMG_SUPPORT_RAYLIB
-    this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -109,8 +109,10 @@ void app_init(App* this, OMG_EntryData* data) {
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
     this->clock->init(this->clock, true);
+    this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    // this->clock->set_fps_limit(this->clock, 5.0);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);
     this->exit_code = 0;

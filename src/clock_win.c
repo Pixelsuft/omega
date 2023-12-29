@@ -15,11 +15,15 @@ bool omg_clock_win_reset(OMG_ClockWin* this) {
 
 bool omg_clock_win_update(OMG_ClockWin* this) {
     uint64_t now = (uint64_t)this->k32->GetTickCount64();
-    // TODO: fps limit
-    while (now == base->last_tick) { // Temporary hack
-        now = (uint64_t)this->k32->GetTickCount64();
-    }
     base->dt = (double)(now - base->last_tick) * base->speed / 1000.0;
+    if ((base->fps_limit >= 0.0) && (base->dt < (base->dt_limit * base->speed))) {
+        if (!base->wait_for_limit)
+            return true;
+        while (base->dt < (base->dt_limit * base->speed)) {
+            now = (uint64_t)this->k32->GetTickCount64();
+            base->dt = (double)(now - base->last_tick) * base->speed / 1000.0;
+        }
+    }
     base->last_tick = now;
     return false;
 }
@@ -28,6 +32,14 @@ bool omg_clock_win_update_hp(OMG_ClockWin* this) {
     this->k32->QueryPerformanceCounter(&this->temp_int);
     uint64_t now = (uint64_t)this->temp_int.QuadPart;
     base->dt = (double)(now - base->last_tick) * base->speed / this->freq;
+    if ((base->fps_limit >= 0.0) && (base->dt < (base->dt_limit * base->speed))) {
+        if (!base->wait_for_limit)
+            return true;
+        while (false && base->dt < (base->dt_limit * base->speed)) { // TODO: It's broken
+            now = (uint64_t)this->temp_int.QuadPart;
+            base->dt = (double)(now - base->last_tick) * base->speed / this->freq;
+        }
+    }
     base->last_tick = now;
     return false;
 }

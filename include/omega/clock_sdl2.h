@@ -4,7 +4,7 @@
 
 #if OMG_SUPPORT_SDL2
 typedef struct {
-    OMG_Clock base;
+    OMG_Clock parent;
     double freq;
     OMG_Sdl2* sdl2;
 } OMG_ClockSdl2;

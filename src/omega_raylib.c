@@ -4,6 +4,7 @@
 #include <omega/memory_raylib.h>
 #include <omega/winmgr_raylib.h>
 #include <omega/window_raylib.h>
+#include <omega/clock_raylib.h>
 #define base ((OMG_Omega*)this)
 #define winmgr_raylib ((OMG_WinmgrRaylib*)base->winmgr)
 #define MAKE_EVENT(event) do { \
@@ -106,16 +107,17 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
     base->on_loop_stop(&ls_event);
 }
 
-bool omg_raylib_app_init(OMG_Raylib* this) {
+bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
     if (OMG_ISNULL(base->clock)) {
-        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_Clock));
+        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockRaylib));
         if (OMG_ISNULL(base->clock)) {
             return true;
         }
         base->clock->was_allocated = true;
         base->clock->omg = this;
+        ((OMG_ClockRaylib*)base->clock)->raylib = this->raylib;
         OMG_BEGIN_POINTER_CAST();
-        base->clock->init = omg_clock_init;
+        base->clock->init = omg_clock_raylib_init;
         OMG_END_POINTER_CAST();
     }
     _OMG_LOG_INFO(base, "Omega successfully inited with Raylib backend");
@@ -123,7 +125,7 @@ bool omg_raylib_app_init(OMG_Raylib* this) {
     return false;
 }
 
-bool omg_raylib_app_quit(OMG_Raylib* this) {
+bool omg_raylib_app_quit(OMG_OmegaRaylib* this) {
     if (base->inited) {
         omg_app_quit((OMG_Omega*)this);
         base->inited = false;
