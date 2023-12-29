@@ -40,6 +40,10 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(MemAlloc);
     LOAD_REQUIRED(MemRealloc);
     LOAD_REQUIRED(MemFree);
+    LOAD_REQUIRED(WaitTime);
+    LOAD_REQUIRED(SetTargetFPS);
+    LOAD_REQUIRED(GetFrameTime);
+    LOAD_REQUIRED(GetFPS);
     LOAD_REQUIRED(SetTraceLogCallback);
     LOAD_REQUIRED(IsWindowResized);
     LOAD_REQUIRED(BeginDrawing);

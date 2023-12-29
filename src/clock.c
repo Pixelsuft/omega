@@ -35,6 +35,7 @@ int omg_clock_get_fps(OMG_Clock* this) {
 
 bool omg_clock_set_fps_limit(OMG_Clock* this, double fps_limit) {
     this->fps_limit = fps_limit;
+    this->dt_limit = 1.0 / fps_limit;
     return false;
 }
 
@@ -72,7 +73,7 @@ bool omg_clock_update(OMG_Clock* this) {
     return false;
 #else
     OMG_UNUSED(this);
-    return true;
+    return false;
 #endif
 }
 
@@ -90,7 +91,7 @@ bool omg_clock_update_hp(OMG_Clock* this) {
     return false;
 #else
     OMG_UNUSED(this);
-    return true;
+    return false;
 #endif
 }
 
@@ -98,7 +99,7 @@ bool omg_clock_init(OMG_Clock* this, bool high_perf) {
     this->high_perf = high_perf;
     this->wait_for_limit = true;
     this->dt = 0.0;
-    this->fps_limit = 0.0;
+    this->fps_limit = this->dt_limit = 0.0;
     this->speed = 1.0;
     this->destroy = omg_clock_destroy;
     this->reset = omg_clock_reset;

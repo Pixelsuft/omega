@@ -87,8 +87,8 @@ bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
     return false;
 }
 
-void omg_sdl2_delay(OMG_OmegaSdl2* this, float seconds) {
-    this->sdl2->SDL_Delay((uint32_t)(seconds * 1000.0f));
+void omg_sdl2_delay(OMG_OmegaSdl2* this, double seconds) {
+    this->sdl2->SDL_Delay((uint32_t)(seconds * 1000.0));
 }
 
 void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {

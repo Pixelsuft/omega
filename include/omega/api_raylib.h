@@ -66,6 +66,10 @@ typedef struct {
     void* OMG_RAYLIB_PREFIX (*MemAlloc)(unsigned int);
     void* OMG_RAYLIB_PREFIX (*MemRealloc)(void*, unsigned int);
     void OMG_RAYLIB_PREFIX (*MemFree)(void*);
+    void OMG_RAYLIB_PREFIX (*WaitTime)(double seconds);
+    void OMG_RAYLIB_PREFIX (*SetTargetFPS)(int fps);
+    float OMG_RAYLIB_PREFIX (*GetFrameTime)(void);
+    int OMG_RAYLIB_PREFIX (*GetFPS)(void);
     void OMG_RAYLIB_PREFIX (*SetTraceLogCallback)(TraceLogCallback);
     bool OMG_RAYLIB_PREFIX (*IsWindowResized)(void);
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);

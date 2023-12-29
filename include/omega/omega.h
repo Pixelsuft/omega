@@ -44,7 +44,7 @@ typedef struct OMG_Omega {
     bool (*destroy)(struct OMG_Omega* this);
     bool (*winmgr_free)(struct OMG_Omega* this);
     bool (*winmgr_alloc)(struct OMG_Omega* this);
-    void (*delay)(struct OMG_Omega* this, float delay);
+    void (*delay)(struct OMG_Omega* this, double seconds);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
     bool (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
     bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
@@ -90,7 +90,7 @@ OMG_API void omg_event_on_update(OMG_EventUpdate* event);
 OMG_API void omg_event_on_paint(OMG_EventPaint* event);
 OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
-OMG_API void omg_delay(OMG_Omega* this, float seconds);
+OMG_API void omg_delay(OMG_Omega* this, double seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
 OMG_API void omg_auto_loop_run(OMG_Omega* this);

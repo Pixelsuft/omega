@@ -13,6 +13,7 @@ typedef struct OMG_Clock {
     int (*get_fps)(struct OMG_Clock* this);
     double dt;
     double fps_limit;
+    double dt_limit;
     double speed;
     bool wait_for_limit;
     bool high_perf;

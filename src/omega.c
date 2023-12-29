@@ -11,7 +11,7 @@ OMG_Omega* omg_create(OMG_EntryData* data) {
     return NULL;
 }
 
-void omg_delay(OMG_Omega* this, float seconds) {
+void omg_delay(OMG_Omega* this, double seconds) {
     OMG_UNUSED(this, seconds);
 }
 

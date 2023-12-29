@@ -42,7 +42,7 @@ OMG_API bool omg_win_app_init(OMG_OmegaWin* this);
 OMG_API bool omg_win_app_quit(OMG_OmegaWin* this);
 OMG_API bool omg_win_alloc_winmgr(OMG_OmegaWin* this);
 OMG_API void omg_win_auto_loop_run(OMG_OmegaWin* this);
-OMG_API void omg_win_delay(OMG_OmegaWin* this, float seconds);
+OMG_API void omg_win_delay(OMG_OmegaWin* this, double seconds);
 OMG_API LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 OMG_API bool omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data);
 OMG_API bool omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data);

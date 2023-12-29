@@ -197,8 +197,8 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
     return false;
 }
 
-void omg_win_delay(OMG_OmegaWin* this, float seconds) {
-    this->k32->Sleep((DWORD)(seconds * 1000.0f));
+void omg_win_delay(OMG_OmegaWin* this, double seconds) {
+    this->k32->Sleep((DWORD)(seconds * 1000.0));
 }
 
 bool omg_win_app_quit(OMG_OmegaWin* this) {

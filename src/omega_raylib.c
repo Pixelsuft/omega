@@ -107,6 +107,17 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
 }
 
 bool omg_raylib_app_init(OMG_Raylib* this) {
+    if (OMG_ISNULL(base->clock)) {
+        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_Clock));
+        if (OMG_ISNULL(base->clock)) {
+            return true;
+        }
+        base->clock->was_allocated = true;
+        base->clock->omg = this;
+        OMG_BEGIN_POINTER_CAST();
+        base->clock->init = omg_clock_init;
+        OMG_END_POINTER_CAST();
+    }
     _OMG_LOG_INFO(base, "Omega successfully inited with Raylib backend");
     base->inited = true;
     return false;
@@ -136,6 +147,10 @@ bool omg_raylib_destroy(OMG_OmegaRaylib* this) {
     }
     omg_destroy((OMG_Omega*)this);
     return result;
+}
+
+void omg_raylib_delay(OMG_OmegaRaylib* this, double seconds) {
+    this->raylib->WaitTime(seconds);
 }
 
 bool omg_raylib_init(OMG_OmegaRaylib* this) {
@@ -186,6 +201,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->auto_loop_run = omg_raylib_auto_loop_run;
     base->app_init = omg_raylib_app_init;
     base->app_quit = omg_raylib_app_quit;
+    base->delay = omg_raylib_delay;
     base->winmgr_alloc = omg_raylib_alloc_winmgr;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
