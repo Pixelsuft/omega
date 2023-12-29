@@ -12,6 +12,7 @@ typedef struct {
     OMG_Ntdll* nt;
     OMG_Dwmapi* dwm;
     OMG_User32* u32;
+    OMG_Gdi32* g32;
     OMG_Uxtheme* uxtheme;
     HANDLE stdout_handle;
     HANDLE stderr_handle;
@@ -23,6 +24,7 @@ typedef struct {
     bool should_free_ntdll;
     bool should_free_dwm;
     bool should_free_u32;
+    bool should_free_g32;
     bool should_free_uxtheme;
 } OMG_OmegaWin;
 

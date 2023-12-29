@@ -125,6 +125,9 @@
 #ifndef SWP_NOACTIVATE
 #define SWP_NOACTIVATE 0x0010
 #endif
+#ifndef SWP_NOSENDCHANGING
+#define SWP_NOSENDCHANGING 0x0400
+#endif
 #ifndef WS_EX_COMPOSITED
 #define WS_EX_COMPOSITED 0x02000000
 #endif
@@ -300,11 +303,15 @@ typedef struct {
     UINT OMG_WIN_STD_PREFIX (*GetDpiForWindow)(HWND);
     int OMG_WIN_STD_PREFIX (*GetSystemMetrics)(int);
     int OMG_WIN_STD_PREFIX (*GetSystemMetricsForDpi)(int, UINT);
-    int OMG_WIN_STD_PREFIX (*GetDeviceCaps)(HDC, int);
     HDC OMG_WIN_STD_PREFIX (*GetDC)(HWND);
     HDC OMG_WIN_STD_PREFIX (*GetWindowDC)(HWND);
     int OMG_WIN_STD_PREFIX (*ReleaseDC)(HWND, HDC);
 } OMG_User32;
+
+typedef struct {
+    HANDLE handle;
+    int OMG_WIN_STD_PREFIX (*GetDeviceCaps)(HDC, int);
+} OMG_Gdi32;
 
 typedef struct {
     HANDLE handle;
@@ -329,6 +336,8 @@ OMG_API bool omg_winapi_kernel32_load(OMG_Kernel32* this);
 OMG_API bool omg_winapi_kernel32_free(OMG_Kernel32* this);
 OMG_API bool omg_winapi_user32_load(OMG_User32* this);
 OMG_API bool omg_winapi_user32_free(OMG_User32* this);
+OMG_API bool omg_winapi_gdi32_load(OMG_Gdi32* this);
+OMG_API bool omg_winapi_gdi32_free(OMG_Gdi32* this);
 OMG_API bool omg_winapi_ntdll_load(OMG_Ntdll* this);
 OMG_API bool omg_winapi_ntdll_free(OMG_Ntdll* this);
 OMG_API bool omg_winapi_dwmapi_load(OMG_Dwmapi* this);

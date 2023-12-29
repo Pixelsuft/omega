@@ -298,8 +298,8 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     if (omg_base->support_highdpi) {
         if (OMG_ISNULL(this->u32->GetDpiForWindow)) {
             HDC hdc = this->u32->GetWindowDC(this->hwnd);
-            new_scale.x = (float)this->u32->GetDeviceCaps(hdc, LOGPIXELSX) / 96.0f;
-            new_scale.y = (float)this->u32->GetDeviceCaps(hdc, LOGPIXELSY) / 96.0f;
+            new_scale.x = (float)this->g32->GetDeviceCaps(hdc, LOGPIXELSX) / 96.0f;
+            new_scale.y = (float)this->g32->GetDeviceCaps(hdc, LOGPIXELSY) / 96.0f;
             this->u32->ReleaseDC(this->hwnd, hdc);
         }
         else {

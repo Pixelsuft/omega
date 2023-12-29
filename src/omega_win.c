@@ -186,6 +186,12 @@ bool omg_win_app_quit(OMG_OmegaWin* this) {
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
     bool result = base->app_quit((OMG_Omega*)this);
+    // TODO: Null Checks
+    if (this->should_free_g32) {
+        result = omg_winapi_gdi32_free(this->g32) || result;
+        result = OMG_FREE(base->mem, this->g32) || result;
+        this->g32 = NULL;
+    }
     if (this->should_free_u32) {
         result = omg_winapi_user32_free(this->u32) || result;
         result = OMG_FREE(base->mem, this->u32) || result;
@@ -240,6 +246,7 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
         return true;
     omg_alloc_winmgr((OMG_Omega*)this);
     winmgr_win->u32 = this->u32;
+    winmgr_win->g32 = this->g32;
     winmgr_win->k32 = this->k32;
     winmgr_win->dwm = this->dwm;
     winmgr_win->uxtheme = this->uxtheme;
@@ -352,6 +359,19 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     else
         this->should_free_u32 = false;
+    if (OMG_ISNULL(this->g32)) {
+        this->g32 = OMG_MALLOC(base->mem, sizeof(OMG_Gdi32));
+        if (OMG_ISNULL(this->g32)) {
+            return true;
+        }
+        if (omg_winapi_gdi32_load(this->g32)) {
+            OMG_FREE(base->mem, this->g32);
+            return true;
+        }
+        this->should_free_g32 = true;
+    }
+    else
+        this->should_free_g32 = false;
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
     base->delay = omg_win_delay;

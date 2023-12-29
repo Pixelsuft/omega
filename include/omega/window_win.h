@@ -11,6 +11,7 @@ typedef struct {
     ATOM class_atom;
     HWND hwnd;
     OMG_User32* u32;
+    OMG_Gdi32* g32;
     OMG_Kernel32* k32;
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;

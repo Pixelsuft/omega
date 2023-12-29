@@ -127,6 +127,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_OPENGL);
         else if (this->id_cache[8] & OMG_REN_DRIVER_SOFTWARE)
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_SOFTWARE);
+        sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D11);
     }
     else
         sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, base->driver);

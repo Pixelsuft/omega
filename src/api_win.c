@@ -134,7 +134,6 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(DefWindowProcW);
     LOAD_REQUIRED(GetSysColorBrush);
     LOAD_REQUIRED(LoadImageW);
-    LOAD_REQUIRED(GetDeviceCaps);
     LOAD_REQUIRED(GetDC);
     LOAD_REQUIRED(GetWindowDC);
     LOAD_REQUIRED(ReleaseDC);
@@ -150,6 +149,30 @@ bool omg_winapi_user32_load(OMG_User32* this) {
 
 bool omg_winapi_user32_free(OMG_User32* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    if (OMG_ISNULL(this->handle))
+        return true;
+    return (bool)FreeLibrary(this->handle);
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+
+bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
+#if OMG_WINAPI_DYNAMIC
+    this->handle = LOAD_SYSTEM_LIBRARY(L"gdi32.dll");
+    if (OMG_ISNULL(this->handle))
+        return true;
+#endif
+    OMG_BEGIN_POINTER_CAST();
+    LOAD_REQUIRED(GetDeviceCaps);
+    OMG_END_POINTER_CAST();
+    return false;
+}
+
+bool omg_winapi_gdi32_free(OMG_Gdi32* this) {
+#if OMG_WINAPI_DYNAMIC
     if (OMG_ISNULL(this->handle))
         return true;
     return (bool)FreeLibrary(this->handle);
