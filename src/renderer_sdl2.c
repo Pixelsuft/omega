@@ -86,7 +86,13 @@ int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
 
 bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col) {
     bool res = false;
-    if (this->sdl2->SDL_SetRenderDrawColor(this->ren, (uint8_t)col->r, (uint8_t)col->g, (uint8_t)col->b, (uint8_t)col->a) < 0) {
+    if (this->sdl2->SDL_SetRenderDrawColor(
+        this->ren,
+        (uint8_t)(col->r * (omg_color_t)255 / OMG_MAX_COLOR),
+        (uint8_t)(col->g * (omg_color_t)255 / OMG_MAX_COLOR), 
+        (uint8_t)(col->b * (omg_color_t)255 / OMG_MAX_COLOR),
+        (uint8_t)(col->a * (omg_color_t)255 / OMG_MAX_COLOR)
+    ) < 0) {
         res = true;
         _OMG_SDL2_DRAW_COLOR_WARN();
     }

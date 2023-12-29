@@ -76,3 +76,7 @@
 #ifndef OMG_WIN_PRECISE_ENCODING
 #define OMG_WIN_PRECISE_ENCODING 1
 #endif
+
+#ifndef OMG_MAX_COLOR
+#define OMG_MAX_COLOR ((omg_color_t)255)
+#endif

@@ -11,6 +11,8 @@ typedef struct {
     OMG_Window* win;
     OMG_Renderer* ren;
     OMG_Clock* clock;
+    omg_color_t bg_col;
+    bool bg_fow;
     int exit_code;
 } App;
 
@@ -39,6 +41,20 @@ void app_on_update(OMG_EventUpdate* event) {
         return;
     }
     this->omg->enable_paint = true;
+    if (this->bg_fow) {
+        this->bg_col += this->clock->dt * 100.0f;
+        if (this->bg_col >= OMG_MAX_COLOR) {
+            this->bg_col = OMG_MAX_COLOR * (omg_color_t)2 - this->bg_col;
+            this->bg_fow = false;
+        }
+    }
+    else {
+        this->bg_col -= this->clock->dt * 100.0f;
+        if (this->bg_col < (omg_color_t)0) {
+            this->bg_col = -this->bg_col;
+            this->bg_fow = true;
+        }
+    }
     // OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
     // OMG_INFO(this->omg, "DT: ", this->clock->dt);
 }
@@ -48,7 +64,7 @@ void app_on_paint(OMG_EventPaint* event) {
     if (event->win != this->win)
         return;
     this->ren->begin(this->ren);
-    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(100, 100, 100));
+    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
     this->ren->flip(this->ren);
 }
 
@@ -90,6 +106,8 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_update = app_on_update;
     this->omg->on_paint = app_on_paint;
     this->omg->on_loop_stop = app_on_destroy;
+    this->bg_col = (omg_color_t)0;
+    this->bg_fow = true;
     this->clock->init(this->clock, true);
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
