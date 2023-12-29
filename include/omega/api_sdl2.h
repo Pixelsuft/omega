@@ -259,6 +259,7 @@ typedef struct {
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetWindowID)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowFullscreen)(SDL_Window*, uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowResizable)(SDL_Window*, SDL_bool);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowBordered)(SDL_Window*, SDL_bool);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowAlwaysOnTop)(SDL_Window*, SDL_bool);

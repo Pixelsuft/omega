@@ -30,6 +30,24 @@ bool omg_window_raylib_set_state(OMG_WindowRaylib* this, int state) {
     return false;
 }
 
+bool omg_window_raylib_set_sys_button(OMG_WindowRaylib* this, int id, bool enabled) {
+    OMG_UNUSED(this, id, enabled);
+    return false;
+}
+
+bool omg_window_raylib_set_resizable(OMG_WindowRaylib* this, bool enabled) {
+    base->resizable = enabled;
+    if (base->resizable) {
+        base->sys_buttons |= OMG_WIN_SYS_BUTTON_MAXIMIZE;
+        this->raylib->SetWindowState(FLAG_WINDOW_RESIZABLE);
+    }
+    else {
+        base->sys_buttons &= ~OMG_WIN_SYS_BUTTON_MAXIMIZE;
+        this->raylib->ClearWindowState(FLAG_WINDOW_RESIZABLE);
+    }
+    return false;
+}
+
 bool omg_window_raylib_destroy(OMG_WindowRaylib* this) {
     if (base->inited) {
         omg_window_destroy((OMG_Window*)this);
@@ -84,7 +102,6 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
         ((base->state & OMG_WIN_STATE_MINIMIZED) ? FLAG_WINDOW_MINIMIZED : 0) |
         ((base->state & OMG_WIN_STATE_MAXIMIZED) ? FLAG_WINDOW_MAXIMIZED : 0) |
         ((base->state & OMG_WIN_STATE_RESTORED) ? 0 : FLAG_WINDOW_UNFOCUSED) |
-        FLAG_WINDOW_MOUSE_PASSTHROUGH |
         FLAG_WINDOW_ALWAYS_RUN
     );
     this->raylib->InitWindow((int)base->size.w, (int)base->size.h, "OMG Window [Raylib]");
@@ -92,7 +109,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     if (base->inited) {
         if (base->window_mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN)
             this->raylib->ToggleBorderlessWindowed();
-        else
+        else if (base->window_mode == OMG_WIN_MODE_FULLSCREEN)
             this->raylib->ToggleFullscreen();
         _OMG_LOG_INFO(omg_base, "Raylib window created successfuly");
     }

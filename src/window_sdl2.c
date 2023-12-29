@@ -105,6 +105,16 @@ bool omg_window_sdl2_destroy(OMG_WindowSdl2* this) {
     return false;
 }
 
+bool omg_window_sdl2_set_window_mode(OMG_WindowSdl2* this, int mode) {
+    if (this->sdl2->SDL_SetWindowFullscreen(this->win, (mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN ? SDL_WINDOW_FULLSCREEN_DESKTOP : (
+        (mode == OMG_WIN_MODE_FULLSCREEN) ? SDL_WINDOW_FULLSCREEN : 0
+    ))) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set window mode (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -139,6 +149,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_resizable = omg_window_sdl2_set_resizable;
     base->set_bordered = omg_window_sdl2_set_bordered;
     base->set_always_on_top = omg_window_sdl2_set_always_on_top;
+    base->set_window_mode = omg_window_sdl2_set_window_mode;
     base->renderer_alloc = omg_window_sdl2_renderer_alloc;
     base->show = omg_window_sdl2_show;
     base->set_title = omg_window_sdl2_set_title;

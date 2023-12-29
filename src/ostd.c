@@ -362,7 +362,7 @@ void omg_std_fill_defaults(OMG_Std* this) {
 #else
     this->ulltoa = omg_std_ulltoa;
 #endif
-#if OMG_IS_UNIX && OMG_HAS_STD
+#if OMG_HAS_STD && OMG_IS_UNIX
     this->sleep = sleep;
 #else
     this->sleep = NULL;
