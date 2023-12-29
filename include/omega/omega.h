@@ -1,8 +1,9 @@
 #pragma once
 #include <omega/config.h>
+#include <omega/ostd.h>
 #include <omega/entry.h>
 #include <omega/memory.h>
-#include <omega/ostd.h>
+#include <omega/clock.h>
 #include <omega/winmgr.h>
 #include <omega/window.h>
 #include <omega/events.h>
@@ -28,6 +29,7 @@ typedef struct OMG_Omega {
     OMG_Std* std;
     OMG_EntryData* entry_data;
     OMG_Winmgr* winmgr;
+    OMG_Clock* clock;
     OMG_Window** omg_window_cache;
     OMG_String* sdl2_dll_path;
     void* extra1;
@@ -64,6 +66,7 @@ typedef struct OMG_Omega {
     int type;
     int theme;
     int app_theme;
+    bool high_perf_clock;
     bool looping;
     bool support_highdpi;
     bool should_free_mem;

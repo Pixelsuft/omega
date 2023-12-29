@@ -42,7 +42,7 @@ bool omg_clock_reset(OMG_Clock* this) {
 #if OMG_HAS_STD && OMG_IS_UNIX
     if (this->high_perf) {
         struct timespec time_spec;
-        if (clock_gettime(CLOCK_REALTIME, &time_spec) < 0)
+        if (clock_gettime(CLOCK_MONOTONIC, &time_spec) < 0)
             return true;
         this->last_tick = _OMG_CALC_HP_TIME(time_spec);
         this->last_tick2 = _OMG_CALC_HP_TIME2(time_spec);
@@ -79,7 +79,7 @@ bool omg_clock_update(OMG_Clock* this) {
 bool omg_clock_update_hp(OMG_Clock* this) {
 #if OMG_HAS_STD && OMG_IS_UNIX
     struct timespec time_spec;
-    if (clock_gettime(CLOCK_REALTIME, &time_spec) < 0)
+    if (clock_gettime(CLOCK_MONOTONIC, &time_spec) < 0)
         return true;
     uint64_t now = _OMG_CALC_HP_TIME(time_spec);
     uint64_t now2 = _OMG_CALC_HP_TIME2(time_spec);

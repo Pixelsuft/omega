@@ -117,6 +117,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
     this->std = NULL;
     this->looping = false;
+    this->high_perf_clock = false;
     this->should_free_mem = false;
     this->theme = OMG_THEME_NONE;
     this->scale.x = this->scale.y = 1.0f;

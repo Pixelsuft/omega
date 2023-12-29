@@ -78,16 +78,15 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    this->clock = this->omg->clock;
     this->ren = this->win->ren;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
     this->omg->on_paint = app_on_paint;
     this->omg->on_loop_stop = app_on_destroy;
+    this->clock->init(this->clock);
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
-    this->clock = OMG_MALLOC(this->omg->mem, sizeof(OMG_Clock)); // Not Freed Currently, just testing
-    this->clock->omg = this->omg;
-    omg_clock_init(this->clock, true);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);
     this->exit_code = 0;
