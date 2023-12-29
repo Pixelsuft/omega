@@ -228,7 +228,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_SIZING: {
-            return 0;
+            return RET_DEF_PROC();
         }
         case WM_SIZE: {
             if (!base->resizable) {
@@ -239,8 +239,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                     (int)this->size_cache.w, (int)this->size_cache.h,
                     SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_NOSENDCHANGING
                 );
+                return 0;
             }
-            return 0;
+            return RET_DEF_PROC();
         }
         case WM_NCCREATE: {
             LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
@@ -402,7 +403,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         (base->resizable ? WS_THICKFRAME : 0) | \
         WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
-        (int)(base->size.w * base->scale.x), (int)(base->size.h * base->scale.y),
+        (int)(base->size.w * base->scale.x) + 31, (int)(base->size.h * base->scale.y) + 16,
         NULL, NULL, this->wc.hInstance, this
     );
     if (OMG_ISNULL(this->hwnd)) {
