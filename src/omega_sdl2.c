@@ -12,6 +12,11 @@
     ((OMG_Event*)event)->data = base->event_arg; \
     ((OMG_Event*)event)->time = (uint64_t)(this->ev.common.timestamp); \
 } while (0)
+#define MAKE_EVENT_STATIC(event) do { \
+    ((OMG_Event*)event)->omg = this; \
+    ((OMG_Event*)event)->data = base->event_arg; \
+    ((OMG_Event*)event)->time = this->sdl2->SDL_GetTicks64(); \
+} while (0)
 
 void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;
@@ -131,14 +136,20 @@ void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
         omg_sdl2_poll_events(this);
         if (!base->looping)
             break;
-        MAKE_EVENT(&u_event);
+        MAKE_EVENT_STATIC(&u_event);
         base->on_update(&u_event);
-        MAKE_EVENT(&p_event);
-        p_event.win = NULL;
-        base->on_paint(&p_event);
+        if (base->enable_paint) {
+            for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+                if (OMG_ISNULL(base->winmgr->cache[i]))
+                    continue;
+                MAKE_EVENT_STATIC(&p_event);
+                p_event.win = base->winmgr->cache[i];
+                base->on_paint(&p_event);
+            }
+        }
     }
     OMG_EventLoopStop ls_event;
-    MAKE_EVENT(&ls_event);
+    MAKE_EVENT_STATIC(&ls_event);
     base->on_loop_stop(&ls_event);
 }
 
@@ -151,7 +162,9 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
         base->clock->was_allocated = true;
         base->clock->omg = this;
         ((OMG_ClockSdl2*)base->clock)->sdl2 = this->sdl2;
+        OMG_BEGIN_POINTER_CAST();
         base->clock->init = omg_clock_sdl2_init;
+        OMG_END_POINTER_CAST();
     }
     if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
         if (base->clock->was_allocated) {

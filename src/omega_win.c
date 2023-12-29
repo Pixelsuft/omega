@@ -124,6 +124,7 @@ void omg_win_poll_events(OMG_OmegaWin* this) {
 void omg_win_auto_loop_run(OMG_OmegaWin* this) {
     base->looping = true;
     while (base->looping) {
+        // TODO: win32 api paint event
         omg_win_poll_events(this);
         if (!base->looping)
             break;

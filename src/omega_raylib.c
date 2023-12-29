@@ -95,9 +95,11 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
             break;
         MAKE_EVENT(&u_event);
         base->on_update(&u_event);
-        MAKE_EVENT(&p_event);
-        p_event.win = NULL;
-        base->on_paint(&p_event);
+        if (base->enable_paint) {
+            MAKE_EVENT(&p_event);
+            p_event.win = base->winmgr->cache[0];
+            base->on_paint(&p_event);
+        }
     }
     OMG_EventLoopStop ls_event;
     MAKE_EVENT(&ls_event);

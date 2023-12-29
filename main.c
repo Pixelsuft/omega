@@ -33,14 +33,20 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 
 void app_on_update(OMG_EventUpdate* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
-    OMG_UNUSED(this);
-    this->clock->update(this->clock);
-    OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
+    if (this->clock->update(this->clock)) {
+        // FPS limit, so let's check events again
+        this->omg->enable_paint = false;
+        return;
+    }
+    this->omg->enable_paint = true;
+    // OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
     // OMG_INFO(this->omg, "DT: ", this->clock->dt);
 }
 
 void app_on_paint(OMG_EventPaint* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
+    if (event->win != this->win)
+        return;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(100, 100, 100));
     this->ren->flip(this->ren);
