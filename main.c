@@ -1,5 +1,6 @@
 #include <omega/omega.h>
 #include <omega/entry.h>
+#include <omega/clock.h>
 #include <omega/omega_win.h>
 #include <omega/omega_sdl2.h>
 #include <omega/omega_raylib.h>
@@ -9,6 +10,7 @@ typedef struct {
     OMG_Omega* omg;
     OMG_Window* win;
     OMG_Renderer* ren;
+    OMG_Clock* clock;
     int exit_code;
 } App;
 
@@ -32,6 +34,8 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 void app_on_update(OMG_EventUpdate* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
     OMG_UNUSED(this);
+    this->clock->update(this->clock);
+    OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
 }
 
 void app_on_paint(OMG_EventPaint* event) {
@@ -80,6 +84,10 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_loop_stop = app_on_destroy;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    this->clock = OMG_MALLOC(this->omg->mem, sizeof(OMG_Clock)); // Not Freed Currently, just testing
+    this->clock->omg = this->omg;
+    omg_clock_init(this->clock, false);
+    this->clock->reset(this->clock);
     this->win->show(this->win, true);
     this->exit_code = 0;
 }

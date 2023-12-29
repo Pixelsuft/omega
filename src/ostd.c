@@ -7,6 +7,9 @@
 #if OMG_HAS_STD
 #include <math.h>
 #include <string.h>
+#if OMG_IS_UNIX
+#include <unistd.h>
+#endif
 #endif
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
 
@@ -358,6 +361,11 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->ulltoa = _ui64toa;
 #else
     this->ulltoa = omg_std_ulltoa;
+#endif
+#if OMG_IS_UNIX && OMG_HAS_STD
+    this->sleep = sleep;
+#else
+    this->sleep = NULL;
 #endif
 }
 
