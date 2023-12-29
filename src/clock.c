@@ -84,6 +84,7 @@ bool omg_clock_update_hp(OMG_Clock* this) {
     uint64_t now = _OMG_CALC_HP_TIME(time_spec);
     uint64_t now2 = _OMG_CALC_HP_TIME2(time_spec);
     this->dt = ((double)now + (double)now2 / 1000000000 - (double)this->last_tick - (double)this->last_tick2 / 1000000000) * this->speed;
+    // this->dt = ((double)(now - this->last_tick) + (double)(now2 - this->last_tick2) / 1000000000.0) * this->speed;
     this->last_tick = now;
     this->last_tick2 = now2;
     return false;
