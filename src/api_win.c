@@ -126,6 +126,7 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(MoveWindow);
     LOAD_REQUIRED(ShowWindow);
     LOAD_REQUIRED(SetWindowTextW);
+    LOAD_REQUIRED(WaitMessage);
     LOAD_REQUIRED(PeekMessageW);
     LOAD_REQUIRED(TranslateMessage);
     LOAD_REQUIRED(DispatchMessageW);

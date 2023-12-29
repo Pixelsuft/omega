@@ -130,6 +130,9 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
         OMG_EventUpdate u_event;
         MAKE_EVENT(&u_event);
         base->on_update(&u_event);
+        if (!base->looping)
+            break;
+        this->u32->WaitMessage();
     }
     OMG_EventLoopStop ls_event;
     MAKE_EVENT(&ls_event);

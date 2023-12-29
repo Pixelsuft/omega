@@ -290,6 +290,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*MoveWindow)(HWND, int, int, int, int, BOOL);
     BOOL OMG_WIN_STD_PREFIX (*ShowWindow)(HWND, INT);
     BOOL OMG_WIN_STD_PREFIX (*SetWindowTextW)(HWND, LPCWSTR);
+    BOOL OMG_WIN_STD_PREFIX (*WaitMessage)(void);
     BOOL OMG_WIN_STD_PREFIX (*PeekMessageW)(LPMSG, HWND, UINT, UINT, UINT);
     BOOL OMG_WIN_STD_PREFIX (*TranslateMessage)(const MSG*);
     LRESULT OMG_WIN_STD_PREFIX (*DispatchMessageW)(const MSG*);
