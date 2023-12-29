@@ -228,10 +228,12 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_SIZING: {
+            if (!base->resizable)
+                return 0;
             return RET_DEF_PROC();
         }
         case WM_SIZE: {
-            if (!base->resizable) {
+            if (!OMG_HAS_STD && !base->resizable) {
                 // Fuck Microsoft
                 this->u32->SetWindowPos(
                     this->hwnd,
