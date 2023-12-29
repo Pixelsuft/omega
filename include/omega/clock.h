@@ -3,6 +3,7 @@
 
 typedef struct OMG_Clock {
     uint64_t last_tick;
+    uint64_t last_tick2;
     void* omg;
     bool (*destroy)(struct OMG_Clock* this);
     bool (*reset)(struct OMG_Clock* this);

@@ -36,6 +36,7 @@ void app_on_update(OMG_EventUpdate* event) {
     OMG_UNUSED(this);
     this->clock->update(this->clock);
     OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
+    // OMG_INFO(this->omg, "DT: ", this->clock->dt);
 }
 
 void app_on_paint(OMG_EventPaint* event) {
@@ -86,7 +87,7 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->clock = OMG_MALLOC(this->omg->mem, sizeof(OMG_Clock)); // Not Freed Currently, just testing
     this->clock->omg = this->omg;
-    omg_clock_init(this->clock, false);
+    omg_clock_init(this->clock, true);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);
     this->exit_code = 0;
