@@ -259,6 +259,10 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
     DWORD OMG_WIN_STD_PREFIX (*FormatMessageW)(DWORD, LPCVOID, DWORD, DWORD, LPWSTR, DWORD, char** args);
     HMODULE OMG_WIN_STD_PREFIX (*GetModuleHandleW)(LPCWSTR);
+    BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceFrequency)(LARGE_INTEGER*);
+    BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceCounter)(LARGE_INTEGER*);
+    DWORD OMG_WIN_STD_PREFIX (*GetTickCount)(void);
+    ULONGLONG OMG_WIN_STD_PREFIX (*GetTickCount64)(void);
 } OMG_Kernel32;
 
 typedef struct {
@@ -345,4 +349,7 @@ OMG_API bool omg_winapi_dwmapi_load(OMG_Dwmapi* this);
 OMG_API bool omg_winapi_dwmapi_free(OMG_Dwmapi* this);
 OMG_API bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num);
 OMG_API bool omg_winapi_uxtheme_free(OMG_Uxtheme* this);
+#if OMG_EXPORT_SHIT
+OMG_API ULONGLONG omg_win_get_tick_count64_emu(void);
+#endif
 #endif

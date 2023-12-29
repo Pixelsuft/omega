@@ -32,6 +32,12 @@
 #define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = NULL
 #endif
 
+static OMG_Kernel32* k32_cache = NULL;
+
+ULONGLONG omg_win_get_tick_count64_emu(void) {
+    return (uint64_t)k32_cache->GetTickCount();
+}
+
 bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     this->handle = LOAD_SYSTEM_LIBRARY(L"kernel32.dll");
@@ -58,10 +64,17 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(GetStdHandle);
     LOAD_REQUIRED(AllocConsole);
     LOAD_REQUIRED(FreeConsole);
+    LOAD_REQUIRED(QueryPerformanceFrequency);
+    LOAD_REQUIRED(QueryPerformanceCounter);
+    LOAD_REQUIRED(GetTickCount);
     LOAD_REQUIRED_COMPAT(AttachConsole);
+    LOAD_REQUIRED_COMPAT(GetTickCount64);
+    if (OMG_ISNULL(this->GetTickCount64))
+        this->GetTickCount64 = omg_win_get_tick_count64_emu;
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     OMG_END_POINTER_CAST();
 #endif
+    k32_cache = this;
     return false;
 }
 

@@ -6,6 +6,7 @@
 #include <omega/memory_win.h>
 #include <omega/window_win.h>
 #include <omega/winmgr_win.h>
+#include <omega/clock_win.h>
 #define base ((OMG_Omega*)this)
 #define winmgr_win ((OMG_WinmgrWin*)base->winmgr)
 #define MAKE_EVENT(event) do { \
@@ -159,14 +160,15 @@ void omg_win_update_scale(OMG_OmegaWin* this) {
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->clock)) {
-        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_Clock));
+        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockWin));
         if (OMG_ISNULL(base->clock)) {
             return true;
         }
         base->clock->was_allocated = true;
         base->clock->omg = this;
+        ((OMG_ClockWin*)base->clock)->k32 = this->k32;
         OMG_BEGIN_POINTER_CAST();
-        base->clock->init = omg_clock_init;
+        base->clock->init = omg_clock_win_init;
         OMG_END_POINTER_CAST();
     }
     if (base->support_highdpi) {
