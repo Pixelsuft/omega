@@ -123,8 +123,12 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D11);
         else if (this->id_cache[8] & OMG_REN_DRIVER_D3D9)
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D9);
-        else if (this->id_cache[8] & OMG_REN_DRIVER_OPENGL)
+        else if (!OMG_IS_ANDROID && (this->id_cache[8] & OMG_REN_DRIVER_OPENGL))
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_OPENGL);
+        else if (this->id_cache[8] & OMG_REN_DRIVER_OPENGLES2)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_OPENGLES2);
+        else if (this->id_cache[8] & OMG_REN_DRIVER_OPENGLES)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_OPENGLES);
         else if (this->id_cache[8] & OMG_REN_DRIVER_SOFTWARE)
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_SOFTWARE);
     }
