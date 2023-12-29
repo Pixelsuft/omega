@@ -14,6 +14,7 @@ typedef struct {
     OMG_Kernel32* k32;
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;
+    OMG_FPoint size_cache;
 } OMG_WindowWin;
 
 OMG_API bool omg_window_win_init(OMG_WindowWin* this);

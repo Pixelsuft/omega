@@ -200,6 +200,12 @@
 #ifndef WM_PAINT
 #define WM_PAINT 0x000F
 #endif
+#ifndef WM_SIZING
+#define WM_SIZING 0x0214
+#endif
+#ifndef WM_SIZE
+#define WM_SIZE 0x0005
+#endif
 
 typedef struct {
     ULONG dwOSVersionInfoSize;

@@ -1,3 +1,2 @@
 [-] Set default events from seperate function to be able to reset them
 [-] Add function to set log callback
-[-] WTF WIN32 API RESIZE ON MOVE WITHOUT STDLIB FUCK MICROSOFT

@@ -92,7 +92,7 @@ bool omg_window_sdl2_set_bordered(OMG_WindowSdl2* this, bool enabled) {
 bool omg_window_sdl2_set_always_on_top(OMG_WindowSdl2* this, bool enabled) {
     base->always_on_top = enabled;
     if (OMG_ISNOTNULL(this->sdl2->SDL_SetWindowAlwaysOnTop))
-        this->sdl2->SDL_SetWindowAlwaysOnTop(this, enabled ? SDL_TRUE : SDL_FALSE);
+        this->sdl2->SDL_SetWindowAlwaysOnTop(this->win, enabled ? SDL_TRUE : SDL_FALSE);
     return false;
 }
 

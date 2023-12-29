@@ -227,6 +227,21 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_base->on_paint(&p_event);
             return RET_DEF_PROC();
         }
+        case WM_SIZING: {
+            return 0;
+        }
+        case WM_SIZE: {
+            if (!base->resizable) {
+                // Fuck Microsoft
+                this->u32->SetWindowPos(
+                    this->hwnd,
+                    NULL, 0, 0,
+                    (int)this->size_cache.w, (int)this->size_cache.h,
+                    SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_NOSENDCHANGING
+                );
+            }
+            return 0;
+        }
         case WM_NCCREATE: {
             LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
             this = (OMG_WindowWin*)lps->lpCreateParams;
@@ -308,22 +323,22 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     float new_w = (float)(rect.right - rect.left) * new_scale.x / base->scale.x;
     float new_h = (float)(rect.bottom - rect.top) * new_scale.y / base->scale.y;
     */
-    float new_w = base->size.w * new_scale.x + (float)(rect.right - rect.left - c_rect.right);
-    float new_h = base->size.h * new_scale.y + (float)(rect.bottom - rect.top - c_rect.bottom);
+    this->size_cache.w = base->size.w * new_scale.x + (float)(rect.right - rect.left - c_rect.right);
+    this->size_cache.h = base->size.h * new_scale.y + (float)(rect.bottom - rect.top - c_rect.bottom);
     /*this->u32->MoveWindow(
         this->hwnd,
-        base->centered ? (int)(((float)desktop_rect.right - new_w) / 2.0f) : rect.right,
-        base->centered ? (int)(((float)desktop_rect.bottom - new_h) / 2.0f) : rect.bottom,
-        (int)new_w,
-        (int)new_h,
+        base->centered ? (int)(((float)desktop_rect.right - this->size_cache.w) / 2.0f) : rect.right,
+        base->centered ? (int)(((float)desktop_rect.bottom - this->size_cache.h) / 2.0f) : rect.bottom,
+        (int)this->size_cache.w,
+        (int)this->size_cache.h,
         TRUE
     );*/
     this->u32->SetWindowPos(
         this->hwnd,
         NULL,
-        (int)(((float)desktop_rect.right - new_w) / 2.0f),
-        (int)(((float)desktop_rect.bottom - new_h) / 2.0f),
-        (int)new_w, (int)new_h,
+        (int)(((float)desktop_rect.right - this->size_cache.w) / 2.0f),
+        (int)(((float)desktop_rect.bottom - this->size_cache.h) / 2.0f),
+        (int)this->size_cache.w, (int)this->size_cache.h,
         SWP_NOZORDER | SWP_NOACTIVATE | (base->centered ? 0 : SWP_NOMOVE) | SWP_FRAMECHANGED
     );
     // Why???
