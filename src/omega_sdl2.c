@@ -4,6 +4,7 @@
 #include <omega/memory_sdl2.h>
 #include <omega/window_sdl2.h>
 #include <omega/winmgr_sdl2.h>
+#include <omega/clock_sdl2.h>
 #define base ((OMG_Omega*)this)
 #define winmgr_sdl2 ((OMG_WinmgrSdl2*)base->winmgr)
 #define MAKE_EVENT(event) do { \
@@ -142,7 +143,21 @@ void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
+    if (OMG_ISNULL(base->clock)) {
+        base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockSdl2));
+        if (OMG_ISNULL(base->clock)) {
+            return true;
+        }
+        base->clock->was_allocated = true;
+        base->clock->omg = this;
+        ((OMG_ClockSdl2*)base->clock)->sdl2 = this->sdl2;
+        base->clock->init = omg_clock_sdl2_init;
+    }
     if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
+        if (base->clock->was_allocated) {
+            OMG_FREE(base->mem, base->clock);
+            base->clock = NULL;
+        }
         _OMG_LOG_INFO(base, "Failed to init SDL2 (", this->sdl2->SDL_GetError(), ")");
         return true;
     }

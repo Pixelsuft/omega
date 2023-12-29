@@ -84,7 +84,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_update = app_on_update;
     this->omg->on_paint = app_on_paint;
     this->omg->on_loop_stop = app_on_destroy;
-    this->clock->init(this->clock);
+    this->clock->init(this->clock, true);
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->clock->reset(this->clock);

@@ -25,7 +25,7 @@ bool omg_clock_destroy(OMG_Clock* this) {
 
 int omg_clock_get_fps(OMG_Clock* this) {
     if (this->dt > 0.0) {
-        double res = 1.0 / this->dt;
+        double res = this->speed / this->dt;
         if ((this->fps_limit > 0.0) && (res > this->fps_limit))
             res = this->fps_limit;
         return (int)(omg_base->std->round(res));

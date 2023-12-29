@@ -66,7 +66,6 @@ typedef struct OMG_Omega {
     int type;
     int theme;
     int app_theme;
-    bool high_perf_clock;
     bool looping;
     bool support_highdpi;
     bool should_free_mem;
