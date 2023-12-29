@@ -45,6 +45,12 @@ void omg_sdl2_fill_std(OMG_OmegaSdl2* this) {
     base->std->ulltoa = this->sdl2->SDL_ulltoa;
     base->std->utf8strlen = this->sdl2->SDL_utf8strlen;
     base->std->utf8strnlen = this->sdl2->SDL_utf8strnlen;
+    base->std->floor = this->sdl2->SDL_floor;
+    base->std->ceil = this->sdl2->SDL_ceil;
+    base->std->round = this->sdl2->SDL_round;
+    base->std->floorf = this->sdl2->SDL_floorf;
+    base->std->ceilf = this->sdl2->SDL_ceilf;
+    base->std->roundf = this->sdl2->SDL_roundf;
 }
 
 bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data) {

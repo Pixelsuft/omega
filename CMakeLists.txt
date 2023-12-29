@@ -14,3 +14,4 @@ file(GLOB omega_src CONFIGURE_DEPENDS "src/*.c")
 
 add_definitions(-DCMAKE_BUILD -DOMG_STATIC)
 add_executable(omgapp "main.c" ${omega_src})
+target_link_libraries(omgapp m)

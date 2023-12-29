@@ -5,6 +5,7 @@
 #include <omega/omega_win.h>
 #endif
 #if OMG_HAS_STD
+#include <math.h>
 #include <string.h>
 #endif
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
@@ -220,6 +221,45 @@ void omg_std_str_reverse(char* str, size_t length) {
     }
 }
 
+double omg_std_floor(double x) {
+    // Should I check bounds?
+    long long n = (long long)x;
+    double d = (double)n;
+    if (d == x || x >= 0)
+        return d;
+    else
+        return d - 1;
+}
+
+double omg_std_ceil(double x) {
+    double integer = omg_def_std->floor(x);
+    double fraction = x - integer;
+    if (fraction > 0.0) {
+        integer += 1.0;
+    }
+    return integer;
+}
+
+double omg_std_round(double x) {
+    if (x >= 0.0) {
+        return omg_def_std->floor(x + 0.5);
+    } else {
+        return omg_def_std->ceil(x - 0.5);
+    }
+}
+
+float omg_std_floorf(float x) {
+    return (float)omg_def_std->floor((double)x);
+}
+
+float omg_std_ceilf(float x) {
+    return (float)omg_def_std->ceil((double)x);
+}
+
+float omg_std_roundf(float x) {
+    return (float)omg_def_std->round((double)x);
+}
+
 OMG_Std* omg_std_get_default_handle(void) {
     return omg_def_std;
 }
@@ -258,6 +298,12 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strlen = strlen;
     this->strcmp = strcmp;
     this->strnlen = strnlen;
+    this->floor = floor;
+    this->ceil = ceil;
+    this->round = round;
+    this->floorf = floorf;
+    this->ceilf = ceilf;
+    this->roundf = roundf;
 #else
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
@@ -266,6 +312,12 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strcmp = omg_std_strcmp;
     this->strlen = omg_std_strlen;
     this->strnlen = omg_std_strnlen;
+    this->floor = omg_std_floor;
+    this->ceil = omg_std_ceil;
+    this->round = omg_std_round;
+    this->floorf = omg_std_floorf;
+    this->ceilf = omg_std_ceilf;
+    this->roundf = omg_std_roundf;
 #endif
 #if OMG_HAVE_WCSLEN
     this->wcslen = wcslen;

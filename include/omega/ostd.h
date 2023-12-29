@@ -220,6 +220,12 @@ typedef struct {
     char* (*lltoa)(int64_t value, char* string, int radix);
     char* (*ulltoa)(uint64_t value, char* string, int radix);
     size_t (*wcslen)(const wchar_t* src);
+    double (*floor)(double x);
+    double (*ceil)(double x);
+    double (*round)(double x);
+    float (*floorf)(float x);
+    float (*ceilf)(float x);
+    float (*roundf)(float x);
     void* memory_allocator;
     void* extra;
 } OMG_Std;

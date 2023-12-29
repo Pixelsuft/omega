@@ -237,6 +237,12 @@ typedef struct {
     char* OMG_SDL2_STD_PREFIX (*SDL_lltoa)(int64_t, char*, int);
     char* OMG_SDL2_STD_PREFIX (*SDL_ulltoa)(uint64_t, char*, int);
     size_t OMG_SDL2_STD_PREFIX (*SDL_wcslen)(const wchar_t*);
+    double OMG_SDL2_STD_PREFIX (*SDL_floor)(double);
+    double OMG_SDL2_STD_PREFIX (*SDL_ceil)(double);
+    double OMG_SDL2_STD_PREFIX (*SDL_round)(double);
+    float OMG_SDL2_STD_PREFIX (*SDL_floorf)(float);
+    float OMG_SDL2_STD_PREFIX (*SDL_ceilf)(float);
+    float OMG_SDL2_STD_PREFIX (*SDL_roundf)(float);
     int OMG_SDL2_STD_PREFIX (*SDL_GetNumAllocations)(void);
     void* OMG_SDL2_STD_PREFIX (*SDL_malloc)(size_t);
     void* OMG_SDL2_STD_PREFIX (*SDL_realloc)(void*, size_t);

@@ -60,6 +60,12 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_lltoa);
     LOAD_REQUIRED(SDL_ulltoa);
     LOAD_REQUIRED(SDL_wcslen);
+    LOAD_REQUIRED(SDL_floor);
+    LOAD_REQUIRED(SDL_ceil);
+    LOAD_REQUIRED(SDL_round);
+    LOAD_REQUIRED(SDL_floorf);
+    LOAD_REQUIRED(SDL_ceilf);
+    LOAD_REQUIRED(SDL_roundf);
     LOAD_REQUIRED(SDL_malloc);
     LOAD_REQUIRED(SDL_realloc);
     LOAD_REQUIRED(SDL_free);
