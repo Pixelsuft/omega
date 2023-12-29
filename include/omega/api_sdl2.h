@@ -237,8 +237,9 @@ typedef struct {
     char* OMG_SDL2_STD_PREFIX (*SDL_lltoa)(int64_t, char*, int);
     char* OMG_SDL2_STD_PREFIX (*SDL_ulltoa)(uint64_t, char*, int);
     size_t OMG_SDL2_STD_PREFIX (*SDL_wcslen)(const wchar_t*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetNumAllocations)(void);
     void* OMG_SDL2_STD_PREFIX (*SDL_malloc)(size_t);
-    void* OMG_SDL2_STD_PREFIX (*SDL_realloc)(void*, size_t size);
+    void* OMG_SDL2_STD_PREFIX (*SDL_realloc)(void*, size_t);
     void OMG_SDL2_STD_PREFIX (*SDL_free)(void*);
     void OMG_SDL2_STD_PREFIX (*SDL_LogInfo)(int, const char*, ...);
     void OMG_SDL2_STD_PREFIX (*SDL_LogWarn)(int, const char*, ...);
@@ -252,7 +253,6 @@ typedef struct {
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetWindowID)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
-    // TODO: this and probably more require new versions
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowResizable)(SDL_Window*, SDL_bool);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowBordered)(SDL_Window*, SDL_bool);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowAlwaysOnTop)(SDL_Window*, SDL_bool);
@@ -261,6 +261,10 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_RestoreWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
+    uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetTicks)(void);
+    uint64_t OMG_SDL2_STD_PREFIX (*SDL_GetTicks64)(void);
+    uint64_t OMG_SDL2_STD_PREFIX (*SDL_GetPerformanceFrequency)(void);
+    uint64_t OMG_SDL2_STD_PREFIX (*SDL_GetPerformanceCounter)(void);
     int OMG_SDL2_STD_PREFIX (*SDL_GetNumRenderDrivers)(void);
     int OMG_SDL2_STD_PREFIX (*SDL_GetRenderDriverInfo)(int, SDL_RendererInfo*);
     int OMG_SDL2_STD_PREFIX (*SDL_GetRendererInfo)(SDL_Renderer*, SDL_RendererInfo*);
@@ -275,5 +279,7 @@ typedef struct {
 
 OMG_API bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path);
 OMG_API bool omg_sdl2_dll_free(OMG_Sdl2* this);
-
+#if OMG_EXPORT_SHIT
+OMG_API uint64_t omg_sdl2_get_ticks64_emu(void);
+#endif
 #endif

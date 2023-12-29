@@ -4,9 +4,21 @@
 #if OMG_SDL2_DYNAMIC
 #include <omega/api_static.h>
 #define LOAD_REQUIRED(func_name) this->func_name = (omg_static_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = (omg_static_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
+#if OMG_SDL2_COMOMG_SDL2_COMPAT_STATIC
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = NULL
+#else
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
 #endif
+#endif
+
+static OMG_Sdl2* omg_sdl2_cache = NULL;
+
+uint64_t omg_sdl2_get_ticks64_emu(void) {
+    return (uint64_t)omg_sdl2_cache->SDL_GetTicks();
+}
 
 bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
 #if OMG_SDL2_DYNAMIC
@@ -63,14 +75,15 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_GetWindowID);
     LOAD_REQUIRED(SDL_ShowWindow);
     LOAD_REQUIRED(SDL_HideWindow);
-    LOAD_REQUIRED(SDL_SetWindowResizable);
     LOAD_REQUIRED(SDL_SetWindowBordered);
-    LOAD_REQUIRED(SDL_SetWindowAlwaysOnTop);
     LOAD_REQUIRED(SDL_MinimizeWindow);
     LOAD_REQUIRED(SDL_MaximizeWindow);
     LOAD_REQUIRED(SDL_RestoreWindow);
     LOAD_REQUIRED(SDL_SetWindowTitle);
     LOAD_REQUIRED(SDL_PollEvent);
+    LOAD_REQUIRED(SDL_GetTicks);
+    LOAD_REQUIRED(SDL_GetPerformanceFrequency);
+    LOAD_REQUIRED(SDL_GetPerformanceCounter);
     LOAD_REQUIRED(SDL_GetNumRenderDrivers);
     LOAD_REQUIRED(SDL_GetRenderDriverInfo);
     LOAD_REQUIRED(SDL_GetRendererInfo);
@@ -80,7 +93,15 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_RenderClear);
     LOAD_REQUIRED(SDL_SetRenderDrawColor);
     LOAD_REQUIRED(SDL_RenderPresent);
+    // TODO: check using SDL2 versions
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
+    LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
+    LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
+    if (OMG_ISNULL(this->SDL_GetTicks64))
+        this->SDL_GetTicks64 = omg_sdl2_get_ticks64_emu;
     OMG_END_POINTER_CAST();
+    omg_sdl2_cache = this;
     return false;
 }
 

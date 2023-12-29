@@ -96,6 +96,12 @@ bool omg_memory_sdl2_free(OMG_MemorySdl2* this, void* ptr) {
 #endif
 }
 
+size_t omg_memory_sdl2_get_alloc_count(OMG_MemorySdl2* this) {
+    if (OMG_ISNULL(this->sdl2->SDL_GetNumAllocations))
+        return base->alloc_count;
+    return (size_t)this->sdl2->SDL_GetNumAllocations();
+}
+
 OMG_MemorySdl2* omg_memory_sdl2_create(void* omg, OMG_Sdl2* sdl2) {
     OMG_MemorySdl2* this = sdl2->SDL_malloc(sizeof(OMG_MemorySdl2));
     if (OMG_ISNULL(this))
@@ -106,6 +112,7 @@ OMG_MemorySdl2* omg_memory_sdl2_create(void* omg, OMG_Sdl2* sdl2) {
     base->realloc = omg_memory_sdl2_realloc;
     base->free = omg_memory_sdl2_free;
     base->destroy = omg_memory_sdl2_destroy;
+    base->get_alloc_count = omg_memory_sdl2_get_alloc_count;
     OMG_END_POINTER_CAST();
     this->sdl2 = sdl2;
     this->omg = omg;

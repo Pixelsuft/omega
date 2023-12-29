@@ -115,8 +115,6 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     int sdl2_driver;
     if (base->driver == OMG_REN_DRIVER_AUTO) {
         sdl2_driver = -1;
-        // TODO: d3d12 since windows 10, d3d11 since vista or 7
-        // TODO: Force OpenGLES on Android
         if (this->id_cache[8] & OMG_REN_DRIVER_D3D12)
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D12);
         else if (this->id_cache[8] & OMG_REN_DRIVER_D3D11)
