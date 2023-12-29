@@ -3,7 +3,12 @@
 
 #if OMG_SUPPORT_RAYLIB
 #include <omega/renderer.h>
-#define _OMG_RAYLIB_OMG_COLOR(col) ((Color){ .r = (unsigned int)(col)->r, .g = (unsigned int)(col)->g, .b = (unsigned int)(col)->b, .a = (unsigned int)(col)->a })
+#define _OMG_RAYLIB_OMG_COLOR(col) ((Color){ \
+    .r = (unsigned int)((col)->r * (omg_color_t)255 / OMG_MAX_COLOR),\
+    .g = (unsigned int)((col)->g * (omg_color_t)255 / OMG_MAX_COLOR),\
+    .b = (unsigned int)((col)->b * (omg_color_t)255 / OMG_MAX_COLOR), \
+    .a = (unsigned int)((col)->a * (omg_color_t)255 / OMG_MAX_COLOR) \
+})
 
 typedef struct {
     OMG_Renderer parent;
