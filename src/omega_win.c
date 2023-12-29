@@ -124,7 +124,6 @@ void omg_win_poll_events(OMG_OmegaWin* this) {
 void omg_win_auto_loop_run(OMG_OmegaWin* this) {
     base->looping = true;
     while (base->looping) {
-        // TODO: win32 api paint event
         omg_win_poll_events(this);
         if (!base->looping)
             break;
@@ -133,7 +132,16 @@ void omg_win_auto_loop_run(OMG_OmegaWin* this) {
         base->on_update(&u_event);
         if (!base->looping)
             break;
-        this->u32->WaitMessage();
+        for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+            OMG_WindowWin* win = (OMG_WindowWin*)base->winmgr->cache[i];
+            if (OMG_ISNULL(win) || !((OMG_Window*)win)->enable_paint)
+                continue;
+            // Should I clear background???
+            if (!this->u32->InvalidateRect(win->hwnd, NULL, FALSE))
+                continue;
+            this->u32->UpdateWindow(win->hwnd);
+        }
+        // this->u32->WaitMessage();
     }
     OMG_EventLoopStop ls_event;
     MAKE_EVENT(&ls_event);
