@@ -44,6 +44,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
     base->inited = true;
+    _OMG_LOG_INFO(omg_base, "Raylib renderer created successfuly with opengl driver");
     return false;
 }
 #endif

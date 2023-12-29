@@ -145,6 +145,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;
+    _OMG_LOG_INFO(omg_base, "SDL2 window created successfuly");
     return false;
 }
 #endif

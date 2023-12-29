@@ -422,6 +422,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->renderer_free = omg_window_win_renderer_free;
     OMG_END_POINTER_CAST();
     base->inited = true;
+    _OMG_LOG_INFO(omg_base, "Win32 window created successfuly");
     return false;
 }
 #endif

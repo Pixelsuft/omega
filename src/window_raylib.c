@@ -62,6 +62,8 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     );
     this->raylib->InitWindow((int)base->size.w, (int)base->size.h, "OMG Window [Raylib]");
     base->inited = this->raylib->IsWindowReady();
+    if (base->inited)
+        _OMG_LOG_INFO(omg_base, "Raylib window created successfuly");
     return !base->inited;
 }
 #endif

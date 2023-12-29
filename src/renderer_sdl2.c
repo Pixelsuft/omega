@@ -32,6 +32,8 @@ bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this) {
 }
 
 int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name) {
+    if (OMG_ISNULL(name))
+        return OMG_REN_DRIVER_UNKNOWN;
     if (!omg_base->std->strcmp(name, "direct3d"))
         return OMG_REN_DRIVER_D3D9;
     if (!omg_base->std->strcmp(name, "direct3d11"))
@@ -47,6 +49,14 @@ int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name)
     if (!omg_base->std->strcmp(name, "software"))
         return OMG_REN_DRIVER_SOFTWARE;
     return OMG_REN_DRIVER_UNKNOWN;
+}
+
+int omg_renderer_sdl2_get_renderer_id(OMG_RendererSdl2* this, int driver) {
+    for (int i = 0; i < this->id_cache[9]; i++) {
+        if (this->id_cache[i] == driver)
+            return i;
+    }
+    return -1;
 }
 
 int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
@@ -102,15 +112,39 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->flip = omg_renderer_sdl2_flip;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_SDL2;
-    // TODO: more customize
+    int sdl2_driver;
+    if (base->driver == OMG_REN_DRIVER_AUTO) {
+        sdl2_driver = -1;
+        // TODO: d3d12 since windows 10, d3d11 since vista or 7
+        // TODO: Force OpenGLES on Android
+        if (this->id_cache[8] & OMG_REN_DRIVER_D3D12)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D12);
+        else if (this->id_cache[8] & OMG_REN_DRIVER_D3D11)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D11);
+        else if (this->id_cache[8] & OMG_REN_DRIVER_D3D9)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D9);
+        else if (this->id_cache[8] & OMG_REN_DRIVER_OPENGL)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_OPENGL);
+        else if (this->id_cache[8] & OMG_REN_DRIVER_SOFTWARE)
+            sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_SOFTWARE);
+    }
+    else
+        sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, base->driver);
     this->ren = this->sdl2->SDL_CreateRenderer(
         this->win,
-        -1,
+        sdl2_driver,
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | (win_base->vsync ? SDL_RENDERER_PRESENTVSYNC : 0)
     );
     if (OMG_ISNULL(this->ren)) {
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 renderer (", this->sdl2->SDL_GetError(), ")");
         return true;
+    }
+    SDL_RendererInfo info;
+    if (this->sdl2->SDL_GetRendererInfo(this->ren, &info) < 0)
+        _OMG_LOG_WARN(omg_base, "Failed to get renderer info (", this->sdl2->SDL_GetError(), ")");
+    else {
+        base->driver = omg_renderer_sdl2_driver_from_name(this, info.name);
+        _OMG_LOG_INFO(omg_base, "SDL2 renderer created successfuly with ", info.name, " driver");
     }
     omg_renderer_sdl2_update_scale(this);
     base->inited = true;

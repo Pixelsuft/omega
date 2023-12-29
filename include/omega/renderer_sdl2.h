@@ -17,6 +17,7 @@ OMG_API bool omg_renderer_sdl2_init(OMG_RendererSdl2* this);
 OMG_API bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this);
 OMG_API int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this);
 #if OMG_EXPORT_SHIT
+OMG_API int omg_renderer_sdl2_get_renderer_id(OMG_RendererSdl2* this, int driver);
 OMG_API int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name);
 OMG_API void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this);
 OMG_API bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col);
