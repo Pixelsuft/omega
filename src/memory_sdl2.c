@@ -27,6 +27,8 @@ void* omg_memory_sdl2_alloc(OMG_MemorySdl2* this, OMG_MemoryExtra extra) {
     result->line = extra.line;
     result->is_allocated = true;
     base->alloc_size += extra.size;
+    // if (OMG_ISNOTNULL(result->filename))
+    //     this->sdl2->SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Memory Allocation %s:%i", (char*)result->func, (int)result->line);
     return (void*)((size_t)result + sizeof(OMG_MemoryExtra));
 #else
     void* result = this->sdl2->SDL_malloc((size_t)extra);
@@ -84,6 +86,8 @@ bool omg_memory_sdl2_free(OMG_MemorySdl2* this, void* ptr) {
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
     }
+    // if (OMG_ISNOTNULL(real_ptr->filename))
+    //     this->sdl2->SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Memory Free %s:%i", (char*)real_ptr->func, (int)real_ptr->line);
     real_ptr->is_allocated = false;
     OMG_MemoryExtra data = *real_ptr;
     this->sdl2->SDL_free(real_ptr);
