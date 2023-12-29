@@ -71,6 +71,9 @@ typedef struct {
     float OMG_RAYLIB_PREFIX (*GetFrameTime)(void);
     int OMG_RAYLIB_PREFIX (*GetFPS)(void);
     void OMG_RAYLIB_PREFIX (*SetTraceLogCallback)(TraceLogCallback);
+    void OMG_RAYLIB_PREFIX (*MaximizeWindow)(void);
+    void OMG_RAYLIB_PREFIX (*MinimizeWindow)(void);
+    void OMG_RAYLIB_PREFIX (*RestoreWindow)(void);
     bool OMG_RAYLIB_PREFIX (*IsWindowResized)(void);
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);

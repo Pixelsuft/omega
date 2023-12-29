@@ -61,8 +61,9 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_on_paint(OMG_EventPaint* event) {
     App* this = (App*)(((OMG_Event*)event)->data);
-    if (event->win != this->win)
-        return;
+    // You can use something like this to detect window, but we have only one
+    // if (event->win != this->win)
+    //     return;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
     this->ren->flip(this->ren);

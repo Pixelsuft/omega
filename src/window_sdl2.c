@@ -52,11 +52,11 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
 bool omg_window_sdl2_set_state(OMG_WindowSdl2* this, int state) {
     if (state & OMG_WIN_STATE_MINIMIZED) {
         state &= (~OMG_WIN_STATE_MAXIMIZED) | (~OMG_WIN_STATE_RESTORED);
-        this->sdl2->SDL_RestoreWindow(this->win);
+        this->sdl2->SDL_MinimizeWindow(this->win);
     }
     else if (state & OMG_WIN_STATE_MAXIMIZED) {
         state &= (~OMG_WIN_STATE_MINIMIZED) | (~OMG_WIN_STATE_RESTORED);
-        this->sdl2->SDL_RestoreWindow(this->win);
+        this->sdl2->SDL_MaximizeWindow(this->win);
     }
     else if (/*state & OMG_WIN_STATE_RESTORED*/ !(base->state & OMG_WIN_STATE_RESTORED)) {
         state = OMG_WIN_STATE_RESTORED;

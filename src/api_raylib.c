@@ -45,6 +45,9 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(GetFrameTime);
     LOAD_REQUIRED(GetFPS);
     LOAD_REQUIRED(SetTraceLogCallback);
+    LOAD_REQUIRED(MaximizeWindow);
+    LOAD_REQUIRED(MinimizeWindow);
+    LOAD_REQUIRED(RestoreWindow);
     LOAD_REQUIRED(IsWindowResized);
     LOAD_REQUIRED(BeginDrawing);
     LOAD_REQUIRED(EndDrawing);

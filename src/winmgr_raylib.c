@@ -6,9 +6,13 @@
 
 #if OMG_SUPPORT_RAYLIB
 OMG_WindowRaylib* omg_winmgr_raylib_window_alloc(OMG_WinmgrRaylib* this) {
+    if (OMG_ISNOTNULL(base->cache[0])) {
+        _OMG_LOG_ERROR(omg_base, "Failed to create Raylib window (cannot create more than one)");
+        return NULL;
+    }
     OMG_WindowRaylib* result = OMG_MALLOC(omg_base->mem, sizeof(OMG_WindowRaylib));
     if (OMG_ISNULL(result)) {
-        _OMG_LOG_ERROR(omg_base, "Failed to allocate memory for Raylib Window");
+        _OMG_LOG_ERROR(omg_base, "Failed to allocate memory for Raylib window");
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();

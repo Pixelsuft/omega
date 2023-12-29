@@ -10,6 +10,7 @@ void omg_window_fill_on_create(OMG_Window* this) {
     this->thick = false;
     this->bordered = true;
     this->centered = true;
+    this->aa = true;
     this->state = OMG_WIN_STATE_RESTORED;
     this->always_on_top = false;
     this->window_mode = OMG_WIN_MODE_WINDOW;
