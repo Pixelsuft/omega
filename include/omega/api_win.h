@@ -233,6 +233,10 @@ typedef enum
     OMG_WIN_APPMODE_MAX
 } OMG_WinPreferredAppMode;
 
+typedef struct {
+    LONGLONG QuadPart;
+} OMG_WIN_LARGE_INTEGER;
+
 #if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
 OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(OMG_WIN_NTDLL_OSVERSIONINFOEXW* version_information);
 #endif
@@ -259,8 +263,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*WriteConsoleW)(HANDLE, const VOID*, DWORD, LPDWORD, LPVOID);
     DWORD OMG_WIN_STD_PREFIX (*FormatMessageW)(DWORD, LPCVOID, DWORD, DWORD, LPWSTR, DWORD, char** args);
     HMODULE OMG_WIN_STD_PREFIX (*GetModuleHandleW)(LPCWSTR);
-    BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceFrequency)(LARGE_INTEGER*);
-    BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceCounter)(LARGE_INTEGER*);
+    BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceFrequency)(OMG_WIN_LARGE_INTEGER*);
+    BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceCounter)(OMG_WIN_LARGE_INTEGER*);
     DWORD OMG_WIN_STD_PREFIX (*GetTickCount)(void);
     ULONGLONG OMG_WIN_STD_PREFIX (*GetTickCount64)(void);
 } OMG_Kernel32;
