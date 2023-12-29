@@ -89,8 +89,13 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     );
     this->raylib->InitWindow((int)base->size.w, (int)base->size.h, "OMG Window [Raylib]");
     base->inited = this->raylib->IsWindowReady();
-    if (base->inited)
+    if (base->inited) {
+        if (base->window_mode == OMG_WIN_MODE_DESKTOP_FULLSCREEN)
+            this->raylib->ToggleBorderlessWindowed();
+        else
+            this->raylib->ToggleFullscreen();
         _OMG_LOG_INFO(omg_base, "Raylib window created successfuly");
+    }
     return !base->inited;
 }
 #endif

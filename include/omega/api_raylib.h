@@ -66,8 +66,8 @@ typedef struct {
     void* OMG_RAYLIB_PREFIX (*MemAlloc)(unsigned int);
     void* OMG_RAYLIB_PREFIX (*MemRealloc)(void*, unsigned int);
     void OMG_RAYLIB_PREFIX (*MemFree)(void*);
-    void OMG_RAYLIB_PREFIX (*WaitTime)(double seconds);
-    void OMG_RAYLIB_PREFIX (*SetTargetFPS)(int fps);
+    void OMG_RAYLIB_PREFIX (*WaitTime)(double);
+    void OMG_RAYLIB_PREFIX (*SetTargetFPS)(int);
     float OMG_RAYLIB_PREFIX (*GetFrameTime)(void);
     int OMG_RAYLIB_PREFIX (*GetFPS)(void);
     void OMG_RAYLIB_PREFIX (*SetTraceLogCallback)(TraceLogCallback);
@@ -75,9 +75,22 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*MinimizeWindow)(void);
     void OMG_RAYLIB_PREFIX (*RestoreWindow)(void);
     bool OMG_RAYLIB_PREFIX (*IsWindowResized)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowFullscreen)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowHidden)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowMinimized)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowMaximized)(void);
+    bool OMG_RAYLIB_PREFIX (*IsWindowFocused)(void);
+    void OMG_RAYLIB_PREFIX (*ToggleFullscreen)(void);
+    void OMG_RAYLIB_PREFIX (*ToggleBorderlessWindowed)(void);
+    int OMG_RAYLIB_PREFIX (*GetScreenWidth)(void);
+    int OMG_RAYLIB_PREFIX (*GetScreenHeight)(void);
+    int OMG_RAYLIB_PREFIX (*GetRenderWidth)(void);
+    int OMG_RAYLIB_PREFIX (*GetRenderHeight)(void);
+    void OMG_RAYLIB_PREFIX (*SetWindowSize)(int, int);
+    void OMG_RAYLIB_PREFIX (*SetWindowFocused)(void);
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
-    void OMG_RAYLIB_PREFIX (*ClearBackground)(Color color);
+    void OMG_RAYLIB_PREFIX (*ClearBackground)(Color);
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);
