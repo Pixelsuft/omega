@@ -230,6 +230,15 @@
 #ifndef SC_CLOSE
 #define SC_CLOSE 0xF060
 #endif
+#ifndef SC_VSCROLL
+#define SC_VSCROLL 0xF070
+#endif
+#ifndef SC_HSCROLL
+#define SC_HSCROLL 0xF080
+#endif
+#ifndef SC_KEYMENU
+#define SC_KEYMENU 0xF100
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif

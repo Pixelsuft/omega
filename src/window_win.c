@@ -310,7 +310,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_SYSCOMMAND: {
-            if (wparam == SC_CLOSE) {
+            if ((wparam == SC_VSCROLL) || (wparam == SC_HSCROLL) || (wparam == SC_KEYMENU))
+                return FALSE;
+            else if (wparam == SC_CLOSE) {
                 if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE))
                     return FALSE;
             }
