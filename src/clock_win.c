@@ -1,6 +1,6 @@
 #include <omega/clock_win.h>
 
-#if OMG_SUPPORT_SDL2
+#if OMG_SUPPORT_WIN
 #define base ((OMG_Clock*)this)
 
 bool omg_clock_win_reset(OMG_ClockWin* this) {

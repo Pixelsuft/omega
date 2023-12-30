@@ -2,7 +2,7 @@
 #include <omega/api_win.h>
 #include <omega/clock.h>
 
-#if OMG_SUPPORT_SDL2
+#if OMG_SUPPORT_WIN
 typedef struct {
     OMG_Clock parent;
     OMG_WIN_LARGE_INTEGER temp_int;
