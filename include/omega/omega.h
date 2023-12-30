@@ -61,6 +61,7 @@ typedef struct OMG_Omega {
     void (*on_paint)(OMG_EventPaint* event);
     void (*on_resize)(OMG_EventResize* event);
     void (*on_size_change)(OMG_EventResize* event);
+    void (*on_state_change)(OMG_EventStateChange* event);
     OMG_FPoint scale;
     int log_level_lib;
     int log_level_omg;
@@ -91,6 +92,7 @@ OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
 OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
 OMG_API void omg_event_on_resize(OMG_EventResize* event);
+OMG_API void omg_event_on_state_change(OMG_EventStateChange* event);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);

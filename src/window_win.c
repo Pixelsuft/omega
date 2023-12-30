@@ -253,6 +253,47 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         case WM_SIZE: {
             UINT new_w = (UINT)LOWORD(lparam);
             UINT new_h = (UINT)HIWORD(lparam);
+            if ((wparam == SIZE_MINIMIZED) && !(base->state & OMG_WIN_STATE_MINIMIZED)) {
+                OMG_EventStateChange event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                event.change = OMG_WIN_STATE_MINIMIZED;
+                event.prev_state = base->state;
+                base->state &= ~OMG_WIN_STATE_RESTORED;
+                base->state |= OMG_WIN_STATE_MINIMIZED;
+                omg_base->on_state_change(&event);
+            }
+            if ((wparam == SIZE_MAXIMIZED) && !(base->state & OMG_WIN_STATE_MAXIMIZED)) {
+                OMG_EventStateChange event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                event.change = OMG_WIN_STATE_MAXIMIZED;
+                event.prev_state = base->state;
+                base->state &= ~OMG_WIN_STATE_RESTORED;
+                base->state |= OMG_WIN_STATE_MAXIMIZED;
+                omg_base->on_state_change(&event);
+            }
+            if ((wparam != SIZE_MAXIMIZED) && (base->state & OMG_WIN_STATE_MAXIMIZED)) {
+                OMG_EventStateChange event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                event.change = OMG_WIN_STATE_RESTORED;
+                event.prev_state = base->state;
+                base->state &= ~OMG_WIN_STATE_MAXIMIZED;
+                base->state |= OMG_WIN_STATE_RESTORED;
+                omg_base->on_state_change(&event);
+            }
+            if ((wparam != SIZE_MINIMIZED) && (base->state & OMG_WIN_STATE_MINIMIZED)) {
+                OMG_EventStateChange event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                event.change = OMG_WIN_STATE_RESTORED;
+                event.prev_state = base->state;
+                base->state &= ~OMG_WIN_STATE_MINIMIZED;
+                if (!(base->state & OMG_WIN_STATE_MAXIMIZED))
+                    base->state |= OMG_WIN_STATE_RESTORED;
+                omg_base->on_state_change(&event);
+            }
             if (!OMG_HAS_STD && !base->resizable && (
                 (new_w != (UINT)(base->size.w * base->scale.x)) || (new_h != (UINT)(base->size.h * base->scale.y))
             )) {

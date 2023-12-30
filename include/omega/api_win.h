@@ -215,6 +215,12 @@
 #ifndef LOGPIXELSY
 #define LOGPIXELSY 90
 #endif
+#ifndef SIZE_MAXIMIZED
+#define SIZE_MAXIMIZED 2
+#endif
+#ifndef SIZE_MINIMIZED
+#define SIZE_MINIMIZED 1
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif

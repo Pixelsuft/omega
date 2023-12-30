@@ -128,6 +128,46 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                         base->on_size_change(&event);
                         break;
                     }
+                    case SDL_WINDOWEVENT_MINIMIZED: {
+                        OMG_EventStateChange event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        event.prev_state = win->state;
+                        event.change = OMG_WIN_STATE_MINIMIZED;
+                        win->state &= ~OMG_WIN_STATE_RESTORED;
+                        win->state |= OMG_WIN_STATE_MINIMIZED;
+                        base->on_state_change(&event);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_MAXIMIZED: {
+                        OMG_EventStateChange event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        event.prev_state = win->state;
+                        event.change = OMG_WIN_STATE_MAXIMIZED;
+                        win->state &= ~OMG_WIN_STATE_RESTORED;
+                        win->state |= OMG_WIN_STATE_MAXIMIZED;
+                        base->on_state_change(&event);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_RESTORED: {
+                        OMG_EventStateChange event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        event.prev_state = win->state;
+                        event.change = OMG_WIN_STATE_RESTORED;
+                        win->state &= ~OMG_WIN_STATE_MINIMIZED;
+                        if (!(win->state & OMG_WIN_STATE_MINIMIZED))
+                            win->state &= ~OMG_WIN_STATE_MAXIMIZED;
+                        if (!(win->state & OMG_WIN_STATE_MAXIMIZED))
+                            win->state |= OMG_WIN_STATE_RESTORED;
+                        base->on_state_change(&event);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_CLOSE: {
+                        // TODO
+                        break;
+                    }
                 }
                 break;
             }

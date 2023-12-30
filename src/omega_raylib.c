@@ -91,6 +91,48 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         base->on_size_change(&event);
         base->on_resize(&event);
     }
+    bool is_max = this->raylib->IsWindowMaximized();
+    bool is_min = this->raylib->IsWindowMinimized();
+    if (is_min && !(win->state & OMG_WIN_STATE_MINIMIZED)) {
+        OMG_EventStateChange event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        event.change = OMG_WIN_STATE_MINIMIZED;
+        event.prev_state = win->state;
+        win->state &= ~OMG_WIN_STATE_RESTORED;
+        win->state |= OMG_WIN_STATE_MINIMIZED;
+        base->on_state_change(&event);
+    }
+    if (is_max && !(win->state & OMG_WIN_STATE_MAXIMIZED)) {
+        OMG_EventStateChange event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        event.change = OMG_WIN_STATE_MAXIMIZED;
+        event.prev_state = win->state;
+        win->state &= ~OMG_WIN_STATE_RESTORED;
+        win->state |= OMG_WIN_STATE_MAXIMIZED;
+        base->on_state_change(&event);
+    }
+    if (!is_max && (win->state & OMG_WIN_STATE_MAXIMIZED)) {
+        OMG_EventStateChange event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        event.change = OMG_WIN_STATE_RESTORED;
+        event.prev_state = win->state;
+        win->state &= ~OMG_WIN_STATE_MAXIMIZED;
+        win->state |= OMG_WIN_STATE_RESTORED;
+        base->on_state_change(&event);
+    }
+    if (!is_min && (win->state & OMG_WIN_STATE_MINIMIZED)) {
+        OMG_EventStateChange event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        event.change = (is_max ? OMG_WIN_STATE_MAXIMIZED : OMG_WIN_STATE_RESTORED);
+        event.prev_state = win->state;
+        win->state &= ~OMG_WIN_STATE_MINIMIZED;
+        win->state |= (is_max ? OMG_WIN_STATE_MAXIMIZED : OMG_WIN_STATE_RESTORED);
+        base->on_state_change(&event);
+    }
 }
 
 void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {

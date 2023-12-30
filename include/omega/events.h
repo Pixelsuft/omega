@@ -32,3 +32,10 @@ typedef struct {
     void* win;
     OMG_FPoint size;
 } OMG_EventResize;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    int prev_state;
+    int change;
+} OMG_EventStateChange;
