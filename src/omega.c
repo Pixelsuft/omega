@@ -94,7 +94,7 @@ void omg_auto_loop_stop(OMG_Omega* this) {
 }
 
 void omg_event_on_quit(OMG_EventQuit* event) {
-    OMG_Omega* this = OMG_FROM_EVENT(event);
+    OMG_Omega* this = OMG_OMEGA_FROM_EVENT(event);
     this->auto_loop_stop(this);
 }
 
