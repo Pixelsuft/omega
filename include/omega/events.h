@@ -30,6 +30,11 @@ typedef struct {
 typedef struct {
     OMG_Event parent;
     void* win;
+} OMG_EventClose;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
     OMG_FPoint size;
 } OMG_EventResize;
 

@@ -134,11 +134,16 @@ void omg_event_on_state_changing(OMG_EventStateChanging* event) {
     }
 }
 
+void omg_event_on_close(OMG_EventClose* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
     this->on_loop_stop = omg_event_on_loop_stop;
     this->on_paint = omg_event_on_paint;
+    this->on_close = omg_event_on_close;
     this->on_resize = omg_event_on_resize;
     this->on_size_change = omg_event_on_resize;
     this->on_state_change = omg_event_on_state_change;

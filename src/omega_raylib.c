@@ -83,6 +83,10 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         c_event.change = OMG_WIN_STATE_CLOSED;
         base->on_state_changing(&c_event);
         if (c_event.allow) {
+            OMG_EventClose close_event;
+            MAKE_EVENT(&close_event);
+            close_event.win = win;
+            base->on_close(&close_event);
             OMG_EventQuit event;
             MAKE_EVENT(&event);
             base->on_quit(&event);

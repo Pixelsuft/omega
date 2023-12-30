@@ -197,13 +197,19 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                         break;
                     }
                     case SDL_WINDOWEVENT_CLOSE: {
-                        OMG_EventStateChanging event;
-                        MAKE_EVENT(&event);
-                        event.win = win;
-                        event.allow = true;
-                        event.change = OMG_WIN_STATE_CLOSED;
-                        base->on_state_changing(&event);
-                        this->not_prevent_close = event.allow;
+                        OMG_EventStateChanging c_event;
+                        MAKE_EVENT(&c_event);
+                        c_event.win = win;
+                        c_event.allow = true;
+                        c_event.change = OMG_WIN_STATE_CLOSED;
+                        base->on_state_changing(&c_event);
+                        this->not_prevent_close = c_event.allow;
+                        if (c_event.allow) {
+                            OMG_EventClose event;
+                            MAKE_EVENT(&event);
+                            event.win = win;
+                            base->on_close(&event);
+                        }
                         break;
                     }
                 }
