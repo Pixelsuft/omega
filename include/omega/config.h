@@ -41,7 +41,6 @@
 #define OMG_SDL2_DYNAMIC 1
 #endif
 #ifndef OMG_SDL2_COMPAT_DYNAMIC
-// TODO
 #define OMG_SDL2_COMPAT_DYNAMIC 0
 #endif
 #ifndef OMG_SDL2_COMPAT_STATIC
