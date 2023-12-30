@@ -229,12 +229,20 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_SIZING: {
-            if (!base->resizable)
-                return 0;
-            return RET_DEF_PROC();
+            RECT* new_rect = (RECT*)lparam;
+            if (!base->resizable) {
+                new_rect->right = new_rect->left + (LONG)this->size_cache.w;
+                new_rect->bottom = new_rect->top + (LONG)this->size_cache.h;
+                return TRUE;
+            }
+            return TRUE;
         }
         case WM_SIZE: {
-            if (!OMG_HAS_STD && !base->resizable) {
+            UINT new_w = (UINT)LOWORD(lparam);
+            UINT new_h = (UINT)HIWORD(lparam);
+            if (!OMG_HAS_STD && !base->resizable && (
+                (new_w != (UINT)(base->size.w * base->scale.x)) || (new_h != (UINT)(base->size.h * base->scale.y))
+            )) {
                 // Fuck Microsoft
                 this->u32->SetWindowPos(
                     this->hwnd,
@@ -244,8 +252,6 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 );
                 return 0;
             }
-            UINT new_w = (UINT)LOWORD(lparam);
-            UINT new_h = (UINT)HIWORD(lparam);
             if (base->resizable && (new_w > 0) && (new_h > 0) && ((new_w != (UINT)base->size.w) || (new_h != (UINT)base->size.h))) {
                 OMG_EventResize event;
                 MAKE_EVENT(&event);

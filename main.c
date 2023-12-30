@@ -98,7 +98,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->win->resizable = true;
+    this->win->resizable = false;
     if (this->win->default_init(this->win)) {
         this->omg->destroy(this->omg);
         return;
