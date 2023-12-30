@@ -276,10 +276,19 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         }
         case WM_DESTROY: {
             // TODO: it's not really quit, but should work for atleast one window
+            // TODO: fix this quit shit
             OMG_EventQuit event;
             MAKE_EVENT(&event);
             omg_base->on_quit(&event);
+            //this->u32->PostQuitMessage(0);
             return RET_DEF_PROC();
+        }
+        case WM_QUIT: {
+            // Why???
+            /*OMG_EventQuit event;
+            MAKE_EVENT(&event);
+            omg_base->on_quit(&event);*/
+            return 0;
         }
         default: {
             if (OMG_ISNOTNULL(this)) {

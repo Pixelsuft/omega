@@ -224,6 +224,9 @@
 #ifndef WM_DESTROY
 #define WM_DESTROY 0x0002
 #endif
+#ifndef WM_QUIT
+#define WM_QUIT 0x0012
+#endif
 #ifndef WM_PAINT
 #define WM_PAINT 0x000F
 #endif
@@ -315,6 +318,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
     HWND OMG_WIN_STD_PREFIX (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
     BOOL OMG_WIN_STD_PREFIX (*DestroyWindow)(HWND);
+    void OMG_WIN_STD_PREFIX (*PostQuitMessage)(int);
     LONG OMG_WIN_STD_PREFIX (*SetWindowLongW)(HWND, int, LONG);
     LONG OMG_WIN_STD_PREFIX (*GetWindowLongW)(HWND, int);
 #ifndef SetWindowLongPtrW
