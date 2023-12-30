@@ -221,8 +221,20 @@
 #ifndef SIZE_MINIMIZED
 #define SIZE_MINIMIZED 1
 #endif
+#ifndef SC_MINIMIZE
+#define SC_MINIMIZE 0xF020
+#endif
+#ifndef SC_MAXIMIZE
+#define SC_MAXIMIZE 0xF030
+#endif
+#ifndef SC_CLOSE
+#define SC_CLOSE 0xF060
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
+#endif
+#ifndef WM_NCCALCSIZE
+#define WM_NCCALCSIZE 0x0083
 #endif
 #ifndef WM_THEMECHANGED
 #define WM_THEMECHANGED 0x031A
@@ -247,6 +259,9 @@
 #endif
 #ifndef WM_SIZE
 #define WM_SIZE 0x0005
+#endif
+#ifndef WM_SYSCOMMAND
+#define WM_SYSCOMMAND 0x012
 #endif
 
 typedef struct {

@@ -309,19 +309,27 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             }
             return RET_DEF_PROC();
         }
-        case WM_NCCREATE: {
-            LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
-            this = (OMG_WindowWin*)lps->lpCreateParams;
-            if (OMG_ISNULL(this->u32->SetWindowLongPtrW))
-                this->u32->SetWindowLongW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
-            else
-                this->u32->SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
-            if (omg_base->support_highdpi && OMG_ISNOTNULL(this->u32->EnableNonClientDpiScaling))
-                this->u32->EnableNonClientDpiScaling(hwnd);
+        case WM_SYSCOMMAND: {
+            if (wparam == SC_CLOSE) {
+                if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE))
+                    return FALSE;
+            }
+            else if (wparam == SC_MAXIMIZE) {
+                if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE))
+                    return FALSE;
+            }
+            else if (wparam == SC_MINIMIZE) {
+                if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE))
+                    return FALSE;
+            }
             return RET_DEF_PROC();
         }
         case WM_THEMECHANGED: {
             omg_window_win_check_dark_mode(this);
+            return RET_DEF_PROC();
+        }
+        case WM_NCCALCSIZE: {
+            omg_window_win_update_scale(this);
             return RET_DEF_PROC();
         }
         case WM_DESTROY: {
@@ -339,6 +347,17 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             MAKE_EVENT(&event);
             omg_base->on_quit(&event);*/
             return 0;
+        }
+        case WM_NCCREATE: {
+            LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
+            this = (OMG_WindowWin*)lps->lpCreateParams;
+            if (OMG_ISNULL(this->u32->SetWindowLongPtrW))
+                this->u32->SetWindowLongW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
+            else
+                this->u32->SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
+            if (omg_base->support_highdpi && OMG_ISNOTNULL(this->u32->EnableNonClientDpiScaling))
+                this->u32->EnableNonClientDpiScaling(hwnd);
+            return RET_DEF_PROC();
         }
         default: {
             if (OMG_ISNOTNULL(this)) {
