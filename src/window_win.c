@@ -360,27 +360,19 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.change = OMG_WIN_STATE_CLOSED;
             omg_base->on_state_changing(&event);
             if (event.allow) {
+                base->enable_paint = false;
                 return RET_DEF_PROC();
             }
             return FALSE;
         }
         case WM_DESTROY: {
+            this->destroyed = true;
             OMG_EventClose event;
             MAKE_EVENT(&event);
             event.win = this;
-            omg_base->on_close(&event);
-            // TODO: it's not really quit, but should work for atleast one window
-            // TODO: fix this quit shit
-            OMG_EventQuit c_event;
-            MAKE_EVENT(&c_event);
-            omg_base->on_quit(&c_event);
+            omg_base->on_close(&event); // Maybe in WM_CLOSE?
             this->u32->PostQuitMessage(0);
             return FALSE;
-        }
-        case WM_QUIT: {
-            // Why This never happen???
-            // printf("1337\n");
-            return 0;
         }
         case WM_NCCREATE: {
             LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
@@ -411,10 +403,11 @@ bool omg_window_win_destroy(OMG_WindowWin* this) {
     bool result = false;
     if (base->inited) {
         omg_window_destroy((OMG_Window*)this);
-        if (!this->u32->DestroyWindow(this->hwnd)) {
-            // _OMG_LOG_WARN(omg_base, "Failed to destroy window");
+        if (!this->destroyed && OMG_ISNOTNULL(this->hwnd) && !this->u32->DestroyWindow(this->hwnd)) {
+            _OMG_LOG_WARN(omg_base, "Failed to destroy window");
             result = true;
         }
+        this->destroyed = true;
         if (!this->u32->UnregisterClassW(this->wc.lpszClassName, this->wc.hInstance)) {
             _OMG_LOG_WARN(omg_base, "Failed to unregister class");
             result = true;
@@ -478,6 +471,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
     base->inited = false;
+    this->destroyed = false;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;
     this->wc.lpfnWndProc = (WNDPROC)omg_win_wnd_proc;

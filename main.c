@@ -13,7 +13,6 @@ typedef struct {
     OMG_Clock* clock;
     omg_color_t bg_col;
     bool bg_fow;
-    bool allow_exit;
     int exit_code;
 } App;
 
@@ -37,10 +36,9 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 void app_on_state_changing(OMG_EventStateChanging* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     if (event->change == OMG_WIN_STATE_CLOSED) {
-        if (this->allow_exit)
-            return;
-        this->allow_exit = true;
-        event->allow = false; // Allow to close window only for the second time
+        OMG_UNUSED(this);
+        // You can prevent window from being closed
+        // event->allow = false;
         return;
     }
 }
@@ -129,7 +127,6 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_state_changing = app_on_state_changing;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
-    this->allow_exit = false;
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));

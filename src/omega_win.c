@@ -113,6 +113,14 @@ bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
 
 void omg_win_poll_events(OMG_OmegaWin* this) {
     while (base->looping && this->u32->PeekMessageW(&this->msg, NULL, 0, 0, PM_REMOVE)) {
+        if (this->msg.message == WM_QUIT) {
+            // Why doesn't happen in WNDPROC? Fuck Microsoft!
+            // TODO: Does this work with multiple windows?
+            OMG_EventQuit c_event;
+            MAKE_EVENT(&c_event);
+            base->on_quit(&c_event);
+            continue;
+        }
         if (!base->looping)
             return;
         this->u32->TranslateMessage(&this->msg);
