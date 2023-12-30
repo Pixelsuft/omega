@@ -228,9 +228,22 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_base->on_paint(&p_event);
             return RET_DEF_PROC();
         }
+        case WM_WINDOWPOSCHANGED: {
+            WINDOWPOS* pos = (WINDOWPOS*)lparam;
+            // _OMG_LOG_INFO(omg_base, (int)pos->flags, " ", (void*)pos->flags);
+            // Without STD: 532 214, 5174 1436
+            // With: 2581 A15
+            // TODO: Why??? Fuck Microsoft!
+            if (!base->resizable) {
+                pos->cx = (int)this->size_cache.w;
+                pos->cy = (int)this->size_cache.h;
+            }
+            return RET_DEF_PROC();
+        }
         case WM_SIZING: {
             RECT* new_rect = (RECT*)lparam;
             if (!base->resizable) {
+                // Why this never happen? Fuck Microsoft!
                 new_rect->right = new_rect->left + (LONG)this->size_cache.w;
                 new_rect->bottom = new_rect->top + (LONG)this->size_cache.h;
                 return TRUE;

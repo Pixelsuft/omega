@@ -230,6 +230,9 @@
 #ifndef WM_PAINT
 #define WM_PAINT 0x000F
 #endif
+#ifndef WM_WINDOWPOSCHANGED
+#define WM_WINDOWPOSCHANGED 0x0047
+#endif
 #ifndef WM_SIZING
 #define WM_SIZING 0x0214
 #endif
