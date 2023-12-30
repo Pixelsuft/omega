@@ -134,6 +134,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->std = NULL;
     this->clock = NULL;
     this->looping = false;
+    this->emulate_mouse = true;
     this->enable_paint = true;
     this->should_free_mem = false;
     this->theme = OMG_THEME_NONE;

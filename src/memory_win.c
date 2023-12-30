@@ -44,6 +44,10 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
         }
         return NULL;
     }
+#if OMG_DEBUG_FILL_MEM
+    if (OMG_ISNOTNULL(omg_base->std))
+        omg_base->std->memset(result, 255, extra.size + sizeof(OMG_MemoryExtra));
+#endif
     result->filename = extra.filename;
     result->func = extra.func;
     result->size = extra.size;

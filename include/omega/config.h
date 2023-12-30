@@ -4,6 +4,10 @@
 #ifndef OMG_DEBUG
 #define OMG_DEBUG 1
 #endif
+#ifndef OMG_DEBUG_FILL_MEM
+#define OMG_DEBUG_FILL_MEM 1
+#endif
+
 #ifndef OMG_ENTRY
 #define OMG_ENTRY 1
 #endif
@@ -41,7 +45,7 @@
 #define OMG_SDL2_COMPAT_DYNAMIC 0
 #endif
 #ifndef OMG_SDL2_COMPAT_STATIC
-#define OMG_SDL2_COMPAT_STATIC 1
+#define OMG_SDL2_COMPAT_STATIC (!OMG_IS_ANDROID && !OMG_IS_EMSCRIPTEN)
 #endif
 #ifndef OMG_SUPPORT_SDL2_MAIN
 #define OMG_SUPPORT_SDL2_MAIN 1
