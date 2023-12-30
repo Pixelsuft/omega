@@ -230,20 +230,22 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         }
         case WM_WINDOWPOSCHANGED: {
             WINDOWPOS* pos = (WINDOWPOS*)lparam;
-            // _OMG_LOG_INFO(omg_base, (int)pos->flags, " ", (void*)pos->flags);
-            // Without STD: 532 214, 5174 1436
-            // With: 2581 A15
-            // TODO: Why??? Fuck Microsoft!
-            if (!base->resizable) {
+            OMG_UNUSED(pos);
+            return RET_DEF_PROC();
+        }
+        case WM_WINDOWPOSCHANGING: {
+            WINDOWPOS* pos = (WINDOWPOS*)lparam;
+            if (!base->resizable) { // Why??? Fuck Microsoft!
                 pos->cx = (int)this->size_cache.w;
                 pos->cy = (int)this->size_cache.h;
+                pos->flags |= SWP_NOSIZE;
+                return FALSE;
             }
             return RET_DEF_PROC();
         }
         case WM_SIZING: {
             RECT* new_rect = (RECT*)lparam;
             if (!base->resizable) {
-                // Why this never happen? Fuck Microsoft!
                 new_rect->right = new_rect->left + (LONG)this->size_cache.w;
                 new_rect->bottom = new_rect->top + (LONG)this->size_cache.h;
                 return TRUE;
@@ -293,18 +295,6 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 if (!(base->state & OMG_WIN_STATE_MAXIMIZED))
                     base->state |= OMG_WIN_STATE_RESTORED;
                 omg_base->on_state_change(&event);
-            }
-            if (!OMG_HAS_STD && !base->resizable && (
-                (new_w != (UINT)(base->size.w * base->scale.x)) || (new_h != (UINT)(base->size.h * base->scale.y))
-            )) {
-                // Fuck Microsoft
-                this->u32->SetWindowPos(
-                    this->hwnd,
-                    NULL, 0, 0,
-                    (int)this->size_cache.w, (int)this->size_cache.h,
-                    SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_FRAMECHANGED | SWP_NOSENDCHANGING
-                );
-                return 0;
             }
             if (base->resizable && (new_w > 0) && (new_h > 0) && ((new_w != (UINT)base->size.w) || (new_h != (UINT)base->size.h))) {
                 OMG_EventResize event;
