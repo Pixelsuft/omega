@@ -13,6 +13,7 @@ typedef struct {
     OMG_Clock* clock;
     omg_color_t bg_col;
     bool bg_fow;
+    bool allow_exit;
     int exit_code;
 } App;
 
@@ -31,6 +32,17 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     );
     this->omg->destroy(this->omg);
     this->exit_code = 0;
+}
+
+void app_on_state_changing(OMG_EventStateChanging* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    if (event->change == OMG_WIN_STATE_CLOSED) {
+        if (this->allow_exit)
+            return;
+        this->allow_exit = true;
+        event->allow = false; // Allow to close window only for the second time
+        return;
+    }
 }
 
 void app_on_size_change(OMG_EventResize* event) {
@@ -80,11 +92,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -114,8 +126,10 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_paint = app_on_paint;
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_size_change = app_on_size_change;
+    this->omg->on_state_changing = app_on_state_changing;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
+    this->allow_exit = false;
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));

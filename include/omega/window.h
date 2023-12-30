@@ -19,6 +19,7 @@
 #define OMG_WIN_STATE_RESTORED (1 << 1)
 #define OMG_WIN_STATE_MINIMIZED (1 << 2)
 #define OMG_WIN_STATE_MAXIMIZED (1 << 3)
+#define OMG_WIN_STATE_CLOSED (1 << 4)
 
 typedef struct OMG_Window {
     bool (*default_init)(struct OMG_Window* this);

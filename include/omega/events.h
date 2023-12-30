@@ -39,3 +39,10 @@ typedef struct {
     int prev_state;
     int change;
 } OMG_EventStateChange;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    int change;
+    bool allow;
+} OMG_EventStateChanging;

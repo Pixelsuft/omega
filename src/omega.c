@@ -118,6 +118,22 @@ void omg_event_on_state_change(OMG_EventStateChange* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_state_changing(OMG_EventStateChanging* event) {
+    OMG_Window* this = OMG_WIN_FROM_EVENT(event);
+    if (event->change == OMG_WIN_STATE_CLOSED) {
+        if (!(this->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE))
+            event->allow = false;
+    }
+    else if (event->change == OMG_WIN_STATE_MAXIMIZED) {
+        if (!(this->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE))
+            event->allow = false;
+    }
+    else if (event->change == OMG_WIN_STATE_MINIMIZED) {
+        if (!(this->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE))
+            event->allow = false;
+    }
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
@@ -126,6 +142,7 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_resize = omg_event_on_resize;
     this->on_size_change = omg_event_on_resize;
     this->on_state_change = omg_event_on_state_change;
+    this->on_state_changing = omg_event_on_state_changing;
 }
 
 bool omg_omg_init(OMG_Omega* this) {

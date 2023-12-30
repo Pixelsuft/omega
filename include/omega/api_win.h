@@ -239,6 +239,9 @@
 #ifndef SC_KEYMENU
 #define SC_KEYMENU 0xF100
 #endif
+#ifndef SC_RESTORE
+#define SC_RESTORE 0xF120
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif

@@ -310,18 +310,34 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_SYSCOMMAND: {
+            OMG_EventStateChanging event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            event.allow = true;
             if ((wparam == SC_VSCROLL) || (wparam == SC_HSCROLL) || (wparam == SC_KEYMENU))
                 return FALSE;
             else if (wparam == SC_CLOSE) {
-                if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_CLOSE))
+                event.change = OMG_WIN_STATE_CLOSED;
+                omg_base->on_state_changing(&event);
+                if (!event.allow)
                     return FALSE;
             }
             else if (wparam == SC_MAXIMIZE) {
-                if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_MAXIMIZE))
+                event.change = OMG_WIN_STATE_MAXIMIZED;
+                omg_base->on_state_changing(&event);
+                if (!event.allow)
                     return FALSE;
             }
             else if (wparam == SC_MINIMIZE) {
-                if (!(base->sys_buttons & OMG_WIN_SYS_BUTTON_MINIMIZE))
+                event.change = OMG_WIN_STATE_MINIMIZED;
+                omg_base->on_state_changing(&event);
+                if (!event.allow)
+                    return FALSE;
+            }
+            else if (wparam == SC_RESTORE) {
+                event.change = OMG_WIN_STATE_RESTORED;
+                omg_base->on_state_changing(&event);
+                if (!event.allow)
                     return FALSE;
             }
             return RET_DEF_PROC();
