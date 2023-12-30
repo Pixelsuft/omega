@@ -168,6 +168,7 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
         }
         omg_renderer_fill_on_create(base->ren);
         ren_sdl2->id_cache[0] = -1;
+        ren_sdl2->win_build_num = this->win_build_num;
         base->ren->was_allocated = true;
         base->ren->win = this;
         base->ren->omg = omg_base;

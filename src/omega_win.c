@@ -281,6 +281,7 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
     winmgr_win->k32 = this->k32;
     winmgr_win->dwm = this->dwm;
     winmgr_win->uxtheme = this->uxtheme;
+    winmgr_win->win_build_num = this->win_build_number;
     OMG_BEGIN_POINTER_CAST();
     base->winmgr->init = omg_winmgr_win_init;
     OMG_END_POINTER_CAST();

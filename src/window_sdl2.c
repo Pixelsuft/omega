@@ -36,6 +36,7 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
             return true;
         omg_renderer_fill_on_create(base->ren);
         ren_sdl2->id_cache[0] = -1;
+        ren_sdl2->win_build_num = 0; // TODO
         base->ren->was_allocated = true;
         base->ren->win = this;
         OMG_BEGIN_POINTER_CAST();

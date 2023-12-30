@@ -9,6 +9,7 @@ typedef struct {
     OMG_Kernel32* k32;
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;
+    int win_build_num;
 } OMG_WinmgrWin;
 
 OMG_API bool omg_winmgr_win_destroy(OMG_WinmgrWin* this);

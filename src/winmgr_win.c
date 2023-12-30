@@ -18,6 +18,7 @@ OMG_WindowWin* omg_winmgr_win_window_alloc(OMG_WinmgrWin* this) {
     result->k32 = this->k32;
     result->dwm = this->dwm;
     result->g32 = this->g32;
+    result->win_build_num = this->win_build_num;
     result->uxtheme = this->uxtheme;
     result->parent.was_allocated = true;
     result->parent.default_init = omg_window_win_init;

@@ -36,9 +36,9 @@ int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name)
         return OMG_REN_DRIVER_UNKNOWN;
     if (!omg_base->std->strcmp(name, "direct3d"))
         return OMG_REN_DRIVER_D3D9;
-    if (!omg_base->std->strcmp(name, "direct3d11"))
+    if (!omg_base->std->strcmp(name, "direct3d11") && (this->win_build_num >= 7600))
         return OMG_REN_DRIVER_D3D11;
-    if (!omg_base->std->strcmp(name, "direct3d12"))
+    if (!omg_base->std->strcmp(name, "direct3d12") && (this->win_build_num >= 10240))
         return OMG_REN_DRIVER_D3D12;
     if (!omg_base->std->strcmp(name, "opengl"))
         return OMG_REN_DRIVER_OPENGL;
@@ -143,15 +143,14 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
         sdl2_driver,
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE | (win_base->vsync ? SDL_RENDERER_PRESENTVSYNC : 0)
     );
-    // Ugly Hack
-    if (OMG_ISNULL(this->ren) && (sdl2_driver == omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D12))) {
+    /*if (OMG_ISNULL(this->ren) && (sdl2_driver == omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D12))) {
         base->driver = OMG_REN_DRIVER_D3D11;
         return omg_renderer_sdl2_init(this);
     }
     else if (OMG_ISNULL(this->ren) && (sdl2_driver == omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D11))) {
         base->driver = OMG_REN_DRIVER_D3D9;
         return omg_renderer_sdl2_init(this);
-    }
+    }*/
     if (OMG_ISNULL(this->ren)) {
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 renderer (", this->sdl2->SDL_GetError(), ")");
         return true;

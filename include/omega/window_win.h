@@ -16,6 +16,7 @@ typedef struct {
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;
     OMG_FPoint size_cache;
+    int win_build_num;
 } OMG_WindowWin;
 
 OMG_API bool omg_window_win_init(OMG_WindowWin* this);
