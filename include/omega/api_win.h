@@ -254,6 +254,9 @@
 #ifndef WM_DESTROY
 #define WM_DESTROY 0x0002
 #endif
+#ifndef WM_CLOSE
+#define WM_CLOSE 0x0010
+#endif
 #ifndef WM_QUIT
 #define WM_QUIT 0x0012
 #endif

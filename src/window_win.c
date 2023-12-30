@@ -314,11 +314,13 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             MAKE_EVENT(&event);
             event.win = this;
             event.allow = true;
-            if ((wparam == SC_VSCROLL) || (wparam == SC_HSCROLL) || (wparam == SC_KEYMENU))
+            // TODO: customize SC_KEYMENU
+            if ((wparam == SC_VSCROLL) || (wparam == SC_HSCROLL)/* || (wparam == SC_KEYMENU)*/)
                 return FALSE;
             else if (wparam == SC_CLOSE) {
                 event.change = OMG_WIN_STATE_CLOSED;
-                omg_base->on_state_changing(&event);
+                // in WM_CLOSE
+                // omg_base->on_state_changing(&event);
                 if (!event.allow)
                     return FALSE;
             }
@@ -350,20 +352,34 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_window_win_update_scale(this);
             return RET_DEF_PROC();
         }
+        case WM_CLOSE: {
+            OMG_EventStateChanging event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            event.allow = true;
+            event.change = OMG_WIN_STATE_CLOSED;
+            omg_base->on_state_changing(&event);
+            if (event.allow) {
+                return RET_DEF_PROC();
+            }
+            return FALSE;
+        }
         case WM_DESTROY: {
+            OMG_EventClose event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            omg_base->on_close(&event);
             // TODO: it's not really quit, but should work for atleast one window
             // TODO: fix this quit shit
-            OMG_EventQuit event;
-            MAKE_EVENT(&event);
-            omg_base->on_quit(&event);
-            //this->u32->PostQuitMessage(0);
-            return RET_DEF_PROC();
+            OMG_EventQuit c_event;
+            MAKE_EVENT(&c_event);
+            omg_base->on_quit(&c_event);
+            this->u32->PostQuitMessage(0);
+            return FALSE;
         }
         case WM_QUIT: {
-            // Why???
-            /*OMG_EventQuit event;
-            MAKE_EVENT(&event);
-            omg_base->on_quit(&event);*/
+            // Why This never happen???
+            // printf("1337\n");
             return 0;
         }
         case WM_NCCREATE: {
