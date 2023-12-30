@@ -62,6 +62,12 @@
 #ifndef MAKEINTRESOURCEW
 #define MAKEINTRESOURCEW(res_to_make) ((LPWSTR)((ULONG_PTR)((WORD)(res_to_make))))
 #endif
+#ifndef LOWORD
+#define LOWORD(l) ((WORD) (((DWORD_PTR) (l)) & 0xffff))
+#endif
+#ifndef HIWORD
+#define HIWORD(l) ((WORD) ((((DWORD_PTR) (l)) >> 16) & 0xffff))
+#endif
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x10
 #endif

@@ -33,6 +33,12 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->exit_code = 0;
 }
 
+void app_on_size_change(OMG_EventResize* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    OMG_INFO(this->omg, "Resize: [", (int)event->size.w, "x", (int)event->size.h, "]");
+    OMG_INFO(this->omg, "Scale: [", this->ren->scale.x, "x", this->ren->scale.y, "]");
+}
+
 void app_on_update(OMG_EventUpdate* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     if (this->clock->update(this->clock)) {
@@ -71,14 +77,14 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
+#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
-#endif
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -92,7 +98,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->win->resizable = false;
+    this->win->resizable = true;
     if (this->win->default_init(this->win)) {
         this->omg->destroy(this->omg);
         return;
@@ -107,6 +113,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_update = app_on_update;
     this->omg->on_paint = app_on_paint;
     this->omg->on_loop_stop = app_on_destroy;
+    this->omg->on_size_change = app_on_size_change;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
     this->clock->init(this->clock, true);

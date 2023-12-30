@@ -19,6 +19,7 @@ OMG_API bool omg_renderer_raylib_init(OMG_RendererRaylib* this);
 OMG_API bool omg_renderer_raylib_destroy(OMG_RendererRaylib* this);
 OMG_API int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this);
 #if OMG_EXPORT_SHIT
+OMG_API void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this);
 OMG_API bool omg_renderer_raylib_clear(OMG_RendererRaylib* this, const OMG_Color* col);
 OMG_API bool omg_renderer_raylib_begin(OMG_RendererRaylib* this);
 OMG_API bool omg_renderer_raylib_flip(OMG_RendererRaylib* this);

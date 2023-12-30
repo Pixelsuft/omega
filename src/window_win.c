@@ -244,6 +244,19 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 );
                 return 0;
             }
+            UINT new_w = (UINT)LOWORD(lparam);
+            UINT new_h = (UINT)HIWORD(lparam);
+            if (base->resizable && (new_w > 0) && (new_h > 0) && ((new_w != (UINT)base->size.w) || (new_h != (UINT)base->size.h))) {
+                OMG_EventResize event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                base->size.w = event.size.w = (float)new_w;
+                base->size.h = event.size.h = (float)new_h;
+                if (OMG_ISNOTNULL(base->ren))
+                    base->ren->_on_update_window_size(base->ren);
+                omg_base->on_size_change(&event);
+                omg_base->on_resize(&event);
+            }
             return RET_DEF_PROC();
         }
         case WM_NCCREATE: {
@@ -351,6 +364,8 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     // _OMG_LOG_INFO(omg_base, (int)GetLastError());
     base->scale.x = new_scale.x;
     base->scale.y = new_scale.y;
+    RECT test;
+    GetClientRect(this->hwnd, &test);
 }
 
 bool omg_window_win_init(OMG_WindowWin* this) {

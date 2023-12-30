@@ -81,8 +81,15 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
     if (OMG_ISNULL(win))
         return;
     if (this->raylib->IsWindowResized()) {
+        OMG_EventResize event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        win->size.w = event.size.w = (float)this->raylib->GetScreenWidth();
+        win->size.h = event.size.h = (float)this->raylib->GetScreenHeight();
         if (OMG_ISNOTNULL(win->ren))
             win->ren->_on_update_window_size(win->ren);
+        base->on_size_change(&event);
+        base->on_resize(&event);
     }
 }
 

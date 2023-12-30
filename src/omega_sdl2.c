@@ -17,6 +17,12 @@
     ((OMG_Event*)event)->data = base->event_arg; \
     ((OMG_Event*)event)->time = this->sdl2->SDL_GetTicks64(); \
 } while (0)
+#define FIND_SDL2_WIN(win, window_id) for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) { \
+    if (OMG_ISNOTNULL(base->winmgr->cache[i]) && (((OMG_WindowSdl2*)base->winmgr->cache[i])->id == window_id)) { \
+        win = base->winmgr->cache[i]; \
+        break; \
+    } \
+} \
 
 void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;
@@ -96,23 +102,30 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
         switch (this->ev.type) {
             case SDL_WINDOWEVENT: {
                 OMG_Window* win = NULL;
-                for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
-                    if (OMG_ISNOTNULL(base->winmgr->cache[i]) && (((OMG_WindowSdl2*)base->winmgr->cache[i])->id == this->ev.window.windowID)) {
-                        win = base->winmgr->cache[i];
-                        break;
-                    }
-                }
+                FIND_SDL2_WIN(win, this->ev.window.windowID);
                 if (OMG_ISNULL(win))
                     break;
                 switch (this->ev.window.event) {
                     case SDL_WINDOWEVENT_RESIZED: {
+                        OMG_EventResize event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        win->size.w = event.size.w = (float)this->ev.window.data1;
+                        win->size.h = event.size.h = (float)this->ev.window.data2;
                         if (OMG_ISNOTNULL(win->ren))
                             win->ren->_on_update_window_size(win->ren);
+                        base->on_resize(&event);
                         break;
                     }
                     case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                        OMG_EventResize event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        win->size.w = event.size.w = (float)this->ev.window.data1;
+                        win->size.h = event.size.h = (float)this->ev.window.data2;
                         if (OMG_ISNOTNULL(win->ren))
                             win->ren->_on_update_window_size(win->ren);
+                        base->on_size_change(&event);
                         break;
                     }
                 }

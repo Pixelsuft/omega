@@ -7,6 +7,15 @@
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
 
+void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this) {
+    if (!omg_base->support_highdpi)
+        return;
+    base->size.w = (float)this->raylib->GetRenderWidth();
+    base->size.h = (float)this->raylib->GetRenderHeight();
+    base->scale.x = base->size.w / (float)this->raylib->GetScreenWidth();
+    base->scale.y = base->size.h / (float)this->raylib->GetScreenHeight();
+}
+
 bool omg_renderer_raylib_destroy(OMG_RendererRaylib* this) {
     if (base->inited) {
         base->inited = false;
@@ -37,6 +46,7 @@ int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
+    base->_on_update_window_size = omg_renderer_raylib_update_scale;
     base->destroy = omg_renderer_raylib_destroy;
     base->clear = omg_renderer_raylib_clear;
     base->begin = omg_renderer_raylib_begin;
