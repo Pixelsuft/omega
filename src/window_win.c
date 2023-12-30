@@ -369,12 +369,6 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
         (int)this->size_cache.w, (int)this->size_cache.h,
         SWP_NOZORDER | SWP_NOACTIVATE | (base->centered ? 0 : SWP_NOMOVE) | SWP_FRAMECHANGED
     );
-    // Why???
-    // _OMG_LOG_INFO(omg_base, (int)GetLastError());
-    base->scale.x = new_scale.x;
-    base->scale.y = new_scale.y;
-    RECT test;
-    GetClientRect(this->hwnd, &test);
 }
 
 bool omg_window_win_init(OMG_WindowWin* this) {
