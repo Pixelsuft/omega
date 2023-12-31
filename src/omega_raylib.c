@@ -7,6 +7,23 @@
 #include <omega/clock_raylib.h>
 #define base ((OMG_Omega*)this)
 #define winmgr_raylib ((OMG_WinmgrRaylib*)base->winmgr)
+#define MOUSE_FILL_STATE(state) do { \
+    state = 0; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_LEFT)) \
+        state |= OMG_MBUTTON_LMASK; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) \
+        state |= OMG_MBUTTON_MMASK; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) \
+        state |= OMG_MBUTTON_RMASK; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_SIDE)) \
+        state |= OMG_MBUTTON_X1MASK; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_EXTRA)) \
+        state |= OMG_MBUTTON_X2MASK; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_FORWARD)) \
+        state |= OMG_MBUTTON_X3MASK; \
+    if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_BACK)) \
+        state |= OMG_MBUTTON_X4MASK; \
+} while (0)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
     ((OMG_Event*)event)->data = base->event_arg; \
@@ -193,21 +210,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         event.is_emulated = false;
         event.win = win;
         event.id = 0;
-        event.state = 0;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-            event.state |= OMG_MBUTTON_LMASK;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
-            event.state |= OMG_MBUTTON_MMASK;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-            event.state |= OMG_MBUTTON_RMASK;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_SIDE))
-            event.state |= OMG_MBUTTON_X1MASK;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_EXTRA))
-            event.state |= OMG_MBUTTON_X2MASK;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_FORWARD))
-            event.state |= OMG_MBUTTON_X3MASK;
-        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_BACK))
-            event.state |= OMG_MBUTTON_X4MASK;
+        MOUSE_FILL_STATE(event.state);
         event.pos.x = mouse_pos.x;
         event.pos.y = mouse_pos.y;
         event.rel.x = mouse_delta.x;
@@ -226,6 +229,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             event.pos.x = mouse_pos.x;
             event.pos.y = mouse_pos.y;
             event.clicks = 1; // TODO
+            MOUSE_FILL_STATE(event.state);
             event.is_pressed = pressed;
             (pressed ? base->on_mouse_down : base->on_mouse_up)(&event);
         }

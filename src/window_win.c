@@ -14,6 +14,19 @@
 #define GET_WIN_STYLE() (int64_t)this->u32->GetWindowLongPtrW(this->hwnd, GWL_STYLE)
 #define SET_WIN_STYLE(value) this->u32->SetWindowLongPtrW(this->hwnd, GWL_STYLE, (LONG_PTR)(value))
 #endif
+#define MOUSE_FILL_STATE(state, wparam) do { \
+    state = 0; \
+    if (wparam & MK_LBUTTON) \
+        state |= OMG_MBUTTON_LMASK; \
+    if (wparam & MK_MBUTTON) \
+        state |= OMG_MBUTTON_MMASK; \
+    if (wparam & MK_RBUTTON) \
+        state |= OMG_MBUTTON_RMASK; \
+    if (wparam & MK_XBUTTON1) \
+        state |= OMG_MBUTTON_X1MASK; \
+    if (wparam & MK_XBUTTON2) \
+        state |= OMG_MBUTTON_X2MASK; \
+} while (0)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
     ((OMG_Event*)event)->data = omg_base->event_arg; \
@@ -238,7 +251,6 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.win = this;
             event.is_emulated = false;
             event.id = 0;
-            event.state = 0;
             event.pos.x = (float)x_pos;
             event.pos.y = (float)y_pos;
             event.rel.x = (float)(x_pos - this->mouse_pos_cache.x);
@@ -249,16 +261,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 event.rel.y = 0.0f;
             this->mouse_pos_cache.x = x_pos;
             this->mouse_pos_cache.y = y_pos;
-            if (wparam & MK_LBUTTON)
-                event.state |= OMG_MBUTTON_LMASK;
-            if (wparam & MK_MBUTTON)
-                event.state |= OMG_MBUTTON_MMASK;
-            if (wparam & MK_RBUTTON)
-                event.state |= OMG_MBUTTON_RMASK;
-            if (wparam & MK_XBUTTON1)
-                event.state |= OMG_MBUTTON_X1MASK;
-            if (wparam & MK_XBUTTON2)
-                event.state |= OMG_MBUTTON_X2MASK;
+            MOUSE_FILL_STATE(event.state, wparam);
             omg_base->on_mouse_move(&event);
             return FALSE;
         }

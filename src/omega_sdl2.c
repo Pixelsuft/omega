@@ -136,6 +136,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                     event.pos.x = (float)this->ev.button.x;
                     event.pos.y = (float)this->ev.button.y;
                     event.clicks = this->ev.button.clicks;
+                    event.state = this->sdl2->SDL_GetMouseState(NULL, NULL);
                     event.is_pressed = this->ev.button.state == SDL_PRESSED;
                     (this->ev.type == SDL_MOUSEBUTTONDOWN ? base->on_mouse_down : base->on_mouse_up)(&event);
                 }

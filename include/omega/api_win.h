@@ -263,6 +263,12 @@
 #ifndef MK_XBUTTON2
 #define MK_XBUTTON2 0x0040
 #endif
+#ifndef XBUTTON1
+#define XBUTTON1 0x0001
+#endif
+#ifndef XBUTTON2
+#define XBUTTON1 0x0002
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
@@ -301,6 +307,30 @@
 #endif
 #ifndef WM_MOUSEMOVE
 #define WM_MOUSEMOVE 0x0200
+#endif
+#ifndef WM_LBUTTONDOWN
+#define WM_LBUTTONDOWN 0x0201
+#endif
+#ifndef WM_LBUTTONUP
+#define WM_LBUTTONUP 0x0202
+#endif
+#ifndef WM_RBUTTONDOWN
+#define WM_RBUTTONDOWN 0x0204
+#endif
+#ifndef WM_RBUTTONUP
+#define WM_RBUTTONUP 0x0205
+#endif
+#ifndef WM_MBUTTONDOWN
+#define WM_MBUTTONDOWN 0x0207
+#endif
+#ifndef WM_MBUTTONUP
+#define WM_MBUTTONUP 0x0208
+#endif
+#ifndef WM_XBUTTONDOWN
+#define WM_XBUTTONDOWN 0x020B
+#endif
+#ifndef WM_XBUTTONUP
+#define WM_XBUTTONUP 0x020C
 #endif
 
 typedef struct {

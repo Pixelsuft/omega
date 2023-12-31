@@ -67,6 +67,7 @@ typedef struct {
     OMG_Event parent;
     void* win;
     OMG_FPoint pos;
+    uint32_t state;
     uint32_t id;
     bool is_emulated;
     bool is_pressed;
