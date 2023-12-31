@@ -40,6 +40,16 @@ typedef struct Vector2 {
 } Vector2;
 
 typedef enum {
+    MOUSE_BUTTON_LEFT    = 0,
+    MOUSE_BUTTON_RIGHT   = 1,
+    MOUSE_BUTTON_MIDDLE  = 2,
+    MOUSE_BUTTON_SIDE    = 3,
+    MOUSE_BUTTON_EXTRA   = 4,
+    MOUSE_BUTTON_FORWARD = 5,
+    MOUSE_BUTTON_BACK    = 6
+} MouseButton;
+
+typedef enum {
     LOG_ALL = 0,
     LOG_TRACE,
     LOG_DEBUG,

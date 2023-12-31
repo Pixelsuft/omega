@@ -193,7 +193,21 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         event.is_emulated = false;
         event.win = win;
         event.id = 0;
-        event.state = 0; // TODO
+        event.state = 0;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+            event.state |= OMG_MBUTTON_LMASK;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
+            event.state |= OMG_MBUTTON_MMASK;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+            event.state |= OMG_MBUTTON_RMASK;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_SIDE))
+            event.state |= OMG_MBUTTON_X1MASK;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_EXTRA))
+            event.state |= OMG_MBUTTON_X2MASK;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_FORWARD))
+            event.state |= OMG_MBUTTON_X3MASK;
+        if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_BACK))
+            event.state |= OMG_MBUTTON_X4MASK;
         event.pos.x = mouse_pos.x;
         event.pos.y = mouse_pos.y;
         event.rel.x = mouse_delta.x;
