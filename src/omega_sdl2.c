@@ -120,6 +120,27 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 }
                 break;
             }
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP: {
+                OMG_Window* win = NULL;
+                FIND_SDL2_WIN(win, this->ev.button.windowID);
+                if (OMG_ISNULL(win))
+                    break;
+                OMG_EventMouseButton event;
+                MAKE_EVENT(&event);
+                event.is_emulated = this->ev.button.which == SDL_TOUCH_MOUSEID;
+                if (!event.is_emulated || base->emulate_mouse) {
+                    event.win = win;
+                    event.id = this->ev.button.which;
+                    event.button = this->ev.button.button;
+                    event.pos.x = (float)this->ev.button.x;
+                    event.pos.y = (float)this->ev.button.y;
+                    event.clicks = this->ev.button.clicks;
+                    event.is_pressed = this->ev.button.state == SDL_PRESSED;
+                    (this->ev.type == SDL_MOUSEBUTTONDOWN ? base->on_mouse_down : base->on_mouse_up)(&event);
+                }
+                break;
+            }
             case SDL_WINDOWEVENT: {
                 OMG_Window* win = NULL;
                 FIND_SDL2_WIN(win, this->ev.window.windowID);

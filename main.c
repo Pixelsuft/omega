@@ -53,6 +53,11 @@ void app_on_mouse_move(OMG_EventMouseMove* event) {
     OMG_INFO(this->omg, "Mouse Move [", &event->pos, "]");
 }
 
+void app_on_mouse_button(OMG_EventMouseButton* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    OMG_INFO(this->omg, "Mouse Button ", event->is_pressed ? "Press" : "Release" ," [", &event->pos, "]");
+}
+
 void app_on_update(OMG_EventUpdate* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     if (this->clock->update(this->clock)) {
@@ -91,14 +96,14 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -130,6 +135,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_size_change = app_on_size_change;
     this->omg->on_state_changing = app_on_state_changing;
     this->omg->on_mouse_move = app_on_mouse_move;
+    this->omg->on_mouse_down = this->omg->on_mouse_up = app_on_mouse_button;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
     this->clock->init(this->clock, true);

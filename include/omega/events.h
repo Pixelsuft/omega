@@ -55,10 +55,21 @@ typedef struct {
 typedef struct {
     OMG_Event parent;
     void* win;
-    uint32_t id;
-    uint32_t state;
     OMG_FPoint pos;
     OMG_FPoint rel;
+    uint32_t id;
+    uint32_t state;
     bool is_emulated;
     uint8_t clicks;
 } OMG_EventMouseMove;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    OMG_FPoint pos;
+    uint32_t id;
+    bool is_emulated;
+    bool is_pressed;
+    uint8_t clicks;
+    uint8_t button;
+} OMG_EventMouseButton;

@@ -142,6 +142,10 @@ void omg_event_on_mouse_move(OMG_EventMouseMove* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_mouse_button(OMG_EventMouseButton* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
@@ -153,6 +157,8 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_state_change = omg_event_on_state_change;
     this->on_state_changing = omg_event_on_state_changing;
     this->on_mouse_move = omg_event_on_mouse_move;
+    this->on_mouse_down = omg_event_on_mouse_button;
+    this->on_mouse_up = omg_event_on_mouse_button;
 }
 
 bool omg_omg_init(OMG_Omega* this) {
