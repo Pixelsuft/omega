@@ -65,7 +65,13 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
 
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    OMG_INFO(this->omg, "Key ", event->is_pressed ? "Press" : "Release");
+    OMG_INFO(
+        this->omg,
+        "Key ",
+        omg_keyboard_name_from_scancode(event->scancode)->ptr,
+        " ",
+        event->is_pressed ? "Press" : "Release"
+    );
 }
 
 void app_on_update(OMG_EventUpdate* event) {
@@ -149,6 +155,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_state_changing = app_on_state_changing;
     this->omg->on_mouse_move = app_on_mouse_move;
     this->omg->on_mouse_down = this->omg->on_mouse_up = app_on_mouse_button;
+    this->omg->on_key_down = this->omg->on_key_up = app_on_keyboard;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
     this->clock->init(this->clock, true);

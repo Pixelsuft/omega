@@ -7,6 +7,7 @@
 #include <omega/winmgr.h>
 #include <omega/window.h>
 #include <omega/events.h>
+#include <omega/keyboard.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
