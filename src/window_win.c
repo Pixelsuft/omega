@@ -1,7 +1,7 @@
 #include <omega/window_win.h>
 
 #if OMG_SUPPORT_WIN
-#include <omega/omega.h>
+#include <omega/omega_win.h>
 #include <omega/renderer_sdl2.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -30,7 +30,7 @@
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
     ((OMG_Event*)event)->data = omg_base->event_arg; \
-    ((OMG_Event*)event)->time = 0; \
+    ((OMG_Event*)event)->time = (uint64_t)((OMG_OmegaWin*)omg_base)->msg.time; \
 } while (0)
 
 bool omg_window_win_show(OMG_WindowWin* this, bool show) {
@@ -235,10 +235,13 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #endif
     switch (msg) {
         case WM_PAINT: {
+            PAINTSTRUCT ps;
+            this->u32->BeginPaint(this->hwnd, &ps);
             OMG_EventPaint event;
             MAKE_EVENT(&event);
             event.win = this;
             omg_base->on_paint(&event);
+            this->u32->EndPaint(this->hwnd, &ps);
             return RET_DEF_PROC();
         }
         case WM_MOUSEMOVE: {
@@ -286,7 +289,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             else if ((msg == WM_RBUTTONDOWN) || (msg == WM_RBUTTONUP))
                 event.button = OMG_MBUTTON_RIGHT;
             else
-                event.button = (HIWORD(wparam) == XBUTTON2) ? OMG_MBUTTON_X2 : OMG_MBUTTON_X1;
+                event.button = (GET_XBUTTON_WPARAM(wparam) == XBUTTON2) ? OMG_MBUTTON_X2 : OMG_MBUTTON_X1;
             event.pos.x = (float)GET_X_LPARAM(lparam);
             event.pos.y = (float)GET_Y_LPARAM(lparam);
             event.clicks = 1; // TODO
@@ -296,6 +299,21 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             MOUSE_FILL_STATE(event.state, need_wparam);
             (event.is_pressed ? omg_base->on_mouse_down : omg_base->on_mouse_up)(&event);
             break;
+        }
+        case WM_ERASEBKGND: {
+            /*
+            RECT client_rect;
+            HBRUSH brush;
+            GetClientRect(hwnd, &client_rect);
+            brush = CreateSolidBrush(0);
+            FillRect(GetDC(hwnd), &client_rect, brush);
+            DeleteObject(brush);
+            */
+            return TRUE;
+        }
+        case WM_MOUSELEAVE: {
+            // TODO
+            return FALSE;
         }
         case WM_WINDOWPOSCHANGED: {
             WINDOWPOS* pos = (WINDOWPOS*)lparam;

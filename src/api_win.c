@@ -152,6 +152,8 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(GetDC);
     LOAD_REQUIRED(GetWindowDC);
     LOAD_REQUIRED(ReleaseDC);
+    LOAD_REQUIRED(BeginPaint);
+    LOAD_REQUIRED(EndPaint);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwareness);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwarenessContext);

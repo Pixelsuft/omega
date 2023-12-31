@@ -74,6 +74,9 @@
 #ifndef GET_Y_LPARAM
 #define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
 #endif
+#ifndef GET_XBUTTON_WPARAM
+#define GET_XBUTTON_WPARAM(w) (HIWORD(w))
+#endif
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x10
 #endif
@@ -332,6 +335,9 @@
 #ifndef WM_XBUTTONUP
 #define WM_XBUTTONUP 0x020C
 #endif
+#ifndef WM_ERASEBKGND
+#define WM_ERASEBKGND 0x0014
+#endif
 
 typedef struct {
     ULONG dwOSVersionInfoSize;
@@ -448,6 +454,8 @@ typedef struct {
     HDC OMG_WIN_STD_PREFIX (*GetDC)(HWND);
     HDC OMG_WIN_STD_PREFIX (*GetWindowDC)(HWND);
     int OMG_WIN_STD_PREFIX (*ReleaseDC)(HWND, HDC);
+    HDC OMG_WIN_STD_PREFIX (*BeginPaint)(HWND, LPPAINTSTRUCT);
+    HDC OMG_WIN_STD_PREFIX (*EndPaint)(HWND, const PAINTSTRUCT*);
 } OMG_User32;
 
 typedef struct {
