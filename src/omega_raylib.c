@@ -266,6 +266,24 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             (pressed ? base->on_mouse_down : base->on_mouse_up)(&event);
         }
     }
+    bool is_pressed;
+    for (int i = 0; i < 350; i++) {
+        uint32_t code = this->scancode_map[i];
+        if (code == 0)
+            continue;
+        is_pressed = this->raylib->IsKeyPressed(i);
+        if (is_pressed || this->raylib->IsKeyReleased(i)) {
+            OMG_EventKeyboard event;
+            MAKE_EVENT(&event);
+            event.win = win;
+            event.is_pressed = is_pressed;
+            event.repeat = 0; // TODO
+            event.scancode = code;
+            event.sym = omg_keyboard_key_from_scancode(code);
+            event.mod = 0; // TODO
+            (is_pressed ? base->on_key_down : base->on_key_up)(&event);
+        }
+    }
 }
 
 void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {

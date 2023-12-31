@@ -329,6 +329,10 @@ const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode) {
     return &OMG_STRING_MAKE_STATIC((char*)res);
 }
 
+OMG_Keycode omg_keyboard_key_from_scancode(OMG_Scancode scancode) {
+    return 0; // TODO
+}
+
 const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key) {
     static char name[8];
     char* end;
