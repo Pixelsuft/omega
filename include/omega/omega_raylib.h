@@ -8,6 +8,7 @@ typedef struct {
     OMG_Omega parent;
     OMG_Raylib raylib_stk;
     OMG_Raylib* raylib;
+    uint32_t scancode_map[350]; // TODO: Alloc Dynamicly
     bool should_free_raylib;
     bool is_focused;
 } OMG_OmegaRaylib;
