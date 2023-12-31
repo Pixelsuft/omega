@@ -78,6 +78,14 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(BeginDrawing);
     LOAD_REQUIRED(EndDrawing);
     LOAD_REQUIRED(ClearBackground);
+    LOAD_REQUIRED(IsKeyPressed);
+    LOAD_REQUIRED(IsKeyPressedRepeat);
+    LOAD_REQUIRED(IsKeyDown);
+    LOAD_REQUIRED(IsKeyReleased);
+    LOAD_REQUIRED(IsKeyUp);
+    LOAD_REQUIRED(GetKeyPressed);
+    LOAD_REQUIRED(GetCharPressed);
+    LOAD_REQUIRED(SetExitKey);
     OMG_END_POINTER_CAST();
     return false;
 }
