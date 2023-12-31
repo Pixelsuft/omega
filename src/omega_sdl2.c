@@ -148,17 +148,17 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 if (OMG_ISNULL(win))
                     break;
                 switch (this->ev.window.event) {
-                    case SDL_WINDOWEVENT_ENTER: {
-                        // TODO
+                    case SDL_WINDOWEVENT_ENTER:
+                    case SDL_WINDOWEVENT_LEAVE:{
+                        OMG_EventMouseFocus event;
                         int x, y;
-                        uint32_t state = this->sdl2->SDL_GetMouseState(&x, &y);
-                        OMG_UNUSED(x, y, state);
-                        break;
-                    }
-                    case SDL_WINDOWEVENT_LEAVE: {
-                        int x, y;
-                        uint32_t state = this->sdl2->SDL_GetMouseState(&x, &y);
-                        OMG_UNUSED(x, y, state);
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        event.state = this->sdl2->SDL_GetMouseState(&x, &y);
+                        event.pos.x = (float)x;
+                        event.pos.y = (float)y;
+                        event.is_focused = this->ev.window.event == SDL_WINDOWEVENT_ENTER;
+                        (event.is_focused ? base->on_mouse_enter : base->on_mouse_leave)(&event);
                         break;
                     }
                     case SDL_WINDOWEVENT_SIZE_CHANGED: {

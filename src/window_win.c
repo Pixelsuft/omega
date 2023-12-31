@@ -26,6 +26,7 @@
         state |= OMG_MBUTTON_X1MASK; \
     if (wparam & MK_XBUTTON2) \
         state |= OMG_MBUTTON_X2MASK; \
+    this->mouse_state_cache = state; \
 } while (0)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
@@ -258,13 +259,21 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.pos.y = (float)y_pos;
             event.rel.x = (float)(x_pos - this->mouse_pos_cache.x);
             event.rel.y = (float)(y_pos - this->mouse_pos_cache.y);
-            if (event.rel.x >= 1073731824.0f)
-                event.rel.x = 0.0f;
-            if (event.rel.y >= 1073731824.0f)
-                event.rel.y = 0.0f;
+            MOUSE_FILL_STATE(event.state, wparam);
+            if (this->is_mouse_left) {
+                this->is_mouse_left = false;
+                event.rel.x = event.rel.y = 0.0f;
+                OMG_EventMouseFocus c_event;
+                MAKE_EVENT(&c_event);
+                c_event.win = this;
+                c_event.state = event.state;
+                c_event.pos.x = (float)event.pos.x;
+                c_event.pos.y = (float)event.pos.y;
+                c_event.is_focused = true;
+                omg_base->on_mouse_enter(&c_event);
+            }
             this->mouse_pos_cache.x = x_pos;
             this->mouse_pos_cache.y = y_pos;
-            MOUSE_FILL_STATE(event.state, wparam);
             omg_base->on_mouse_move(&event);
             return FALSE;
         }
@@ -312,7 +321,15 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return TRUE;
         }
         case WM_MOUSELEAVE: {
-            // TODO
+            this->is_mouse_left = true;
+            OMG_EventMouseFocus event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            event.state = this->mouse_state_cache;
+            event.pos.x = (float)this->mouse_pos_cache.x;
+            event.pos.y = (float)this->mouse_pos_cache.y;
+            event.is_focused = false;
+            omg_base->on_mouse_leave(&event);
             return FALSE;
         }
         case WM_WINDOWPOSCHANGED: {
@@ -560,7 +577,9 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->type = OMG_WIN_TYPE_WIN;
     base->inited = false;
     this->destroyed = false;
-    this->mouse_pos_cache.x = this->mouse_pos_cache.y = -1073741825;
+    this->is_mouse_left = true;
+    this->mouse_state_cache = 0;
+    this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;
     this->wc.lpfnWndProc = (WNDPROC)omg_win_wnd_proc;

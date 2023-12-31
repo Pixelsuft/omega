@@ -74,3 +74,11 @@ typedef struct {
     uint8_t clicks;
     uint8_t button;
 } OMG_EventMouseButton;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    OMG_FPoint pos;
+    uint32_t state;
+    bool is_focused;
+} OMG_EventMouseFocus;

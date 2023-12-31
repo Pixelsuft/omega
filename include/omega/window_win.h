@@ -17,7 +17,9 @@ typedef struct {
     OMG_Uxtheme* uxtheme;
     OMG_FPoint size_cache;
     OMG_Point mouse_pos_cache;
+    uint32_t mouse_state_cache;
     int win_build_num;
+    bool is_mouse_left;
     bool destroyed;
 } OMG_WindowWin;
 
