@@ -9,6 +9,7 @@ typedef struct {
     OMG_Raylib raylib_stk;
     OMG_Raylib* raylib;
     bool should_free_raylib;
+    bool is_focused;
 } OMG_OmegaRaylib;
 
 OMG_API OMG_OmegaRaylib* omg_raylib_create(OMG_EntryData* data);

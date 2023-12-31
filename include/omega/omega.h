@@ -82,6 +82,7 @@ typedef struct OMG_Omega {
     void (*on_size_change)(OMG_EventResize* event);
     void (*on_state_change)(OMG_EventStateChange* event);
     void (*on_state_changing)(OMG_EventStateChanging* event);
+    void (*on_focus_change)(OMG_EventFocusChange* event);
     void (*on_mouse_move)(OMG_EventMouseMove* event);
     void (*on_mouse_down)(OMG_EventMouseButton* event);
     void (*on_mouse_up)(OMG_EventMouseButton* event);
@@ -122,6 +123,7 @@ OMG_API void omg_event_on_close(OMG_EventClose* event);
 OMG_API void omg_event_on_resize(OMG_EventResize* event);
 OMG_API void omg_event_on_state_change(OMG_EventStateChange* event);
 OMG_API void omg_event_on_state_changing(OMG_EventStateChanging* event);
+OMG_API void omg_event_on_focus_change(OMG_EventFocusChange* event);
 OMG_API void omg_event_on_mouse_move(OMG_EventMouseMove* event);
 OMG_API void omg_event_on_mouse_button(OMG_EventMouseButton* event);
 OMG_API void omg_event_on_mouse_focus(OMG_EventMouseFocus* event);

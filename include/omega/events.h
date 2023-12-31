@@ -55,6 +55,12 @@ typedef struct {
 typedef struct {
     OMG_Event parent;
     void* win;
+    bool is_focused;
+} OMG_EventFocusChange;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
     OMG_FPoint pos;
     OMG_FPoint rel;
     uint32_t id;

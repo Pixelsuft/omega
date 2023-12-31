@@ -338,6 +338,12 @@
 #ifndef WM_ERASEBKGND
 #define WM_ERASEBKGND 0x0014
 #endif
+#ifndef WM_SETFOCUS
+#define WM_SETFOCUS 0x0007
+#endif
+#ifndef WM_KILLFOCUS
+#define WM_KILLFOCUS 0x0008
+#endif
 
 typedef struct {
     ULONG dwOSVersionInfoSize;

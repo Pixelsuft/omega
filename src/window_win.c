@@ -457,6 +457,15 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_window_win_update_scale(this);
             return RET_DEF_PROC();
         }
+        case WM_SETFOCUS:
+        case WM_KILLFOCUS: {
+            OMG_EventFocusChange event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            event.is_focused = msg == WM_SETFOCUS;
+            omg_base->on_focus_change(&event);
+            return FALSE;
+        }
         case WM_CLOSE: {
             OMG_EventStateChanging event;
             MAKE_EVENT(&event);

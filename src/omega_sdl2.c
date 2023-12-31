@@ -183,11 +183,13 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                         base->on_resize(&event);
                         break;
                     }
-                    case SDL_WINDOWEVENT_FOCUS_GAINED: {
-                        // TODO
-                        break;
-                    }
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
                     case SDL_WINDOWEVENT_FOCUS_LOST: {
+                        OMG_EventFocusChange event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        event.is_focused = this->ev.window.event == SDL_WINDOWEVENT_FOCUS_GAINED;
+                        base->on_focus_change(&event);
                         break;
                     }
                     case SDL_WINDOWEVENT_MINIMIZED: {

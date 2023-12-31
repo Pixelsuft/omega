@@ -202,6 +202,24 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         else
             this->raylib->MinimizeWindow();
     }
+    if (this->raylib->IsWindowFocused()) {
+        if (!this->is_focused) {
+            this->is_focused = true;
+            OMG_EventFocusChange event;
+            MAKE_EVENT(&event);
+            event.win = win;
+            event.is_focused = true;
+            base->on_focus_change(&event);
+        }
+    }
+    else if (this->is_focused) {
+        this->is_focused = false;
+        OMG_EventFocusChange event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        event.is_focused = false;
+        base->on_focus_change(&event);
+    }
     Vector2 mouse_delta = this->raylib->GetMouseDelta();
     Vector2 mouse_pos = this->raylib->GetMousePosition();
     if ((mouse_delta.x != 0.0f) || (mouse_delta.y != 0.0f)) {
@@ -258,6 +276,7 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
 }
 
 bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
+    this->is_focused = false;
     if (OMG_ISNULL(base->clock)) {
         base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockRaylib));
         if (OMG_ISNULL(base->clock)) {
