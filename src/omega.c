@@ -124,8 +124,6 @@ void omg_event_on_focus_change(OMG_EventFocusChange* event) {
 
 void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event) {
     OMG_UNUSED(event);
-    OMG_Omega* this = OMG_OMEGA_FROM_EVENT(event);
-    _OMG_LOG_INFO(this, &event->rel);
 }
 
 void omg_event_on_state_changing(OMG_EventStateChanging* event) {

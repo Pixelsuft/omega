@@ -77,6 +77,12 @@
 #ifndef GET_XBUTTON_WPARAM
 #define GET_XBUTTON_WPARAM(w) (HIWORD(w))
 #endif
+#ifndef GET_WHEEL_DELTA_WPARAM
+#define GET_WHEEL_DELTA_WPARAM ((short)HIWORD(wParam))
+#endif
+#ifndef GET_KEYSTATE_WPARAM
+#define GET_KEYSTATE_WPARAM (LOWORD(wParam))
+#endif
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x10
 #endif
@@ -272,6 +278,9 @@
 #ifndef XBUTTON2
 #define XBUTTON1 0x0002
 #endif
+#ifndef WHEEL_DELTA
+#define WHEEL_DELTA 120
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
@@ -343,6 +352,9 @@
 #endif
 #ifndef WM_KILLFOCUS
 #define WM_KILLFOCUS 0x0008
+#endif
+#ifndef WM_MOUSEWHEEL
+#define WM_MOUSEWHEEL 0x020A
 #endif
 
 typedef struct {
