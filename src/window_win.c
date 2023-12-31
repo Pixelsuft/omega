@@ -126,7 +126,7 @@ bool omg_window_win_set_resizable(OMG_WindowWin* this, bool enabled) {
     res = !this->u32->SetWindowPos(
         this->hwnd, NULL, 0, 0, 0, 0,
         SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED
-    ) || true;
+    ) || res;
     return res;
 }
 
@@ -264,6 +264,38 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             MOUSE_FILL_STATE(event.state, wparam);
             omg_base->on_mouse_move(&event);
             return FALSE;
+        }
+        case WM_LBUTTONDOWN:
+        case WM_MBUTTONDOWN:
+        case WM_RBUTTONDOWN:
+        case WM_XBUTTONDOWN:
+        case WM_LBUTTONUP:
+        case WM_MBUTTONUP:
+        case WM_RBUTTONUP:
+        case WM_XBUTTONUP: {
+            OMG_EventMouseButton event;
+            MAKE_EVENT(&event);
+            event.is_emulated = false;
+            event.is_pressed = (msg == WM_LBUTTONDOWN) || (msg == WM_MBUTTONDOWN) || (msg == WM_RBUTTONDOWN) || (msg == WM_XBUTTONDOWN);
+            event.win = this;
+            event.id = 0;
+            if ((msg == WM_LBUTTONDOWN) || (msg == WM_LBUTTONUP))
+                event.button = OMG_MBUTTON_LEFT;
+            else if ((msg == WM_MBUTTONDOWN) || (msg == WM_MBUTTONUP))
+                event.button = OMG_MBUTTON_MIDDLE;
+            else if ((msg == WM_RBUTTONDOWN) || (msg == WM_RBUTTONUP))
+                event.button = OMG_MBUTTON_RIGHT;
+            else
+                event.button = (HIWORD(wparam) == XBUTTON2) ? OMG_MBUTTON_X2 : OMG_MBUTTON_X1;
+            event.pos.x = (float)GET_X_LPARAM(lparam);
+            event.pos.y = (float)GET_Y_LPARAM(lparam);
+            event.clicks = 1; // TODO
+            WORD need_wparam = (WORD)wparam;
+            if ((msg == WM_XBUTTONDOWN) || (msg == WM_XBUTTONUP))
+                need_wparam = LOWORD(wparam);
+            MOUSE_FILL_STATE(event.state, need_wparam);
+            (event.is_pressed ? omg_base->on_mouse_down : omg_base->on_mouse_up)(&event);
+            break;
         }
         case WM_WINDOWPOSCHANGED: {
             WINDOWPOS* pos = (WINDOWPOS*)lparam;
