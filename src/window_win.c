@@ -306,7 +306,6 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             WINDOWPOS* pos = (WINDOWPOS*)lparam;
             // Why??? Fuck Microsoft!
             if (!base->resizable && ((pos->cx != (int)this->size_cache.x) || (pos->cy != (int)this->size_cache.y))) {
-                printf("%i\n\n", pos->cx);
                 pos->cx = (int)this->size_cache.w;
                 pos->cy = (int)this->size_cache.h;
                 pos->flags |= SWP_NOSIZE;
