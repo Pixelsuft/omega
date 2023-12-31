@@ -106,15 +106,17 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 if (OMG_ISNULL(win))
                     break;
                 switch (this->ev.window.event) {
-                    case SDL_WINDOWEVENT_RESIZED: {
-                        OMG_EventResize event;
-                        MAKE_EVENT(&event);
-                        event.win = win;
-                        win->size.w = event.size.w = (float)this->ev.window.data1;
-                        win->size.h = event.size.h = (float)this->ev.window.data2;
-                        if (OMG_ISNOTNULL(win->ren))
-                            win->ren->_on_update_window_size(win->ren);
-                        base->on_resize(&event);
+                    case SDL_WINDOWEVENT_ENTER: {
+                        // TODO
+                        int x, y;
+                        uint32_t state = this->sdl2->SDL_GetMouseState(&x, &y);
+                        OMG_UNUSED(x, y, state);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_LEAVE: {
+                        int x, y;
+                        uint32_t state = this->sdl2->SDL_GetMouseState(&x, &y);
+                        OMG_UNUSED(x, y, state);
                         break;
                     }
                     case SDL_WINDOWEVENT_SIZE_CHANGED: {
@@ -126,6 +128,24 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                         if (OMG_ISNOTNULL(win->ren))
                             win->ren->_on_update_window_size(win->ren);
                         base->on_size_change(&event);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_RESIZED: {
+                        OMG_EventResize event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        win->size.w = event.size.w = (float)this->ev.window.data1;
+                        win->size.h = event.size.h = (float)this->ev.window.data2;
+                        if (OMG_ISNOTNULL(win->ren))
+                            win->ren->_on_update_window_size(win->ren);
+                        base->on_resize(&event);
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_FOCUS_GAINED: {
+                        // TODO
+                        break;
+                    }
+                    case SDL_WINDOWEVENT_FOCUS_LOST: {
                         break;
                     }
                     case SDL_WINDOWEVENT_MINIMIZED: {

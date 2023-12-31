@@ -252,6 +252,8 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_LogError)(int, const char*, ...);
     void OMG_SDL2_STD_PREFIX (*SDL_LogCritical)(int, const char*, ...);
     const char* OMG_SDL2_STD_PREFIX (*SDL_GetError)(void);
+    uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetMouseState)(int*, int*);
+    uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetRelativeMouseState)(int*, int*);
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindowFrom)(const void*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);

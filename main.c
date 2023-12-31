@@ -20,8 +20,8 @@ int omega_main(OMG_EntryData* data);
 OMG_MAKE_MAIN(omega_main)
 
 void app_on_destroy(OMG_EventLoopStop* event) {
-    App* this = (App*)OMG_ARG_FROM_EVENT(event);
-    // everything will be cleaned up automaticly
+    App* this = OMG_ARG_FROM_EVENT(event);
+    // everything other will be cleaned up automaticly
     this->ren->destroy(this->ren);
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -76,7 +76,7 @@ void app_on_update(OMG_EventUpdate* event) {
 }
 
 void app_on_paint(OMG_EventPaint* event) {
-    App* this = (App*)OMG_ARG_FROM_EVENT(event);
+    App* this = OMG_ARG_FROM_EVENT(event);
     // You can use something like this to detect window, but we have only one
     // if (event->win != this->win)
     //     return;
@@ -87,14 +87,14 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
