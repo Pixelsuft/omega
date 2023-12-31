@@ -186,8 +186,8 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             this->raylib->MinimizeWindow();
     }
     Vector2 mouse_delta = this->raylib->GetMouseDelta();
+    Vector2 mouse_pos = this->raylib->GetMousePosition();
     if ((mouse_delta.x != 0.0f) || (mouse_delta.y != 0.0f)) {
-        Vector2 mouse_pos = this->raylib->GetMousePosition();
         OMG_EventMouseMove event;
         MAKE_EVENT(&event);
         event.is_emulated = false;
@@ -213,6 +213,22 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         event.rel.x = mouse_delta.x;
         event.rel.y = mouse_delta.y;
         base->on_mouse_move(&event);
+    }
+    for (int i = 0; i < 7; i++) {
+        bool pressed = this->raylib->IsMouseButtonPressed(i);
+        if (pressed || this->raylib->IsMouseButtonReleased(i)) {
+            OMG_EventMouseButton event;
+            MAKE_EVENT(&event);
+            event.is_emulated = false;
+            event.win = win;
+            event.id = 0;
+            event.button = i + 1;
+            event.pos.x = mouse_pos.x;
+            event.pos.y = mouse_pos.y;
+            event.clicks = 1; // TODO
+            event.is_pressed = pressed;
+            (pressed ? base->on_mouse_down : base->on_mouse_up)(&event);
+        }
     }
 }
 
