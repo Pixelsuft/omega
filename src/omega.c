@@ -158,6 +158,10 @@ void omg_event_on_mouse_focus(OMG_EventMouseFocus* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_keyboard(OMG_EventKeyboard* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
@@ -175,6 +179,8 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_mouse_enter = omg_event_on_mouse_focus;
     this->on_mouse_leave = omg_event_on_mouse_focus;
     this->on_focus_change = omg_event_on_focus_change;
+    this->on_key_down = omg_event_on_keyboard;
+    this->on_key_up = omg_event_on_keyboard;
 }
 
 bool omg_omg_init(OMG_Omega* this) {

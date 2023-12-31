@@ -98,3 +98,13 @@ typedef struct {
     uint32_t state;
     bool is_focused;
 } OMG_EventMouseFocus;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    uint32_t scancode;
+    uint32_t sym;
+    uint16_t mod;
+    bool is_pressed;
+    uint8_t repeat;
+} OMG_EventKeyboard;

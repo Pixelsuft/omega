@@ -120,6 +120,23 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 }
                 break;
             }
+            case SDL_KEYDOWN:
+            case SDL_KEYUP: {
+                OMG_Window* win = NULL;
+                FIND_SDL2_WIN(win, this->ev.key.windowID);
+                if (OMG_ISNULL(win))
+                    break;
+                OMG_EventKeyboard event;
+                MAKE_EVENT(&event);
+                event.win = win;
+                event.is_pressed = this->ev.key.state == SDL_PRESSED;
+                event.repeat = this->ev.key.repeat;
+                event.scancode = this->ev.key.keysym.scancode;
+                event.sym = this->ev.key.keysym.sym;
+                event.mod = this->ev.key.keysym.mod;
+                (this->ev.type == SDL_KEYDOWN ? base->on_key_down : base->on_key_up)(&event);
+                break;
+            }
             case SDL_MOUSEBUTTONDOWN:
             case SDL_MOUSEBUTTONUP: {
                 OMG_Window* win = NULL;
