@@ -39,30 +39,30 @@ const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode) {
 
 const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key) {
     static char name[8];
-    char *end;
+    char* end;
     if (key & OMGK_SCANCODE_MASK) {
         return omg_keyboard_name_from_scancode((OMG_Scancode)(key & ~OMGK_SCANCODE_MASK));
     }
     switch (key) {
-    case OMGK_RETURN:
-        return omg_keyboard_name_from_scancode(OMG_SCANCODE_RETURN);
-    case OMGK_ESCAPE:
-        return omg_keyboard_name_from_scancode(OMG_SCANCODE_ESCAPE);
-    case OMGK_BACKSPACE:
-        return omg_keyboard_name_from_scancode(OMG_SCANCODE_BACKSPACE);
-    case OMGK_TAB:
-        return omg_keyboard_name_from_scancode(OMG_SCANCODE_TAB);
-    case OMGK_SPACE:
-        return omg_keyboard_name_from_scancode(OMG_SCANCODE_SPACE);
-    case OMGK_DELETE:
-        return omg_keyboard_name_from_scancode(OMG_SCANCODE_DELETE);
-    default:
-        if (key >= 'a' && key <= 'z') {
-            key -= 32;
-        }
-        end = OMG_keyboard_UCS4ToUTF8((uint32_t)key, name);
-        *end = '\0';
-        return &OMG_STRING_MAKE_STATIC(name);
+        case OMGK_RETURN:
+            return omg_keyboard_name_from_scancode(OMG_SCANCODE_RETURN);
+        case OMGK_ESCAPE:
+            return omg_keyboard_name_from_scancode(OMG_SCANCODE_ESCAPE);
+        case OMGK_BACKSPACE:
+            return omg_keyboard_name_from_scancode(OMG_SCANCODE_BACKSPACE);
+        case OMGK_TAB:
+            return omg_keyboard_name_from_scancode(OMG_SCANCODE_TAB);
+        case OMGK_SPACE:
+            return omg_keyboard_name_from_scancode(OMG_SCANCODE_SPACE);
+        case OMGK_DELETE:
+            return omg_keyboard_name_from_scancode(OMG_SCANCODE_DELETE);
+        default:
+            if (key >= 'a' && key <= 'z') {
+                key -= 32;
+            }
+            end = OMG_keyboard_UCS4ToUTF8((uint32_t)key, name);
+            *end = '\0';
+            return &OMG_STRING_MAKE_STATIC(name);
     }
     return &OMG_STRING_MAKE_STATIC("");
 }
