@@ -222,11 +222,45 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #endif
     switch (msg) {
         case WM_PAINT: {
-            OMG_EventPaint p_event;
-            MAKE_EVENT(&p_event);
-            p_event.win = this;
-            omg_base->on_paint(&p_event);
+            OMG_EventPaint event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            omg_base->on_paint(&event);
             return RET_DEF_PROC();
+        }
+        case WM_MOUSEMOVE: {
+            int x_pos = GET_X_LPARAM(lparam);
+            int y_pos = GET_Y_LPARAM(lparam);
+            if ((x_pos == this->mouse_pos_cache.x) && (y_pos == this->mouse_pos_cache.y))
+                return FALSE;
+            OMG_EventMouseMove event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            event.is_emulated = false;
+            event.id = 0;
+            event.state = 0;
+            event.pos.x = (float)x_pos;
+            event.pos.y = (float)y_pos;
+            event.rel.x = (float)(x_pos - this->mouse_pos_cache.x);
+            event.rel.y = (float)(y_pos - this->mouse_pos_cache.y);
+            if (event.rel.x >= 1073731824.0f)
+                event.rel.x = 0.0f;
+            if (event.rel.y >= 1073731824.0f)
+                event.rel.y = 0.0f;
+            this->mouse_pos_cache.x = x_pos;
+            this->mouse_pos_cache.y = y_pos;
+            if (wparam & MK_LBUTTON)
+                event.state |= OMG_MBUTTON_LMASK;
+            if (wparam & MK_MBUTTON)
+                event.state |= OMG_MBUTTON_MMASK;
+            if (wparam & MK_RBUTTON)
+                event.state |= OMG_MBUTTON_RMASK;
+            if (wparam & MK_XBUTTON1)
+                event.state |= OMG_MBUTTON_X1MASK;
+            if (wparam & MK_XBUTTON2)
+                event.state |= OMG_MBUTTON_X2MASK;
+            omg_base->on_mouse_move(&event);
+            return FALSE;
         }
         case WM_WINDOWPOSCHANGED: {
             WINDOWPOS* pos = (WINDOWPOS*)lparam;
@@ -472,6 +506,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->type = OMG_WIN_TYPE_WIN;
     base->inited = false;
     this->destroyed = false;
+    this->mouse_pos_cache.x = this->mouse_pos_cache.y = -1073741825;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;
     this->wc.lpfnWndProc = (WNDPROC)omg_win_wnd_proc;

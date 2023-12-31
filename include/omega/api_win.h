@@ -68,6 +68,12 @@
 #ifndef HIWORD
 #define HIWORD(l) ((WORD) ((((DWORD_PTR) (l)) >> 16) & 0xffff))
 #endif
+#ifndef GET_X_LPARAM
+#define GET_X_LPARAM(lp) ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+#define GET_Y_LPARAM(lp) ((int)(short)HIWORD(lp))
+#endif
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x10
 #endif
@@ -242,6 +248,21 @@
 #ifndef SC_RESTORE
 #define SC_RESTORE 0xF120
 #endif
+#ifndef MK_LBUTTON
+#define MK_LBUTTON 0x0001
+#endif
+#ifndef MK_RBUTTON
+#define MK_RBUTTON 0x0002
+#endif
+#ifndef MK_MBUTTON
+#define MK_MBUTTON 0x0010
+#endif
+#ifndef MK_XBUTTON1
+#define MK_XBUTTON1 0x0020
+#endif
+#ifndef MK_XBUTTON2
+#define MK_XBUTTON2 0x0040
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
@@ -277,6 +298,9 @@
 #endif
 #ifndef WM_SYSCOMMAND
 #define WM_SYSCOMMAND 0x012
+#endif
+#ifndef WM_MOUSEMOVE
+#define WM_MOUSEMOVE 0x0200
 #endif
 
 typedef struct {

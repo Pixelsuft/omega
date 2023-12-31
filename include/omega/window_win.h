@@ -16,6 +16,7 @@ typedef struct {
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;
     OMG_FPoint size_cache;
+    OMG_Point mouse_pos_cache;
     int win_build_num;
     bool destroyed;
 } OMG_WindowWin;
