@@ -512,6 +512,42 @@ bool omg_string_add_char_p(OMG_String* this, const char* str_to_add) {
     return false;
 }
 
+bool omg_string_add_point(OMG_String* this, const OMG_Point* point_to_add) {
+    return OMG_ISNULL(point_to_add) || omg_string_add_int(this, point_to_add->x) ||
+        omg_string_add_char(this, 'x') || omg_string_add_int(this, point_to_add->y);
+}
+
+bool omg_string_add_fpoint(OMG_String* this, const OMG_FPoint* fpoint_to_add) {
+    return OMG_ISNULL(fpoint_to_add) || omg_string_add_float(this, fpoint_to_add->x) ||
+        omg_string_add_char(this, 'x') || omg_string_add_float(this, fpoint_to_add->y);
+}
+
+bool omg_string_add_dpoint(OMG_String* this, const OMG_DPoint* dpoint_to_add) {
+    return OMG_ISNULL(dpoint_to_add) || omg_string_add_double(this, dpoint_to_add->x) ||
+        omg_string_add_char(this, 'x') || omg_string_add_double(this, dpoint_to_add->y);
+}
+
+bool omg_string_add_rect(OMG_String* this, const OMG_Rect* rect_to_add) {
+    return OMG_ISNULL(rect_to_add) || omg_string_add_int(this, rect_to_add->x) ||
+        omg_string_add_char(this, 'x') || omg_string_add_int(this, rect_to_add->y) ||
+        omg_string_add_char(this, ';') || omg_string_add_int(this, rect_to_add->w) ||
+        omg_string_add_char(this, 'x') || omg_string_add_int(this, rect_to_add->h);
+}
+
+bool omg_string_add_frect(OMG_String* this, const OMG_FRect* frect_to_add) {
+    return OMG_ISNULL(frect_to_add) || omg_string_add_float(this, frect_to_add->x) ||
+        omg_string_add_char(this, 'x') || omg_string_add_float(this, frect_to_add->y) ||
+        omg_string_add_char(this, ';') || omg_string_add_float(this, frect_to_add->w) ||
+        omg_string_add_char(this, 'x') || omg_string_add_float(this, frect_to_add->h);
+}
+
+bool omg_string_add_drect(OMG_String* this, const OMG_DRect* drect_to_add) {
+    return OMG_ISNULL(drect_to_add) || omg_string_add_double(this, drect_to_add->x) ||
+        omg_string_add_char(this, 'x') || omg_string_add_double(this, drect_to_add->y) ||
+        omg_string_add_char(this, ';') || omg_string_add_double(this, drect_to_add->w) ||
+        omg_string_add_char(this, 'x') || omg_string_add_double(this, drect_to_add->h);
+}
+
 bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
 #if OMG_SUPPORT_WIN
     if (this->type < OMG_STRING_BUFFER || OMG_ISNULL(wstr_to_add))

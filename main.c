@@ -45,13 +45,12 @@ void app_on_state_changing(OMG_EventStateChanging* event) {
 
 void app_on_size_change(OMG_EventResize* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    OMG_INFO(this->omg, "Resize: [", (int)event->size.w, "x", (int)event->size.h, "]");
-    // OMG_INFO(this->omg, "Scale: [", this->ren->scale.x, "x", this->ren->scale.y, "]");
+    OMG_INFO(this->omg, "Resize: [", &event->size, "]");
 }
 
 void app_on_mouse_move(OMG_EventMouseMove* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    OMG_INFO(this->omg, "Mouse Move [", (int)event->id, " ", event->pos.x, "x", event->pos.y, "]");
+    OMG_INFO(this->omg, "Mouse Move [", &event->pos, "]");
 }
 
 void app_on_update(OMG_EventUpdate* event) {

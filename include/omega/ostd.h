@@ -38,6 +38,12 @@
     double: omg_string_add_double, \
     long: omg_string_add_long, \
     unsigned long: omg_string_add_ulong, \
+    OMG_Point*: omg_string_add_point, \
+    OMG_FPoint*: omg_string_add_fpoint, \
+    OMG_DPoint*: omg_string_add_dpoint, \
+    OMG_Rect*: omg_string_add_rect, \
+    OMG_FRect*: omg_string_add_frect, \
+    OMG_DRect*: omg_string_add_drect, \
     OMG_String*: omg_string_add, \
     void*: omg_string_add_pointer, \
     const void*: omg_string_add_pointer \
@@ -199,6 +205,54 @@ typedef union {
     double val[2];
 } OMG_DPoint;
 
+typedef union {
+    struct {
+        int x;
+        int y;
+        int w;
+        int h;
+    };
+    struct {
+        int x1;
+        int y1;
+        int x2;
+        int y2;
+    };
+    int val[4];
+} OMG_Rect;
+
+typedef union {
+    struct {
+        float x;
+        float y;
+        float w;
+        float h;
+    };
+    struct {
+        float x1;
+        float y1;
+        float x2;
+        float y2;
+    };
+    float val[4];
+} OMG_FRect;
+
+typedef union {
+    struct {
+        double x;
+        double y;
+        double w;
+        double h;
+    };
+    struct {
+        double x1;
+        double y1;
+        double x2;
+        double y2;
+    };
+    double val[4];
+} OMG_DRect;
+
 typedef struct {
     void* (*lib_load)(const OMG_String* fn, const wchar_t* adv_fn);
     void* (*lib_func)(void* lib, const OMG_String* func_name);
@@ -258,3 +312,9 @@ OMG_API bool omg_string_add_float(OMG_String* this, const float float_to_add);
 OMG_API bool omg_string_add_double(OMG_String* this, const double double_to_add);
 OMG_API bool omg_string_add_char_p(OMG_String* this, const char* str_to_add);
 OMG_API bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add);
+OMG_API bool omg_string_add_point(OMG_String* this, const OMG_Point* point_to_add);
+OMG_API bool omg_string_add_fpoint(OMG_String* this, const OMG_FPoint* fpoint_to_add);
+OMG_API bool omg_string_add_dpoint(OMG_String* this, const OMG_DPoint* dpoint_to_add);
+OMG_API bool omg_string_add_rect(OMG_String* this, const OMG_Rect* rect_to_add);
+OMG_API bool omg_string_add_frect(OMG_String* this, const OMG_FRect* frect_to_add);
+OMG_API bool omg_string_add_drect(OMG_String* this, const OMG_DRect* drect_to_add);
