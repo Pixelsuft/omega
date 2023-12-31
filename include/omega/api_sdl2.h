@@ -39,6 +39,21 @@ typedef enum
 #define SDL_WINDOWPOS_CENTERED         SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 #define SDL_WINDOWPOS_ISCENTERED(X)    (((X) & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK)
 
+#define SDL_TOUCH_MOUSEID ((uint32_t)-1)
+#define SDL_MOUSE_TOUCHID ((int64_t)-1)
+
+#define SDL_BUTTON(X)       (1 << ((X) - 1))
+#define SDL_BUTTON_LEFT     1
+#define SDL_BUTTON_MIDDLE   2
+#define SDL_BUTTON_RIGHT    3
+#define SDL_BUTTON_X1       4
+#define SDL_BUTTON_X2       5
+#define SDL_BUTTON_LMASK    SDL_BUTTON(SDL_BUTTON_LEFT)
+#define SDL_BUTTON_MMASK    SDL_BUTTON(SDL_BUTTON_MIDDLE)
+#define SDL_BUTTON_RMASK    SDL_BUTTON(SDL_BUTTON_RIGHT)
+#define SDL_BUTTON_X1MASK   SDL_BUTTON(SDL_BUTTON_X1)
+#define SDL_BUTTON_X2MASK   SDL_BUTTON(SDL_BUTTON_X2)
+
 typedef enum
 {
     SDL_LOG_CATEGORY_APPLICATION
@@ -155,11 +170,56 @@ typedef struct SDL_WindowEvent
     int32_t data2;
 } SDL_WindowEvent;
 
+typedef struct SDL_MouseMotionEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    uint32_t which;
+    uint32_t state;
+    int32_t x;
+    int32_t y;
+    int32_t xrel;
+    int32_t yrel;
+} SDL_MouseMotionEvent;
+
+typedef struct SDL_MouseButtonEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    uint32_t which;
+    uint8_t button;
+    uint8_t state;
+    uint8_t clicks;
+    uint8_t padding1;
+    int32_t x;
+    int32_t y;
+} SDL_MouseButtonEvent;
+
+typedef struct SDL_MouseWheelEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    uint32_t which;
+    int32_t x;
+    int32_t y;
+    uint32_t direction;
+    float preciseX; // 2.0.18
+    float preciseY;
+    int32_t mouseX; // 2.26.0
+    int32_t mouseY;
+} SDL_MouseWheelEvent;
+
 typedef union SDL_Event
 {
     uint32_t type;
     SDL_CommonEvent common;
     SDL_WindowEvent window;
+    SDL_MouseMotionEvent motion;
+    SDL_MouseButtonEvent button;
+    SDL_MouseWheelEvent wheel;
     uint8_t padding[sizeof(void*) <= 8 ? 56 : sizeof(void*) == 16 ? 64 : 3 * sizeof(void*)];
 } SDL_Event;
 
@@ -252,6 +312,7 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_LogError)(int, const char*, ...);
     void OMG_SDL2_STD_PREFIX (*SDL_LogCritical)(int, const char*, ...);
     const char* OMG_SDL2_STD_PREFIX (*SDL_GetError)(void);
+    SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_GetMouseFocus)(void);
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetMouseState)(int*, int*);
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetRelativeMouseState)(int*, int*);
     SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_CreateWindow)(const char*, int, int, int, int, uint32_t);

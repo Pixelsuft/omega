@@ -24,6 +24,20 @@
 #define OMG_LOG_CATEGORY_FATAL 4
 #define OMG_LOG_CATEGORY_DISABLED 5
 
+#define OMG_TOUCH_MOUSEID ((uint32_t)-1)
+#define OMG_MOUSE_TOUCHID ((int64)-1)
+#define OMG_MBUTTON(X)       (1 << ((X) - 1))
+#define OMG_MBUTTON_LEFT     1
+#define OMG_MBUTTON_MIDDLE   2
+#define OMG_MBUTTON_RIGHT    3
+#define OMG_MBUTTON_X1       4
+#define OMG_MBUTTON_X2       5
+#define OMG_MBUTTON_LMASK    OMG_MBUTTON(OMG_MBUTTON_LEFT)
+#define OMG_MBUTTON_MMASK    OMG_MBUTTON(OMG_MBUTTON_MIDDLE)
+#define OMG_MBUTTON_RMASK    OMG_MBUTTON(OMG_MBUTTON_RIGHT)
+#define OMG_MBUTTON_X1MASK   OMG_MBUTTON(OMG_MBUTTON_X1)
+#define OMG_MBUTTON_X2MASK   OMG_MBUTTON(OMG_MBUTTON_X2)
+
 typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
@@ -64,6 +78,7 @@ typedef struct OMG_Omega {
     void (*on_size_change)(OMG_EventResize* event);
     void (*on_state_change)(OMG_EventStateChange* event);
     void (*on_state_changing)(OMG_EventStateChanging* event);
+    void (*on_mouse_move)(OMG_EventMouseMove* event);
     OMG_FPoint scale;
     int log_level_lib;
     int log_level_omg;
@@ -99,6 +114,7 @@ OMG_API void omg_event_on_close(OMG_EventClose* event);
 OMG_API void omg_event_on_resize(OMG_EventResize* event);
 OMG_API void omg_event_on_state_change(OMG_EventStateChange* event);
 OMG_API void omg_event_on_state_changing(OMG_EventStateChanging* event);
+OMG_API void omg_event_on_mouse_move(OMG_EventMouseMove* event);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);

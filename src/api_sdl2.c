@@ -74,6 +74,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_LogError);
     LOAD_REQUIRED(SDL_LogCritical);
     LOAD_REQUIRED(SDL_GetError);
+    LOAD_REQUIRED(SDL_GetMouseFocus);
     LOAD_REQUIRED(SDL_GetMouseState);
     LOAD_REQUIRED(SDL_GetRelativeMouseState);
     LOAD_REQUIRED(SDL_CreateWindow);

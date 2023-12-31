@@ -100,6 +100,26 @@ void omg_sdl2_delay(OMG_OmegaSdl2* this, double seconds) {
 void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
     while (this->sdl2->SDL_PollEvent(&this->ev)) {
         switch (this->ev.type) {
+            case SDL_MOUSEMOTION: {
+                OMG_Window* win = NULL;
+                FIND_SDL2_WIN(win, this->ev.motion.windowID);
+                if (OMG_ISNULL(win))
+                    break;
+                OMG_EventMouseMove event;
+                MAKE_EVENT(&event);
+                event.is_emulated = this->ev.motion.which == SDL_TOUCH_MOUSEID;
+                if (!event.is_emulated || base->emulate_mouse) {
+                    event.win = win;
+                    event.id = this->ev.motion.which;
+                    event.state = this->ev.motion.state;
+                    event.pos.x = (float)this->ev.motion.x;
+                    event.pos.y = (float)this->ev.motion.y;
+                    event.rel.x = (float)this->ev.motion.xrel;
+                    event.rel.y = (float)this->ev.motion.yrel;
+                    base->on_mouse_move(&event);
+                }
+                break;
+            }
             case SDL_WINDOWEVENT: {
                 OMG_Window* win = NULL;
                 FIND_SDL2_WIN(win, this->ev.window.windowID);

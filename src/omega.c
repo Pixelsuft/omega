@@ -138,6 +138,10 @@ void omg_event_on_close(OMG_EventClose* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_mouse_move(OMG_EventMouseMove* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
@@ -148,6 +152,7 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_size_change = omg_event_on_resize;
     this->on_state_change = omg_event_on_state_change;
     this->on_state_changing = omg_event_on_state_changing;
+    this->on_mouse_move = omg_event_on_mouse_move;
 }
 
 bool omg_omg_init(OMG_Omega* this) {

@@ -51,3 +51,14 @@ typedef struct {
     int change;
     bool allow;
 } OMG_EventStateChanging;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    uint32_t id;
+    uint32_t state;
+    OMG_FPoint pos;
+    OMG_FPoint rel;
+    bool is_emulated;
+    uint8_t clicks;
+} OMG_EventMouseMove;
