@@ -60,6 +60,9 @@ typedef enum
 #define SDLK_SCANCODE_MASK (1 << 30)
 #define SDL_SCANCODE_TO_KEYCODE(X)  (X | SDLK_SCANCODE_MASK)
 
+#define SDL_TEXTEDITINGEVENT_TEXT_SIZE (32)
+#define SDL_TEXTINPUTEVENT_TEXT_SIZE (32)
+
 typedef int32_t SDL_Keycode;
 
 typedef enum
@@ -584,6 +587,14 @@ typedef enum
     KMOD_RESERVED = KMOD_SCROLL
 } SDL_Keymod;
 
+typedef struct SDL_Keysym
+{
+    SDL_Scancode scancode;
+    SDL_Keycode sym;
+    uint16_t mod;
+    uint32_t unused;
+} SDL_Keysym;
+
 typedef enum
 {
     SDL_LOG_CATEGORY_APPLICATION
@@ -742,11 +753,55 @@ typedef struct SDL_MouseWheelEvent
     int32_t mouseY;
 } SDL_MouseWheelEvent;
 
+typedef struct SDL_KeyboardEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    uint8_t state;
+    uint8_t repeat;
+    uint8_t padding2;
+    uint8_t padding3;
+    SDL_Keysym keysym;
+} SDL_KeyboardEvent;
+
+typedef struct SDL_TextEditingEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    char text[SDL_TEXTEDITINGEVENT_TEXT_SIZE];
+    int32_t start;
+    int32_t length;
+} SDL_TextEditingEvent;
+
+typedef struct SDL_TextEditingExtEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    char* text;
+    int32_t start;
+    int32_t length;
+} SDL_TextEditingExtEvent;
+
+typedef struct SDL_TextInputEvent
+{
+    uint32_t type;
+    uint32_t timestamp;
+    uint32_t windowID;
+    char text[SDL_TEXTINPUTEVENT_TEXT_SIZE];
+} SDL_TextInputEvent;
+
 typedef union SDL_Event
 {
     uint32_t type;
     SDL_CommonEvent common;
     SDL_WindowEvent window;
+    SDL_KeyboardEvent key;
+    SDL_TextEditingEvent edit;
+    SDL_TextEditingExtEvent editExt;
+    SDL_TextInputEvent text; 
     SDL_MouseMotionEvent motion;
     SDL_MouseButtonEvent button;
     SDL_MouseWheelEvent wheel;
