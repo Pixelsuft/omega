@@ -122,6 +122,12 @@ void omg_event_on_focus_change(OMG_EventFocusChange* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event) {
+    OMG_UNUSED(event);
+    OMG_Omega* this = OMG_OMEGA_FROM_EVENT(event);
+    _OMG_LOG_INFO(this, &event->rel);
+}
+
 void omg_event_on_state_changing(OMG_EventStateChanging* event) {
     OMG_Window* this = OMG_WIN_FROM_EVENT(event);
     if (event->change == OMG_WIN_STATE_CLOSED) {
@@ -167,6 +173,7 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_mouse_move = omg_event_on_mouse_move;
     this->on_mouse_down = omg_event_on_mouse_button;
     this->on_mouse_up = omg_event_on_mouse_button;
+    this->on_mouse_wheel = omg_event_on_mouse_wheel;
     this->on_mouse_enter = omg_event_on_mouse_focus;
     this->on_mouse_leave = omg_event_on_mouse_focus;
     this->on_focus_change = omg_event_on_focus_change;

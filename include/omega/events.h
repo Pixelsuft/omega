@@ -84,6 +84,16 @@ typedef struct {
 typedef struct {
     OMG_Event parent;
     void* win;
+    OMG_FPoint mouse_pos;
+    OMG_FPoint rel;
+    uint32_t state;
+    uint32_t id;
+    bool is_emulated;
+} OMG_EventMouseWheel;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
     OMG_FPoint pos;
     uint32_t state;
     bool is_focused;

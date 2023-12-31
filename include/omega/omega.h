@@ -86,6 +86,7 @@ typedef struct OMG_Omega {
     void (*on_mouse_move)(OMG_EventMouseMove* event);
     void (*on_mouse_down)(OMG_EventMouseButton* event);
     void (*on_mouse_up)(OMG_EventMouseButton* event);
+    void (*on_mouse_wheel)(OMG_EventMouseWheel* event);
     void (*on_mouse_enter)(OMG_EventMouseFocus* event);
     void (*on_mouse_leave)(OMG_EventMouseFocus* event);
     OMG_FPoint scale;
@@ -126,6 +127,7 @@ OMG_API void omg_event_on_state_changing(OMG_EventStateChanging* event);
 OMG_API void omg_event_on_focus_change(OMG_EventFocusChange* event);
 OMG_API void omg_event_on_mouse_move(OMG_EventMouseMove* event);
 OMG_API void omg_event_on_mouse_button(OMG_EventMouseButton* event);
+OMG_API void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event);
 OMG_API void omg_event_on_mouse_focus(OMG_EventMouseFocus* event);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);

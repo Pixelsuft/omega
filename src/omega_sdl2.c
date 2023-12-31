@@ -279,6 +279,45 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 }
                 break;
             }
+            case SDL_MOUSEWHEEL: {
+                OMG_Window* win = NULL;
+                FIND_SDL2_WIN(win, this->ev.wheel.windowID);
+                if (OMG_ISNULL(win))
+                    break;
+                OMG_EventMouseWheel event;
+                MAKE_EVENT(&event);
+                event.is_emulated = this->ev.wheel.which == SDL_TOUCH_MOUSEID;
+                if (!event.is_emulated || base->emulate_mouse) {
+                    event.win = win;
+                    event.id = this->ev.wheel.which;
+                    int x, y;
+                    event.state = this->sdl2->SDL_GetMouseState(&x, &y);
+                    event.rel.x = (float)this->ev.wheel.x;
+                    event.rel.y = (float)(-this->ev.wheel.y);
+#if SDL_VERSION_ATLEAST(2, 0, 18)
+                    if ((this->sdl2->ver.major >= 2) && ((this->sdl2->ver.minor > 0) || (this->sdl2->ver.patch >= 18))) {
+                        event.rel.x = this->ev.wheel.preciseX;
+                        event.rel.y = -this->ev.wheel.preciseY;
+                    }
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+                    if (this->ev.wheel.direction == SDL_MOUSEWHEEL_FLIPPED) {
+                        event.rel.x = -event.rel.x;
+                        event.rel.y = -event.rel.y;
+                    }
+#endif
+                    event.mouse_pos.x = (float)x;
+                    event.mouse_pos.y = (float)y;
+#if SDL_VERSION_ATLEAST(2, 26, 0)
+                    if ((this->sdl2->ver.major >= 2) && (this->sdl2->ver.minor >= 26)) {
+                        event.mouse_pos.x = (float)this->ev.wheel.mouseX;
+                        event.mouse_pos.y = (float)this->ev.wheel.mouseY;
+                    }
+#endif
+                    base->on_mouse_wheel(&event);
+                }
+                break;
+            }
             case SDL_QUIT: {
                 if (this->not_prevent_close) {
                     OMG_EventQuit event;

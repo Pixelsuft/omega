@@ -13,6 +13,9 @@
 #if OMG_SDL2_DYNAMIC
 #define OMG_SDL2_STD_PREFIX
 
+// Hack
+#define SDL_VERSION_ATLEAST(x, y, z) 1
+
 #ifdef __CC_ARM
 #define SDL_FALSE 0
 #define SDL_TRUE 1
@@ -597,6 +600,12 @@ typedef struct SDL_Keysym
 
 typedef enum
 {
+    SDL_MOUSEWHEEL_NORMAL,
+    SDL_MOUSEWHEEL_FLIPPED
+} SDL_MouseWheelDirection;
+
+typedef enum
+{
     SDL_LOG_CATEGORY_APPLICATION
 } SDL_LogCategory;
 
@@ -746,7 +755,7 @@ typedef struct SDL_MouseWheelEvent
     uint32_t which;
     int32_t x;
     int32_t y;
-    uint32_t direction;
+    uint32_t direction; // 2.0.4
     float preciseX; // 2.0.18
     float preciseY;
     int32_t mouseX; // 2.26.0
