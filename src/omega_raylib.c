@@ -185,6 +185,21 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         else
             this->raylib->MinimizeWindow();
     }
+    Vector2 mouse_delta = this->raylib->GetMouseDelta();
+    if ((mouse_delta.x != 0.0f) || (mouse_delta.y != 0.0f)) {
+        Vector2 mouse_pos = this->raylib->GetMousePosition();
+        OMG_EventMouseMove event;
+        MAKE_EVENT(&event);
+        event.is_emulated = false;
+        event.win = win;
+        event.id = 0;
+        event.state = 0; // TODO
+        event.pos.x = mouse_pos.x;
+        event.pos.y = mouse_pos.y;
+        event.rel.x = mouse_delta.x;
+        event.rel.y = mouse_delta.y;
+        base->on_mouse_move(&event);
+    }
 }
 
 void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {

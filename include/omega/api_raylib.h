@@ -34,6 +34,11 @@ typedef struct Color {
     unsigned char a;
 } Color;
 
+typedef struct Vector2 {
+    float x;
+    float y;
+} Vector2;
+
 typedef enum {
     LOG_ALL = 0,
     LOG_TRACE,
@@ -88,6 +93,19 @@ typedef struct {
     int OMG_RAYLIB_PREFIX (*GetRenderHeight)(void);
     void OMG_RAYLIB_PREFIX (*SetWindowSize)(int, int);
     void OMG_RAYLIB_PREFIX (*SetWindowFocused)(void);
+    bool (*IsMouseButtonPressed)(int);
+    bool (*IsMouseButtonDown)(int);
+    bool (*IsMouseButtonReleased)(int);
+    bool (*IsMouseButtonUp)(int);
+    int (*GetMouseX)(void);
+    int (*GetMouseY)(void);
+    Vector2 (*GetMousePosition)(void);
+    Vector2 (*GetMouseDelta)(void);
+    void (*SetMousePosition)(int, int);
+    void (*SetMouseOffset)(int, int);
+    void (*SetMouseScale)(float, float);
+    float (*GetMouseWheelMove)(void);
+    Vector2 (*GetMouseWheelMoveV)(void);
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
     void OMG_RAYLIB_PREFIX (*ClearBackground)(Color);

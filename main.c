@@ -51,7 +51,7 @@ void app_on_size_change(OMG_EventResize* event) {
 
 void app_on_mouse_move(OMG_EventMouseMove* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    OMG_INFO(this->omg, "Mouse Move [", event->pos.x, "x", event->pos.y, "]");
+    OMG_INFO(this->omg, "Mouse Move [", (int)event->id, " ", event->pos.x, "x", event->pos.y, "]");
 }
 
 void app_on_update(OMG_EventUpdate* event) {
