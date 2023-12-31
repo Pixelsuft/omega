@@ -481,8 +481,8 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     float new_w = (float)(rect.right - rect.left) * new_scale.x / base->scale.x;
     float new_h = (float)(rect.bottom - rect.top) * new_scale.y / base->scale.y;
     */
-    this->size_cache.w = base->size.w * new_scale.x + (float)(rect.right - rect.left - c_rect.right);
-    this->size_cache.h = base->size.h * new_scale.y + (float)(rect.bottom - rect.top - c_rect.bottom);
+    this->size_cache.w = base->size.w/* * new_scale.x*/ + (float)(rect.right - rect.left - c_rect.right);
+    this->size_cache.h = base->size.h/* * new_scale.y*/ + (float)(rect.bottom - rect.top - c_rect.bottom);
     /*this->u32->MoveWindow(
         this->hwnd,
         base->centered ? (int)(((float)desktop_rect.right - this->size_cache.w) / 2.0f) : rect.right,
@@ -558,7 +558,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         (base->resizable ? WS_THICKFRAME : 0) | \
         WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
-        (int)(base->size.w * base->scale.x) + 31, (int)(base->size.h * base->scale.y) + 16,
+        (int)(base->size.w) + 31, (int)(base->size.h) + 16,
         NULL, NULL, this->wc.hInstance, this
     );
     if (OMG_ISNULL(this->hwnd)) {
