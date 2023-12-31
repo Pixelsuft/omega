@@ -304,7 +304,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         }
         case WM_WINDOWPOSCHANGING: {
             WINDOWPOS* pos = (WINDOWPOS*)lparam;
-            if (!base->resizable) { // Why??? Fuck Microsoft!
+            // Why??? Fuck Microsoft!
+            if (!base->resizable && ((pos->cx != (int)this->size_cache.x) || (pos->cy != (int)this->size_cache.y))) {
+                printf("%i\n\n", pos->cx);
                 pos->cx = (int)this->size_cache.w;
                 pos->cy = (int)this->size_cache.h;
                 pos->flags |= SWP_NOSIZE;
@@ -593,7 +595,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         (base->resizable ? WS_THICKFRAME : 0) | \
         WS_OVERLAPPED,
         CW_USEDEFAULT, CW_USEDEFAULT,
-        (int)(base->size.w) + 31, (int)(base->size.h) + 16,
+        (int)base->size.w + 50, (int)base->size.h + 50,
         NULL, NULL, this->wc.hInstance, this
     );
     if (OMG_ISNULL(this->hwnd)) {
