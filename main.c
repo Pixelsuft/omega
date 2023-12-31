@@ -119,15 +119,18 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->winmgr->init(this->omg->winmgr) ||
         (OMG_ISNULL(this->win = this->omg->winmgr->window_alloc(this->omg->winmgr)))
     ) {
+        OMG_ERROR(this->omg, "OMG Init Fail");
         this->omg->destroy(this->omg);
         return;
     }
     this->win->resizable = false;
     if (this->win->default_init(this->win)) {
+        OMG_ERROR(this->omg, "OMG Window Init Fail");
         this->omg->destroy(this->omg);
         return;
     }
     if (this->win->renderer_alloc(this->win) || this->win->ren->init(this->win->ren)) {
+        OMG_ERROR(this->omg, "OMG Renderer Init fail");
         this->omg->destroy(this->omg);
         return;
     }
