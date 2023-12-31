@@ -69,7 +69,9 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         this->omg,
         "Key ",
         omg_keyboard_name_from_scancode(event->scancode)->ptr,
-        " ",
+        " (",
+        omg_keyboard_name_from_key(event->sym)->ptr,
+        ") ",
         event->is_pressed ? "Press" : "Release"
     );
 }

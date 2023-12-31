@@ -796,7 +796,7 @@ typedef enum
     OMGK_SOFTRIGHT = OMG_SCANCODE_TO_KEYCODE(OMG_SCANCODE_SOFTRIGHT),
     OMGK_CALL = OMG_SCANCODE_TO_KEYCODE(OMG_SCANCODE_CALL),
     OMGK_ENDCALL = OMG_SCANCODE_TO_KEYCODE(OMG_SCANCODE_ENDCALL)
-} OMG_KeyCode;
+} OMG_Keycode;
 
 typedef enum
 {
@@ -821,3 +821,7 @@ typedef enum
 } OMG_Keymod;
 
 OMG_API const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode);
+OMG_API const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key);
+#if OMG_EXPORT_SHIT
+OMG_API char* OMG_keyboard_UCS4ToUTF8(uint32_t ch, char* dst);
+#endif
