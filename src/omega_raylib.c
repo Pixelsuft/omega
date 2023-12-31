@@ -291,7 +291,10 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
 
 bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
     this->is_focused = false;
-    base->std->memset(this->scancode_map, 0, sizeof(this->scancode_map));
+    this->scancode_map = OMG_MALLOC(base->mem, 350 * sizeof(uint32_t));
+    if (OMG_ISNULL(this->scancode_map))
+        return true;
+    base->std->memset(this->scancode_map, 0, 350 * sizeof(uint32_t));
     this->scancode_map[KEY_NULL] = 0;
     this->scancode_map[KEY_APOSTROPHE] = OMG_SCANCODE_APOSTROPHE;
     this->scancode_map[KEY_COMMA] = OMG_SCANCODE_COMMA;
@@ -405,6 +408,8 @@ bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
     if (OMG_ISNULL(base->clock)) {
         base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockRaylib));
         if (OMG_ISNULL(base->clock)) {
+            OMG_FREE(base->mem, this->scancode_map);
+            this->scancode_map = NULL;
             return true;
         }
         base->clock->was_allocated = true;
@@ -421,6 +426,8 @@ bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
 
 bool omg_raylib_app_quit(OMG_OmegaRaylib* this) {
     if (base->inited) {
+        OMG_FREE(base->mem, this->scancode_map);
+        this->scancode_map = NULL;
         omg_app_quit((OMG_Omega*)this);
         base->inited = false;
     }
