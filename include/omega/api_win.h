@@ -327,6 +327,9 @@
 #ifndef WM_TIMER
 #define WM_TIMER 0x0113
 #endif
+#ifndef WM_TOUCH
+#define WM_TOUCH 0x0240
+#endif
 #ifndef WM_EXITSIZEMOVE
 #define WM_EXITSIZEMOVE 0x0232
 #endif
