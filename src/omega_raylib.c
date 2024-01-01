@@ -303,6 +303,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             event.is_repeated = event.is_pressed && is_repeated;
             event.scancode = code;
             event.sym = omg_keyboard_key_from_scancode(code);
+            base->keyboard_state[code] = event.is_pressed;
             KEYBOARD_FILL_MOD(event.mod);
             (event.is_pressed ? base->on_key_down : base->on_key_up)(&event);
         }
