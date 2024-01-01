@@ -117,6 +117,24 @@ bool omg_window_sdl2_set_window_mode(OMG_WindowSdl2* this, int mode) {
     return false;
 }
 
+bool omg_window_sdl2_set_size(OMG_WindowSdl2* this, const OMG_FPoint* new_size) {
+    omg_window_set_size((OMG_Window*)this, new_size);
+    this->sdl2->SDL_SetWindowSize(this->win, (int)new_size->w, (int)new_size->h);
+    return false;
+}
+
+bool omg_window_sdl2_set_min_size(OMG_WindowSdl2* this, const OMG_FPoint* new_min_size) {
+    omg_window_set_min_size((OMG_Window*)this, new_min_size);
+    this->sdl2->SDL_SetWindowMinimumSize(this->win, (int)new_min_size->w, (int)new_min_size->h);
+    return false;
+}
+
+bool omg_window_sdl2_set_max_size(OMG_WindowSdl2* this, const OMG_FPoint* new_max_size) {
+    omg_window_set_max_size((OMG_Window*)this, new_max_size);
+    this->sdl2->SDL_SetWindowMaximumSize(this->win, (int)new_max_size->w, (int)new_max_size->h);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -146,6 +164,9 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         this->id = 1;
     }
     OMG_BEGIN_POINTER_CAST();
+    base->set_size = omg_window_sdl2_set_size;
+    base->set_min_size = omg_window_sdl2_set_min_size;
+    base->set_max_size = omg_window_sdl2_set_max_size;
     base->set_state = omg_window_sdl2_set_title;
     base->set_sys_button = omg_window_sdl2_set_title;
     base->set_resizable = omg_window_sdl2_set_resizable;

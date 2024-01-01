@@ -129,6 +129,27 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         }
     }
     if (this->raylib->IsWindowResized()) {
+        float new_w = (float)this->raylib->GetScreenWidth();
+        float new_h = (float)this->raylib->GetScreenHeight();
+        bool should_limit = false;
+        if (new_w < win->min_size.w) {
+            should_limit = true;
+            new_w = win->min_size.w;
+        }
+        else if ((win->max_size.w > 0.0f) && (new_w > win->max_size.w)) {
+            should_limit = true;
+            new_w = win->max_size.w;
+        }
+        if (new_h < win->min_size.h) {
+            should_limit = true;
+            new_h = win->min_size.h;
+        }
+        else if ((win->max_size.h > 0.0f) && (new_h > win->max_size.h)) {
+            should_limit = true;
+            new_h = win->max_size.h;
+        }
+        if (should_limit)
+            this->raylib->SetWindowSize((int)new_w, (int)new_h);
         OMG_EventResize event;
         MAKE_EVENT(&event);
         event.win = win;

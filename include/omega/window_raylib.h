@@ -12,6 +12,7 @@ typedef struct {
 OMG_API bool omg_window_raylib_init(OMG_WindowRaylib* this);
 OMG_API bool omg_window_raylib_destroy(OMG_WindowRaylib* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_window_raylib_set_size(OMG_WindowRaylib* this, const OMG_FPoint* new_size);
 OMG_API bool omg_window_raylib_set_state(OMG_WindowRaylib* this, int state);
 OMG_API bool omg_window_raylib_set_sys_button(OMG_WindowRaylib* this, int id, bool enabled);
 OMG_API bool omg_window_raylib_set_resizable(OMG_WindowRaylib* this, bool enabled);

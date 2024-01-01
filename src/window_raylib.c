@@ -93,6 +93,12 @@ bool omg_window_raylib_set_window_mode(OMG_WindowRaylib* this, int mode) {
     return false;
 }
 
+bool omg_window_raylib_set_size(OMG_WindowRaylib* this, const OMG_FPoint* new_size) {
+    omg_window_set_size((OMG_Window*)this, new_size);
+    this->raylib->SetWindowSize((int)new_size->w, (int)new_size->h);
+    return false;
+}
+
 bool omg_window_raylib_destroy(OMG_WindowRaylib* this) {
     if (base->inited) {
         omg_window_destroy((OMG_Window*)this);
@@ -131,6 +137,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->inited = false;
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_raylib_show;
+    base->set_size = omg_window_set_size;
     base->set_title = omg_window_raylib_set_title;
     base->destroy = omg_window_raylib_destroy;
     base->renderer_alloc = omg_window_raylib_renderer_alloc;

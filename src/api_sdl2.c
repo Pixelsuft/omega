@@ -86,6 +86,9 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_HideWindow);
     LOAD_REQUIRED(SDL_SetWindowFullscreen);
     LOAD_REQUIRED(SDL_SetWindowBordered);
+    LOAD_REQUIRED(SDL_SetWindowSize);
+    LOAD_REQUIRED(SDL_SetWindowMaximumSize);
+    LOAD_REQUIRED(SDL_SetWindowMinimumSize);
     LOAD_REQUIRED(SDL_MinimizeWindow);
     LOAD_REQUIRED(SDL_MaximizeWindow);
     LOAD_REQUIRED(SDL_RestoreWindow);

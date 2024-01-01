@@ -920,6 +920,9 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowResizable)(SDL_Window*, SDL_bool);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowBordered)(SDL_Window*, SDL_bool);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowAlwaysOnTop)(SDL_Window*, SDL_bool);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowSize)(SDL_Window*, int, int);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowMinimumSize)(SDL_Window*, int, int);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowMaximumSize)(SDL_Window*, int, int);
     void OMG_SDL2_STD_PREFIX (*SDL_MinimizeWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_MaximizeWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_RestoreWindow)(SDL_Window*);

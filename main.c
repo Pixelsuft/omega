@@ -143,7 +143,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->win->resizable = false;
+    this->win->resizable = true;
     if (this->win->default_init(this->win)) {
         OMG_ERROR(this->omg, "OMG Window Init Fail");
         this->omg->destroy(this->omg);
@@ -169,6 +169,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_key_down = this->omg->on_key_up = app_on_keyboard;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
+    this->win->set_min_size(this->win, &(OMG_FPoint){ .w = 320.0f, .h = 200.0f });
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));

@@ -26,6 +26,9 @@ typedef struct OMG_Window {
     bool (*destroy)(struct OMG_Window* this);
     bool (*show)(struct OMG_Window* this, bool show);
     bool (*set_title)(struct OMG_Window* this, const OMG_String* new_title);
+    bool (*set_size)(struct OMG_Window* this, const OMG_FPoint* new_size);
+    bool (*set_min_size)(struct OMG_Window* this, const OMG_FPoint* new_min_size);
+    bool (*set_max_size)(struct OMG_Window* this, const OMG_FPoint* new_max_size);
     bool (*renderer_alloc)(struct OMG_Window* this);
     bool (*renderer_free)(struct OMG_Window* this);
     bool (*set_state)(struct OMG_Window* this, int state);
@@ -44,6 +47,8 @@ typedef struct OMG_Window {
     void* omg;
     size_t array_pos;
     OMG_FPoint size;
+    OMG_FPoint min_size;
+    OMG_FPoint max_size;
     OMG_FPoint scale;
     int type;
     int state;
@@ -69,6 +74,9 @@ OMG_API void omg_window_fill_on_create(OMG_Window* this);
 OMG_API bool omg_window_destroy(OMG_Window* this);
 OMG_API bool omg_window_renderer_alloc(OMG_Window* this);
 OMG_API bool omg_window_renderer_free(OMG_Window* this);
+OMG_API bool omg_window_set_size(OMG_Window* this, const OMG_FPoint* new_size);
+OMG_API bool omg_window_set_min_size(OMG_Window* this, const OMG_FPoint* new_min_size);
+OMG_API bool omg_window_set_max_size(OMG_Window* this, const OMG_FPoint* new_max_size);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);
 OMG_API bool omg_window_set_window_mode(OMG_Window* this, int mode);

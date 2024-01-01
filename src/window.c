@@ -97,17 +97,40 @@ bool omg_window_set_window_mode(OMG_Window* this, int mode) {
     return false;
 }
 
+bool omg_window_set_size(OMG_Window* this, const OMG_FPoint* new_size) {
+    this->size.w = new_size->w;
+    this->size.h = new_size->h;
+    return false;
+}
+
+bool omg_window_set_min_size(OMG_Window* this, const OMG_FPoint* new_min_size) {
+    this->min_size.w = new_min_size->w;
+    this->min_size.h = new_min_size->h;
+    return false;
+}
+
+bool omg_window_set_max_size(OMG_Window* this, const OMG_FPoint* new_max_size) {
+    this->max_size.w = new_max_size->w;
+    this->max_size.h = new_max_size->h;
+    return false;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
     }
     this->scale.x = this->scale.y = 1.0f;
+    this->min_size.w = this->min_size.h = 0.0f;
+    this->max_size.w = this->max_size.h = 0.0f;
     this->ren = NULL;
     this->allow_alt = true;
     this->allow_alt_f4 = true;
     this->enable_paint = true;
     this->ren_type = OMG_REN_TYPE_AUTO;
     this->destroy = omg_window_destroy;
+    this->set_size = omg_window_set_size;
+    this->set_min_size = omg_window_set_min_size;
+    this->set_max_size = omg_window_set_max_size;
     this->set_state = omg_window_set_state;
     this->set_sys_button = omg_window_set_sys_button;
     this->set_resizable = omg_window_set_resizable;
