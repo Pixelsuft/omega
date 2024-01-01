@@ -85,6 +85,7 @@ bool omg_app_quit(OMG_Omega* this) {
     if (OMG_ISNOTNULL(this->keyboard_state)) {
         OMG_FREE(this->mem, this->keyboard_state);
         this->keyboard_state = NULL;
+        this->keymap = NULL;
     }
     return false;
 }
@@ -193,6 +194,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->std = NULL;
     this->clock = NULL;
     this->keyboard_state = NULL;
+    this->keymap = NULL;
     this->looping = false;
     this->emulate_mouse = true;
     this->enable_paint = true;

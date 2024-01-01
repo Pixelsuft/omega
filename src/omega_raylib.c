@@ -333,11 +333,14 @@ void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
 
 bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
     this->is_focused = false;
-    base->keyboard_state = OMG_MALLOC(base->mem, (OMG_NUM_SCANCODES * sizeof(bool)) + (350 * sizeof(uint32_t)));
+    base->keyboard_state = OMG_MALLOC(base->mem, (OMG_NUM_SCANCODES * (sizeof(bool) + sizeof(OMG_Keycode))) + (350 * sizeof(uint32_t)));
     if (OMG_ISNULL(base->keyboard_state))
         return true;
-    this->scancode_map = (uint32_t*)((size_t)base->keyboard_state + ((size_t)OMG_NUM_SCANCODES * sizeof(bool)));
-    base->std->memset(base->keyboard_state, 0, (OMG_NUM_SCANCODES * sizeof(bool)) + (350 * sizeof(uint32_t)));
+    base->keymap = (const OMG_Keycode*)((size_t)base->keyboard_state + OMG_NUM_SCANCODES * sizeof(bool));
+    base->std->memset(base->keyboard_state, 0, OMG_NUM_SCANCODES * sizeof(bool));
+    omg_keyboard_init_keymap(base);
+    this->scancode_map = (uint32_t*)((size_t)base->keymap + ((size_t)OMG_NUM_SCANCODES * sizeof(OMG_Keycode)));
+    base->std->memset(this->scancode_map, 0, 350 * sizeof(uint32_t));
     this->scancode_map[KEY_NULL] = 0;
     this->scancode_map[KEY_APOSTROPHE] = OMG_SCANCODE_APOSTROPHE;
     this->scancode_map[KEY_COMMA] = OMG_SCANCODE_COMMA;

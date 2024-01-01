@@ -52,6 +52,7 @@ typedef struct OMG_Omega {
     OMG_Window** omg_window_cache;
     OMG_String* sdl2_dll_path;
     bool* keyboard_state;
+    const OMG_Keycode* keymap;
     void* extra1;
     void* extra2;
     void* extra3;

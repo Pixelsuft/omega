@@ -531,6 +531,7 @@ typedef enum
 OMG_API const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode);
 OMG_API const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key);
 OMG_API OMG_Keycode omg_keyboard_key_from_scancode(OMG_Scancode scancode);
+OMG_API void omg_keyboard_init_keymap(void* omg);
 #if OMG_EXPORT_SHIT
 OMG_API char* omg_keyboard_UCS4ToUTF8(uint32_t ch, char* dst);
 #endif

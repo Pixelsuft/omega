@@ -374,10 +374,12 @@ void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
-    base->keyboard_state = OMG_MALLOC(base->mem, OMG_NUM_SCANCODES * sizeof(bool));
+    base->keyboard_state = OMG_MALLOC(base->mem, OMG_NUM_SCANCODES * (sizeof(bool) + sizeof(OMG_Keycode)));
     if (OMG_ISNULL(base->keyboard_state))
         return true;
+    base->keymap = (const OMG_Keycode*)((size_t)base->keyboard_state + OMG_NUM_SCANCODES * sizeof(bool));
     base->std->memset(base->keyboard_state, 0, OMG_NUM_SCANCODES * sizeof(bool));
+    omg_keyboard_init_keymap(base);
     if (OMG_ISNULL(base->clock)) {
         base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockSdl2));
         if (OMG_ISNULL(base->clock)) {

@@ -1,4 +1,5 @@
 #include <omega/keyboard.h>
+#include <omega/omega.h>
 
 // Thanks to SDL2 for 99.9% of code
 
@@ -592,6 +593,14 @@ static const char* OMG_ScancodeNames[OMG_NUM_SCANCODES] = {
 	OMGK_ENDCALL
 };
 
+static OMG_Keycode* keymap = NULL;
+
+void omg_keyboard_init_keymap(void* omg) {
+    OMG_Omega* this = (OMG_Omega*)omg;
+    keymap = this->keymap;
+    this->std->memcpy(this->keymap, OMG_default_keymap, sizeof(OMG_Keycode) * OMG_NUM_SCANCODES);
+}
+
 char* omg_keyboard_UCS4ToUTF8(uint32_t ch, char* dst) {
     uint8_t *p = (uint8_t*)dst;
     if (ch <= 0x7F) {
@@ -626,7 +635,7 @@ const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode) {
 }
 
 OMG_Keycode omg_keyboard_key_from_scancode(OMG_Scancode scancode) {
-    return OMG_default_keymap[scancode];
+    return keymap[scancode];
 }
 
 const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key) {
