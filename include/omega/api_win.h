@@ -9,6 +9,7 @@
 #include <windows.h>
 #else
 #include <windows.h>
+#include <windowsx.h>
 #endif
 #define OMG_WIN_STD_PREFIX WINAPI
 
@@ -425,6 +426,9 @@
 #ifndef WM_MOUSEWHEEL
 #define WM_MOUSEWHEEL 0x020A
 #endif
+#ifndef WM_MOUSEHWHEEL
+#define WM_MOUSEHWHEEL 0x020E
+#endif
 #ifndef WM_KEYDOWN
 #define WM_KEYDOWN 0x0100
 #endif
@@ -439,6 +443,9 @@
 #endif
 #ifndef WM_INPUT
 #define WM_INPUT 0x00FF
+#endif
+#ifndef WM_POINTERUPDATE
+#define WM_POINTERUPDATE 0x0245
 #endif
 
 typedef struct {
@@ -473,6 +480,14 @@ typedef enum {
 typedef struct {
     LONGLONG QuadPart;
 } OMG_WIN_LARGE_INTEGER;
+
+typedef struct {
+    POINT ptReserved;
+    POINT ptMaxSize;
+    POINT ptMaxPosition;
+    POINT ptMinTrackSize;
+    POINT ptMaxTrackSize;
+} OMG_WIN_MINMAXINFO, *OMG_WIN_PMINMAXINFO, *OMG_WIN_LPMINMAXINFO;
 
 #if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
 OMG_C_EXPORT __declspec(dllimport) void RtlGetVersion(OMG_WIN_NTDLL_OSVERSIONINFOEXW* version_information);

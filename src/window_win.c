@@ -614,6 +614,13 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             }
             return RET_DEF_PROC();
         }
+        case WM_UNICHAR: {
+            // TODO
+            return RET_DEF_PROC();
+        }
+        case WM_CHAR: {
+            return RET_DEF_PROC();
+        }
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN:
         case WM_RBUTTONDOWN:
@@ -647,6 +654,10 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 MOUSE_FILL_STATE(event.state, wparam);
             (event.is_pressed ? omg_base->on_mouse_down : omg_base->on_mouse_up)(&event);
             break;
+        }
+        case WM_POINTERUPDATE: {
+            // TODO: re-check mouse buttons state like in SDL2 and check for touch, etc
+            return RET_DEF_PROC();
         }
         case WM_ERASEBKGND: {
             /*
@@ -795,8 +806,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_window_win_update_scale(this);
             return RET_DEF_PROC();
         }
+        case WM_MOUSEHWHEEL:
         case WM_MOUSEWHEEL: {
-            short delta = -GET_WHEEL_DELTA_WPARAM(wparam);
+            short delta = GET_WHEEL_DELTA_WPARAM(wparam);
             if (delta == 0) // Am I right?
                 return FALSE;
             WORD param_state = GET_KEYSTATE_WPARAM(wparam);
@@ -806,8 +818,14 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.id = 0;
             event.is_emulated = false;
             MOUSE_FILL_STATE(event.state, param_state);
-            event.rel.x = 0.0f;
-            event.rel.y = (float)delta / (float)WHEEL_DELTA;
+            if (msg == WM_MOUSEWHEEL) {
+                event.rel.x = 0.0f;
+                event.rel.y = (float)(-delta) / (float)WHEEL_DELTA;
+            }
+            else {
+                event.rel.x = (float)delta / (float)WHEEL_DELTA;
+                event.rel.y = 0.0f;
+            }
             event.mouse_pos.x = (float)GET_X_LPARAM(lparam);
             event.mouse_pos.y = (float)GET_Y_LPARAM(lparam);
             omg_base->on_mouse_wheel(&event);
@@ -829,6 +847,24 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 event.is_focused = is_focused;
                 omg_base->on_focus_change(&event);
             }
+            return RET_DEF_PROC();
+        }
+        case WM_GETMINMAXINFO: {
+            if (OMG_ISNULL(this))
+                return FALSE;
+            OMG_WIN_MINMAXINFO* info = (OMG_WIN_MINMAXINFO*)lparam;
+            // TODO
+            OMG_UNUSED(info);
+            if (base->resizable) {
+                return RET_DEF_PROC();
+            }
+            else {
+                return RET_DEF_PROC();
+            }
+            return FALSE;
+        }
+        case WM_INPUTLANGCHANGE: {
+            // TODO: Keymap Update
             return RET_DEF_PROC();
         }
         case WM_CLOSE: {
