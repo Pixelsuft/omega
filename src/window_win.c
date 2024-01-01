@@ -698,12 +698,45 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             }
             return RET_DEF_PROC();
         }
+        case WM_GETMINMAXINFO: {
+            if (OMG_ISNULL(this))
+                return FALSE;
+            // I think it's better to do everything in WM_SIZING
+            OMG_WIN_MINMAXINFO* info = (OMG_WIN_MINMAXINFO*)lparam;
+            if (base->resizable) {
+                return RET_DEF_PROC();
+            }
+            else {
+                info->ptMaxSize.x = (LONG)base->size.w;
+                info->ptMaxSize.y = (LONG)base->size.h;
+                return RET_DEF_PROC();
+            }
+            return FALSE;
+        }
         case WM_SIZING: {
             RECT* new_rect = (RECT*)lparam;
-            if (!base->resizable) {
+            if (base->resizable) {
+                // TODO: why it's broken???
+                LONG min_size_x = (LONG)(base->min_size.w + this->size_cache.w - base->size.w);
+                LONG min_size_y = (LONG)(base->min_size.h + this->size_cache.h - base->size.h);
+                if ((new_rect->right - new_rect->left) < min_size_x)
+                    new_rect->right = new_rect->left + min_size_x;
+                if ((new_rect->bottom - new_rect->top) < min_size_y)
+                    new_rect->bottom = new_rect->top + min_size_y;
+                if (base->max_size.w > 0.0f) {
+                    LONG max_size_x = (LONG)(base->max_size.w + this->size_cache.w - base->size.w);
+                    if ((new_rect->right - new_rect->left) > max_size_x)
+                        new_rect->right = new_rect->left + max_size_x;
+                }
+                if (base->max_size.h > 0.0f) {
+                    LONG max_size_y = (LONG)(base->max_size.h + this->size_cache.h - base->size.h);
+                    if ((new_rect->bottom - new_rect->top) > max_size_y)
+                        new_rect->bottom = new_rect->top + max_size_y;
+                }
+            }
+            else {
                 new_rect->right = new_rect->left + (LONG)this->size_cache.w;
                 new_rect->bottom = new_rect->top + (LONG)this->size_cache.h;
-                return TRUE;
             }
             return TRUE;
         }
@@ -848,20 +881,6 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 omg_base->on_focus_change(&event);
             }
             return RET_DEF_PROC();
-        }
-        case WM_GETMINMAXINFO: {
-            if (OMG_ISNULL(this))
-                return FALSE;
-            OMG_WIN_MINMAXINFO* info = (OMG_WIN_MINMAXINFO*)lparam;
-            // TODO
-            OMG_UNUSED(info);
-            if (base->resizable) {
-                return RET_DEF_PROC();
-            }
-            else {
-                return RET_DEF_PROC();
-            }
-            return FALSE;
         }
         case WM_INPUTLANGCHANGE: {
             // TODO: Keymap Update
