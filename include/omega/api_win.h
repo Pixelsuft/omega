@@ -296,6 +296,66 @@
 #ifndef WM_NCCALCSIZE
 #define WM_NCCALCSIZE 0x0083
 #endif
+#ifndef WM_NCACTIVATE
+#define WM_NCACTIVATE 0x0086
+#endif
+#ifndef WM_NCLBUTTONDOWN
+#define WM_NCLBUTTONDOWN 0x00A1
+#endif
+#ifndef WM_CAPTURECHANGED
+#define WM_CAPTURECHANGED 0x0215
+#endif
+#ifndef WM_GETMINMAXINFO
+#define WM_GETMINMAXINFO 0x0024
+#endif
+#ifndef WM_ENTERSIZEMOVE
+#define WM_ENTERSIZEMOVE 0x0231
+#endif
+#ifndef WM_ENTERMENULOOP
+#define WM_ENTERMENULOOP 0x0211
+#endif
+#ifndef WM_GETDPISCALEDSIZE
+#define WM_GETDPISCALEDSIZE 0x02E4
+#endif
+#ifndef WM_DPICHANGED
+#define WM_DPICHANGED 0x02E0
+#endif
+#ifndef WM_SETTINGCHANGE
+#define WM_SETTINGCHANGE 0x001A
+#endif
+#ifndef WM_TIMER
+#define WM_TIMER 0x0113
+#endif
+#ifndef WM_EXITSIZEMOVE
+#define WM_EXITSIZEMOVE 0x0232
+#endif
+#ifndef WM_DROPFILES
+#define WM_DROPFILES 0x0233
+#endif
+#ifndef WM_DISPLAYCHANGE
+#define WM_DISPLAYCHANGE 0x007E
+#endif
+#ifndef WM_EXITMENULOOP
+#define WM_EXITMENULOOP 0x0212
+#endif
+#ifndef WM_SETCURSOR
+#define WM_SETCURSOR 0x0020
+#endif
+#ifndef WM_ACTIVATE
+#define WM_ACTIVATE 0x0006
+#endif
+#ifndef WM_ENTERIDLE
+#define WM_ENTERIDLE 0x0121
+#endif
+#ifndef WM_UNICHAR
+#define WM_UNICHAR 0x0109
+#endif
+#ifndef WM_CHAR
+#define WM_CHAR 0x0102
+#endif
+#ifndef WM_INPUTLANGCHANGE
+#define WM_INPUTLANGCHANGE 0x0051
+#endif
 #ifndef WM_THEMECHANGED
 #define WM_THEMECHANGED 0x031A
 #endif
@@ -376,6 +436,9 @@
 #endif
 #ifndef WM_SYSKEYUP
 #define WM_SYSKEYUP 0x0105
+#endif
+#ifndef WM_INPUT
+#define WM_INPUT 0x00FF
 #endif
 
 typedef struct {
