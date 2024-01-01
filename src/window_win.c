@@ -14,6 +14,25 @@
 #define GET_WIN_STYLE() (int64_t)this->u32->GetWindowLongPtrW(this->hwnd, GWL_STYLE)
 #define SET_WIN_STYLE(value) this->u32->SetWindowLongPtrW(this->hwnd, GWL_STYLE, (LONG_PTR)(value))
 #endif
+#define KEYBOARD_FILL_MOD(mod) do { \
+    mod = 0; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_LCTRL]) \
+        mod |= OMG_KMOD_LCTRL; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_RCTRL]) \
+        mod |= OMG_KMOD_RCTRL; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_LSHIFT]) \
+        mod |= OMG_KMOD_LSHIFT; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_RSHIFT]) \
+        mod |= OMG_KMOD_RSHIFT; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_LALT]) \
+        mod |= OMG_KMOD_LALT; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_RALT]) \
+        mod |= OMG_KMOD_RALT; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_LGUI]) \
+        mod |= OMG_KMOD_LGUI; \
+    if (omg_base->keyboard_state[OMG_SCANCODE_RGUI]) \
+        mod |= OMG_KMOD_RGUI; \
+} while (0)
 #define MOUSE_FILL_STATE(state, wparam) do { \
     state = 0; \
     if (wparam & MK_LBUTTON) \
@@ -572,12 +591,12 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 event.win = this;
                 event.is_pressed = (msg == WM_KEYDOWN) || (msg == WM_SYSKEYDOWN);
                 if ((code == OMG_SCANCODE_PRINTSCREEN) && !event.is_pressed && !omg_base->keyboard_state[code])
-                    omg_win_wnd_proc(hwnd, WM_KEYUP, wparam, lparam); // Hack
+                    omg_win_wnd_proc(hwnd, WM_KEYDOWN, wparam, lparam); // Hack
                 event.is_repeated = event.is_pressed && omg_base->keyboard_state[code];
                 event.scancode = code;
                 omg_base->keyboard_state[code] = event.is_pressed;
                 event.sym = omg_keyboard_key_from_scancode(code);
-                event.mod = 0; // TODO
+                KEYBOARD_FILL_MOD(event.mod);
                 (event.is_pressed ? omg_base->on_key_down : omg_base->on_key_up)(&event);
             }
             return RET_DEF_PROC();
