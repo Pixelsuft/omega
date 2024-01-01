@@ -151,6 +151,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->clock = this->omg->clock;
     this->ren = this->win->ren;
+    this->win->allow_alt = false;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
     this->omg->on_paint = app_on_paint;
