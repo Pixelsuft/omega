@@ -24,6 +24,25 @@
     if (this->raylib->IsMouseButtonDown(MOUSE_BUTTON_BACK)) \
         state |= OMG_MBUTTON_X4MASK; \
 } while (0)
+#define KEYBOARD_FILL_MOD(mod) do { \
+    mod = 0; \
+    if (this->raylib->IsKeyDown(KEY_LEFT_SHIFT)) \
+        mod |= OMG_KMOD_LSHIFT; \
+    if (this->raylib->IsKeyDown(KEY_RIGHT_SHIFT)) \
+        mod |= OMG_KMOD_RSHIFT; \
+    if (this->raylib->IsKeyDown(KEY_LEFT_CONTROL)) \
+        mod |= OMG_KMOD_LCTRL; \
+    if (this->raylib->IsKeyDown(KEY_RIGHT_CONTROL)) \
+        mod |= OMG_KMOD_RCTRL; \
+    if (this->raylib->IsKeyDown(KEY_LEFT_ALT)) \
+        mod |= OMG_KMOD_LALT; \
+    if (this->raylib->IsKeyDown(KEY_RIGHT_ALT)) \
+        mod |= OMG_KMOD_RALT; \
+    if (this->raylib->IsKeyDown(KEY_LEFT_SUPER)) \
+        mod |= OMG_KMOD_LGUI; \
+    if (this->raylib->IsKeyDown(KEY_RIGHT_SUPER)) \
+        mod |= OMG_KMOD_RGUI; \
+} while (0)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
     ((OMG_Event*)event)->data = base->event_arg; \
@@ -284,7 +303,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             event.is_repeated = event.is_pressed && is_repeated;
             event.scancode = code;
             event.sym = omg_keyboard_key_from_scancode(code);
-            event.mod = 0; // TODO
+            KEYBOARD_FILL_MOD(event.mod);
             (event.is_pressed ? base->on_key_down : base->on_key_up)(&event);
         }
     }
