@@ -696,6 +696,25 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 pos->flags |= SWP_NOSIZE;
                 return FALSE;
             }
+            if (base->resizable) {
+                int min_size_x = (int)base->min_size.w;
+                int min_size_y = (int)base->min_size.h;
+                if (pos->cx < min_size_x)
+                    pos->cx = min_size_x;
+                if (pos->cy < min_size_y)
+                    pos->cy = min_size_y;
+                if (base->max_size.w > 0.0f) {
+                    int max_size_x = (int)base->max_size.w;
+                    if (pos->cx > max_size_x)
+                        pos->cx = max_size_x;
+                }
+                if (base->max_size.h > 0.0f) {
+                    int max_size_y = (int)base->max_size.h;
+                    if (pos->cy > max_size_y)
+                        pos->cy = max_size_y;
+                }
+                return FALSE;
+            }
             return RET_DEF_PROC();
         }
         case WM_GETMINMAXINFO: {
@@ -709,32 +728,15 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             else {
                 info->ptMaxSize.x = (LONG)base->size.w;
                 info->ptMaxSize.y = (LONG)base->size.h;
+                // info->ptMinTrackSize.x = (LONG)base->min_size.w;
+                // info->ptMinTrackSize.y = (LONG)base->min_size.h;
                 return RET_DEF_PROC();
             }
             return FALSE;
         }
         case WM_SIZING: {
             RECT* new_rect = (RECT*)lparam;
-            if (base->resizable) {
-                // TODO: why it's broken???
-                LONG min_size_x = (LONG)(base->min_size.w + this->size_cache.w - base->size.w);
-                LONG min_size_y = (LONG)(base->min_size.h + this->size_cache.h - base->size.h);
-                if ((new_rect->right - new_rect->left) < min_size_x)
-                    new_rect->right = new_rect->left + min_size_x;
-                if ((new_rect->bottom - new_rect->top) < min_size_y)
-                    new_rect->bottom = new_rect->top + min_size_y;
-                if (base->max_size.w > 0.0f) {
-                    LONG max_size_x = (LONG)(base->max_size.w + this->size_cache.w - base->size.w);
-                    if ((new_rect->right - new_rect->left) > max_size_x)
-                        new_rect->right = new_rect->left + max_size_x;
-                }
-                if (base->max_size.h > 0.0f) {
-                    LONG max_size_y = (LONG)(base->max_size.h + this->size_cache.h - base->size.h);
-                    if ((new_rect->bottom - new_rect->top) > max_size_y)
-                        new_rect->bottom = new_rect->top + max_size_y;
-                }
-            }
-            else {
+            if (!base->resizable) {
                 new_rect->right = new_rect->left + (LONG)this->size_cache.w;
                 new_rect->bottom = new_rect->top + (LONG)this->size_cache.h;
             }
