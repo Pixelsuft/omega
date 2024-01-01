@@ -43,11 +43,6 @@ void app_on_state_changing(OMG_EventStateChanging* event) {
     }
 }
 
-void app_on_size_change(OMG_EventResize* event) {
-    App* this = OMG_ARG_FROM_EVENT(event);
-    OMG_INFO(this->omg, "Resize: [", &event->size, "]");
-}
-
 void app_on_mouse_move(OMG_EventMouseMove* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     OMG_UNUSED(this);
@@ -115,6 +110,14 @@ void app_on_paint(OMG_EventPaint* event) {
 }
 
 void app_on_expose(OMG_EventExpose* event) {
+    app_on_update((OMG_EventUpdate*)event);
+    app_on_paint((OMG_EventPaint*)event);
+}
+
+void app_on_size_change(OMG_EventResize* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    OMG_INFO(this->omg, "Resize: [", &event->size, "]");
+    // Nobody prevents you from doing things like this
     app_on_update((OMG_EventUpdate*)event);
     app_on_paint((OMG_EventPaint*)event);
 }
