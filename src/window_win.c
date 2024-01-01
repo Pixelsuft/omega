@@ -302,12 +302,12 @@ bool omg_window_win_show(OMG_WindowWin* this, bool show) {
     return false;
 }
 
-static OMG_Scancode omg_window_win_code_to_scancode(OMG_WindowWin* this, LPARAM lParam, WPARAM wParam)
+static OMG_Scancode omg_window_win_code_to_scancode(OMG_WindowWin* this, LPARAM lparam, WPARAM wparam)
 {
     // Thanks to SDL2
     OMG_Scancode code;
     uint8_t index;
-    uint16_t keyFlags = HIWORD(lParam);
+    uint16_t keyFlags = HIWORD(lparam);
     uint16_t scanCode = LOBYTE(keyFlags);
     scanCode &= ~0x80;
     if (scanCode != 0) {
@@ -315,7 +315,7 @@ static OMG_Scancode omg_window_win_code_to_scancode(OMG_WindowWin* this, LPARAM 
             scanCode = MAKEWORD(scanCode, 0xe0);
         }
     } else {
-        uint16_t vkCode = LOWORD(wParam);
+        uint16_t vkCode = LOWORD(wparam);
         scanCode = LOWORD(this->u32->MapVirtualKeyW(vkCode, MAPVK_VK_TO_VSC_EX));
         if (scanCode == 0xe11d) {
             scanCode = 0xe046;
@@ -571,9 +571,11 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 MAKE_EVENT(&event);
                 event.win = this;
                 event.is_pressed = (msg == WM_KEYDOWN) || (msg == WM_SYSKEYDOWN);
-                // TODO: fix printscreen
-                event.is_repeated = false; // TODO
+                if ((code == OMG_SCANCODE_PRINTSCREEN) && !event.is_pressed && !omg_base->keyboard_state[code])
+                    omg_win_wnd_proc(hwnd, WM_KEYUP, wparam, lparam); // Hack
+                event.is_repeated = event.is_pressed && omg_base->keyboard_state[code];
                 event.scancode = code;
+                omg_base->keyboard_state[code] = event.is_pressed;
                 event.sym = omg_keyboard_key_from_scancode(code);
                 event.mod = 0; // TODO
                 (event.is_pressed ? omg_base->on_key_down : omg_base->on_key_up)(&event);

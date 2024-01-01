@@ -66,15 +66,16 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     // TODO: print bool
-    OMG_INFO(
-        this->omg,
-        "Key ",
-        omg_keyboard_name_from_scancode(event->scancode)->ptr,
-        " (",
-        omg_keyboard_name_from_key(event->sym)->ptr,
-        ") ",
-        event->is_pressed ? "Press" : "Release"
-    );
+    if (!event->is_repeated)
+        OMG_INFO(
+            this->omg,
+            "Key ",
+            omg_keyboard_name_from_scancode(event->scancode)->ptr,
+            " (",
+            omg_keyboard_name_from_key(event->sym)->ptr,
+            ") ",
+            event->is_pressed ? "Press" : "Release"
+        );
 }
 
 void app_on_update(OMG_EventUpdate* event) {
