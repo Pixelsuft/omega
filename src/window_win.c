@@ -571,6 +571,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 MAKE_EVENT(&event);
                 event.win = this;
                 event.is_pressed = (msg == WM_KEYDOWN) || (msg == WM_SYSKEYDOWN);
+                // TODO: fix printscreen
                 event.is_repeated = false; // TODO
                 event.scancode = code;
                 event.sym = omg_keyboard_key_from_scancode(code);

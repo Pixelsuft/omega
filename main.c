@@ -115,14 +115,14 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_WIN
-    this->omg = (OMG_Omega*)omg_win_create(data);
-#endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
+#if OMG_SUPPORT_WIN
+    this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;

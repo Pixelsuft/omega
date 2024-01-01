@@ -167,9 +167,15 @@ void omg_win_update_scale(OMG_OmegaWin* this) {
 }
 
 bool omg_win_app_init(OMG_OmegaWin* this) {
+    base->keyboard_state = OMG_MALLOC(base->mem, OMG_NUM_SCANCODES * sizeof(bool));
+    if (OMG_ISNULL(base->keyboard_state))
+        return true;
+    base->std->memset(base->keyboard_state, 0, OMG_NUM_SCANCODES * sizeof(bool));
     if (OMG_ISNULL(base->clock)) {
         base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockWin));
         if (OMG_ISNULL(base->clock)) {
+            OMG_FREE(base->mem, base->keyboard_state);
+            base->keyboard_state = NULL;
             return true;
         }
         base->clock->was_allocated = true;

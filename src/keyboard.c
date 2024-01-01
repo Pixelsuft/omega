@@ -592,7 +592,7 @@ static const char* OMG_ScancodeNames[OMG_NUM_SCANCODES] = {
 	OMGK_ENDCALL
 };
 
-char* OMG_keyboard_UCS4ToUTF8(uint32_t ch, char* dst) {
+char* omg_keyboard_UCS4ToUTF8(uint32_t ch, char* dst) {
     uint8_t *p = (uint8_t*)dst;
     if (ch <= 0x7F) {
         *p = (uint8_t)ch;
@@ -652,7 +652,7 @@ const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key) {
             if (key >= 'a' && key <= 'z') {
                 key -= 32;
             }
-            end = OMG_keyboard_UCS4ToUTF8((uint32_t)key, name);
+            end = omg_keyboard_UCS4ToUTF8((uint32_t)key, name);
             *end = '\0';
             return &OMG_STRING_MAKE_STATIC(name);
     }

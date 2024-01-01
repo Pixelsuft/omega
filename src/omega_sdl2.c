@@ -373,9 +373,15 @@ void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
 }
 
 bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
+    base->keyboard_state = OMG_MALLOC(base->mem, OMG_NUM_SCANCODES * sizeof(bool));
+    if (OMG_ISNULL(base->keyboard_state))
+        return true;
+    base->std->memset(base->keyboard_state, 0, OMG_NUM_SCANCODES * sizeof(bool));
     if (OMG_ISNULL(base->clock)) {
         base->clock = OMG_MALLOC(base->mem, sizeof(OMG_ClockSdl2));
         if (OMG_ISNULL(base->clock)) {
+            OMG_FREE(base->mem, base->keyboard_state);
+            base->keyboard_state = NULL;
             return true;
         }
         base->clock->was_allocated = true;
@@ -390,6 +396,8 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
             OMG_FREE(base->mem, base->clock);
             base->clock = NULL;
         }
+        OMG_FREE(base->mem, base->keyboard_state);
+        base->keyboard_state = NULL;
         _OMG_LOG_INFO(base, "Failed to init SDL2 (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
