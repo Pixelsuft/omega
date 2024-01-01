@@ -532,6 +532,7 @@ typedef struct {
     LONG_PTR OMG_WIN_STD_PREFIX (*GetWindowLongPtrW)(HWND, int);
 #endif
     HWND OMG_WIN_STD_PREFIX (*GetDesktopWindow)(void);
+    HWND OMG_WIN_STD_PREFIX (*GetForegroundWindow)(void);
     BOOL OMG_WIN_STD_PREFIX (*GetWindowRect)(HWND, LPRECT);
     BOOL OMG_WIN_STD_PREFIX (*GetClientRect)(HWND, LPRECT);
     BOOL OMG_WIN_STD_PREFIX (*SetWindowPos)(HWND, HWND, int, int, int, int, UINT);

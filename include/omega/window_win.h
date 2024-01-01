@@ -20,6 +20,7 @@ typedef struct {
     uint32_t mouse_state_cache;
     int win_build_num;
     bool is_mouse_left;
+    bool is_focused;
     bool destroyed;
 } OMG_WindowWin;
 

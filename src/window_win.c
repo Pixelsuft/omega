@@ -813,14 +813,23 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             omg_base->on_mouse_wheel(&event);
             return FALSE;
         }
+        case WM_NCACTIVATE:
+        case WM_ACTIVATE:
+        case WM_ENTERIDLE:
         case WM_SETFOCUS:
         case WM_KILLFOCUS: {
-            OMG_EventFocusChange event;
-            MAKE_EVENT(&event);
-            event.win = this;
-            event.is_focused = msg == WM_SETFOCUS;
-            omg_base->on_focus_change(&event);
-            return FALSE;
+            bool is_focused = ((msg == WM_SETFOCUS) || (msg == WM_KILLFOCUS)) ?
+                (msg == WM_SETFOCUS) :
+                (this->u32->GetForegroundWindow() == hwnd);
+            if (is_focused != this->is_focused) {
+                this->is_focused = is_focused;
+                OMG_EventFocusChange event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                event.is_focused = is_focused;
+                omg_base->on_focus_change(&event);
+            }
+            return RET_DEF_PROC();
         }
         case WM_CLOSE: {
             OMG_EventStateChanging event;
@@ -943,6 +952,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->inited = false;
     this->destroyed = false;
     this->is_mouse_left = true;
+    this->is_focused = false;
     this->mouse_state_cache = 0;
     this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;
     this->wc.cbSize = sizeof(WNDCLASSEXW);

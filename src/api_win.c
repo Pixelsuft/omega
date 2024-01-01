@@ -135,6 +135,7 @@ bool omg_winapi_user32_load(OMG_User32* this) {
 #endif
     LOAD_REQUIRED(SetWindowLongW);
     LOAD_REQUIRED(GetWindowLongW);
+    LOAD_REQUIRED(GetForegroundWindow);
     LOAD_REQUIRED(GetDesktopWindow);
     LOAD_REQUIRED(GetWindowRect);
     LOAD_REQUIRED(GetClientRect);
