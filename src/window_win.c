@@ -590,8 +590,12 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 MAKE_EVENT(&event);
                 event.win = this;
                 event.is_pressed = (msg == WM_KEYDOWN) || (msg == WM_SYSKEYDOWN);
-                if ((code == OMG_SCANCODE_PRINTSCREEN) && !event.is_pressed && !omg_base->keyboard_state[code])
-                    omg_win_wnd_proc(hwnd, WM_KEYDOWN, wparam, lparam); // Hack
+                if (!event.is_pressed && !omg_base->keyboard_state[code]) {
+                    if (code == OMG_SCANCODE_PRINTSCREEN)
+                        omg_win_wnd_proc(hwnd, WM_KEYDOWN, wparam, lparam); // Hack
+                    else
+                        return FALSE;
+                }
                 event.is_repeated = event.is_pressed && omg_base->keyboard_state[code];
                 event.scancode = code;
                 omg_base->keyboard_state[code] = event.is_pressed;
