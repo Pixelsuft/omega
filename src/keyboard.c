@@ -593,12 +593,12 @@ static const char* OMG_ScancodeNames[OMG_NUM_SCANCODES] = {
 	OMGK_ENDCALL
 };
 
-static OMG_Keycode* keymap = NULL;
+static const OMG_Keycode* keymap = NULL;
 
 void omg_keyboard_init_keymap(void* omg) {
     OMG_Omega* this = (OMG_Omega*)omg;
     keymap = this->keymap;
-    this->std->memcpy(this->keymap, OMG_default_keymap, sizeof(OMG_Keycode) * OMG_NUM_SCANCODES);
+    this->std->memcpy((void*)this->keymap, OMG_default_keymap, sizeof(OMG_Keycode) * OMG_NUM_SCANCODES);
 }
 
 char* omg_keyboard_UCS4ToUTF8(uint32_t ch, char* dst) {
@@ -635,6 +635,7 @@ const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode) {
 }
 
 OMG_Keycode omg_keyboard_key_from_scancode(OMG_Scancode scancode) {
+    // TODO: update keymap
     return keymap[scancode];
 }
 

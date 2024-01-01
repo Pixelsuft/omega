@@ -58,6 +58,8 @@ typedef struct OMG_Window {
     bool inited;
     bool centered;
     bool enable_paint;
+    bool allow_alt;
+    bool allow_alt_f4;
     bool aa;
     bool was_allocated;
 } OMG_Window;

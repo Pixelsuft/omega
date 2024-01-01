@@ -598,6 +598,15 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 event.sym = omg_keyboard_key_from_scancode(code);
                 KEYBOARD_FILL_MOD(event.mod);
                 (event.is_pressed ? omg_base->on_key_down : omg_base->on_key_up)(&event);
+                if ((code == OMG_SCANCODE_F4) && (omg_base->keyboard_state[OMG_SCANCODE_LALT] || omg_base->keyboard_state[OMG_SCANCODE_RALT])) {
+                    if (base->allow_alt_f4) {
+                        if (!base->allow_alt) {
+                            this->u32->SendMessageW(hwnd, WM_CLOSE, 0, 0);
+                        }
+                    }
+                    else
+                        return FALSE;
+                }
             }
             return RET_DEF_PROC();
         }
@@ -745,8 +754,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             MAKE_EVENT(&event);
             event.win = this;
             event.allow = true;
-            // TODO: customize SC_KEYMENU
-            if ((wparam == SC_VSCROLL) || (wparam == SC_HSCROLL)/* || (wparam == SC_KEYMENU)*/)
+            if ((wparam == SC_VSCROLL) || (wparam == SC_HSCROLL) || ((wparam == SC_KEYMENU) && !base->allow_alt))
                 return FALSE;
             else if (wparam == SC_CLOSE) {
                 event.change = OMG_WIN_STATE_CLOSED;

@@ -460,6 +460,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
     HWND OMG_WIN_STD_PREFIX (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
     BOOL OMG_WIN_STD_PREFIX (*DestroyWindow)(HWND);
+    LRESULT OMG_WIN_STD_PREFIX (*SendMessageW)(HWND, UINT, WPARAM, LPARAM);
     void OMG_WIN_STD_PREFIX (*PostQuitMessage)(int);
     LONG OMG_WIN_STD_PREFIX (*SetWindowLongW)(HWND, int, LONG);
     LONG OMG_WIN_STD_PREFIX (*GetWindowLongW)(HWND, int);
