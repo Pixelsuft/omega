@@ -114,6 +114,11 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->flip(this->ren);
 }
 
+void app_on_expose(OMG_EventExpose* event) {
+    app_on_update((OMG_EventUpdate*)event);
+    app_on_paint((OMG_EventPaint*)event);
+}
+
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if OMG_SUPPORT_SDL2
@@ -155,6 +160,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
     this->omg->on_paint = app_on_paint;
+    this->omg->on_expose = app_on_expose;
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_size_change = app_on_size_change;
     this->omg->on_state_changing = app_on_state_changing;

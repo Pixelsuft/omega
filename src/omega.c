@@ -111,6 +111,10 @@ void omg_event_on_paint(OMG_EventPaint* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_expose(OMG_EventExpose* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_event_on_resize(OMG_EventResize* event) {
     OMG_UNUSED(event);
 }
@@ -172,6 +176,7 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_update = omg_event_on_update;
     this->on_loop_stop = omg_event_on_loop_stop;
     this->on_paint = omg_event_on_paint;
+    this->on_expose = omg_event_on_expose;
     this->on_close = omg_event_on_close;
     this->on_resize = omg_event_on_resize;
     this->on_size_change = omg_event_on_resize;

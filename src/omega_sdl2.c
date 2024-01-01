@@ -278,6 +278,13 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                         base->on_state_change(&event);
                         break;
                     }
+                    case SDL_WINDOWEVENT_EXPOSED: {
+                        OMG_EventExpose event;
+                        MAKE_EVENT(&event);
+                        event.win = win;
+                        base->on_expose(&event);
+                        break;
+                    }
                     case SDL_WINDOWEVENT_CLOSE: {
                         OMG_EventStateChanging c_event;
                         MAKE_EVENT(&c_event);

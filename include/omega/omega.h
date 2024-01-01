@@ -80,6 +80,7 @@ typedef struct OMG_Omega {
     void (*on_update)(OMG_EventUpdate* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
     void (*on_paint)(OMG_EventPaint* event);
+    void (*on_expose)(OMG_EventExpose* event);
     void (*on_close)(OMG_EventClose* event);
     void (*on_resize)(OMG_EventResize* event);
     void (*on_size_change)(OMG_EventResize* event);
@@ -125,6 +126,7 @@ OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
 OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
 OMG_API void omg_event_on_paint(OMG_EventPaint* event);
+OMG_API void omg_event_on_expose(OMG_EventExpose* event);
 OMG_API void omg_event_on_close(OMG_EventClose* event);
 OMG_API void omg_event_on_resize(OMG_EventResize* event);
 OMG_API void omg_event_on_state_change(OMG_EventStateChange* event);
