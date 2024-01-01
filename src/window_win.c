@@ -694,45 +694,34 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 pos->cx = (int)this->size_cache.w;
                 pos->cy = (int)this->size_cache.h;
                 pos->flags |= SWP_NOSIZE;
-                return FALSE;
+                // return FALSE;
             }
-            if (base->resizable) {
-                int min_size_x = (int)base->min_size.w;
-                int min_size_y = (int)base->min_size.h;
+            else if (base->resizable) {
+                int min_size_x = (int)(base->min_size.w + this->size_cache.w - base->size.w);
+                int min_size_y = (int)(base->min_size.h + this->size_cache.h - base->size.h);
                 if (pos->cx < min_size_x)
                     pos->cx = min_size_x;
                 if (pos->cy < min_size_y)
                     pos->cy = min_size_y;
                 if (base->max_size.w > 0.0f) {
-                    int max_size_x = (int)base->max_size.w;
+                    int max_size_x = (int)(base->max_size.w + this->size_cache.w - base->size.w);
                     if (pos->cx > max_size_x)
                         pos->cx = max_size_x;
                 }
                 if (base->max_size.h > 0.0f) {
-                    int max_size_y = (int)base->max_size.h;
+                    int max_size_y = (int)(base->max_size.h + this->size_cache.h - base->size.h);
                     if (pos->cy > max_size_y)
                         pos->cy = max_size_y;
                 }
-                return FALSE;
+                // return FALSE;
             }
             return RET_DEF_PROC();
         }
         case WM_GETMINMAXINFO: {
             if (OMG_ISNULL(this))
                 return FALSE;
-            // I think it's better to do everything in WM_SIZING
-            OMG_WIN_MINMAXINFO* info = (OMG_WIN_MINMAXINFO*)lparam;
-            if (base->resizable) {
-                return RET_DEF_PROC();
-            }
-            else {
-                info->ptMaxSize.x = (LONG)base->size.w;
-                info->ptMaxSize.y = (LONG)base->size.h;
-                // info->ptMinTrackSize.x = (LONG)base->min_size.w;
-                // info->ptMinTrackSize.y = (LONG)base->min_size.h;
-                return RET_DEF_PROC();
-            }
-            return FALSE;
+            // I think that WM_WINDOWPOSCHANGING is a way better
+            return RET_DEF_PROC();
         }
         case WM_SIZING: {
             RECT* new_rect = (RECT*)lparam;
@@ -792,6 +781,12 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 event.win = this;
                 base->size.w = event.size.w = (float)new_w;
                 base->size.h = event.size.h = (float)new_h;
+                RECT rect;
+                RECT c_rect;
+                if (this->u32->GetWindowRect(hwnd, &rect) && this->u32->GetClientRect(hwnd, &c_rect)) {
+                    this->size_cache.w = base->size.w + (float)(rect.right - rect.left - c_rect.right);
+                    this->size_cache.h = base->size.h + (float)(rect.bottom - rect.top - c_rect.bottom);
+                }
                 if (OMG_ISNOTNULL(base->ren))
                     base->ren->_on_update_window_size(base->ren);
                 omg_base->on_size_change(&event);
