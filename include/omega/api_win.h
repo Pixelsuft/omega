@@ -62,6 +62,12 @@
 #ifndef MAKEINTRESOURCEW
 #define MAKEINTRESOURCEW(res_to_make) ((LPWSTR)((ULONG_PTR)((WORD)(res_to_make))))
 #endif
+#ifndef LOBYTE
+#define LOBYTE(w) ((BYTE) (((DWORD_PTR) (w)) & 0xff))
+#endif
+#ifndef HIBYTE
+#define HIBYTE(w) ((BYTE) ((((DWORD_PTR) (w)) >> 8) & 0xff))
+#endif
 #ifndef LOWORD
 #define LOWORD(l) ((WORD) (((DWORD_PTR) (l)) & 0xffff))
 #endif
@@ -281,6 +287,9 @@
 #ifndef WHEEL_DELTA
 #define WHEEL_DELTA 120
 #endif
+#ifndef MAPVK_VK_TO_VSC_EX
+#define MAPVK_VK_TO_VSC_EX 4
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
@@ -355,6 +364,18 @@
 #endif
 #ifndef WM_MOUSEWHEEL
 #define WM_MOUSEWHEEL 0x020A
+#endif
+#ifndef WM_KEYDOWN
+#define WM_KEYDOWN 0x0100
+#endif
+#ifndef WM_KEYUP
+#define WM_KEYUP 0x0101
+#endif
+#ifndef WM_SYSKEYDOWN
+#define WM_SYSKEYDOWN 0x0104
+#endif
+#ifndef WM_SYSKEYUP
+#define WM_SYSKEYUP 0x0105
 #endif
 
 typedef struct {
@@ -434,6 +455,7 @@ typedef struct {
 
 typedef struct {
     HANDLE handle;
+    UINT OMG_WIN_STD_PREFIX (*MapVirtualKeyW)(UINT, UINT);
     ATOM OMG_WIN_STD_PREFIX (*RegisterClassExW)(const WNDCLASSEXW*);
     BOOL OMG_WIN_STD_PREFIX (*UnregisterClassW)(LPCWSTR, HINSTANCE hInstance);
     HWND OMG_WIN_STD_PREFIX (*CreateWindowExW)(DWORD, LPCWSTR, LPCWSTR, DWORD, int, int, int, int, HWND, HMENU, HINSTANCE, LPVOID);
