@@ -65,6 +65,7 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
 
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
+    // TODO: print bool
     OMG_INFO(
         this->omg,
         "Key ",

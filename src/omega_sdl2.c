@@ -130,7 +130,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 MAKE_EVENT(&event);
                 event.win = win;
                 event.is_pressed = this->ev.key.state == SDL_PRESSED;
-                event.repeat = this->ev.key.repeat;
+                event.is_repeated = (bool)this->ev.key.repeat;
                 event.scancode = this->ev.key.keysym.scancode;
                 event.sym = this->ev.key.keysym.sym;
                 event.mod = this->ev.key.keysym.mod;

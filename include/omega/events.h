@@ -105,6 +105,6 @@ typedef struct {
     uint32_t scancode;
     uint32_t sym;
     uint16_t mod;
+    bool is_repeated;
     bool is_pressed;
-    uint8_t repeat;
 } OMG_EventKeyboard;
