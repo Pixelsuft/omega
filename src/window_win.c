@@ -668,8 +668,18 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_UNICHAR: {
-            // TODO
-            return RET_DEF_PROC();
+            if (wparam == UNICODE_NOCHAR)
+                return TRUE;
+            char text[5];
+            OMG_EventTextInput event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            OMG_String e_text = OMG_STRING_MAKE_BUFFER(text);
+            if (omg_std_utf32_char_to_utf8((uint32_t)wparam, text))
+                return FALSE;
+            event.text = &e_text;
+            omg_base->on_text_input(&event);
+            return FALSE;
         }
         case WM_CHAR: {
             OMG_EventTextInput event;

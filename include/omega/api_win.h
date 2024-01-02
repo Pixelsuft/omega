@@ -117,6 +117,9 @@
 #ifndef CP_UTF8
 #define CP_UTF8 65001
 #endif
+#ifndef UNICODE_NOCHAR
+#define UNICODE_NOCHAR 0xFFFF
+#endif
 #ifndef ATTACH_PARENT_PROCESS
 #define ATTACH_PARENT_PROCESS ((DWORD)-1)
 #endif
