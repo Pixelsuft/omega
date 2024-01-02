@@ -120,6 +120,9 @@
 #ifndef UNICODE_NOCHAR
 #define UNICODE_NOCHAR 0xFFFF
 #endif
+#ifndef USER_TIMER_MINIMUM
+#define USER_TIMER_MINIMUM 0x0000000A
+#endif
 #ifndef ATTACH_PARENT_PROCESS
 #define ATTACH_PARENT_PROCESS ((DWORD)-1)
 #endif
@@ -564,6 +567,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*DestroyWindow)(HWND);
     LRESULT OMG_WIN_STD_PREFIX (*SendMessageW)(HWND, UINT, WPARAM, LPARAM);
     void OMG_WIN_STD_PREFIX (*PostQuitMessage)(int);
+    UINT_PTR OMG_WIN_STD_PREFIX (*SetTimer)(HWND, UINT_PTR, UINT_PTR, void*);
+    BOOL OMG_WIN_STD_PREFIX (*KillTimer)(HWND, UINT_PTR);
     LONG OMG_WIN_STD_PREFIX (*SetWindowLongW)(HWND, int, LONG);
     LONG OMG_WIN_STD_PREFIX (*GetWindowLongW)(HWND, int);
 #ifndef SetWindowLongPtrW

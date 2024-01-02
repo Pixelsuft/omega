@@ -812,6 +812,26 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             }
             return TRUE;
         }
+        case WM_TIMER: {
+            if (wparam == (UINT_PTR)&this->resize_timer) {
+                OMG_EventExpose event;
+                MAKE_EVENT(&event);
+                event.win = this;
+                omg_base->on_expose(&event);
+                return FALSE;
+            }
+            return RET_DEF_PROC();
+        }
+        case WM_ENTERSIZEMOVE:
+        case WM_ENTERMENULOOP: {
+            this->u32->SetTimer(hwnd, (UINT_PTR)&this->resize_timer, USER_TIMER_MINIMUM, NULL);
+            return RET_DEF_PROC();
+        }
+        case WM_EXITSIZEMOVE:
+        case WM_EXITMENULOOP: {
+            this->u32->KillTimer(hwnd, (UINT_PTR)&this->resize_timer);
+            return RET_DEF_PROC();
+        }
         case WM_SIZE: {
             UINT new_w = (UINT)LOWORD(lparam);
             UINT new_h = (UINT)HIWORD(lparam);
@@ -1080,6 +1100,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->high_surrogate = 0;
     this->mouse_state_cache = 0;
     this->last_mouse_state = 0;
+    this->resize_timer = 0;
     this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;

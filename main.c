@@ -110,6 +110,7 @@ void app_on_paint(OMG_EventPaint* event) {
 }
 
 void app_on_expose(OMG_EventExpose* event) {
+    // Be careful with pointer casting
     app_on_update((OMG_EventUpdate*)event);
     app_on_paint((OMG_EventPaint*)event);
 }
@@ -117,9 +118,6 @@ void app_on_expose(OMG_EventExpose* event) {
 void app_on_size_change(OMG_EventResize* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     OMG_INFO(this->omg, "Resize: [", &event->size, "]");
-    // Nobody prevents you from doing things like this
-    app_on_update((OMG_EventUpdate*)event);
-    app_on_paint((OMG_EventPaint*)event);
 }
 
 void app_init(App* this, OMG_EntryData* data) {

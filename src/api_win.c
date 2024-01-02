@@ -126,6 +126,8 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(DestroyWindow);
     LOAD_REQUIRED(SendMessageW);
     LOAD_REQUIRED(PostQuitMessage);
+    LOAD_REQUIRED(SetTimer);
+    LOAD_REQUIRED(KillTimer);
 #ifdef SetWindowLongPtrW
     this->SetWindowLongPtrW = NULL;
     this->GetWindowLongPtrW = NULL;

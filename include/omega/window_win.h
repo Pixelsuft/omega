@@ -20,6 +20,7 @@ typedef struct {
     OMG_Point mouse_pos_cache;
     uint32_t mouse_state_cache;
     WCHAR high_surrogate;
+    UINT resize_timer;
     int win_build_num;
     bool is_mouse_left;
     bool is_focused;
