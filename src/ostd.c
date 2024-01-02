@@ -369,26 +369,25 @@ void omg_std_fill_defaults(OMG_Std* this) {
 #endif
 }
 
-int omg_std_unicode_char_to_utf8(char* out, uint32_t code)
-{
+bool omg_std_unicode_char_to_utf8(char* out, uint32_t code) {
     // https://gist.github.com/MightyPork/52eda3e5677b4b03524e40c9f0ab1da5
     if (code <= 0x7F) {
         out[0] = (char) code;
         out[1] = 0;
-        return 1;
+        return false;
     }
     else if (code <= 0x07FF) {
         out[0] = (char) (((code >> 6) & 0x1F) | 0xC0);
         out[1] = (char) (((code >> 0) & 0x3F) | 0x80);
         out[2] = 0;
-        return 2;
+        return false;
     }
     else if (code <= 0xFFFF) {
         out[0] = (char) (((code >> 12) & 0x0F) | 0xE0);
         out[1] = (char) (((code >>  6) & 0x3F) | 0x80);
         out[2] = (char) (((code >>  0) & 0x3F) | 0x80);
         out[3] = 0;
-        return 3;
+        return false;
     }
     else if (code <= 0x10FFFF) {
         out[0] = (char) (((code >> 18) & 0x07) | 0xF0);
@@ -396,15 +395,47 @@ int omg_std_unicode_char_to_utf8(char* out, uint32_t code)
         out[2] = (char) (((code >>  6) & 0x3F) | 0x80);
         out[3] = (char) (((code >>  0) & 0x3F) | 0x80);
         out[4] = 0;
-        return 4;
+        return false;
     }
     else { 
         out[0] = (char) 0xEF;  
         out[1] = (char) 0xBF;
         out[2] = (char) 0xBD;
         out[3] = 0;
-        return 0;
+        return true;
     }
+}
+
+// Thanks to SDL2
+bool omg_std_utf32_char_to_utf8(uint32_t codepoint, char* text) {
+    if (codepoint <= 0x7F) {
+        text[0] = (char)codepoint;
+        text[1] = '\0';
+    } else if (codepoint <= 0x7FF) {
+        text[0] = 0xC0 | (char)((codepoint >> 6) & 0x1F);
+        text[1] = 0x80 | (char)(codepoint & 0x3F);
+        text[2] = '\0';
+    } else if (codepoint <= 0xFFFF) {
+        text[0] = 0xE0 | (char)((codepoint >> 12) & 0x0F);
+        text[1] = 0x80 | (char)((codepoint >> 6) & 0x3F);
+        text[2] = 0x80 | (char)(codepoint & 0x3F);
+        text[3] = '\0';
+    } else if (codepoint <= 0x10FFFF) {
+        text[0] = 0xF0 | (char)((codepoint >> 18) & 0x0F);
+        text[1] = 0x80 | (char)((codepoint >> 12) & 0x3F);
+        text[2] = 0x80 | (char)((codepoint >> 6) & 0x3F);
+        text[3] = 0x80 | (char)(codepoint & 0x3F);
+        text[4] = '\0';
+    } else {
+        return true;
+    }
+    return false;
+}
+
+bool omg_std_win_utf16_char_to_utf8(uint32_t high_surrogate, uint32_t low_surrogate, char* text) {
+    const uint32_t SURROGATE_OFFSET = 0x10000 - (0xD800 << 10) - 0xDC00;
+    const uint32_t codepoint = (high_surrogate << 10) + low_surrogate + SURROGATE_OFFSET;
+    return omg_std_utf32_char_to_utf8(codepoint, text);
 }
 
 bool omg_string_add_double(OMG_String* this, const double double_to_add) {

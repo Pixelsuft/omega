@@ -672,7 +672,28 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_CHAR: {
-            return RET_DEF_PROC();
+            OMG_EventTextInput event;
+            MAKE_EVENT(&event);
+            event.win = this;
+            if (IS_HIGH_SURROGATE(wparam)) {
+                this->high_surrogate = (WCHAR)wparam;
+            } else if (IS_SURROGATE_PAIR(this->high_surrogate, wparam)) {
+                char text[5];
+                if (!omg_std_win_utf16_char_to_utf8((UINT32)this->high_surrogate, (UINT32)wparam, text)) {
+                    OMG_String e_text = OMG_STRING_MAKE_BUFFER(text);
+                    event.text = &e_text;
+                    omg_base->on_text_input(&event);
+                }
+                this->high_surrogate = 0;
+            } else {
+                char text[5];
+                if (!omg_std_utf32_char_to_utf8((UINT32)wparam, text)) {
+                    OMG_String e_text = OMG_STRING_MAKE_BUFFER(text);
+                    event.text = &e_text;
+                    omg_base->on_text_input(&event);
+                }
+            }
+            return FALSE;
         }
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN:
@@ -1046,6 +1067,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->destroyed = false;
     this->is_mouse_left = true;
     this->is_focused = false;
+    this->high_surrogate = 0;
     this->mouse_state_cache = 0;
     this->last_mouse_state = 0;
     this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;

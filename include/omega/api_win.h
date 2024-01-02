@@ -90,6 +90,15 @@
 #ifndef GET_KEYSTATE_WPARAM
 #define GET_KEYSTATE_WPARAM (LOWORD(wParam))
 #endif
+#ifndef IS_HIGH_SURROGATE
+#define IS_HIGH_SURROGATE(x) (((x) >= 0xd800) && ((x) <= 0xdbff))
+#endif
+#ifndef IS_LOW_SURROGATE
+#define IS_LOW_SURROGATE(x) (((x) >= 0xdc00) && ((x) <= 0xdfff))
+#endif
+#ifndef IS_SURROGATE_PAIR
+#define IS_SURROGATE_PAIR(h, l) (IS_HIGH_SURROGATE(h) && IS_LOW_SURROGATE(l))
+#endif
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x10
 #endif

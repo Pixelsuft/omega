@@ -178,7 +178,7 @@ void omg_event_on_keyboard(OMG_EventKeyboard* event) {
 
 void omg_event_on_text_input(OMG_EventTextInput* event) {
     OMG_UNUSED(event);
-    // _OMG_LOG_INFO(OMG_OMEGA_FROM_EVENT(event), event->text);
+    _OMG_LOG_INFO(OMG_OMEGA_FROM_EVENT(event), event->text);
 }
 
 void omg_reset_event_handlers(OMG_Omega* this) {
