@@ -118,6 +118,8 @@ typedef struct OMG_Omega {
     bool inited;
 } OMG_Omega;
 
+OMG_API OMG_Omega* omg_alloc_omega_internal(OMG_EntryData* data, size_t size);
+OMG_API void omg_free_omega_internal(OMG_Omega* this);
 OMG_API OMG_Omega* omg_create(OMG_EntryData* data);
 OMG_API void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data);
 OMG_API OMG_Omega* omg_get_default_omega(void);

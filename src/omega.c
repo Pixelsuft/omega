@@ -15,6 +15,16 @@ void omg_delay(OMG_Omega* this, double seconds) {
     OMG_UNUSED(this, seconds);
 }
 
+OMG_Omega* omg_alloc_omega_internal(OMG_EntryData* data, size_t size) {
+    OMG_UNUSED(data, size);
+    static uint8_t buf[2048];
+    return (OMG_Omega*)buf;
+}
+
+void omg_free_omega_internal(OMG_Omega* this) {
+    OMG_UNUSED(this);
+}
+
 void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->entry_data = data;
     this->mem = NULL;
@@ -45,7 +55,7 @@ bool omg_log_info_str(OMG_Omega* this, const OMG_String* data) {
 }
 
 bool omg_destroy(OMG_Omega* this) {
-    OMG_UNUSED(this);
+    omg_free_omega_internal(this);
     omg_def_omega = NULL;
     return false;
 }

@@ -71,9 +71,9 @@ void omg_win_fill_after_create(OMG_OmegaWin* this, OMG_EntryData* data) {
 }
 
 OMG_OmegaWin* omg_win_create(OMG_EntryData* data) {
-    static OMG_OmegaWin result;
-    omg_win_fill_after_create(&result, data);
-    return &result;
+    OMG_OmegaWin* result = (OMG_OmegaWin*)omg_alloc_omega_internal(data, sizeof(OMG_OmegaWin));
+    omg_win_fill_after_create(result, data);
+    return result;
 }
 
 void omg_win_attach_console(OMG_OmegaWin* this) {

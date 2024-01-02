@@ -33,9 +33,9 @@ void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
 }
 
 OMG_OmegaSdl2* omg_sdl2_create(OMG_EntryData* data) {
-    static OMG_OmegaSdl2 result;
-    omg_sdl2_fill_after_create(&result, data);
-    return &result;
+    OMG_OmegaSdl2* result = (OMG_OmegaSdl2*)omg_alloc_omega_internal(data, sizeof(OMG_OmegaSdl2));
+    omg_sdl2_fill_after_create(result, data);
+    return result;
 }
 
 void omg_sdl2_fill_std(OMG_OmegaSdl2* this) {

@@ -58,9 +58,9 @@ void omg_raylib_fill_after_create(OMG_OmegaRaylib* this, OMG_EntryData* data) {
 }
 
 OMG_OmegaRaylib* omg_raylib_create(OMG_EntryData* data) {
-    static OMG_OmegaRaylib result;
-    omg_raylib_fill_after_create(&result, data);
-    return &result;
+    OMG_OmegaRaylib* result = (OMG_OmegaRaylib*)omg_alloc_omega_internal(data, sizeof(OMG_OmegaRaylib));
+    omg_raylib_fill_after_create(result, data);
+    return result;
 }
 
 void omg_raylib_fill_std(OMG_OmegaRaylib* this) {
