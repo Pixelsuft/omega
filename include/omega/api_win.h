@@ -243,6 +243,9 @@
 #ifndef SIZE_MINIMIZED
 #define SIZE_MINIMIZED 1
 #endif
+#ifndef USER_TIMER_MINIMUM
+#define USER_TIMER_MINIMUM 0x0000000A
+#endif
 #ifndef SC_MINIMIZE
 #define SC_MINIMIZE 0xF020
 #endif
@@ -284,6 +287,12 @@
 #endif
 #ifndef XBUTTON2
 #define XBUTTON1 0x0002
+#endif
+#ifndef VK_ENTER
+#define VK_ENTER 10
+#endif
+#ifndef VK_OEM_NEC_EQUAL
+#define VK_OEM_NEC_EQUAL 0x92
 #endif
 #ifndef WHEEL_DELTA
 #define WHEEL_DELTA 120

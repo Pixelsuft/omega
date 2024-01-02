@@ -45,7 +45,6 @@
         state |= OMG_MBUTTON_X1MASK; \
     if (wparam & MK_XBUTTON2) \
         state |= OMG_MBUTTON_X2MASK; \
-    this->mouse_state_cache = state; \
 } while (0)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = base->omg; \
@@ -315,6 +314,57 @@ static const OMG_Scancode OMG_windows_scancode_table[] = {
 	OMG_SCANCODE_UNKNOWN
 };
 
+static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_pressed, uint32_t mouse_flags, bool swap_buttons, uint8_t button, uint32_t mouse_id)
+{
+    if (swap_buttons) {
+        if (button == OMG_MBUTTON_LEFT) {
+            button = OMG_MBUTTON_RIGHT;
+        } else if (button == OMG_MBUTTON_RIGHT) {
+            button = OMG_MBUTTON_LEFT;
+        }
+    }
+
+    if (mouse_pressed && !(mouse_flags & OMG_MBUTTON(button))) {
+        OMG_EventMouseButton event;
+        MAKE_EVENT(&event);
+        event.is_emulated = false;
+        event.is_pressed = true;
+        event.win = this;
+        event.id = mouse_id;
+        event.button = button;
+        event.pos.x = (float)this->mouse_pos_cache.x;
+        event.pos.y = (float)this->mouse_pos_cache.y;
+        event.clicks = 1;
+        event.state = this->last_mouse_state;
+        omg_base->on_mouse_down(&event);
+    } else if (!mouse_pressed && (mouse_flags & OMG_MBUTTON(button))) {
+        OMG_EventMouseButton event;
+        MAKE_EVENT(&event);
+        event.is_emulated = false;
+        event.is_pressed = false;
+        event.win = this;
+        event.id = mouse_id;
+        event.button = button;
+        event.pos.x = (float)this->mouse_pos_cache.x;
+        event.pos.y = (float)this->mouse_pos_cache.y;
+        event.clicks = 1;
+        event.state = this->last_mouse_state;
+        omg_base->on_mouse_up(&event);
+    }
+}
+
+static void omg_win_windows_check_mouse_buttons(OMG_WindowWin* this, WPARAM wparam, uint32_t mouse_id)
+{
+    if (wparam != this->last_mouse_state) {
+        uint32_t mouse_flags = this->mouse_state_cache;
+        this->last_mouse_state = wparam;
+        omg_win_windows_check_button_wparam(this, (wparam & MK_LBUTTON), mouse_flags, false, OMG_MBUTTON_LEFT, mouse_id);
+        omg_win_windows_check_button_wparam(this, (wparam & MK_MBUTTON), mouse_flags, false, OMG_MBUTTON_MIDDLE, mouse_id);
+        omg_win_windows_check_button_wparam(this, (wparam & MK_RBUTTON), mouse_flags, false, OMG_MBUTTON_RIGHT, mouse_id);
+        omg_win_windows_check_button_wparam(this, (wparam & MK_XBUTTON1), mouse_flags, false, OMG_MBUTTON_X1, mouse_id);
+        omg_win_windows_check_button_wparam(this, (wparam & MK_XBUTTON2), mouse_flags, false, OMG_MBUTTON_X2, mouse_id);
+    }
+}
 
 bool omg_window_win_show(OMG_WindowWin* this, bool show) {
     this->u32->ShowWindow(this->hwnd, show ? SW_SHOWNORMAL : SW_HIDE);
@@ -563,6 +613,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.rel.x = (float)(x_pos - this->mouse_pos_cache.x);
             event.rel.y = (float)(y_pos - this->mouse_pos_cache.y);
             MOUSE_FILL_STATE(event.state, wparam);
+            omg_win_windows_check_mouse_buttons(this, wparam, 0);
+            this->mouse_state_cache = event.state;
+            this->last_mouse_state = wparam;
             if (this->is_mouse_left) {
                 this->is_mouse_left = false;
                 event.rel.x = event.rel.y = 0.0f;
@@ -649,25 +702,22 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             if ((msg == WM_XBUTTONDOWN) || (msg == WM_XBUTTONUP)) {
                 WORD need_wparam = GET_KEYSTATE_WPARAM(wparam);
                 MOUSE_FILL_STATE(event.state, need_wparam);
+                this->mouse_state_cache = event.state;
+                this->last_mouse_state = wparam;
             }
-            else
+            else {
                 MOUSE_FILL_STATE(event.state, wparam);
+                this->mouse_state_cache = event.state;
+                this->last_mouse_state = wparam;
+            }
             (event.is_pressed ? omg_base->on_mouse_down : omg_base->on_mouse_up)(&event);
             break;
         }
         case WM_POINTERUPDATE: {
-            // TODO: re-check mouse buttons state like in SDL2 and check for touch, etc
+            // TODO: check for touch, etc
             return RET_DEF_PROC();
         }
         case WM_ERASEBKGND: {
-            /*
-            RECT client_rect;
-            HBRUSH brush;
-            GetClientRect(hwnd, &client_rect);
-            brush = CreateSolidBrush(0);
-            FillRect(GetDC(hwnd), &client_rect, brush);
-            DeleteObject(brush);
-            */
             return TRUE;
         }
         case WM_MOUSELEAVE: {
@@ -848,6 +898,9 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.id = 0;
             event.is_emulated = false;
             MOUSE_FILL_STATE(event.state, param_state);
+            omg_win_windows_check_mouse_buttons(this, (WPARAM)param_state, 0);
+            this->mouse_state_cache = event.state;
+            this->last_mouse_state = wparam;
             if (msg == WM_MOUSEWHEEL) {
                 event.rel.x = 0.0f;
                 event.rel.y = (float)(-delta) / (float)WHEEL_DELTA;
@@ -974,20 +1027,8 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     HWND hwnd_d = this->u32->GetDesktopWindow();
     if (!this->u32->GetClientRect(hwnd_d, &desktop_rect) || !this->u32->GetWindowRect(this->hwnd, &rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
         return;
-    /*
-    float new_w = (float)(rect.right - rect.left) * new_scale.x / base->scale.x;
-    float new_h = (float)(rect.bottom - rect.top) * new_scale.y / base->scale.y;
-    */
     this->size_cache.w = base->size.w/* * new_scale.x*/ + (float)(rect.right - rect.left - c_rect.right);
     this->size_cache.h = base->size.h/* * new_scale.y*/ + (float)(rect.bottom - rect.top - c_rect.bottom);
-    /*this->u32->MoveWindow(
-        this->hwnd,
-        base->centered ? (int)(((float)desktop_rect.right - this->size_cache.w) / 2.0f) : rect.right,
-        base->centered ? (int)(((float)desktop_rect.bottom - this->size_cache.h) / 2.0f) : rect.bottom,
-        (int)this->size_cache.w,
-        (int)this->size_cache.h,
-        TRUE
-    );*/
     this->u32->SetWindowPos(
         this->hwnd,
         NULL,
@@ -1006,6 +1047,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->is_mouse_left = true;
     this->is_focused = false;
     this->mouse_state_cache = 0;
+    this->last_mouse_state = 0;
     this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;

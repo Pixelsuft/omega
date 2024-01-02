@@ -15,6 +15,7 @@ typedef struct {
     OMG_Kernel32* k32;
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;
+    WPARAM last_mouse_state;
     OMG_FPoint size_cache;
     OMG_Point mouse_pos_cache;
     uint32_t mouse_state_cache;
