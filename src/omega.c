@@ -176,6 +176,11 @@ void omg_event_on_keyboard(OMG_EventKeyboard* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_text_input(OMG_EventTextInput* event) {
+    OMG_UNUSED(event);
+    // _OMG_LOG_INFO(OMG_OMEGA_FROM_EVENT(event), event->text);
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
@@ -196,6 +201,7 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_focus_change = omg_event_on_focus_change;
     this->on_key_down = omg_event_on_keyboard;
     this->on_key_up = omg_event_on_keyboard;
+    this->on_text_input = omg_event_on_text_input;
 }
 
 bool omg_omg_init(OMG_Omega* this) {

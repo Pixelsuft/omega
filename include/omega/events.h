@@ -113,3 +113,9 @@ typedef struct {
     bool is_repeated;
     bool is_pressed;
 } OMG_EventKeyboard;
+
+typedef struct {
+    OMG_Event parent;
+    void* win;
+    OMG_String* text;
+} OMG_EventTextInput;

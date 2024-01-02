@@ -169,7 +169,16 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 break;
             }
             case SDL_TEXTINPUT: {
-                // TODO
+                OMG_Window* win = NULL;
+                FIND_SDL2_WIN(win, this->ev.button.windowID);
+                if (OMG_ISNULL(win))
+                    break;
+                OMG_String input_text = OMG_STRING_MAKE_STATIC(this->ev.text.text);
+                OMG_EventTextInput event;
+                MAKE_EVENT(&event);
+                event.win = win;
+                event.text = &input_text;
+                base->on_text_input(&event);
                 break;
             }
             case SDL_TEXTEDITING: {

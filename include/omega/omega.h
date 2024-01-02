@@ -100,6 +100,7 @@ typedef struct OMG_Omega {
     void (*on_mouse_leave)(OMG_EventMouseFocus* event);
     void (*on_key_down)(OMG_EventKeyboard* event);
     void (*on_key_up)(OMG_EventKeyboard* event);
+    void (*on_text_input)(OMG_EventTextInput* event);
     OMG_FPoint scale;
     int log_level_lib;
     int log_level_omg;
@@ -143,6 +144,7 @@ OMG_API void omg_event_on_mouse_button(OMG_EventMouseButton* event);
 OMG_API void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event);
 OMG_API void omg_event_on_mouse_focus(OMG_EventMouseFocus* event);
 OMG_API void omg_event_on_keyboard(OMG_EventKeyboard* event);
+OMG_API void omg_event_on_text_input(OMG_EventTextInput* event);
 OMG_API int omg_set_text_input_state(OMG_Omega* this, int state);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);
