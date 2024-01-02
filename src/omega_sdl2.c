@@ -97,6 +97,14 @@ void omg_sdl2_delay(OMG_OmegaSdl2* this, double seconds) {
     this->sdl2->SDL_Delay((uint32_t)(seconds * 1000.0));
 }
 
+int omg_sdl2_set_text_input_state(OMG_OmegaSdl2* this, int state) {
+    if (state == OMG_TEXT_INPUT_ENABLED)
+        this->sdl2->SDL_StartTextInput();
+    else if (state == OMG_TEXT_INPUT_DISABLED)
+        this->sdl2->SDL_StopTextInput();
+    return this->sdl2->SDL_IsTextInputActive() ? OMG_TEXT_INPUT_ENABLED : OMG_TEXT_INPUT_DISABLED;
+}
+
 void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
     while (this->sdl2->SDL_PollEvent(&this->ev)) {
         switch (this->ev.type) {
@@ -165,6 +173,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 break;
             }
             case SDL_TEXTEDITING: {
+                // TODO
                 break;
             }
             case SDL_TEXTEDITING_EXT: {
@@ -512,6 +521,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->app_init = omg_sdl2_app_init;
     base->app_quit = omg_sdl2_app_quit;
     base->delay = omg_sdl2_delay;
+    base->set_text_input_state = omg_sdl2_set_text_input_state;
     base->log_info_str = omg_sdl2_log_info_str;
     base->log_warn_str = omg_sdl2_log_warn_str;
     base->log_error_str = omg_sdl2_log_error_str;

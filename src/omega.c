@@ -98,6 +98,11 @@ void omg_auto_loop_stop(OMG_Omega* this) {
     this->looping = false;
 }
 
+int omg_set_text_input_state(OMG_Omega* this, int state) {
+    OMG_UNUSED(this, state);
+    return OMG_TEXT_INPUT_DISABLED;
+}
+
 void omg_event_on_quit(OMG_EventQuit* event) {
     OMG_Omega* this = OMG_OMEGA_FROM_EVENT(event);
     this->auto_loop_stop(this);
@@ -226,6 +231,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->app_quit = omg_app_quit;
     this->auto_loop_run = omg_auto_loop_run;
     this->auto_loop_stop = omg_auto_loop_stop;
+    this->set_text_input_state = omg_set_text_input_state;
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
     this->winmgr_alloc = omg_alloc_winmgr;

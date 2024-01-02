@@ -25,6 +25,10 @@
 #define OMG_LOG_CATEGORY_FATAL 4
 #define OMG_LOG_CATEGORY_DISABLED 5
 
+#define OMG_TEXT_INPUT_UNCHANGED 0
+#define OMG_TEXT_INPUT_DISABLED 1
+#define OMG_TEXT_INPUT_ENABLED 2
+
 #define OMG_TOUCH_MOUSEID ((uint32_t)-1)
 #define OMG_MOUSE_TOUCHID ((int64)-1)
 #define OMG_MBUTTON(X)       (1 << ((X) - 1))
@@ -73,6 +77,7 @@ typedef struct OMG_Omega {
     bool (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
     void (*auto_loop_run)(struct OMG_Omega* this);
     void (*auto_loop_stop)(struct OMG_Omega* this);
+    int (*set_text_input_state)(struct OMG_Omega* this, int state);
     OMG_Window* (*window_alloc)(struct OMG_Omega* this);
     bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
     void (*reset_event_handlers)(struct OMG_Omega* this);
@@ -138,6 +143,7 @@ OMG_API void omg_event_on_mouse_button(OMG_EventMouseButton* event);
 OMG_API void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event);
 OMG_API void omg_event_on_mouse_focus(OMG_EventMouseFocus* event);
 OMG_API void omg_event_on_keyboard(OMG_EventKeyboard* event);
+OMG_API int omg_set_text_input_state(OMG_Omega* this, int state);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);

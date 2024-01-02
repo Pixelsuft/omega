@@ -26,6 +26,7 @@ OMG_API bool omg_sdl2_alloc_winmgr(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_app_init(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_app_quit(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_delay(OMG_OmegaSdl2* this, double seconds);
+OMG_API int omg_sdl2_set_text_input_state(OMG_OmegaSdl2* this, int state);
 OMG_API void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_poll_events(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data);
