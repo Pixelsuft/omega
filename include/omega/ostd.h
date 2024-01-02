@@ -291,6 +291,7 @@ OMG_API void omg_std_fill_defaults(OMG_Std* this);
 OMG_API size_t omg_std_static_strlen(const char* src);
 OMG_API size_t omg_std_strlen(const char* src);
 OMG_API int omg_std_strcmp(const char* str1, const char* str2);
+OMG_API int omg_std_unicode_char_to_utf8(char* out, uint32_t code);
 OMG_API void omg_std_str_reverse(char* str, size_t length);
 OMG_API bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base);
 OMG_API bool omg_string_buffer_set_size(OMG_String* this, size_t new_size);

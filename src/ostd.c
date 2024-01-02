@@ -369,6 +369,44 @@ void omg_std_fill_defaults(OMG_Std* this) {
 #endif
 }
 
+int omg_std_unicode_char_to_utf8(char* out, uint32_t code)
+{
+    // https://gist.github.com/MightyPork/52eda3e5677b4b03524e40c9f0ab1da5
+    if (code <= 0x7F) {
+        out[0] = (char) code;
+        out[1] = 0;
+        return 1;
+    }
+    else if (code <= 0x07FF) {
+        out[0] = (char) (((code >> 6) & 0x1F) | 0xC0);
+        out[1] = (char) (((code >> 0) & 0x3F) | 0x80);
+        out[2] = 0;
+        return 2;
+    }
+    else if (code <= 0xFFFF) {
+        out[0] = (char) (((code >> 12) & 0x0F) | 0xE0);
+        out[1] = (char) (((code >>  6) & 0x3F) | 0x80);
+        out[2] = (char) (((code >>  0) & 0x3F) | 0x80);
+        out[3] = 0;
+        return 3;
+    }
+    else if (code <= 0x10FFFF) {
+        out[0] = (char) (((code >> 18) & 0x07) | 0xF0);
+        out[1] = (char) (((code >> 12) & 0x3F) | 0x80);
+        out[2] = (char) (((code >>  6) & 0x3F) | 0x80);
+        out[3] = (char) (((code >>  0) & 0x3F) | 0x80);
+        out[4] = 0;
+        return 4;
+    }
+    else { 
+        out[0] = (char) 0xEF;  
+        out[1] = (char) 0xBF;
+        out[2] = (char) 0xBD;
+        out[3] = 0;
+        return 0;
+    }
+}
+
 bool omg_string_add_double(OMG_String* this, const double double_to_add) {
     if (this->type < OMG_STRING_BUFFER)
         return true;

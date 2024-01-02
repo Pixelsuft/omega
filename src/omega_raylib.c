@@ -329,6 +329,18 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             (event.is_pressed ? base->on_key_down : base->on_key_up)(&event);
         }
     }
+    int key_pressed = this->raylib->GetCharPressed();
+    while (key_pressed) {
+        char buf[5];
+        omg_std_unicode_char_to_utf8(buf, (int32_t)key_pressed);
+        OMG_String text = OMG_STRING_MAKE_BUFFER(buf);
+        OMG_EventTextInput event;
+        MAKE_EVENT(&event);
+        event.win = win;
+        event.text = &text;
+        base->on_text_input(&event);
+        key_pressed = this->raylib->GetCharPressed();
+    }
 }
 
 void omg_raylib_auto_loop_run(OMG_OmegaRaylib* this) {
