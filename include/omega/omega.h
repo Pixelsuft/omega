@@ -105,6 +105,7 @@ typedef struct OMG_Omega {
     bool emulate_mouse;
     bool enable_paint;
     bool looping;
+    bool supports_screen_keyboard;
     bool support_highdpi;
     bool should_free_mem;
     bool should_free_std;

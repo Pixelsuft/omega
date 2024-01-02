@@ -203,6 +203,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->looping = false;
     this->emulate_mouse = true;
     this->enable_paint = true;
+    this->supports_screen_keyboard = false;
     this->should_free_mem = false;
     this->theme = OMG_THEME_NONE;
     this->scale.x = this->scale.y = 1.0f;

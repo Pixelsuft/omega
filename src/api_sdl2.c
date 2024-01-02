@@ -94,6 +94,12 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_RestoreWindow);
     LOAD_REQUIRED(SDL_SetWindowTitle);
     LOAD_REQUIRED(SDL_PollEvent);
+    LOAD_REQUIRED(SDL_StartTextInput);
+    LOAD_REQUIRED(SDL_StopTextInput);
+    LOAD_REQUIRED(SDL_IsTextInputActive);
+    LOAD_REQUIRED(SDL_IsScreenKeyboardShown);
+    LOAD_REQUIRED(SDL_HasScreenKeyboardSupport);
+    LOAD_REQUIRED(SDL_SetTextInputRect);
     LOAD_REQUIRED(SDL_GetTicks);
     LOAD_REQUIRED(SDL_GetPerformanceFrequency);
     LOAD_REQUIRED(SDL_GetPerformanceCounter);

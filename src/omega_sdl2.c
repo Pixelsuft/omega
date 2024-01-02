@@ -160,6 +160,17 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 }
                 break;
             }
+            case SDL_TEXTINPUT: {
+                // TODO
+                break;
+            }
+            case SDL_TEXTEDITING: {
+                break;
+            }
+            case SDL_TEXTEDITING_EXT: {
+                // Probably in the future
+                break;
+            }
             case SDL_WINDOWEVENT: {
                 OMG_Window* win = NULL;
                 FIND_SDL2_WIN(win, this->ev.window.windowID);
@@ -411,6 +422,7 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
         _OMG_LOG_INFO(base, "Failed to init SDL2 (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
+    base->supports_screen_keyboard = this->sdl2->SDL_HasScreenKeyboardSupport();
     _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
     base->inited = true;
     return false;

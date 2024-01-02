@@ -68,6 +68,20 @@ typedef enum
 
 typedef int32_t SDL_Keycode;
 
+typedef struct SDL_Rect {
+    int x;
+    int y;
+    int w;
+    int h;
+} SDL_Rect;
+
+typedef struct SDL_FRect {
+    float x;
+    float y;
+    float w;
+    float h;
+} SDL_FRect;
+
 typedef enum
 {
     SDL_SCANCODE_UNKNOWN = 0,
@@ -928,6 +942,12 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_RestoreWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowTitle)(SDL_Window*, const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_PollEvent)(SDL_Event*);
+    void OMG_SDL2_STD_PREFIX (*SDL_StartTextInput)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_StopTextInput)(void);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_IsTextInputActive)(void);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_IsScreenKeyboardShown)(SDL_Window*);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_HasScreenKeyboardSupport)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetTextInputRect)(const SDL_Rect*);
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetTicks)(void);
     uint64_t OMG_SDL2_STD_PREFIX (*SDL_GetTicks64)(void);
     uint64_t OMG_SDL2_STD_PREFIX (*SDL_GetPerformanceFrequency)(void);
