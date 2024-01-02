@@ -16,6 +16,39 @@
 // Hack
 #define SDL_VERSION_ATLEAST(x, y, z) 1
 
+#define SDL_LIL_ENDIAN  1234
+#define SDL_BIG_ENDIAN  4321
+#ifndef SDL_BYTEORDER
+#ifdef __linux__
+#include <endian.h>
+#define SDL_BYTEORDER  __BYTE_ORDER
+#elif defined(__OpenBSD__) || defined(__DragonFly__)
+#include <endian.h>
+#define SDL_BYTEORDER  BYTE_ORDER
+#elif defined(__FreeBSD__) || defined(__NetBSD__)
+#include <sys/endian.h>
+#define SDL_BYTEORDER  BYTE_ORDER
+#elif defined(__ORDER_LITTLE_ENDIAN__) && defined(__ORDER_BIG_ENDIAN__) && defined(__BYTE_ORDER__)
+#if (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#define SDL_BYTEORDER   SDL_LIL_ENDIAN
+#elif (__BYTE_ORDER__ == __ORDER_BIG_ENDIAN__)
+#define SDL_BYTEORDER   SDL_BIG_ENDIAN
+#else
+#error Unsupported endianness
+#endif
+#else
+#if defined(__hppa__) || \
+    defined(__m68k__) || defined(mc68000) || defined(_M_M68K) || \
+    (defined(__MIPS__) && defined(__MIPSEB__)) || \
+    defined(__ppc__) || defined(__POWERPC__) || defined(__powerpc__) || defined(__PPC__) || \
+    defined(__sparc__)
+#define SDL_BYTEORDER   SDL_BIG_ENDIAN
+#else
+#define SDL_BYTEORDER   SDL_LIL_ENDIAN
+#endif
+#endif
+#endif
+
 #ifdef __CC_ARM
 #define SDL_FALSE 0
 #define SDL_TRUE 1
@@ -32,6 +65,14 @@ typedef enum
 #define SDL_INIT_VIDEO          0x00000020u
 #define SDL_INIT_EVENTS         0x00004000u
 
+#define SDL_SWSURFACE       0
+#define SDL_PREALLOC        0x00000001
+#define SDL_RLEACCEL        0x00000002
+#define SDL_DONTFREE        0x00000004
+#define SDL_SIMD_ALIGNED    0x00000008
+
+#define SDL_MUSTLOCK(S) (((S)->flags & SDL_RLEACCEL) != 0)
+
 #define SDL_WINDOWPOS_UNDEFINED_MASK    0x1FFF0000u
 #define SDL_WINDOWPOS_UNDEFINED_DISPLAY(X)  (SDL_WINDOWPOS_UNDEFINED_MASK | (X))
 #define SDL_WINDOWPOS_UNDEFINED         SDL_WINDOWPOS_UNDEFINED_DISPLAY(0)
@@ -41,6 +82,28 @@ typedef enum
 #define SDL_WINDOWPOS_CENTERED_DISPLAY(X)  (SDL_WINDOWPOS_CENTERED_MASK | (X))
 #define SDL_WINDOWPOS_CENTERED         SDL_WINDOWPOS_CENTERED_DISPLAY(0)
 #define SDL_WINDOWPOS_ISCENTERED(X)    (((X) & 0xFFFF0000) == SDL_WINDOWPOS_CENTERED_MASK)
+
+#ifdef __cplusplus
+#define SDL_reinterpret_cast(type, expression) reinterpret_cast<type>(expression)
+#define SDL_static_cast(type, expression) static_cast<type>(expression)
+#define SDL_const_cast(type, expression) const_cast<type>(expression)
+#else
+#define SDL_reinterpret_cast(type, expression) ((type)(expression))
+#define SDL_static_cast(type, expression) ((type)(expression))
+#define SDL_const_cast(type, expression) ((type)(expression))
+#endif
+
+#define SDL_FOURCC(A, B, C, D) \
+    ((SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (A))) << 0) | \
+     (SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (B))) << 8) | \
+     (SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (C))) << 16) | \
+     (SDL_static_cast(uint32_t, SDL_static_cast(uint8_t, (D))) << 24))
+
+#define SDL_DEFINE_PIXELFOURCC(A, B, C, D) SDL_FOURCC(A, B, C, D)
+
+#define SDL_DEFINE_PIXELFORMAT(type, order, layout, bits, bytes) \
+    ((1 << 28) | ((type) << 24) | ((order) << 20) | ((layout) << 16) | \
+     ((bits) << 8) | ((bytes) << 0))
 
 #define SDL_TOUCH_MOUSEID ((uint32_t)-1)
 #define SDL_MOUSE_TOUCHID ((int64_t)-1)
@@ -66,6 +129,11 @@ typedef enum
 #define SDL_TEXTEDITINGEVENT_TEXT_SIZE (32)
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE (32)
 
+typedef void SDL_Window;
+typedef void SDL_Renderer;
+typedef void SDL_BlitMap;
+typedef void SDL_Texture;
+
 typedef int32_t SDL_Keycode;
 
 typedef struct SDL_Rect {
@@ -82,8 +150,17 @@ typedef struct SDL_FRect {
     float h;
 } SDL_FRect;
 
-typedef enum
-{
+typedef struct SDL_Point {
+    int x;
+    int y;
+} SDL_Point;
+
+typedef struct SDL_FPoint {
+    float x;
+    float y;
+} SDL_FPoint;
+
+typedef enum {
     SDL_SCANCODE_UNKNOWN = 0,
     SDL_SCANCODE_A = 4,
     SDL_SCANCODE_B = 5,
@@ -334,8 +411,7 @@ typedef enum
     SDL_NUM_SCANCODES = 512
 } SDL_Scancode;
 
-typedef enum
-{
+typedef enum {
     SDLK_UNKNOWN = 0,
     SDLK_RETURN = '\r',
     SDLK_ESCAPE = '\x1B',
@@ -582,8 +658,7 @@ typedef enum
     SDLK_ENDCALL = SDL_SCANCODE_TO_KEYCODE(SDL_SCANCODE_ENDCALL)
 } SDL_KeyCode;
 
-typedef enum
-{
+typedef enum {
     KMOD_NONE = 0x0000,
     KMOD_LSHIFT = 0x0001,
     KMOD_RSHIFT = 0x0002,
@@ -604,30 +679,34 @@ typedef enum
     KMOD_RESERVED = KMOD_SCROLL
 } SDL_Keymod;
 
-typedef struct SDL_Keysym
-{
+typedef struct SDL_Keysym {
     SDL_Scancode scancode;
     SDL_Keycode sym;
     uint16_t mod;
     uint32_t unused;
 } SDL_Keysym;
 
-typedef enum
-{
+typedef enum {
     SDL_MOUSEWHEEL_NORMAL,
     SDL_MOUSEWHEEL_FLIPPED
 } SDL_MouseWheelDirection;
 
-typedef enum
-{
+typedef enum {
     SDL_LOG_CATEGORY_APPLICATION
 } SDL_LogCategory;
 
-typedef struct {
+typedef struct SDL_version {
     uint8_t major;
     uint8_t minor;
     uint8_t patch;
 } SDL_version;
+
+typedef struct SDL_Color {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
+    uint8_t a;
+} SDL_Color;
 
 typedef enum
 {
@@ -715,14 +794,12 @@ typedef enum
     SDL_LASTEVENT = 0xFFFF
 } SDL_EventType;
 
-typedef struct SDL_CommonEvent
-{
+typedef struct SDL_CommonEvent {
     uint32_t type;
     uint32_t timestamp;
 } SDL_CommonEvent;
 
-typedef struct SDL_WindowEvent
-{
+typedef struct SDL_WindowEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -734,8 +811,7 @@ typedef struct SDL_WindowEvent
     int32_t data2;
 } SDL_WindowEvent;
 
-typedef struct SDL_MouseMotionEvent
-{
+typedef struct SDL_MouseMotionEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -747,8 +823,7 @@ typedef struct SDL_MouseMotionEvent
     int32_t yrel;
 } SDL_MouseMotionEvent;
 
-typedef struct SDL_MouseButtonEvent
-{
+typedef struct SDL_MouseButtonEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -761,8 +836,7 @@ typedef struct SDL_MouseButtonEvent
     int32_t y;
 } SDL_MouseButtonEvent;
 
-typedef struct SDL_MouseWheelEvent
-{
+typedef struct SDL_MouseWheelEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -776,8 +850,7 @@ typedef struct SDL_MouseWheelEvent
     int32_t mouseY;
 } SDL_MouseWheelEvent;
 
-typedef struct SDL_KeyboardEvent
-{
+typedef struct SDL_KeyboardEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -788,8 +861,7 @@ typedef struct SDL_KeyboardEvent
     SDL_Keysym keysym;
 } SDL_KeyboardEvent;
 
-typedef struct SDL_TextEditingEvent
-{
+typedef struct SDL_TextEditingEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -798,8 +870,7 @@ typedef struct SDL_TextEditingEvent
     int32_t length;
 } SDL_TextEditingEvent;
 
-typedef struct SDL_TextEditingExtEvent
-{
+typedef struct SDL_TextEditingExtEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
@@ -808,16 +879,14 @@ typedef struct SDL_TextEditingExtEvent
     int32_t length;
 } SDL_TextEditingExtEvent;
 
-typedef struct SDL_TextInputEvent
-{
+typedef struct SDL_TextInputEvent {
     uint32_t type;
     uint32_t timestamp;
     uint32_t windowID;
     char text[SDL_TEXTINPUTEVENT_TEXT_SIZE];
 } SDL_TextInputEvent;
 
-typedef union SDL_Event
-{
+typedef union SDL_Event {
     uint32_t type;
     SDL_CommonEvent common;
     SDL_WindowEvent window;
@@ -831,8 +900,7 @@ typedef union SDL_Event
     uint8_t padding[sizeof(void*) <= 8 ? 56 : sizeof(void*) == 16 ? 64 : 3 * sizeof(void*)];
 } SDL_Event;
 
-typedef enum
-{
+typedef enum {
     SDL_WINDOW_FULLSCREEN = 0x00000001,
     SDL_WINDOW_OPENGL = 0x00000002,
     SDL_WINDOW_SHOWN = 0x00000004,
@@ -859,16 +927,14 @@ typedef enum
     SDL_WINDOW_INPUT_GRABBED = SDL_WINDOW_MOUSE_GRABBED
 } SDL_WindowFlags;
 
-typedef enum
-{
+typedef enum {
     SDL_RENDERER_SOFTWARE = 0x00000001,
     SDL_RENDERER_ACCELERATED = 0x00000002,
     SDL_RENDERER_PRESENTVSYNC = 0x00000004,
     SDL_RENDERER_TARGETTEXTURE = 0x00000008
 } SDL_RendererFlags;
 
-typedef struct SDL_RendererInfo
-{
+typedef struct SDL_RendererInfo {
     const char* name;
     uint32_t flags;
     uint32_t num_texture_formats;
@@ -877,8 +943,262 @@ typedef struct SDL_RendererInfo
     int max_texture_height;
 } SDL_RendererInfo;
 
-typedef void SDL_Window;
-typedef void SDL_Renderer;
+typedef struct SDL_Vertex {
+    SDL_FPoint position;
+    SDL_Color color;
+    SDL_FPoint tex_coord;
+} SDL_Vertex;
+
+typedef enum {
+    SDL_ScaleModeNearest,
+    SDL_ScaleModeLinear,
+    SDL_ScaleModeBest
+} SDL_ScaleMode;
+
+typedef enum {
+    SDL_TEXTUREACCESS_STATIC,
+    SDL_TEXTUREACCESS_STREAMING,
+    SDL_TEXTUREACCESS_TARGET
+} SDL_TextureAccess;
+
+typedef enum {
+    SDL_TEXTUREMODULATE_NONE = 0x00000000,
+    SDL_TEXTUREMODULATE_COLOR = 0x00000001,
+    SDL_TEXTUREMODULATE_ALPHA = 0x00000002
+} SDL_TextureModulate;
+
+typedef enum {
+    SDL_FLIP_NONE = 0x00000000,
+    SDL_FLIP_HORIZONTAL = 0x00000001,
+    SDL_FLIP_VERTICAL = 0x00000002
+} SDL_RendererFlip;
+
+typedef enum {
+    SDL_PIXELTYPE_UNKNOWN,
+    SDL_PIXELTYPE_INDEX1,
+    SDL_PIXELTYPE_INDEX4,
+    SDL_PIXELTYPE_INDEX8,
+    SDL_PIXELTYPE_PACKED8,
+    SDL_PIXELTYPE_PACKED16,
+    SDL_PIXELTYPE_PACKED32,
+    SDL_PIXELTYPE_ARRAYU8,
+    SDL_PIXELTYPE_ARRAYU16,
+    SDL_PIXELTYPE_ARRAYU32,
+    SDL_PIXELTYPE_ARRAYF16,
+    SDL_PIXELTYPE_ARRAYF32
+} SDL_PixelType;
+
+typedef enum {
+    SDL_BITMAPORDER_NONE,
+    SDL_BITMAPORDER_4321,
+    SDL_BITMAPORDER_1234
+} SDL_BitmapOrder;
+
+typedef enum {
+    SDL_PACKEDORDER_NONE,
+    SDL_PACKEDORDER_XRGB,
+    SDL_PACKEDORDER_RGBX,
+    SDL_PACKEDORDER_ARGB,
+    SDL_PACKEDORDER_RGBA,
+    SDL_PACKEDORDER_XBGR,
+    SDL_PACKEDORDER_BGRX,
+    SDL_PACKEDORDER_ABGR,
+    SDL_PACKEDORDER_BGRA
+} SDL_PackedOrder;
+
+typedef enum {
+    SDL_ARRAYORDER_NONE,
+    SDL_ARRAYORDER_RGB,
+    SDL_ARRAYORDER_RGBA,
+    SDL_ARRAYORDER_ARGB,
+    SDL_ARRAYORDER_BGR,
+    SDL_ARRAYORDER_BGRA,
+    SDL_ARRAYORDER_ABGR
+} SDL_ArrayOrder;
+
+typedef enum {
+    SDL_PACKEDLAYOUT_NONE,
+    SDL_PACKEDLAYOUT_332,
+    SDL_PACKEDLAYOUT_4444,
+    SDL_PACKEDLAYOUT_1555,
+    SDL_PACKEDLAYOUT_5551,
+    SDL_PACKEDLAYOUT_565,
+    SDL_PACKEDLAYOUT_8888,
+    SDL_PACKEDLAYOUT_2101010,
+    SDL_PACKEDLAYOUT_1010102
+} SDL_PackedLayout;
+
+typedef enum {
+    SDL_PIXELFORMAT_UNKNOWN,
+    SDL_PIXELFORMAT_INDEX1LSB =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_4321, 0,
+                               1, 0),
+    SDL_PIXELFORMAT_INDEX1MSB =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX1, SDL_BITMAPORDER_1234, 0,
+                               1, 0),
+    SDL_PIXELFORMAT_INDEX4LSB =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_4321, 0,
+                               4, 0),
+    SDL_PIXELFORMAT_INDEX4MSB =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX4, SDL_BITMAPORDER_1234, 0,
+                               4, 0),
+    SDL_PIXELFORMAT_INDEX8 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_INDEX8, 0, 0, 8, 1),
+    SDL_PIXELFORMAT_RGB332 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED8, SDL_PACKEDORDER_XRGB,
+                               SDL_PACKEDLAYOUT_332, 8, 1),
+    SDL_PIXELFORMAT_XRGB4444 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB,
+                               SDL_PACKEDLAYOUT_4444, 12, 2),
+    SDL_PIXELFORMAT_RGB444 = SDL_PIXELFORMAT_XRGB4444,
+    SDL_PIXELFORMAT_XBGR4444 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR,
+                               SDL_PACKEDLAYOUT_4444, 12, 2),
+    SDL_PIXELFORMAT_BGR444 = SDL_PIXELFORMAT_XBGR4444,
+    SDL_PIXELFORMAT_XRGB1555 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB,
+                               SDL_PACKEDLAYOUT_1555, 15, 2),
+    SDL_PIXELFORMAT_RGB555 = SDL_PIXELFORMAT_XRGB1555,
+    SDL_PIXELFORMAT_XBGR1555 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR,
+                               SDL_PACKEDLAYOUT_1555, 15, 2),
+    SDL_PIXELFORMAT_BGR555 = SDL_PIXELFORMAT_XBGR1555,
+    SDL_PIXELFORMAT_ARGB4444 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ARGB,
+                               SDL_PACKEDLAYOUT_4444, 16, 2),
+    SDL_PIXELFORMAT_RGBA4444 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_RGBA,
+                               SDL_PACKEDLAYOUT_4444, 16, 2),
+    SDL_PIXELFORMAT_ABGR4444 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ABGR,
+                               SDL_PACKEDLAYOUT_4444, 16, 2),
+    SDL_PIXELFORMAT_BGRA4444 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_BGRA,
+                               SDL_PACKEDLAYOUT_4444, 16, 2),
+    SDL_PIXELFORMAT_ARGB1555 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ARGB,
+                               SDL_PACKEDLAYOUT_1555, 16, 2),
+    SDL_PIXELFORMAT_RGBA5551 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_RGBA,
+                               SDL_PACKEDLAYOUT_5551, 16, 2),
+    SDL_PIXELFORMAT_ABGR1555 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_ABGR,
+                               SDL_PACKEDLAYOUT_1555, 16, 2),
+    SDL_PIXELFORMAT_BGRA5551 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_BGRA,
+                               SDL_PACKEDLAYOUT_5551, 16, 2),
+    SDL_PIXELFORMAT_RGB565 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XRGB,
+                               SDL_PACKEDLAYOUT_565, 16, 2),
+    SDL_PIXELFORMAT_BGR565 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED16, SDL_PACKEDORDER_XBGR,
+                               SDL_PACKEDLAYOUT_565, 16, 2),
+    SDL_PIXELFORMAT_RGB24 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU8, SDL_ARRAYORDER_RGB, 0,
+                               24, 3),
+    SDL_PIXELFORMAT_BGR24 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_ARRAYU8, SDL_ARRAYORDER_BGR, 0,
+                               24, 3),
+    SDL_PIXELFORMAT_XRGB8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XRGB,
+                               SDL_PACKEDLAYOUT_8888, 24, 4),
+    SDL_PIXELFORMAT_RGB888 = SDL_PIXELFORMAT_XRGB8888,
+    SDL_PIXELFORMAT_RGBX8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_RGBX,
+                               SDL_PACKEDLAYOUT_8888, 24, 4),
+    SDL_PIXELFORMAT_XBGR8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_XBGR,
+                               SDL_PACKEDLAYOUT_8888, 24, 4),
+    SDL_PIXELFORMAT_BGR888 = SDL_PIXELFORMAT_XBGR8888,
+    SDL_PIXELFORMAT_BGRX8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_BGRX,
+                               SDL_PACKEDLAYOUT_8888, 24, 4),
+    SDL_PIXELFORMAT_ARGB8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB,
+                               SDL_PACKEDLAYOUT_8888, 32, 4),
+    SDL_PIXELFORMAT_RGBA8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_RGBA,
+                               SDL_PACKEDLAYOUT_8888, 32, 4),
+    SDL_PIXELFORMAT_ABGR8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ABGR,
+                               SDL_PACKEDLAYOUT_8888, 32, 4),
+    SDL_PIXELFORMAT_BGRA8888 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_BGRA,
+                               SDL_PACKEDLAYOUT_8888, 32, 4),
+    SDL_PIXELFORMAT_ARGB2101010 =
+        SDL_DEFINE_PIXELFORMAT(SDL_PIXELTYPE_PACKED32, SDL_PACKEDORDER_ARGB,
+                               SDL_PACKEDLAYOUT_2101010, 32, 4),
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    SDL_PIXELFORMAT_RGBA32 = SDL_PIXELFORMAT_RGBA8888,
+    SDL_PIXELFORMAT_ARGB32 = SDL_PIXELFORMAT_ARGB8888,
+    SDL_PIXELFORMAT_BGRA32 = SDL_PIXELFORMAT_BGRA8888,
+    SDL_PIXELFORMAT_ABGR32 = SDL_PIXELFORMAT_ABGR8888,
+#else
+    SDL_PIXELFORMAT_RGBA32 = SDL_PIXELFORMAT_ABGR8888,
+    SDL_PIXELFORMAT_ARGB32 = SDL_PIXELFORMAT_BGRA8888,
+    SDL_PIXELFORMAT_BGRA32 = SDL_PIXELFORMAT_ARGB8888,
+    SDL_PIXELFORMAT_ABGR32 = SDL_PIXELFORMAT_RGBA8888,
+#endif
+    SDL_PIXELFORMAT_YV12 =      
+        SDL_DEFINE_PIXELFOURCC('Y', 'V', '1', '2'),
+    SDL_PIXELFORMAT_IYUV =      
+        SDL_DEFINE_PIXELFOURCC('I', 'Y', 'U', 'V'),
+    SDL_PIXELFORMAT_YUY2 =      
+        SDL_DEFINE_PIXELFOURCC('Y', 'U', 'Y', '2'),
+    SDL_PIXELFORMAT_UYVY =      
+        SDL_DEFINE_PIXELFOURCC('U', 'Y', 'V', 'Y'),
+    SDL_PIXELFORMAT_YVYU =      
+        SDL_DEFINE_PIXELFOURCC('Y', 'V', 'Y', 'U'),
+    SDL_PIXELFORMAT_NV12 =      
+        SDL_DEFINE_PIXELFOURCC('N', 'V', '1', '2'),
+    SDL_PIXELFORMAT_NV21 =      
+        SDL_DEFINE_PIXELFOURCC('N', 'V', '2', '1'),
+    SDL_PIXELFORMAT_EXTERNAL_OES =      
+        SDL_DEFINE_PIXELFOURCC('O', 'E', 'S', ' ')
+} SDL_PixelFormatEnum;
+
+typedef struct SDL_Palette {
+    int ncolors;
+    SDL_Color* colors;
+    uint32_t version;
+    int refcount;
+} SDL_Palette;
+
+typedef struct SDL_PixelFormat {
+    uint32_t format;
+    SDL_Palette *palette;
+    uint8_t BitsPerPixel;
+    uint8_t BytesPerPixel;
+    uint8_t padding[2];
+    uint32_t Rmask;
+    uint32_t Gmask;
+    uint32_t Bmask;
+    uint32_t Amask;
+    uint8_t Rloss;
+    uint8_t Gloss;
+    uint8_t Bloss;
+    uint8_t Aloss;
+    uint8_t Rshift;
+    uint8_t Gshift;
+    uint8_t Bshift;
+    uint8_t Ashift;
+    int refcount;
+    struct SDL_PixelFormat* next;
+} SDL_PixelFormat;
+
+typedef struct SDL_Surface {
+    uint32_t flags;
+    SDL_PixelFormat* format;
+    int w, h;
+    int pitch;
+    void* pixels;
+    void* userdata;
+    int locked;
+    void* list_blitmap;
+    SDL_Rect clip_rect;
+    SDL_BlitMap* map;
+    int refcount;
+} SDL_Surface;
 #else
 #define OMG_SDL2_STD_PREFIX SDLCALL
 #endif
@@ -958,6 +1278,8 @@ typedef struct {
     SDL_Renderer* OMG_SDL2_STD_PREFIX (*SDL_CreateRenderer)(SDL_Window*, int, uint32_t);
     int OMG_SDL2_STD_PREFIX (*SDL_GetRendererOutputSize)(SDL_Renderer*, int*, int*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyRenderer)(SDL_Renderer*);
+    SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTexture)(SDL_Renderer*, uint32_t, int, int, int);
+    void OMG_SDL2_STD_PREFIX (*SDL_DestroyTexture)(SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);
     void OMG_SDL2_STD_PREFIX (*SDL_RenderPresent)(SDL_Renderer*);

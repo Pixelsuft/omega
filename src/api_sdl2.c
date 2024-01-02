@@ -109,6 +109,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_CreateRenderer);
     LOAD_REQUIRED(SDL_GetRendererOutputSize);
     LOAD_REQUIRED(SDL_DestroyRenderer);
+    LOAD_REQUIRED(SDL_CreateTexture);
+    LOAD_REQUIRED(SDL_DestroyTexture);
     LOAD_REQUIRED(SDL_RenderClear);
     LOAD_REQUIRED(SDL_SetRenderDrawColor);
     LOAD_REQUIRED(SDL_RenderPresent);
