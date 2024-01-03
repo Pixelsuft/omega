@@ -272,6 +272,7 @@ void omg_std_set_default_handle(OMG_Std* this) {
 }
 
 void* omg_std_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
+    // TODO: support ref count
     OMG_UNUSED(fn, adv_fn);
     return NULL;
 }
