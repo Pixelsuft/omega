@@ -38,7 +38,7 @@ bool omg_window_renderer_alloc(OMG_Window* this) {
 
 bool omg_window_renderer_free(OMG_Window* this) {
     if (OMG_ISNOTNULL(this->ren)) {
-        // ren->destroy
+        this->ren->destroy(this->ren);
         if (this->ren->was_allocated) {
             OMG_FREE(omg_base->mem, this->ren);
             this->ren = NULL;

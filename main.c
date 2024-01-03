@@ -24,7 +24,6 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->ren->tex_destroy(this->ren, this->tex);
     // everything other will be cleaned up automaticly
-    this->ren->destroy(this->ren);
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
