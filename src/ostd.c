@@ -287,6 +287,7 @@ bool omg_std_lib_free(void* lib) {
 }
 
 void omg_std_fill_defaults(OMG_Std* this) {
+    // TODO: lrint
     this->lib_load = omg_std_lib_load; // TODO: these 3
     this->lib_func = omg_std_lib_func;
     this->lib_free = omg_std_lib_free;

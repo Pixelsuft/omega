@@ -239,7 +239,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
         base->driver = omg_renderer_sdl2_driver_from_name(this, info.name);
         _OMG_LOG_INFO(omg_base, "SDL2 renderer created successfuly with ", info.name, " driver");
     }
-    omg_sdl2_gfx_set_handle(this->sdl2);
+    omg_sdl2_gfx_set_handle(this->sdl2, omg_std_get_default_handle());
     omg_renderer_sdl2_update_scale(this);
     base->inited = true;
     return false;

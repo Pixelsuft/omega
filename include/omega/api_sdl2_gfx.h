@@ -46,7 +46,7 @@ Pixelsuft -- pixelsuft at github dot com
 
 #define SDL2_GFX_STD_PREFIX
 
-SDL2_GFX_STD_PREFIX void omg_sdl2_gfx_set_handle(OMG_Sdl2* sdl2);
+SDL2_GFX_STD_PREFIX void omg_sdl2_gfx_set_handle(OMG_Sdl2* sdl2, OMG_Std* std);
 SDL2_GFX_STD_PREFIX int pixelRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int hlineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t x2, int16_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int vlineRGBA(SDL_Renderer* renderer, int16_t x, int16_t y1, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
