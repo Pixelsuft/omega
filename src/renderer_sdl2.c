@@ -158,6 +158,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_
         tex_base->size.w = (float)qw;
         tex_base->size.h = (float)qh;
     }
+    tex_base->auto_blend = true;
     return tex;
 }
 

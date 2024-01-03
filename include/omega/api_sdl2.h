@@ -161,6 +161,15 @@ typedef struct SDL_FPoint {
 } SDL_FPoint;
 
 typedef enum {
+    SDL_BLENDMODE_NONE = 0x00000000,
+    SDL_BLENDMODE_BLEND = 0x00000001,
+    SDL_BLENDMODE_ADD = 0x00000002,
+    SDL_BLENDMODE_MOD = 0x00000004,
+    SDL_BLENDMODE_MUL = 0x00000008,
+    SDL_BLENDMODE_INVALID = 0x7FFFFFFF
+} SDL_BlendMode;
+
+typedef enum {
     SDL_SCANCODE_UNKNOWN = 0,
     SDL_SCANCODE_A = 4,
     SDL_SCANCODE_B = 5,
@@ -1216,8 +1225,23 @@ typedef struct {
     SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTexture)(SDL_Renderer*, uint32_t, int, int, int);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyTexture)(SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_QueryTexture)(SDL_Texture*, uint32_t*, int*, int*, int*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetTextureColorMod)(SDL_Texture*, uint8_t, uint8_t, uint8_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetTextureAlphaMod)(SDL_Texture*, uint8_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetTextureBlendMode)(SDL_Texture*, SDL_BlendMode);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetTextureScaleMode)(SDL_Texture*, SDL_ScaleMode);
+    int OMG_SDL2_STD_PREFIX (*SDL_UpdateTexture)(SDL_Texture* texture, const SDL_Rect*, const void*, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_LockTexture)(SDL_Texture*, const SDL_Rect*, void**, int*);
+    int OMG_SDL2_STD_PREFIX (*SDL_UnlockTexture)(SDL_Texture*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderSetViewport)(SDL_Renderer*, const SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderSetClipRect)(SDL_Renderer*, const SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawBlendMode)(SDL_Renderer*, SDL_ScaleMode);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetScale)(SDL_Renderer*, float, float);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderSetVSync)(SDL_Renderer* renderer, int vsync);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoint)(SDL_Renderer*, int, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoints)(SDL_Renderer*, const SDL_FPoint*, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointF)(SDL_Renderer*, int, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointsF)(SDL_Renderer*, const SDL_FPoint*, int);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderTarget)(SDL_Renderer*, SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);
     void OMG_SDL2_STD_PREFIX (*SDL_RenderPresent)(SDL_Renderer*);

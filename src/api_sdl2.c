@@ -116,14 +116,29 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_CreateTexture);
     LOAD_REQUIRED(SDL_DestroyTexture);
     LOAD_REQUIRED(SDL_QueryTexture);
+    LOAD_REQUIRED(SDL_SetTextureColorMod);
+    LOAD_REQUIRED(SDL_SetTextureAlphaMod);
+    LOAD_REQUIRED(SDL_SetTextureBlendMode);
+    LOAD_REQUIRED(SDL_SetTextureScaleMode);
+    LOAD_REQUIRED(SDL_UpdateTexture);
+    LOAD_REQUIRED(SDL_LockTexture);
+    LOAD_REQUIRED(SDL_UnlockTexture);
+    LOAD_REQUIRED(SDL_RenderSetViewport);
+    LOAD_REQUIRED(SDL_RenderSetClipRect);
+    LOAD_REQUIRED(SDL_SetRenderDrawBlendMode);
     LOAD_REQUIRED(SDL_RenderSetScale);
+    LOAD_REQUIRED(SDL_RenderSetVSync);
     LOAD_REQUIRED(SDL_RenderClear);
+    LOAD_REQUIRED(SDL_RenderDrawPoint);
+    LOAD_REQUIRED(SDL_RenderDrawPoints);
     LOAD_REQUIRED(SDL_SetRenderTarget);
     LOAD_REQUIRED(SDL_SetRenderDrawColor);
     LOAD_REQUIRED(SDL_RenderPresent);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
+    LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointF); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointsF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
     if (OMG_ISNULL(this->SDL_GetTicks64))
