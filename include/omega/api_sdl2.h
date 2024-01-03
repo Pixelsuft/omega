@@ -1240,7 +1240,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoint)(SDL_Renderer*, int, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoints)(SDL_Renderer*, const SDL_FPoint*, int);
-    int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointF)(SDL_Renderer*, int, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointF)(SDL_Renderer*, float, float);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointsF)(SDL_Renderer*, const SDL_FPoint*, int);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderTarget)(SDL_Renderer*, SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);
@@ -1251,6 +1251,7 @@ typedef struct {
 OMG_API bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path);
 OMG_API bool omg_sdl2_dll_free(OMG_Sdl2* this);
 #if OMG_EXPORT_SHIT
+OMG_API int omg_sdl2_draw_pointf_emu(SDL_Renderer* ren, float px, float py);
 OMG_API uint64_t omg_sdl2_get_ticks64_emu(void);
 #endif
 #endif

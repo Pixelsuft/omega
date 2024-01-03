@@ -16,6 +16,10 @@
 
 static OMG_Sdl2* omg_sdl2_cache = NULL;
 
+int omg_sdl2_draw_pointf_emu(SDL_Renderer* ren, float px, float py) {
+    return omg_sdl2_cache->SDL_RenderDrawPoint(ren, (int)px, (int)py);
+}
+
 uint64_t omg_sdl2_get_ticks64_emu(void) {
     return (uint64_t)omg_sdl2_cache->SDL_GetTicks();
 }
@@ -141,6 +145,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointsF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
+    if (OMG_ISNULL(this->SDL_RenderDrawPointF))
+        this->SDL_RenderDrawPointF = omg_sdl2_draw_pointf_emu;
     if (OMG_ISNULL(this->SDL_GetTicks64))
         this->SDL_GetTicks64 = omg_sdl2_get_ticks64_emu;
     OMG_END_POINTER_CAST();
