@@ -25,6 +25,7 @@ OMG_API int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const cha
 OMG_API void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this);
 OMG_API bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col);
 OMG_API bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this);
+OMG_API bool omg_renderer_sdl2_set_target(OMG_RendererSdl2* this, OMG_TextureSdl2* tex);
 OMG_API OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex);
 #endif

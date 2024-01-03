@@ -51,11 +51,17 @@ bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex) {
     return false;
 }
 
+bool omg_renderer_set_target(OMG_Renderer* this, OMG_Texture* tex) {
+    this->target = tex;
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
     this->omg = win_base->omg;
     this->aa = false;
+    this->target = NULL;
     this->offset.x = this->offset.y = 0.0f;
     this->color.r = this->color.g = this->color.b = (omg_color_t)0;
     this->color.a = (omg_color_t)255;
@@ -68,6 +74,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->clear = omg_renderer_clear;
     this->begin = omg_renderer_begin;
     this->flip = omg_renderer_flip;
+    this->set_target = omg_renderer_set_target;
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
     return false;

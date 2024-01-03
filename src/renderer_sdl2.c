@@ -109,7 +109,18 @@ bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col) {
     return res;
 }
 
+bool omg_renderer_sdl2_set_target(OMG_RendererSdl2* this, OMG_TextureSdl2* tex) {
+    if (this->sdl2->SDL_SetRenderTarget(this->ren, OMG_ISNULL(tex) ? NULL : tex->tex) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set render target (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    base->target = (OMG_Texture*)tex;
+    return false;
+}
+
 bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
+    if (OMG_ISNOTNULL(base->target))
+        omg_renderer_sdl2_set_target(this, NULL);
     this->sdl2->SDL_RenderPresent(this->ren);
     return false;
 }
@@ -164,6 +175,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->destroy = omg_renderer_sdl2_destroy;
     base->clear = omg_renderer_sdl2_clear;
     base->flip = omg_renderer_sdl2_flip;
+    base->set_target = omg_renderer_sdl2_set_target;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     OMG_END_POINTER_CAST();
