@@ -35,8 +35,10 @@ typedef struct OMG_Renderer {
     void* win;
     OMG_FPoint scale;
     OMG_FPoint size;
+    OMG_FPoint offset;
     int driver;
     int type;
+    bool aa;
     bool inited;
     bool was_allocated;
 } OMG_Renderer;
