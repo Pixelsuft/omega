@@ -43,6 +43,7 @@ typedef struct OMG_Renderer {
     int driver;
     int type;
     bool aa;
+    bool auto_blend;
     bool inited;
     bool was_allocated;
 } OMG_Renderer;

@@ -1238,6 +1238,10 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetScale)(SDL_Renderer*, float, float);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetVSync)(SDL_Renderer* renderer, int vsync);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderCopy)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyF)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_FRect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyEx)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_Rect*, const double, const SDL_Point*, const SDL_RendererFlip flip);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyExF)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_FRect*, const double, const SDL_FPoint*, const SDL_RendererFlip flip);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoint)(SDL_Renderer*, int, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoints)(SDL_Renderer*, const SDL_FPoint*, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointF)(SDL_Renderer*, float, float);
@@ -1251,7 +1255,9 @@ typedef struct {
 OMG_API bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path);
 OMG_API bool omg_sdl2_dll_free(OMG_Sdl2* this);
 #if OMG_EXPORT_SHIT
-OMG_API int omg_sdl2_draw_pointf_emu(SDL_Renderer* ren, float px, float py);
+OMG_API int omg_sdl2_render_draw_pointf_emu(SDL_Renderer* ren, float px, float py);
+OMG_API int omg_sdl2_render_copyf_emu(SDL_Renderer* ren, SDL_Texture* tex, const SDL_Rect* src, const SDL_FRect* dst);
+OMG_API int omg_sdl2_render_copy_exf_emu(SDL_Renderer* ren, SDL_Texture* tex, const SDL_Rect* src, const SDL_FRect* dst, const double angle, const SDL_FPoint* center, const SDL_RendererFlip flip);
 OMG_API uint64_t omg_sdl2_get_ticks64_emu(void);
 #endif
 #endif
