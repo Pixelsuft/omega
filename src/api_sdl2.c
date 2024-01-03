@@ -16,10 +16,6 @@
 
 static OMG_Sdl2* omg_sdl2_cache = NULL;
 
-int omg_sdl2_render_draw_pointf_emu(SDL_Renderer* ren, float px, float py) {
-    return omg_sdl2_cache->SDL_RenderDrawPoint(ren, (int)px, (int)py);
-}
-
 int omg_sdl2_render_copyf_emu(SDL_Renderer* ren, SDL_Texture* tex, const SDL_Rect* src, const SDL_FRect* dst) {
     if (OMG_ISNULL(dst))
         return omg_sdl2_cache->SDL_RenderCopy(ren, tex, src, NULL);
@@ -45,6 +41,32 @@ int omg_sdl2_render_copy_exf_emu(SDL_Renderer* ren, SDL_Texture* tex, const SDL_
         center_i.y = (int)center->y;
     }
     return omg_sdl2_cache->SDL_RenderCopyEx(ren, tex, src, OMG_ISNULL(dst) ? NULL : &dst_i, angle, OMG_ISNULL(center) ? NULL : &center_i, flip);
+}
+
+int omg_sdl2_render_draw_pointf_emu(SDL_Renderer* ren, float px, float py) {
+    return omg_sdl2_cache->SDL_RenderDrawPoint(ren, (int)px, (int)py);
+}
+
+int omg_sdl2_render_draw_rectf_emu(SDL_Renderer* ren, const SDL_FRect* rect) {
+    if (OMG_ISNULL(rect))
+        return omg_sdl2_cache->SDL_RenderDrawRect(ren, NULL);
+    SDL_Rect rect_i;
+    rect_i.x = (int)rect->x;
+    rect_i.y = (int)rect->y;
+    rect_i.w = (int)rect->w;
+    rect_i.h = (int)rect->h;
+    return omg_sdl2_cache->SDL_RenderDrawRect(ren, &rect_i);
+}
+
+int omg_sdl2_render_fill_rectf_emu(SDL_Renderer* ren, const SDL_FRect* rect) {
+    if (OMG_ISNULL(rect))
+        return omg_sdl2_cache->SDL_RenderFillRect(ren, NULL);
+    SDL_Rect rect_i;
+    rect_i.x = (int)rect->x;
+    rect_i.y = (int)rect->y;
+    rect_i.w = (int)rect->w;
+    rect_i.h = (int)rect->h;
+    return omg_sdl2_cache->SDL_RenderFillRect(ren, &rect_i);
 }
 
 uint64_t omg_sdl2_get_ticks64_emu(void) {
@@ -164,6 +186,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_RenderCopyEx);
     LOAD_REQUIRED(SDL_RenderDrawPoint);
     LOAD_REQUIRED(SDL_RenderDrawPoints);
+    LOAD_REQUIRED(SDL_RenderDrawRect);
+    LOAD_REQUIRED(SDL_RenderFillRect);
     LOAD_REQUIRED(SDL_SetRenderTarget);
     LOAD_REQUIRED(SDL_SetRenderDrawColor);
     LOAD_REQUIRED(SDL_RenderPresent);
@@ -174,14 +198,20 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyExF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointsF); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RenderDrawRectF); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RenderFillRectF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
     if (OMG_ISNULL(this->SDL_RenderCopyF))
         this->SDL_RenderCopyF = omg_sdl2_render_copyf_emu;
     if (OMG_ISNULL(this->SDL_RenderCopyExF))
-        this->SDL_RenderCopyF = omg_sdl2_render_copy_exf_emu;
+        this->SDL_RenderCopyExF = omg_sdl2_render_copy_exf_emu;
     if (OMG_ISNULL(this->SDL_RenderDrawPointF))
         this->SDL_RenderDrawPointF = omg_sdl2_render_draw_pointf_emu;
+    if (OMG_ISNULL(this->SDL_RenderDrawRectF))
+        this->SDL_RenderDrawRectF = omg_sdl2_render_draw_rectf_emu;
+    if (OMG_ISNULL(this->SDL_RenderFillRectF))
+        this->SDL_RenderFillRectF = omg_sdl2_render_fill_rectf_emu;
     if (OMG_ISNULL(this->SDL_GetTicks64))
         this->SDL_GetTicks64 = omg_sdl2_get_ticks64_emu;
     OMG_END_POINTER_CAST();
