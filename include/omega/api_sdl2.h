@@ -1242,6 +1242,8 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyF)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_FRect*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyEx)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_Rect*, const double, const SDL_Point*, const SDL_RendererFlip flip);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyExF)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_FRect*, const double, const SDL_FPoint*, const SDL_RendererFlip flip);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderGeometry)(SDL_Renderer*, SDL_Texture*, const SDL_Vertex*, int, const int*, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderGeometryRaw)(SDL_Renderer*, SDL_Texture*, const float*, int, const SDL_Color*, int, const float*, int, int, const void*, int, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoint)(SDL_Renderer*, int, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPoints)(SDL_Renderer*, const SDL_FPoint*, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderDrawPointF)(SDL_Renderer*, float, float);
