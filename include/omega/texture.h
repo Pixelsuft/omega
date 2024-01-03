@@ -10,4 +10,5 @@
 typedef struct {
     OMG_FPoint size;
     bool auto_blend;
+    bool has_alpha;
 } OMG_Texture;

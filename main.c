@@ -61,6 +61,10 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
 
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
+    if (event->scancode == OMG_SCANCODE_Q) {
+        this->omg->auto_loop_stop(this->omg);
+        return;
+    }
     // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
