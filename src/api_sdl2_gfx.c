@@ -2228,14 +2228,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 	return result;
 }
 
-int aaFilledEllipseColor(SDL_Renderer* renderer, float cx, float cy, float rx, float ry, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return aaFilledEllipseRGBA(renderer, cx, cy, rx, ry, c[0], c[1], c[2], c[3]);
-}
-
-static int _gfxPrimitivesCompareFloat2(const void *a, const void *b)
-{
+static int _gfxPrimitivesCompareFloat2(const void *a, const void *b) {
 	float diff = *((float *)a + 1) - *((float *)b + 1);
 	if (diff != 0.0)
 		return (diff > 0) - (diff < 0);
@@ -2245,22 +2238,17 @@ static int _gfxPrimitivesCompareFloat2(const void *a, const void *b)
 
 #define POLYSIZE 16384
 
-int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *vy, int n, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *vy, int n, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int i, j, xi, yi, result;
 	double x1, x2, y0, y1, y2, minx, maxx, prec;
 	float *list, *strip;
-
 	if (n < 3)
 		return -1;
-
 	result = SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-
 	minx = 99999.0;
 	maxx = -99999.0;
 	prec = 0.00001;
-	for (i = 0; i < n; i++)
-	{
+	for (i = 0; i < n; i++) {
 		double x = vx[i];
 		double y = fabs(vy[i]);
 		if (x < minx)
@@ -2273,38 +2261,30 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 	minx = floor(minx);
 	maxx = floor(maxx);
 	prec = floor(pow(2, 19) / prec);
-
 	list = (float *)malloc(POLYSIZE * sizeof(float));
 	if (list == NULL)
 		return -2;
-
 	yi = 0;
 	y0 = floor(vy[n - 1] * prec) / prec;
 	y1 = floor(vy[0] * prec) / prec;
-	for (i = 1; i <= n; i++)
-	{
-		if (yi > POLYSIZE - 4)
-		{
+	for (i = 1; i <= n; i++) {
+		if (yi > POLYSIZE - 4) {
 			free(list);
 			return -2;
 		}
 		y2 = floor(vy[i % n] * prec) / prec;
-		if (((y1 < y2) - (y1 > y2)) == ((y0 < y1) - (y0 > y1)))
-		{
+		if (((y1 < y2) - (y1 > y2)) == ((y0 < y1) - (y0 > y1))) {
 			list[yi++] = -100002.0;
 			list[yi++] = y1;
 			list[yi++] = -100002.0;
 			list[yi++] = y1;
 		}
-		else
-		{
-			if (y0 != y1)
-			{
+		else {
+			if (y0 != y1) {
 				list[yi++] = (y1 < y0) - (y1 > y0) - 100002.0;
 				list[yi++] = y1;
 			}
-			if (y1 != y2)
-			{
+			if (y1 != y2) {
 				list[yi++] = (y1 < y2) - (y1 > y2) - 100002.0;
 				list[yi++] = y1;
 			}
@@ -2313,21 +2293,15 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 		y1 = y2;
 	}
 	xi = yi;
-
 	qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
-
-	for (i = 1; i <= n; i++)
-	{
+	for (i = 1; i <= n; i++) {
 		double x, y;
 		double d = 0.5 / prec;
-
 		x1 = vx[i - 1];
 		y1 = floor(vy[i - 1] * prec) / prec;
 		x2 = vx[i % n];
 		y2 = floor(vy[i % n] * prec) / prec;
-
-		if (y2 < y1)
-		{
+		if (y2 < y1) {
 			double tmp;
 			tmp = x1;
 			x1 = x2;
@@ -2338,38 +2312,30 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 		}
 		if (y2 != y1)
 			y0 = (x2 - x1) / (y2 - y1);
-
-		for (j = 1; j < xi; j += 4)
-		{
+		for (j = 1; j < xi; j += 4) {
 			y = list[j];
 			if (((y + d) <= y1) || (y == list[j + 4]))
 				continue;
 			if ((y -= d) >= y2)
 				break;
-			if (yi > POLYSIZE - 4)
-			{
+			if (yi > POLYSIZE - 4) {
 				free(list);
 				return -2;
 			}
-			if (y > y1)
-			{
+			if (y > y1) {
 				list[yi++] = x1 + y0 * (y - y1);
 				list[yi++] = y;
 			}
 			y += d * 2.0;
-			if (y < y2)
-			{
+			if (y < y2) {
 				list[yi++] = x1 + y0 * (y - y1);
 				list[yi++] = y;
 			}
 		}
-
 		y = floor(y1) + 1.0;
-		while (y <= y2)
-		{
+		while (y <= y2) {
 			x = x1 + y0 * (y - y1);
-			if (yi > POLYSIZE - 2)
-			{
+			if (yi > POLYSIZE - 2) {
 				free(list);
 				return -2;
 			}
@@ -2378,12 +2344,9 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 			y += 1.0;
 		}
 	}
-
 	qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
-
 	strip = (float *)malloc((maxx - minx + 2) * sizeof(float));
-	if (strip == NULL)
-	{
+	if (strip == NULL) {
 		free(list);
 		return -1;
 	}
@@ -2391,37 +2354,29 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 	n = yi;
 	yi = list[1];
 	j = 0;
-
-	for (i = 0; i < n - 7; i += 4)
-	{
+	for (i = 0; i < n - 7; i += 4) {
 		float x1 = list[i + 0];
 		float y1 = list[i + 1];
 		float x3 = list[i + 2];
 		float x2 = list[i + j + 0];
 		float y2 = list[i + j + 1];
 		float x4 = list[i + j + 2];
-
 		if (x1 + x3 == -200002.0)
 			j += 4;
 		else if (x1 + x3 == -200006.0)
 			j -= 4;
-		else if ((x1 >= minx) && (x2 >= minx))
-		{
-			if (x1 > x2)
-			{
+		else if ((x1 >= minx) && (x2 >= minx)) {
+			if (x1 > x2) {
 				float tmp = x1;
 				x1 = x2;
 				x2 = tmp;
 			}
-			if (x3 > x4)
-			{
+			if (x3 > x4) {
 				float tmp = x3;
 				x3 = x4;
 				x4 = tmp;
 			}
-
-			for (xi = x1 - minx; xi <= x4 - minx; xi++)
-			{
+			for (xi = x1 - minx; xi <= x4 - minx; xi++) {
 				float u, v;
 				float x = minx + xi;
 				if (x < x2)
@@ -2436,15 +2391,10 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 					strip[xi] += (y2 - y1) * (u + v - 1.0);
 			}
 		}
-
-		if ((yi == (list[i + 5] - 1.0)) || (i == n - 8))
-		{
-			for (xi = 0; xi <= maxx - minx; xi++)
-			{
-				if (strip[xi] != 0.0)
-				{
-					if (strip[xi] >= 0.996)
-					{
+		if ((yi == (list[i + 5] - 1.0)) || (i == n - 8)) {
+			for (xi = 0; xi <= maxx - minx; xi++) {
+				if (strip[xi] != 0.0) {
+					if (strip[xi] >= 0.996) {
 						int x0 = xi;
 						while (strip[++xi] >= 0.996)
 							;
@@ -2452,8 +2402,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 						result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 						result |= renderdrawline(renderer, minx + x0, yi, minx + xi, yi);
 					}
-					else
-					{
+					else {
 						result |= SDL_SetRenderDrawColor(renderer, r, g, b, a * strip[xi]);
 						result |= SDL_RenderDrawPoint(renderer, minx + xi, yi);
 					}
@@ -2463,221 +2412,145 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 			yi++;
 		}
 	}
-
 	free(list);
 	free(strip);
 	return result;
 }
 
-int aaFilledPolygonColor(SDL_Renderer* renderer, const double *vx, const double *vy, int n, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return aaFilledPolygonRGBA(renderer, vx, vy, n, c[0], c[1], c[2], c[3]);
-}
-
 int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
-					float start, float end, uint32_t chord, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+					float start, float end, uint32_t chord, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int nverts, i, result;
 	double *vx, *vy;
-
 	if ((rx <= 0) || (ry <= 0) || (start == end))
 		return -1;
-
 	start = fmod(start, 360.0) * 2.0 * M_PI / 360.0;
 	end = fmod(end, 360.0) * 2.0 * M_PI / 360.0;
 	while (start >= end)
 		end += 2.0 * M_PI;
-
 	nverts = (end - start) * sqrt(rx * ry) / M_PI;
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 180)
 		nverts = 180;
-
 	vx = vy = (double *)malloc(2 * sizeof(double) * (nverts + 1));
 	if (vx == NULL)
 		return (-1);
-
 	vy += nverts + 1;
-
-	for (i = 0; i < nverts; i++)
-	{
+	for (i = 0; i < nverts; i++) {
 		double angle = start + (end - start) * (double)i / (double)(nverts - 1);
 		vx[i] = cx + rx * cos(angle);
 		vy[i] = cy + ry * sin(angle);
 	}
-
 	vx[i] = cx;
 	vy[i] = cy;
-
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts + 1 - (chord != 0), r, g, b, a);
-
 	free(vx);
-
 	return (result);
 }
 
-int aaFilledPieColor(SDL_Renderer* renderer, float cx, float cy, float rx, float ry, float start, float end, uint32_t chord, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return aaFilledPieRGBA(renderer, cx, cy, rx, ry, start, end, chord, c[0], c[1], c[2], c[3]);
-}
-
 int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
-			  float start, float end, float thick, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+			  float start, float end, float thick, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int nverts, i, result;
 	double *vx, *vy;
-
 	if ((rx <= 0) || (ry <= 0) || (start == end) || (thick <= 0))
 		return -1;
-
 	start = fmod(start, 360.0) * 2.0 * M_PI / 360.0;
 	end = fmod(end, 360.0) * 2.0 * M_PI / 360.0;
 	while (start >= end)
 		end += 2.0 * M_PI;
-
 	nverts = 2 * floor((end - start) * sqrt(rx * ry) / M_PI);
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 360)
 		nverts = 360;
-
 	vx = vy = (double *)malloc(2 * sizeof(double) * nverts);
 	if (vx == NULL)
 		return (-1);
-
 	vy += nverts;
-
-	for (i = 0; i < nverts / 2; i++)
-	{
+	for (i = 0; i < nverts / 2; i++) {
 		double angle = start + (end - start) * (double)i / (double)(nverts / 2 - 1);
 		vx[i] = cx + (rx + thick / 2) * cos(angle);
 		vy[i] = cy + (ry + thick / 2) * sin(angle);
 		vx[nverts - 1 - i] = cx + (rx - thick / 2) * cos(angle);
 		vy[nverts - 1 - i] = cy + (ry - thick / 2) * sin(angle);
 	}
-
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-
 	free(vx);
-
 	return (result);
 }
 
-int aaArcColor(SDL_Renderer* renderer, float cx, float cy, float rx, float ry, float start, float end, float thick, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return aaArcRGBA(renderer, cx, cy, rx, ry, start, end, thick, c[0], c[1], c[2], c[3]);
-}
-
-int aaBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, float thick, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int aaBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, float thick, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int i, nverts, result;
 	double d, t, stepsize;
 	double x1, y1, x2, y2, dx = 0.0, dy = 0.0;
 	double *vx, *vy;
-
 	if ((n < 3) || (s < 2))
 		return -1;
-
 	nverts = n * s * 2 + 2;
 	vx = (double *)malloc(nverts * 2 * sizeof(double));
 	if (vx == NULL)
 		return -1;
 	vy = vx + nverts;
-
 	t = 0.0;
 	stepsize = 1.0 / (double)s;
 	x1 = _evaluateBezier(x, n, t);
 	y1 = _evaluateBezier(y, n, t);
-	for (i = 0; i < n * s; i++)
-	{
+	for (i = 0; i < n * s; i++) {
 		t += stepsize;
 		x2 = _evaluateBezier(x, n, t);
 		y2 = _evaluateBezier(y, n, t);
-
 		dx = x2 - x1;
 		dy = y2 - y1;
 		d = thick * 0.5L / sqrt(dx * dx + dy * dy);
 		dx *= d;
 		dy *= d;
-
 		vx[i] = x1 + dy;
 		vy[i] = y1 - dx;
 		vx[nverts - 1 - i] = x1 - dy;
 		vy[nverts - 1 - i] = y1 + dx;
-
 		x1 = x2;
 		y1 = y2;
 	}
-
 	vx[i] = x1 + dy;
 	vy[i] = y1 - dx;
 	vx[nverts - 1 - i] = x1 - dy;
 	vy[nverts - 1 - i] = y1 + dx;
-
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-
 	free(vx);
 	return (result);
 }
 
-int aaBezierColor(SDL_Renderer* renderer, double *x, double *y, int n, int s, float thick, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return aaBezierRGBA(renderer, x, y, n, s, thick, c[0], c[1], c[2], c[3]);
-}
-
-int aaFilledPolyBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int aaFilledPolyBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int i, j, nbeziers, nverts, result;
 	double t, stepsize;
 	double x1, y1, x2, y2;
 	double *vx, *vy;
-
 	if ((n < 7) || (s < 2))
 		return -1;
-
 	nbeziers = (n - 1) / 3;
 	nverts = nbeziers * 4 * s + 1;
 	vx = (double *)malloc(nverts * 2 * sizeof(double));
 	if (vx == NULL)
 		return -1;
 	vy = vx + nverts;
-
 	stepsize = 1.0 / (double)s;
-	for (j = 0; j < nbeziers; j++)
-	{
+	for (j = 0; j < nbeziers; j++) {
 		t = 0.0;
 		x1 = _evaluateBezier(x + j * 3, 4, t);
 		y1 = _evaluateBezier(y + j * 3, 4, t);
-		for (i = 0; i < 4 * s; i++)
-		{
+		for (i = 0; i < 4 * s; i++) {
 			t += stepsize;
 			x2 = _evaluateBezier(x + j * 3, 4, t);
 			y2 = _evaluateBezier(y + j * 3, 4, t);
-
 			vx[i + j * s * 4] = x1;
 			vy[i + j * s * 4] = y1;
-
 			x1 = x2;
 			y1 = y2;
 		}
 	}
-
 	vx[j * s * 4] = x1;
 	vy[j * s * 4] = y1;
-
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-
 	free(vx);
 	return (result);
-}
-
-int aaFilledPolyBezierColor(SDL_Renderer* renderer, double *x, double *y, int n, int s, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return aaFilledPolyBezierRGBA(renderer, x, y, n, s, c[0], c[1], c[2], c[3]);
 }
