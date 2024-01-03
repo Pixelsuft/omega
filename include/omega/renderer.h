@@ -36,6 +36,7 @@ typedef struct OMG_Renderer {
     OMG_FPoint scale;
     OMG_FPoint size;
     OMG_FPoint offset;
+    OMG_Color color;
     int driver;
     int type;
     bool aa;

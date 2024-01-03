@@ -9,6 +9,7 @@
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
 #define OMG_TEX_ACCESS_TO_SDL2(access) ((access) == OMG_TEXTURE_ACCESS_STREAMING) ? SDL_TEXTUREACCESS_STREAMING : (((access) == OMG_TEXTURE_ACCESS_TARGET) ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC)
+#define SDL2_TEX_ACCESS_TO_OMG(access) ((access) == SDL_TEXTUREACCESS_STREAMING) ? OMG_TEXTURE_ACCESS_STREAMING : (((access) == SDL_TEXTUREACCESS_TARGET) ? OMG_TEXTURE_ACCESS_TARGET : OMG_TEXTURE_ACCESS_STATIC)
 
 void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
     if (!omg_base->support_highdpi)
@@ -88,6 +89,8 @@ int omg_renderer_sdl2_get_supported_drivers(OMG_RendererSdl2* this) {
 }
 
 bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col) {
+    if (OMG_ISNULL(col))
+        col = &base->color;
     bool res = false;
     if (this->sdl2->SDL_SetRenderDrawColor(
         this->ren,
@@ -123,8 +126,17 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_
     );
     if (OMG_ISNULL(tex->tex)) {
         OMG_FREE(omg_base->mem, tex);
-        _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 Texture (", this->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture (", this->sdl2->SDL_GetError(), ")");
         return NULL;
+    }
+    int qw, qh;
+    if (this->sdl2->SDL_QueryTexture(tex->tex, NULL, NULL, &qw, &qh) < 0) {
+        tex_base->size.w = tex_base->size.h = 0.0f;
+        _OMG_LOG_WARN(omg_base, "Failed to query SDL2 texture (", this->sdl2->SDL_GetError(), ")");
+    }
+    else {
+        tex_base->size.w = (float)qw;
+        tex_base->size.h = (float)qh;
     }
     return tex;
 }

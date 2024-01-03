@@ -57,6 +57,8 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->omg = win_base->omg;
     this->aa = false;
     this->offset.x = this->offset.y = 0.0f;
+    this->color.r = this->color.g = this->color.b = (omg_color_t)0;
+    this->color.a = (omg_color_t)255;
     this->scale.x = win_base->scale.x;
     this->scale.y = win_base->scale.y;
     this->size.w = win_base->size.w;

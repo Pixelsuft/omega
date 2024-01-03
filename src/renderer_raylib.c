@@ -24,6 +24,8 @@ bool omg_renderer_raylib_destroy(OMG_RendererRaylib* this) {
 }
 
 bool omg_renderer_raylib_clear(OMG_RendererRaylib* this, const OMG_Color* col) {
+    if (OMG_ISNULL(col))
+        col = &base->color;
     this->raylib->ClearBackground(_OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
