@@ -61,7 +61,7 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
 
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    if (event->scancode == OMG_SCANCODE_Q) {
+    if (event->code == OMG_SCANCODE_Q) {
         // Quit when Q is pressed
         this->omg->auto_loop_stop(this->omg);
         return;
@@ -71,7 +71,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         OMG_INFO(
             this->omg,
             "Key ",
-            omg_keyboard_name_from_scancode(event->scancode)->ptr,
+            omg_keyboard_name_from_scancode(event->code)->ptr,
             " (",
             omg_keyboard_name_from_key(event->sym)->ptr,
             ") ",

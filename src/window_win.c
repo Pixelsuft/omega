@@ -650,7 +650,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                         return FALSE;
                 }
                 event.is_repeated = event.is_pressed && omg_base->keyboard_state[code];
-                event.scancode = code;
+                event.code = code;
                 omg_base->keyboard_state[code] = event.is_pressed;
                 event.sym = omg_keyboard_key_from_scancode(code);
                 KEYBOARD_FILL_MOD(event.mod);

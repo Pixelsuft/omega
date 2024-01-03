@@ -107,7 +107,7 @@ typedef struct {
 typedef struct {
     OMG_Event parent;
     void* win;
-    uint32_t scancode;
+    uint32_t code;
     uint32_t sym;
     uint16_t mod;
     bool is_repeated;

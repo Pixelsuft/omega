@@ -139,10 +139,10 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 event.win = win;
                 event.is_pressed = this->ev.key.state == SDL_PRESSED;
                 event.is_repeated = (bool)this->ev.key.repeat;
-                event.scancode = this->ev.key.keysym.scancode;
+                event.code = this->ev.key.keysym.scancode;
                 event.sym = this->ev.key.keysym.sym;
                 event.mod = this->ev.key.keysym.mod;
-                base->keyboard_state[event.scancode] = event.is_pressed;
+                base->keyboard_state[event.code] = event.is_pressed;
                 (this->ev.type == SDL_KEYDOWN ? base->on_key_down : base->on_key_up)(&event);
                 break;
             }
