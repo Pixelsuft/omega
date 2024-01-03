@@ -4,6 +4,7 @@
 #include <omega/window.h>
 #include <omega/omega.h>
 #include <omega/texture_sdl2.h>
+#include <omega/api_sdl2_gfx.h>
 #define base ((OMG_Renderer*)this)
 #define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
@@ -238,6 +239,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
         base->driver = omg_renderer_sdl2_driver_from_name(this, info.name);
         _OMG_LOG_INFO(omg_base, "SDL2 renderer created successfuly with ", info.name, " driver");
     }
+    omg_sdl2_gfx_set_handle(this->sdl2);
     omg_renderer_sdl2_update_scale(this);
     base->inited = true;
     return false;
