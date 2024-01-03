@@ -29,6 +29,7 @@ typedef struct OMG_Renderer {
     bool (*clear)(struct OMG_Renderer* this, const OMG_Color* col);
     bool (*begin)(struct OMG_Renderer* this);
     bool (*flip)(struct OMG_Renderer* this);
+    bool (*set_scale)(struct OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
     bool (*set_target)(struct OMG_Renderer* this, OMG_Texture* tex);
     OMG_Texture* (*tex_create)(struct OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
@@ -49,6 +50,7 @@ typedef struct OMG_Renderer {
 OMG_API void omg_renderer_fill_on_create(OMG_Renderer* this);
 OMG_API bool omg_renderer_init(OMG_Renderer* this);
 OMG_API bool omg_renderer_destroy(OMG_Renderer* this);
+OMG_API bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
 #if OMG_EXPORT_SHIT
 OMG_API int omg_renderer_get_supported_drivers(OMG_Renderer* this);
 OMG_API bool omg_renderer_clear(OMG_Renderer* this, const OMG_Color* col);

@@ -85,13 +85,13 @@ void app_on_update(OMG_EventUpdate* event) {
     if (this->bg_fow) {
         this->bg_col += this->clock->dt * 100.0f;
         if (this->bg_col >= OMG_MAX_COLOR) {
-            this->bg_col = OMG_MAX_COLOR * (omg_color_t)2 - this->bg_col;
+            this->bg_col = OMG_MAX_COLOR * 2.0f - this->bg_col;
             this->bg_fow = false;
         }
     }
     else {
         this->bg_col -= this->clock->dt * 100.0f;
-        if (this->bg_col < (omg_color_t)0) {
+        if (this->bg_col < 0.0f) {
             this->bg_col = -this->bg_col;
             this->bg_fow = true;
         }
@@ -169,7 +169,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_mouse_move = app_on_mouse_move;
     this->omg->on_mouse_down = this->omg->on_mouse_up = app_on_mouse_button;
     this->omg->on_key_down = this->omg->on_key_up = app_on_keyboard;
-    this->bg_col = (omg_color_t)0;
+    this->bg_col = 0.0f;
     this->bg_fow = true;
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);

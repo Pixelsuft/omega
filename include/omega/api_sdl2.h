@@ -1216,6 +1216,7 @@ typedef struct {
     SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTexture)(SDL_Renderer*, uint32_t, int, int, int);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyTexture)(SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_QueryTexture)(SDL_Texture*, uint32_t*, int*, int*, int*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderSetScale)(SDL_Renderer*, float, float);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderTarget)(SDL_Renderer*, SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);

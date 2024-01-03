@@ -116,6 +116,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_CreateTexture);
     LOAD_REQUIRED(SDL_DestroyTexture);
     LOAD_REQUIRED(SDL_QueryTexture);
+    LOAD_REQUIRED(SDL_RenderSetScale);
     LOAD_REQUIRED(SDL_RenderClear);
     LOAD_REQUIRED(SDL_SetRenderTarget);
     LOAD_REQUIRED(SDL_SetRenderDrawColor);

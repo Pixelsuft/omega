@@ -114,7 +114,16 @@ bool omg_renderer_sdl2_set_target(OMG_RendererSdl2* this, OMG_TextureSdl2* tex) 
         _OMG_LOG_WARN(omg_base, "Failed to set render target (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
-    base->target = (OMG_Texture*)tex;
+    base->target = tex_base;
+    return false;
+}
+
+bool omg_renderer_sdl2_set_scale(OMG_RendererSdl2* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
+    omg_renderer_set_scale(base, offset, scale);
+    if (OMG_ISNOTNULL(scale)) {
+        if (this->sdl2->SDL_RenderSetScale(this->ren, scale->x, scale->y) < 0)
+            _OMG_LOG_WARN(omg_base, "Failed to set render scale (", this->sdl2->SDL_GetError(), ")");
+    }
     return false;
 }
 
@@ -175,6 +184,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->destroy = omg_renderer_sdl2_destroy;
     base->clear = omg_renderer_sdl2_clear;
     base->flip = omg_renderer_sdl2_flip;
+    base->set_scale = omg_renderer_sdl2_set_scale;
     base->set_target = omg_renderer_sdl2_set_target;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;

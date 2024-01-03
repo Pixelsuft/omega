@@ -40,6 +40,17 @@ void omg_renderer_fill_on_create(OMG_Renderer* this) {
     this->get_supported_drivers = omg_renderer_get_supported_drivers;
 }
 
+bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
+    if (OMG_ISNOTNULL(offset)) {
+        this->offset.x = offset->x;
+        this->offset.y = offset->y;
+    }
+    if (OMG_ISNOTNULL(scale)) {
+        this->scale.x = scale->x;
+        this->scale.y = scale->y;
+    }
+    return false;
+}
 
 OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(this, size, access, has_alpha);
@@ -63,6 +74,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->aa = false;
     this->target = NULL;
     this->offset.x = this->offset.y = 0.0f;
+    this->scale.x = this->scale.y = 1.0f;
     this->color.r = this->color.g = this->color.b = (omg_color_t)0;
     this->color.a = (omg_color_t)255;
     this->scale.x = win_base->scale.x;
@@ -74,6 +86,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->clear = omg_renderer_clear;
     this->begin = omg_renderer_begin;
     this->flip = omg_renderer_flip;
+    this->set_scale = omg_renderer_set_scale;
     this->set_target = omg_renderer_set_target;
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
