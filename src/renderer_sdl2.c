@@ -3,9 +3,12 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/window.h>
 #include <omega/omega.h>
+#include <omega/texture_sdl2.h>
 #define base ((OMG_Renderer*)this)
+#define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
+#define OMG_TEX_ACCESS_TO_SDL2(access) ((access) == OMG_TEXTURE_ACCESS_STREAMING) ? SDL_TEXTUREACCESS_STREAMING : (((access) == OMG_TEXTURE_ACCESS_TARGET) ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC)
 
 void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
     if (!omg_base->support_highdpi)
@@ -108,6 +111,39 @@ bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
     return false;
 }
 
+OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_FPoint* size, int access, bool has_alpha) {
+    OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
+    if (OMG_ISNULL(tex))
+        return NULL;
+    tex->tex = this->sdl2->SDL_CreateTexture(
+        this->ren,
+        has_alpha ? SDL_PIXELFORMAT_RGBA8888 : SDL_PIXELFORMAT_RGB888,
+        OMG_TEX_ACCESS_TO_SDL2(access),
+        (int)size->w, (int)size->h
+    );
+    if (OMG_ISNULL(tex->tex)) {
+        OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 Texture (", this->sdl2->SDL_GetError(), ")");
+        return NULL;
+    }
+    return tex;
+}
+
+bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex) {
+    if (OMG_ISNULL(tex)) {
+        _OMG_NULL_TEXTURE_WARN();
+        return true;
+    }
+    if (OMG_ISNULL(tex->tex)) {
+        _OMG_LOG_WARN(omg_base, "Attempted to free SDL2 null texture");
+        return true;
+    }
+    this->sdl2->SDL_DestroyTexture(tex->tex);
+    tex->tex = NULL;
+    OMG_FREE(omg_base->mem, tex);
+    return false;
+}
+
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -116,6 +152,8 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->destroy = omg_renderer_sdl2_destroy;
     base->clear = omg_renderer_sdl2_clear;
     base->flip = omg_renderer_sdl2_flip;
+    base->tex_create = omg_renderer_sdl2_tex_create;
+    base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_SDL2;
     int sdl2_driver;

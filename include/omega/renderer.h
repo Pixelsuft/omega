@@ -1,5 +1,6 @@
 #pragma once
 #include <omega/ostd.h>
+#include <omega/texture.h>
 
 #define OMG_REN_TYPE_NONE 0
 #define OMG_REN_TYPE_AUTO 1
@@ -21,13 +22,15 @@
 #define OMG_REN_DRIVER_UNKNOWN (1 << 11)
 
 typedef struct OMG_Renderer {
+    void (*_on_update_window_size)(struct OMG_Renderer* this);
     bool (*init)(struct OMG_Renderer* this);
     bool (*destroy)(struct OMG_Renderer* this);
     int (*get_supported_drivers)(struct OMG_Renderer* this);
     bool (*clear)(struct OMG_Renderer* this, const OMG_Color* col);
     bool (*begin)(struct OMG_Renderer* this);
     bool (*flip)(struct OMG_Renderer* this);
-    void (*_on_update_window_size)(struct OMG_Renderer* this);
+    OMG_Texture* (*tex_create)(struct OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
+    bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
     void* omg;
     void* win;
     OMG_FPoint scale;
@@ -47,4 +50,6 @@ OMG_API bool omg_renderer_clear(OMG_Renderer* this, const OMG_Color* col);
 OMG_API void omg_on_update_window_size(OMG_Renderer* this);
 OMG_API bool omg_renderer_begin(OMG_Renderer* this);
 OMG_API bool omg_renderer_flip(OMG_Renderer* this);
+OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
+OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);
 #endif

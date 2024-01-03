@@ -10,6 +10,7 @@ typedef struct {
     OMG_Omega* omg;
     OMG_Window* win;
     OMG_Renderer* ren;
+    OMG_Texture* tex;
     OMG_Clock* clock;
     omg_color_t bg_col;
     bool bg_fow;
@@ -21,6 +22,7 @@ OMG_MAKE_MAIN(omega_main)
 
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
+    this->ren->tex_destroy(this->ren, this->tex);
     // everything other will be cleaned up automaticly
     this->ren->destroy(this->ren);
     this->omg->app_quit(this->omg);
@@ -170,11 +172,12 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_key_down = this->omg->on_key_up = app_on_keyboard;
     this->bg_col = (omg_color_t)0;
     this->bg_fow = true;
-    this->win->set_min_size(this->win, &(OMG_FPoint){ .w = 320.0f, .h = 200.0f });
+    this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
+    this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
-    OMG_INFO(this->omg, 1337.228f, L" win32 is shit btw ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
+    OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     // this->clock->set_fps_limit(this->clock, 5.0);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);

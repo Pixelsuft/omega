@@ -40,6 +40,17 @@ void omg_renderer_fill_on_create(OMG_Renderer* this) {
     this->get_supported_drivers = omg_renderer_get_supported_drivers;
 }
 
+
+OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha) {
+    OMG_UNUSED(this, size, access, has_alpha);
+    return NULL;
+}
+
+bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex) {
+    OMG_UNUSED(this, tex);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -53,5 +64,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->clear = omg_renderer_clear;
     this->begin = omg_renderer_begin;
     this->flip = omg_renderer_flip;
+    this->tex_create = omg_renderer_tex_create;
+    this->tex_destroy = omg_renderer_tex_destroy;
     return false;
 }
