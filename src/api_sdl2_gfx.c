@@ -38,12 +38,6 @@ Pixelsuft -- pixelsuft at github dot com
 #include <string.h>
 #include <omega/api_sdl2_gfx.h>
 
-typedef struct {
-	int16_t x, y;
-	int dx, dy, s1, s2, swapdir, error;
-	uint32_t count;
-} SDL2_gfxBresenhamIterator;
-
 static OMG_Sdl2* sdl2_handle = NULL;
 static OMG_Std* std_handle = NULL;
 
@@ -1225,8 +1219,7 @@ int aapolygonRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, 
 	return (result);
 }
 
-int _gfxPrimitivesCompareInt(const void *a, const void *b)
-{
+int _gfxPrimitivesCompareInt(const void *a, const void *b) {
 	return (*(const int *)a) - (*(const int *)b);
 }
 
@@ -1426,7 +1419,6 @@ int texturedPolygonMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t *
 		return -1;
 	}
 	if ((polyInts == NULL) || (polyAllocated == NULL)) {
-
 		gfxPrimitivesPolyInts = gfxPrimitivesPolyIntsGlobal;
 		gfxPrimitivesPolyAllocated = gfxPrimitivesPolyAllocatedGlobal;
 	}
@@ -1580,45 +1572,34 @@ int bezierRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int
 	int i;
 	double *x, *y, t, stepsize;
 	int16_t x1, y1, x2, y2;
-
-	if (n < 3)
-	{
+	if (n < 3) {
 		return (-1);
 	}
-	if (s < 2)
-	{
+	if (s < 2) {
 		return (-1);
 	}
-
 	stepsize = (double)1.0 / (double)s;
-
-	if ((x = (double *)malloc(sizeof(double) * (n + 1))) == NULL)
-	{
+	if ((x = (double *)malloc(sizeof(double) * (n + 1))) == NULL) {
 		return (-1);
 	}
-	if ((y = (double *)malloc(sizeof(double) * (n + 1))) == NULL)
-	{
+	if ((y = (double *)malloc(sizeof(double) * (n + 1))) == NULL) {
 		free(x);
 		return (-1);
 	}
-	for (i = 0; i < n; i++)
-	{
+	for (i = 0; i < n; i++) {
 		x[i] = (double)vx[i];
 		y[i] = (double)vy[i];
 	}
 	x[n] = (double)vx[0];
 	y[n] = (double)vy[0];
-
 	result = 0;
 	if (a != 255)
 		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
 	t = 0.0;
 	x1 = (int16_t)lrint(_evaluateBezier(x, n + 1, t));
 	y1 = (int16_t)lrint(_evaluateBezier(y, n + 1, t));
-	for (i = 0; i <= (n * s); i++)
-	{
+	for (i = 0; i <= (n * s); i++) {
 		t += stepsize;
 		x2 = (int16_t)_evaluateBezier(x, n, t);
 		y2 = (int16_t)_evaluateBezier(y, n, t);
@@ -1626,144 +1607,29 @@ int bezierRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int
 		x1 = x2;
 		y1 = y2;
 	}
-
 	free(x);
 	free(y);
-
 	return (result);
-}
-
-int _bresenhamInitialize(SDL2_gfxBresenhamIterator *b, int16_t x1, int16_t y1, int16_t x2, int16_t y2)
-{
-	int temp;
-
-	if (b == NULL)
-	{
-		return (-1);
-	}
-
-	b->x = x1;
-	b->y = y1;
-
-	if ((b->dx = x2 - x1) != 0)
-	{
-		if (b->dx < 0)
-		{
-			b->dx = -b->dx;
-			b->s1 = -1;
-		}
-		else
-		{
-			b->s1 = 1;
-		}
-	}
-	else
-	{
-		b->s1 = 0;
-	}
-
-	if ((b->dy = y2 - y1) != 0)
-	{
-		if (b->dy < 0)
-		{
-			b->dy = -b->dy;
-			b->s2 = -1;
-		}
-		else
-		{
-			b->s2 = 1;
-		}
-	}
-	else
-	{
-		b->s2 = 0;
-	}
-
-	if (b->dy > b->dx)
-	{
-		temp = b->dx;
-		b->dx = b->dy;
-		b->dy = temp;
-		b->swapdir = 1;
-	}
-	else
-	{
-		b->swapdir = 0;
-	}
-
-	b->count = (b->dx < 0) ? 0 : (unsigned int)b->dx;
-	b->dy <<= 1;
-	b->error = b->dy - b->dx;
-	b->dx <<= 1;
-
-	return (0);
-}
-
-int _bresenhamIterate(SDL2_gfxBresenhamIterator *b)
-{
-	if (b == NULL)
-	{
-		return (-1);
-	}
-
-	if (b->count == 0)
-	{
-		return (2);
-	}
-
-	while (b->error >= 0)
-	{
-		if (b->swapdir)
-		{
-			b->x += b->s1;
-		}
-		else
-		{
-			b->y += b->s2;
-		}
-
-		b->error -= b->dx;
-	}
-
-	if (b->swapdir)
-	{
-		b->y += b->s2;
-	}
-	else
-	{
-		b->x += b->s1;
-	}
-
-	b->error += b->dy;
-	b->count--;
-
-	return ((b->count) ? 0 : 1);
 }
 
 static void x_perpendicular(SDL_Renderer* B,
 							int x0, int y0, int dx, int dy, int xstep, int ystep,
-							int einit, int w_left, int w_right, int winit)
-{
+							int einit, int w_left, int w_right, int winit) {
 	int x, y, threshold, E_diag, E_square;
 	int tk;
 	int error;
 	int p, q;
-
 	threshold = dx - 2 * dy;
 	E_diag = -2 * dx;
 	E_square = 2 * dy;
 	p = q = 0;
-
 	y = y0;
 	x = x0;
 	error = einit;
 	tk = dx + dy - winit;
-
-	while (tk <= w_left)
-	{
+	while (tk <= w_left) {
 		SDL_RenderDrawPoint(B, x, y);
-		if (error >= threshold)
-		{
+		if (error >= threshold) {
 			x = x + xstep;
 			error = error + E_diag;
 			tk = tk + 2 * dy;
@@ -1773,18 +1639,14 @@ static void x_perpendicular(SDL_Renderer* B,
 		tk = tk + 2 * dx;
 		q++;
 	}
-
 	y = y0;
 	x = x0;
 	error = -einit;
 	tk = dx + dy + winit;
-
-	while (tk <= w_right)
-	{
+	while (tk <= w_right) {
 		if (p)
 			SDL_RenderDrawPoint(B, x, y);
-		if (error > threshold)
-		{
+		if (error > threshold) {
 			x = x - xstep;
 			error = error + E_diag;
 			tk = tk + 2 * dy;
@@ -1794,7 +1656,6 @@ static void x_perpendicular(SDL_Renderer* B,
 		tk = tk + 2 * dx;
 		p++;
 	}
-
 	if (q == 0 && p < 2)
 		SDL_RenderDrawPoint(B, x0, y0);
 }
@@ -1806,7 +1667,6 @@ static void x_varthick_line(SDL_Renderer* B, int style,
 	int p_error, error, x, y, threshold, E_diag, E_square, length, p;
 	int w_left, w_right;
 	double D;
-
 	p_error = 0;
 	error = 0;
 	y = y0;
@@ -1819,20 +1679,15 @@ static void x_varthick_line(SDL_Renderer* B, int style,
 	w_left = thickness * D + 0.5;
 	w_right = 2.0 * thickness * D + 0.5;
 	w_right -= w_left;
-
-	for (p = 0; p < length; p++)
-	{
+	for (p = 0; p < length; p++) {
 		style = (style << 1) | (style < 0);
-
 		if (style < 0)
 			x_perpendicular(B, x, y, dx, dy, pxstep, pystep,
 							p_error, w_left, w_right, error);
-		if (error >= threshold)
-		{
+		if (error >= threshold) {
 			y = y + ystep;
 			error = error + E_diag;
-			if (p_error >= threshold)
-			{
+			if (p_error >= threshold) {
 				if (style < 0)
 					x_perpendicular(B, x, y, dx, dy, pxstep, pystep,
 									(p_error + E_diag + E_square),
@@ -1848,28 +1703,22 @@ static void x_varthick_line(SDL_Renderer* B, int style,
 
 static void y_perpendicular(SDL_Renderer* B,
 							int x0, int y0, int dx, int dy, int xstep, int ystep,
-							int einit, int w_left, int w_right, int winit)
-{
+							int einit, int w_left, int w_right, int winit) {
 	int x, y, threshold, E_diag, E_square;
 	int tk;
 	int error;
 	int p, q;
-
 	p = q = 0;
 	threshold = dy - 2 * dx;
 	E_diag = -2 * dy;
 	E_square = 2 * dx;
-
 	y = y0;
 	x = x0;
 	error = -einit;
 	tk = dx + dy + winit;
-
-	while (tk <= w_left)
-	{
+	while (tk <= w_left) {
 		SDL_RenderDrawPoint(B, x, y);
-		if (error > threshold)
-		{
+		if (error > threshold) {
 			y = y + ystep;
 			error = error + E_diag;
 			tk = tk + 2 * dx;
@@ -1879,18 +1728,14 @@ static void y_perpendicular(SDL_Renderer* B,
 		tk = tk + 2 * dy;
 		q++;
 	}
-
 	y = y0;
 	x = x0;
 	error = einit;
 	tk = dx + dy - winit;
-
-	while (tk <= w_right)
-	{
+	while (tk <= w_right) {
 		if (p)
 			SDL_RenderDrawPoint(B, x, y);
-		if (error >= threshold)
-		{
+		if (error >= threshold) {
 			y = y - ystep;
 			error = error + E_diag;
 			tk = tk + 2 * dx;
@@ -1900,19 +1745,16 @@ static void y_perpendicular(SDL_Renderer* B,
 		tk = tk + 2 * dy;
 		p++;
 	}
-
 	if (q == 0 && p < 2)
 		SDL_RenderDrawPoint(B, x0, y0);
 }
 
 static void y_varthick_line(SDL_Renderer* B, int style,
 							int x0, int y0, int dx, int dy, int xstep, int ystep,
-							double thickness, int pxstep, int pystep)
-{
+							double thickness, int pxstep, int pystep) {
 	int p_error, error, x, y, threshold, E_diag, E_square, length, p;
 	int w_left, w_right;
 	double D;
-
 	p_error = 0;
 	error = 0;
 	y = y0;
@@ -1925,20 +1767,15 @@ static void y_varthick_line(SDL_Renderer* B, int style,
 	w_left = thickness * D + 0.5;
 	w_right = 2.0 * thickness * D + 0.5;
 	w_right -= w_left;
-
-	for (p = 0; p < length; p++)
-	{
+	for (p = 0; p < length; p++) {
 		style = (style << 1) | (style < 0);
-
 		if (style < 0)
 			y_perpendicular(B, x, y, dx, dy, pxstep, pystep,
 							p_error, w_left, w_right, error);
-		if (error >= threshold)
-		{
+		if (error >= threshold) {
 			x = x + xstep;
 			error = error + E_diag;
-			if (p_error >= threshold)
-			{
+			if (p_error >= threshold) {
 				if (style < 0)
 					y_perpendicular(B, x, y, dx, dy, pxstep, pystep,
 									p_error + E_diag + E_square,
@@ -1953,71 +1790,62 @@ static void y_varthick_line(SDL_Renderer* B, int style,
 }
 
 void draw_varthick_line(SDL_Renderer* B, int style,
-						int x0, int y0, int x1, int y1, double thickness)
-{
+						int x0, int y0, int x1, int y1, double thickness) {
 	int dx, dy, xstep, ystep;
 	int pxstep = 0, pystep = 0;
-
 	dx = x1 - x0;
 	dy = y1 - y0;
 	xstep = ystep = 1;
-
-	if (dx < 0)
-	{
+	if (dx < 0) {
 		dx = -dx;
 		xstep = -1;
 	}
-	if (dy < 0)
-	{
+	if (dy < 0) {
 		dy = -dy;
 		ystep = -1;
 	}
-
 	if (dx == 0)
 		xstep = 0;
 	if (dy == 0)
 		ystep = 0;
-
-	switch (xstep + ystep * 4)
-	{
-	case -1 + -1 * 4:
-		pystep = -1;
-		pxstep = 1;
-		break;
-	case -1 + 0 * 4:
-		pystep = -1;
-		pxstep = 0;
-		break;
-	case -1 + 1 * 4:
-		pystep = 1;
-		pxstep = 1;
-		break;
-	case 0 + -1 * 4:
-		pystep = 0;
-		pxstep = -1;
-		break;
-	case 0 + 0 * 4:
-		pystep = 0;
-		pxstep = 0;
-		break;
-	case 0 + 1 * 4:
-		pystep = 0;
-		pxstep = 1;
-		break;
-	case 1 + -1 * 4:
-		pystep = -1;
-		pxstep = -1;
-		break;
-	case 1 + 0 * 4:
-		pystep = -1;
-		pxstep = 0;
-		break;
-	case 1 + 1 * 4:
-		pystep = 1;
-		pxstep = -1;
-		break;
+	switch (xstep + ystep * 4) {
+		case -1 + -1 * 4:
+			pystep = -1;
+			pxstep = 1;
+			break;
+		case -1 + 0 * 4:
+			pystep = -1;
+			pxstep = 0;
+			break;
+		case -1 + 1 * 4:
+			pystep = 1;
+			pxstep = 1;
+			break;
+		case 0 + -1 * 4:
+			pystep = 0;
+			pxstep = -1;
+			break;
+		case 0 + 0 * 4:
+			pystep = 0;
+			pxstep = 0;
+			break;
+		case 0 + 1 * 4:
+			pystep = 0;
+			pxstep = 1;
+			break;
+		case 1 + -1 * 4:
+			pystep = -1;
+			pxstep = -1;
+			break;
+		case 1 + 0 * 4:
+			pystep = -1;
+			pxstep = 0;
+			break;
+		case 1 + 1 * 4:
+			pystep = 1;
+			pxstep = -1;
+			break;
 	}
-
 	if (dx > dy)
 		x_varthick_line(B, style, x0, y0, dx, dy, xstep, ystep,
 						thickness + 1.0,
@@ -2031,128 +1859,34 @@ void draw_varthick_line(SDL_Renderer* B, int style,
 
 static int LineStyle = -1;
 
-int thickLineColor(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t width, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	LineStyle = -1;
-	return thickLineRGBA(renderer, x1, y1, x2, y2, width, c[0], c[1], c[2], c[3]);
-}
-
-int thickLineColorStyle(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2,
-						uint8_t width, uint32_t color, int style)
-{
-	uint8_t *c = (uint8_t *)&color;
-	LineStyle = style;
-	return thickLineRGBA(renderer, x1, y1, x2, y2, width, c[0], c[1], c[2], c[3]);
-}
-
-int thickLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t width, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int thickLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t width, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result;
 	int wh;
-
-	if (renderer == NULL)
-	{
+	if (width < 1) {
 		return -1;
 	}
-	if (width < 1)
-	{
-		return -1;
-	}
-
-	if ((x1 == x2) && (y1 == y2))
-	{
+	if ((x1 == x2) && (y1 == y2)) {
 		wh = width / 2;
 		return boxRGBA(renderer, x1 - wh, y1 - wh, x2 + wh, y2 + wh, r, g, b, a);
 	}
-
 	result = 0;
 	if (a != 255)
 		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
 	draw_varthick_line(renderer, LineStyle, x1, y1, x2, y2, (double)width);
 	return (result);
-}
-
-int RedefineChar(SDL_Renderer* renderer, char c, unsigned char *charpos, uint32_t width, uint32_t height)
-{
-	uint32_t ix, iy;
-	uint8_t *curpos;
-	uint8_t patt, mask;
-	uint8_t *linepos;
-	uint32_t pitch;
-	SDL_Surface *character;
-	SDL_Surface *zoomedCharacter;
-	uint32_t ci;
-
-	ci = (unsigned char)c;
-
-	if (gfxPrimitivesFont[ci] != NULL)
-		SDL_DestroyTexture(gfxPrimitivesFont[ci]);
-
-	character = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32,
-									 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
-	if (character == NULL)
-		return (-1);
-
-	linepos = (uint8_t *)character->pixels;
-	pitch = character->pitch;
-
-	patt = 0;
-	for (iy = 0; iy < height; iy++)
-	{
-		mask = 0x00;
-		curpos = linepos;
-		for (ix = 0; ix < width; ix++)
-		{
-			if (!(mask >>= 1))
-			{
-				patt = *charpos++;
-				mask = 0x80;
-			}
-			if (patt & mask)
-			{
-				*(uint32_t *)curpos = 0xffffffff;
-			}
-			else
-			{
-				*(uint32_t *)curpos = 0;
-			}
-			curpos += 4;
-		}
-		linepos += pitch;
-	}
-
-	if ((charZoomX != 1) || (charZoomY != 1))
-	{
-		zoomedCharacter = zoomSurface(character, (double)charZoomX,
-									  (double)charZoomY, SMOOTHING_OFF);
-		SDL_FreeSurface(character);
-		character = zoomedCharacter;
-	}
-
-	gfxPrimitivesFont[ci] = SDL_CreateTextureFromSurface(renderer, character);
-	SDL_FreeSurface(character);
-
-	if (gfxPrimitivesFont[ci] == NULL)
-	{
-		return (-1);
-	}
-	return 0;
 }
 
 static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2)
 {
 	int result;
-#ifndef __EMSCRIPTEN__
+	// WTF???
+#if !defined(__EMSCRIPTEN__) && 0
 	if ((x1 == x2) && (y1 == y2))
 		result = SDL_RenderDrawPoint(renderer, x1, y1);
-	else if (y1 == y2)
-	{
+	else if (y1 == y2) {
 		int x;
-		if (x1 > x2)
-		{
+		if (x1 > x2) {
 			x = x1;
 			x1 = x2;
 			x2 = x;
@@ -2160,19 +1894,16 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 		SDL_Point *points = (SDL_Point *)malloc((x2 - x1 + 1) * sizeof(SDL_Point));
 		if (points == NULL)
 			return -1;
-		for (x = x1; x <= x2; x++)
-		{
+		for (x = x1; x <= x2; x++) {
 			points[x - x1].x = x;
 			points[x - x1].y = y1;
 		}
 		result = SDL_RenderDrawPoints(renderer, points, x2 - x1 + 1);
 		free(points);
 	}
-	else if (x1 == x2)
-	{
+	else if (x1 == x2) {
 		int y;
-		if (y1 > y2)
-		{
+		if (y1 > y2) {
 			y = y1;
 			y1 = y2;
 			y2 = y;
@@ -2180,8 +1911,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 		SDL_Point *points = (SDL_Point *)malloc((y2 - y1 + 1) * sizeof(SDL_Point));
 		if (points == NULL)
 			return -1;
-		for (y = y1; y <= y2; y++)
-		{
+		for (y = y1; y <= y2; y++) {
 			points[y - y1].x = x1;
 			points[y - y1].y = y;
 		}
@@ -2194,14 +1924,12 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 	return result;
 }
 
-static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, int yc, double s, double f)
-{
+static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, int yc, double s, double f) {
 	int result = 0;
 	double a1, a2;
 	a1 = atan2(y, x1);
 	a2 = atan2(y, x2);
-	if (a1 > a2)
-	{
+	if (a1 > a2) {
 		double a = a1;
 		a1 = a2;
 		a2 = a;
@@ -2209,23 +1937,20 @@ static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, i
 		x1 = x2;
 		x2 = x;
 	}
-	if (f < s)
-	{
+	if (f < s) {
 		if ((a1 > f) && (a2 < s))
 			return result;
 		if ((a1 < s) && (a1 > f))
 			x1 = y / tan(s);
 		if ((a2 > f) && (a2 < s))
 			x2 = y / tan(f);
-		if ((a1 < f) && (a2 > s))
-		{
+		if ((a1 < f) && (a2 > s)) {
 			result |= renderdrawline(renderer, x1 + xc, y + yc, y / tan(f) + xc, y + yc);
 			result |= renderdrawline(renderer, y / tan(s) + xc, y + yc, x2 + xc, y + yc);
 			return result;
 		}
 	}
-	else
-	{
+	else {
 		if ((a1 > f) || (a2 < s))
 			return result;
 		if (a1 < s)
@@ -2237,68 +1962,54 @@ static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, i
 	return result;
 }
 
-int thickEllipseRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t xr, int16_t yr, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t thick)
-{
+int thickEllipseRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t xr, int16_t yr, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t thick) {
 	int result = 0;
 	int xi, yi, xo, yo, x, y, z;
 	double xi2, yi2, xo2, yo2;
-
 	if (thick <= 1)
 		return ellipseRGBA(renderer, xc, yc, xr, yr, r, g, b, a);
-
 	xi = xr - thick / 2;
 	xo = xi + thick - 1;
 	yi = yr - thick / 2;
 	yo = yi + thick - 1;
-
 	if ((xi <= 0) || (yi <= 0))
 		return -1;
-
 	xi2 = xi * xi;
 	yi2 = yi * yi;
 	xo2 = xo * xo;
 	yo2 = yo * yo;
-
 	if (a != 255)
 		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
-	if (xr < yr)
-	{
-		for (x = -xo; x <= -xi; x++)
-		{
+	if (xr < yr) {
+		for (x = -xo; x <= -xi; x++) {
 			y = sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
 			result |= renderdrawline(renderer, xc + x, yc - y, xc + x, yc + y);
 		}
-		for (x = -xi + 1; x <= xi - 1; x++)
-		{
+		for (x = -xi + 1; x <= xi - 1; x++) {
 			y = sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
 			z = sqrt(yi2 * (1.0 - x * x / xi2)) + 0.5;
 			result |= renderdrawline(renderer, xc + x, yc + z, xc + x, yc + y);
 			result |= renderdrawline(renderer, xc + x, yc - z, xc + x, yc - y);
 		}
-		for (x = xo; x >= xi; x--)
-		{
+		for (x = xo; x >= xi; x--) {
 			y = sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
 			result |= renderdrawline(renderer, xc + x, yc - y, xc + x, yc + y);
 		}
 	}
 	else
 	{
-		for (y = -yo; y <= -yi; y++)
-		{
+		for (y = -yo; y <= -yi; y++) {
 			x = sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
 			result |= renderdrawline(renderer, xc - x, yc + y, xc + x, yc + y);
 		}
-		for (y = -yi + 1; y <= yi - 1; y++)
-		{
+		for (y = -yi + 1; y <= yi - 1; y++) {
 			x = sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
 			z = sqrt(xi2 * (1.0 - y * y / yi2)) + 0.5;
 			result |= renderdrawline(renderer, xc + z, yc + y, xc + x, yc + y);
 			result |= renderdrawline(renderer, xc - z, yc + y, xc - x, yc + y);
 		}
-		for (y = yo; y >= yi; y--)
-		{
+		for (y = yo; y >= yi; y--) {
 			x = sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
 			result |= renderdrawline(renderer, xc - x, yc + y, xc + x, yc + y);
 		}
@@ -2306,15 +2017,12 @@ int thickEllipseRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t xr,
 	return result;
 }
 
-int thickArcRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t rad, int16_t start, int16_t end, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t thick)
-{
+int thickArcRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t rad, int16_t start, int16_t end, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t thick) {
 	int result = 0;
 	int ri, ro, x, y, z;
 	double ri2, ro2, s, f;
-
 	if (thick <= 1)
 		return arcRGBA(renderer, xc, yc, rad, start, end, r, g, b, a);
-
 	while (start < -180)
 		start += 360;
 	while (start >= 180)
@@ -2327,151 +2035,97 @@ int thickArcRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t rad, in
 	f = M_PI * (double)end / 180.0;
 	if (start == end)
 		return 0;
-
 	ri = rad - thick / 2;
 	ro = ri + thick - 1;
 	if (ri <= 0)
 		return -1;
-
 	ri2 = ri * ri;
 	ro2 = ro * ro;
-
 	if (a != 255)
 		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
-	for (y = -ro; y <= -ri; y++)
-	{
+	for (y = -ro; y <= -ri; y++) {
 		x = sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
 		result |= hlinecliparc(renderer, -x, x, y, xc, yc, s, f);
 	}
-	for (y = -ri + 1; y <= ri - 1; y++)
-	{
+	for (y = -ri + 1; y <= ri - 1; y++) {
 		x = sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
 		z = sqrt(ri2 * (1.0 - y * y / ri2)) + 0.5;
 		result |= hlinecliparc(renderer, z, x, y, xc, yc, s, f);
 		result |= hlinecliparc(renderer, -z, -x, y, xc, yc, s, f);
 	}
-	for (y = ro; y >= ri; y--)
-	{
+	for (y = ro; y >= ri; y--) {
 		x = sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
 		result |= hlinecliparc(renderer, -x, x, y, xc, yc, s, f);
 	}
 	return result;
 }
 
-int thickCircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t thick)
-{
+int thickCircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a, uint8_t thick) {
 	return thickEllipseRGBA(renderer, x, y, rad, rad, r, g, b, a, thick);
 }
 
-int thickEllipseColor(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry, uint32_t color, uint8_t thick)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return thickEllipseRGBA(renderer, x, y, rx, ry, c[0], c[1], c[2], c[3], thick);
-}
-
-int thickArcColor(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t start, int16_t end, uint32_t color, uint8_t thick)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return thickArcRGBA(renderer, x, y, rad, start, end, c[0], c[1], c[2], c[3], thick);
-}
-
-int thickCircleColor(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint32_t color, uint8_t thick)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return thickEllipseRGBA(renderer, x, y, rad, rad, c[0], c[1], c[2], c[3], thick);
-}
-
-int filledPolyBezierRGBA(SDL_Renderer* renderer, const int16_t *x, const int16_t *y, int n, int s, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int filledPolyBezierRGBA(SDL_Renderer* renderer, const int16_t *x, const int16_t *y, int n, int s, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int i, j, nbeziers, nverts, result;
 	double t, stepsize;
 	double x1, y1, x2, y2;
 	double *dx, *dy;
 	int16_t *vx, *vy;
-
 	if ((n < 7) || (s < 2))
 		return -1;
-
-	if ((dx = (double *)malloc(sizeof(double) * n)) == NULL)
-	{
+	if ((dx = (double *)malloc(sizeof(double) * n)) == NULL) {
 		return (-1);
 	}
-	if ((dy = (double *)malloc(sizeof(double) * n)) == NULL)
-	{
+	if ((dy = (double *)malloc(sizeof(double) * n)) == NULL) {
 		free(dx);
 		return (-1);
 	}
-	for (i = 0; i < n; i++)
-	{
+	for (i = 0; i < n; i++) {
 		dx[i] = (double)x[i];
 		dy[i] = (double)y[i];
 	}
-
 	nbeziers = (n - 1) / 3;
 	nverts = nbeziers * 4 * s + 1;
 	vx = (int16_t *)malloc(nverts * 2 * sizeof(int16_t));
-	if (vx == NULL)
-	{
+	if (vx == NULL) {
 		free(dy);
 		free(dx);
 		return -1;
 	}
 	vy = vx + nverts;
-
 	stepsize = 1.0 / (double)s;
-	for (j = 0; j < nbeziers; j++)
-	{
+	for (j = 0; j < nbeziers; j++) {
 		t = 0.0;
 		x1 = _evaluateBezier(dx + j * 3, 4, t);
 		y1 = _evaluateBezier(dy + j * 3, 4, t);
-		for (i = 0; i < 4 * s; i++)
-		{
+		for (i = 0; i < 4 * s; i++) {
 			t += stepsize;
 			x2 = _evaluateBezier(dx + j * 3, 4, t);
 			y2 = _evaluateBezier(dy + j * 3, 4, t);
-
 			vx[i + j * s * 4] = floor(x1 + 0.5);
 			vy[i + j * s * 4] = floor(y1 + 0.5);
-
 			x1 = x2;
 			y1 = y2;
 		}
 	}
-
 	vx[j * s * 4] = floor(x1 + 0.5);
 	vy[j * s * 4] = floor(y1 + 0.5);
-
 	free(dy);
 	free(dx);
-
 	result = filledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-
 	free(vx);
 	return (result);
 }
 
-int filledPolyBezierColor(SDL_Renderer* renderer, const int16_t *x, const int16_t *y, int n, int s, uint32_t color)
-{
-	uint8_t *c = (uint8_t *)&color;
-	return filledPolyBezierRGBA(renderer, x, y, n, s, c[0], c[1], c[2], c[3]);
-}
-
-int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int n, xi, yi, result = 0;
 	double s, v, x, y, dx, dy;
-
 	if ((rx <= 0.0) || (ry <= 0.0))
 		return -1;
-
 	result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	if (rx >= ry)
-	{
+	if (rx >= ry) {
 		n = ry + 1;
-		for (yi = cy - n - 1; yi <= cy + n + 1; yi++)
-		{
+		for (yi = cy - n - 1; yi <= cy + n + 1; yi++) {
 			if (yi < (cy - 0.5))
 				y = yi;
 			else
@@ -2479,11 +2133,9 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			s = (y - cy) / ry;
 			s = s * s;
 			x = 0.5;
-			if (s < 1.0)
-			{
+			if (s < 1.0) {
 				x = rx * sqrt(1.0 - s);
-				if (x >= 0.5)
-				{
+				if (x >= 0.5) {
 					result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					result |= renderdrawline(renderer, cx - x + 1, yi, cx + x - 1, yi);
 				}
@@ -2491,8 +2143,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			s = 8 * ry * ry;
 			dy = fabs(y - cy) - 1.0;
 			xi = cx - x;
-			while (1)
-			{
+			while (1) {
 				dx = (cx - xi - 1) * ry / rx;
 				v = s - 4 * (dx - dy) * (dx - dy);
 				if (v < 0)
@@ -2507,8 +2158,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				xi -= 1;
 			}
 			xi = cx + x;
-			while (1)
-			{
+			while (1) {
 				dx = (xi - cx) * ry / rx;
 				v = s - 4 * (dx - dy) * (dx - dy);
 				if (v < 0)
@@ -2524,11 +2174,9 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			}
 		}
 	}
-	else
-	{
+	else {
 		n = rx + 1;
-		for (xi = cx - n - 1; xi <= cx + n + 1; xi++)
-		{
+		for (xi = cx - n - 1; xi <= cx + n + 1; xi++) {
 			if (xi < (cx - 0.5))
 				x = xi;
 			else
@@ -2536,11 +2184,9 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			s = (x - cx) / rx;
 			s = s * s;
 			y = 0.5;
-			if (s < 1.0)
-			{
+			if (s < 1.0) {
 				y = ry * sqrt(1.0 - s);
-				if (y >= 0.5)
-				{
+				if (y >= 0.5) {
 					result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					result |= renderdrawline(renderer, xi, cy - y + 1, xi, cy + y - 1);
 				}
@@ -2548,8 +2194,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			s = 8 * rx * rx;
 			dx = fabs(x - cx) - 1.0;
 			yi = cy - y;
-			while (1)
-			{
+			while (1) {
 				dy = (cy - yi - 1) * rx / ry;
 				v = s - 4 * (dy - dx) * (dy - dx);
 				if (v < 0)
@@ -2564,8 +2209,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				yi -= 1;
 			}
 			yi = cy + y;
-			while (1)
-			{
+			while (1) {
 				dy = (yi - cy) * rx / ry;
 				v = s - 4 * (dy - dx) * (dy - dx);
 				if (v < 0)
