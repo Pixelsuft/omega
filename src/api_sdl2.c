@@ -73,6 +73,8 @@ uint64_t omg_sdl2_get_ticks64_emu(void) {
     return (uint64_t)omg_sdl2_cache->SDL_GetTicks();
 }
 
+static bool omg_sdl2_already_loaded = false;
+
 bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
 #if OMG_SDL2_DYNAMIC
     if (OMG_ISNULL(dll_path))
@@ -218,14 +220,23 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
         this->SDL_GetTicks64 = omg_sdl2_get_ticks64_emu;
     OMG_END_POINTER_CAST();
     omg_sdl2_cache = this;
+    if (omg_sdl2_already_loaded) {
+        this->is_first = false;
+    }
+    else {
+        omg_sdl2_already_loaded = true;
+        this->is_first = true;
+    }
     return false;
 }
 
 bool omg_sdl2_dll_free(OMG_Sdl2* this) {
+    if (!this->is_first)
+        return false;
+    omg_sdl2_already_loaded = false;
 #if OMG_SDL2_DYNAMIC
     return omg_static_lib_free(this->handle);
 #else
-    OMG_UNUSED(this);
     return false;
 #endif
 }

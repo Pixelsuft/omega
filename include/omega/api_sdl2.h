@@ -1256,6 +1256,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);
     void OMG_SDL2_STD_PREFIX (*SDL_RenderPresent)(SDL_Renderer*);
     SDL_version ver;
+    bool is_first;
 } OMG_Sdl2;
 
 OMG_API bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path);
