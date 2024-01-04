@@ -12,8 +12,8 @@ void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this) {
         return;
     base->size.w = (float)this->raylib->GetRenderWidth();
     base->size.h = (float)this->raylib->GetRenderHeight();
-    base->scale.x = base->size.w / (float)this->raylib->GetScreenWidth();
-    base->scale.y = base->size.h / (float)this->raylib->GetScreenHeight();
+    base->dpi_scale.x = base->size.w / (float)this->raylib->GetScreenWidth();
+    base->dpi_scale.y = base->size.h / (float)this->raylib->GetScreenHeight();
 }
 
 bool omg_renderer_raylib_destroy(OMG_RendererRaylib* this) {

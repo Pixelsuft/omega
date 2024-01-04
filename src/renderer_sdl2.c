@@ -44,8 +44,8 @@ void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
     }
     base->size.w = (float)ren_w;
     base->size.h = (float)ren_h;
-    base->scale.x = base->size.w / (float)win_w;
-    base->scale.y = base->size.h / (float)win_h;
+    base->dpi_scale.x = base->size.w / (float)win_w;
+    base->dpi_scale.y = base->size.h / (float)win_h;
 }
 
 bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this) {

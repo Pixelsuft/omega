@@ -41,6 +41,7 @@ typedef struct OMG_Renderer {
     void* win;
     OMG_Texture* target;
     OMG_FPoint scale;
+    OMG_FPoint dpi_scale;
     OMG_FPoint size;
     OMG_FPoint offset;
     OMG_Color color;
