@@ -336,6 +336,10 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*SetMouseScale)(float, float);
     float OMG_RAYLIB_PREFIX (*GetMouseWheelMove)(void);
     Vector2 OMG_RAYLIB_PREFIX (*GetMouseWheelMoveV)(void);
+    Image  OMG_RAYLIB_PREFIX(*LoadImage)(const char*);
+    Image OMG_RAYLIB_PREFIX (*LoadImageRaw)(const char*, int, int, int, int);
+    bool OMG_RAYLIB_PREFIX (*IsImageReady)(Image);
+    void OMG_RAYLIB_PREFIX (*UnloadImage)(Image);
     Texture2D OMG_RAYLIB_PREFIX (*LoadTexture)(const char*); 
     Texture2D OMG_RAYLIB_PREFIX (*LoadTextureFromImage)(Image);
     TextureCubemap OMG_RAYLIB_PREFIX (*LoadTextureCubemap)(Image, int);

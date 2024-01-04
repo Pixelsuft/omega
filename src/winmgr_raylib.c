@@ -1,10 +1,13 @@
 #include <omega/winmgr_raylib.h>
-#include <omega/window_raylib.h>
 #include <omega/omega.h>
-#define base ((OMG_Winmgr*)this)
-#define omg_base ((OMG_Omega*)base->omg)
 
 #if OMG_SUPPORT_RAYLIB
+#include <omega/window_raylib.h>
+#include <omega/surface_raylib.h>
+#define base ((OMG_Winmgr*)this)
+#define surf_base ((OMG_Surface*)surf)
+#define omg_base ((OMG_Omega*)base->omg)
+
 OMG_WindowRaylib* omg_winmgr_raylib_window_alloc(OMG_WinmgrRaylib* this) {
     if (OMG_ISNOTNULL(base->cache[0])) {
         _OMG_LOG_ERROR(omg_base, "Failed to create Raylib window (cannot create more than one)");
@@ -39,6 +42,18 @@ bool omg_winmgr_raylib_destroy(OMG_WinmgrRaylib* this) {
     return false;
 }
 
+OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, const OMG_FPoint* size, bool has_alpha) {
+    OMG_SurfaceRaylib* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceRaylib));
+    if (OMG_ISNULL(surf))
+        return NULL;
+    // TODO
+    return surf;
+}
+
+bool omg_winmgr_raylib_surf_destroy(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf) {
+    return false;
+}
+
 bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -46,6 +61,7 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->destroy = omg_winmgr_raylib_destroy;
     base->window_alloc = omg_winmgr_raylib_window_alloc;
     base->window_free = omg_winmgr_raylib_window_free;
+    base->surf_create = omg_winmgr_raylib_surf_create;
     OMG_END_POINTER_CAST();
     return false;
 }
