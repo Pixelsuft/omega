@@ -5,10 +5,11 @@
 #include <omega/omega.h>
 #include <omega/texture_raylib.h>
 #define base ((OMG_Renderer*)this)
+#define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
 #define IS_DEFAULT_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f) && (base->offset.x == 0.0f) && (base->offset.y == 0.0f))
-#define HAS_SS() ((this->ss.x != 1.0f) || (this->ss.y != 1.0f))
+#define RAYLIB_HAS_SS() ((this->ss.x != 1.0f) || (this->ss.y != 1.0f))
 
 void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this) {
     if (!omg_base->support_highdpi)
@@ -107,7 +108,7 @@ bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* re
 }
 
 bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
-    if (HAS_SS()) {
+    if (RAYLIB_HAS_SS()) {
         Rectangle rec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y, .width = this->ss.x, .height = this->ss.y };
         this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
         return false;
@@ -118,7 +119,7 @@ bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* 
 }
 
 bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
-    if (HAS_SS())
+    if (RAYLIB_HAS_SS())
         this->raylib->DrawEllipseLines(
             (int)(pos->x * this->ss.x),
             (int)(pos->y * this->ss.y),
@@ -134,7 +135,7 @@ bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint*
 }
 
 bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
-    if (HAS_SS())
+    if (RAYLIB_HAS_SS())
         this->raylib->DrawEllipse(
             (int)(pos->x * this->ss.x),
             (int)(pos->y * this->ss.y),
@@ -163,6 +164,8 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, cons
     tex->tex = &tex->target.texture;
     tex->is_target = true;
     tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
+    tex_base->size.w = size->w;
+    tex_base->size.h = size->h;
     return tex;
 }
 
@@ -185,16 +188,32 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
 }
 
 bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos) {
-    Vector2 vec;
-    if (OMG_ISNULL(pos)) {
-        vec.x = vec.y = 0.0f;
+    if (RAYLIB_HAS_SS()) {
+        Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
+        Rectangle dst;
+        if (OMG_ISNULL(pos)) {
+            dst.x = dst.y = 0.0f;
+        }
+        else {
+            dst.x = pos->x * this->ss.x;
+            dst.y = pos->y * this->ss.y;
+        }
+        dst.width = tex_base->size.w * this->ss.x;
+        dst.height = tex_base->size.h * this->ss.y;
+        Vector2 origin = { .x = 0.0f, .y = 0.0f };
+        this->raylib->DrawTexturePro(*tex->tex, src, dst, origin, 0.0f, tex->tint);
     }
     else {
-        vec.x = pos->x * this->ss.x;
-        vec.y = pos->y * this->ss.y;
+        Vector2 vec;
+        if (OMG_ISNULL(pos)) {
+            vec.x = vec.y = 0.0f;
+        }
+        else {
+            vec.x = pos->x * this->ss.x;
+            vec.y = pos->y * this->ss.y;
+        }
+        this->raylib->DrawTextureV(*tex->tex, vec, tex->tint);
     }
-    // TODO: fix scale
-    this->raylib->DrawTextureV(*tex->tex, vec, tex->tint);
     return false;
 }
 

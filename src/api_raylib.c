@@ -109,6 +109,7 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(UnloadShader);
     LOAD_REQUIRED(ClearBackground);
     LOAD_REQUIRED(DrawTextureV);
+    LOAD_REQUIRED(DrawTexturePro);
     LOAD_REQUIRED(DrawPixelV);
     LOAD_REQUIRED(DrawLineV);
     LOAD_REQUIRED(DrawLineEx);

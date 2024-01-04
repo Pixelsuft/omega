@@ -370,6 +370,7 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*UnloadShader)(Shader);
     void OMG_RAYLIB_PREFIX (*ClearBackground)(Color);
     void OMG_RAYLIB_PREFIX (*DrawTextureV)(Texture2D, Vector2, Color);
+    void OMG_RAYLIB_PREFIX (*DrawTexturePro)(Texture2D, Rectangle, Rectangle, Vector2, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawPixelV)(Vector2, Color);
     void OMG_RAYLIB_PREFIX (*DrawLineV)(Vector2, Vector2, Color);
     void OMG_RAYLIB_PREFIX (*DrawLineEx)(Vector2, Vector2, float, Color);
