@@ -6,6 +6,7 @@
 #define _OMG_SDL2_DRAW_COLOR_WARN() _OMG_LOG_WARN(omg_base, "Failed to set draw color (", this->sdl2->SDL_GetError(), ")")
 #define _OMG_SDL2_DRAW_BLEND_WARN() _OMG_LOG_WARN(omg_base, "Failed to set draw blend mode (", this->sdl2->SDL_GetError(), ")")
 #define _OMG_SDL2_SCALE_WARN() _OMG_LOG_WARN(omg_base, "Failed to set render scale (", this->sdl2->SDL_GetError(), ")")
+#define _OMG_SDL2_COPY_WARN() _OMG_LOG_WARN(omg_base, "Failed to render copy (", this->sdl2->SDL_GetError(), ")")
 
 typedef struct {
     OMG_Renderer parent;
@@ -37,5 +38,6 @@ OMG_API bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPo
 OMG_API bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 OMG_API OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex);
+OMG_API bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos);
 #endif
 #endif

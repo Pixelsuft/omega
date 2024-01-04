@@ -83,6 +83,11 @@ bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float r
     return false;
 }
 
+bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos) {
+    OMG_UNUSED(this, tex, pos);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -115,5 +120,6 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->fill_circle = omg_renderer_draw_circle;
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
+    this->copy = omg_renderer_copy;
     return false;
 }

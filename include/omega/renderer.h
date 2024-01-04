@@ -39,6 +39,7 @@ typedef struct OMG_Renderer {
     bool (*fill_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
     OMG_Texture* (*tex_create)(struct OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
+    bool (*copy)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
     void* omg;
     void* win;
     OMG_Texture* target;
@@ -73,4 +74,5 @@ OMG_API bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* re
 OMG_API bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);
+OMG_API bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
 #endif

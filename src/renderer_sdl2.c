@@ -336,6 +336,24 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
     return false;
 }
 
+bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos) {
+    SDL_FRect dst_rect;
+    if (OMG_ISNULL(pos)) {
+        dst_rect.x = dst_rect.y = 0.0f;
+    }
+    else {
+        dst_rect.x = pos->x;
+        dst_rect.y = pos->y;
+    }
+    dst_rect.w = tex_base->size.w;
+    dst_rect.h = tex_base->size.h;
+    if (this->sdl2->SDL_RenderCopyF(this->ren, tex->tex, NULL, &dst_rect) < 0) {
+        _OMG_SDL2_COPY_WARN();
+        return true;
+    }
+    return false;
+}
+
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -354,6 +372,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->fill_circle = omg_renderer_sdl2_fill_circle;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
+    base->copy = omg_renderer_sdl2_copy;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_SDL2;
     int sdl2_driver;
