@@ -284,6 +284,7 @@ typedef struct {
     float (*floorf)(float x);
     float (*ceilf)(float x);
     float (*roundf)(float x);
+    int (*lrint)(double x);
     unsigned int (*sleep)(unsigned int);
     void* memory_allocator;
     void* extra;

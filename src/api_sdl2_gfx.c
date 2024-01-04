@@ -772,48 +772,6 @@ int ellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_
 	return (result);
 }
 
-/*#if defined(_MSC_VER)
-#ifdef _M_X64
-#include <emmintrin.h>
-static __inline long
-lrint(float f)
-{
-	return _mm_cvtss_si32(_mm_load_ss(&f));
-}
-#elif defined(_M_IX86)
-__inline long int
-lrint(double flt)
-{
-	int intgr;
-	_asm
-		{
-		fld flt
-			fistp intgr
-		}
-	;
-	return intgr;
-}
-#elif defined(_M_ARM)
-#include <armintr.h>
-#pragma warning(push)
-#pragma warning(disable : 4716)
-__declspec(naked) long int lrint(double flt)
-{
-	__emit(0xEC410B10);
-	__emit(0xEEBD0B40);
-	__emit(0xEE100A10);
-	__emit(0xE12FFF1E);
-}
-#pragma warning(pop)
-#else
-#error lrint needed for MSVC on non X86/AMD64/ARM targets.
-#endif
-#endif*/
-#ifndef lrint
-// TODO: lrint in std
-#define lrint(num_to_round) ((int)std_handle->round((num_to_round)))
-#endif
-
 int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result;
 	int i;
@@ -845,8 +803,8 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 	xc2 = 2 * x;
 	yc2 = 2 * y;
 	sab = sqrt((double)(a2 + b2));
-	od = (int16_t)lrint(sab * 0.01) + 1;
-	dxt = (int16_t)lrint((double)a2 / sab) + od;
+	od = (int16_t)std_handle->lrint(sab * 0.01) + 1;
+	dxt = (int16_t)std_handle->lrint((double)a2 / sab) + od;
 	t = 0;
 	s = -2 * a2 * ry;
 	d = 0;
@@ -904,7 +862,7 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 		result |= pixelRGBAWeight(renderer, xp, yy, r, g, b, a, weight);
 		result |= pixelRGBAWeight(renderer, xx, yy, r, g, b, a, weight);
 	}
-	dyt = (int16_t)lrint((double)b2 / sab) + od;
+	dyt = (int16_t)std_handle->lrint((double)b2 / sab) + od;
 	for (i = 1; i <= dyt; i++) {
 		yp++;
 		d -= s + a2;
@@ -1601,8 +1559,8 @@ int bezierRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int
 		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	t = 0.0;
-	x1 = (int16_t)lrint(_evaluateBezier(x, n + 1, t));
-	y1 = (int16_t)lrint(_evaluateBezier(y, n + 1, t));
+	x1 = (int16_t)std_handle->lrint(_evaluateBezier(x, n + 1, t));
+	y1 = (int16_t)std_handle->lrint(_evaluateBezier(y, n + 1, t));
 	for (i = 0; i <= (n * s); i++) {
 		t += stepsize;
 		x2 = (int16_t)_evaluateBezier(x, n, t);
