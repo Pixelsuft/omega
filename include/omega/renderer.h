@@ -32,6 +32,7 @@ typedef struct OMG_Renderer {
     bool (*set_scale)(struct OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
     bool (*set_target)(struct OMG_Renderer* this, OMG_Texture* tex);
     bool (*draw_point)(struct OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
+    bool (*draw_line)(struct OMG_Renderer* this, const OMG_FRect* start_end, const OMG_Color* col);
     bool (*draw_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     bool (*fill_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     OMG_Texture* (*tex_create)(struct OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);

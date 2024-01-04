@@ -100,6 +100,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->set_scale = omg_renderer_set_scale;
     this->set_target = omg_renderer_set_target;
     this->draw_point = omg_renderer_draw_point;
+    this->draw_line = omg_renderer_draw_fill_rect;
     this->draw_rect = omg_renderer_draw_fill_rect;
     this->fill_rect = omg_renderer_draw_fill_rect;
     this->tex_create = omg_renderer_tex_create;
