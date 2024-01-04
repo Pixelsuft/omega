@@ -47,7 +47,7 @@ bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* o
         Camera2D cam;
         if (base->soft_scale) {
             cam.offset.x = base->offset.x * base->scale.x;
-            cam.offset.y = base->offset.y * base->scale.x;
+            cam.offset.y = base->offset.y * base->scale.y;
             cam.zoom = 1.0f;
             this->ss.x = base->scale.x;
             this->ss.y = base->scale.y;
@@ -58,7 +58,7 @@ bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* o
             cam.zoom = base->a_scale;
             this->ss.x = this->ss.y = 1.0f;
         }
-        _OMG_LOG_INFO(omg_base, (OMG_FPoint*)&cam.offset, " ", cam.zoom);
+        cam.target.x = cam.target.y = 0.0f;
         cam.rotation = 0.0f;
         this->raylib->BeginMode2D(cam);
     }
@@ -105,6 +105,11 @@ bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* re
 }
 
 bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
+    if ((this->ss.x != 1.0f) || (this->ss.y != 1.0f)) {
+        Rectangle rec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y, .width = this->ss.x, .height = this->ss.y };
+        this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
+        return false;
+    }
     Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
     this->raylib->DrawPixelV(vec, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
