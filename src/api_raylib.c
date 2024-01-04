@@ -75,6 +75,16 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SetMouseScale);
     LOAD_REQUIRED(GetMouseWheelMove);
     LOAD_REQUIRED(GetMouseWheelMoveV);
+    LOAD_REQUIRED(LoadTexture);
+    LOAD_REQUIRED(LoadTextureFromImage);
+    LOAD_REQUIRED(LoadTextureCubemap);
+    LOAD_REQUIRED(LoadRenderTexture);
+    LOAD_REQUIRED(IsTextureReady);
+    LOAD_REQUIRED(UnloadTexture);
+    LOAD_REQUIRED(IsRenderTextureReady);
+    LOAD_REQUIRED(UnloadRenderTexture);
+    LOAD_REQUIRED(UpdateTexture);
+    LOAD_REQUIRED(UpdateTextureRec);
     LOAD_REQUIRED(BeginDrawing);
     LOAD_REQUIRED(EndDrawing);
     LOAD_REQUIRED(BeginMode2D);

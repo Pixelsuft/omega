@@ -207,6 +207,8 @@ typedef struct Texture {
     int format;
 } Texture;
 
+typedef Texture TextureCubemap;
+
 typedef Texture Texture2D;
 
 typedef struct RenderTexture {
@@ -334,6 +336,16 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*SetMouseScale)(float, float);
     float OMG_RAYLIB_PREFIX (*GetMouseWheelMove)(void);
     Vector2 OMG_RAYLIB_PREFIX (*GetMouseWheelMoveV)(void);
+    Texture2D OMG_RAYLIB_PREFIX (*LoadTexture)(const char*); 
+    Texture2D OMG_RAYLIB_PREFIX (*LoadTextureFromImage)(Image);
+    TextureCubemap OMG_RAYLIB_PREFIX (*LoadTextureCubemap)(Image, int);
+    RenderTexture2D OMG_RAYLIB_PREFIX (*LoadRenderTexture)(int, int);
+    bool OMG_RAYLIB_PREFIX (*IsTextureReady)(Texture2D);
+    void OMG_RAYLIB_PREFIX (*UnloadTexture)(Texture2D);
+    bool OMG_RAYLIB_PREFIX (*IsRenderTextureReady)(RenderTexture2D);
+    void OMG_RAYLIB_PREFIX (*UnloadRenderTexture)(RenderTexture2D);
+    void OMG_RAYLIB_PREFIX (*UpdateTexture)(Texture2D, const void*);
+    void OMG_RAYLIB_PREFIX (*UpdateTextureRec)(Texture2D, Rectangle, const void*);  
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
     void OMG_RAYLIB_PREFIX (*BeginMode2D)(Camera2D);
