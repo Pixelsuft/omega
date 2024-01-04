@@ -314,6 +314,10 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
             _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture from surface (", this->sdl2->SDL_GetError(), ")");
             return NULL;
         }
+        tex_base->auto_blend = true;
+        tex_base->has_alpha = surf->has_alpha;
+        tex_base->size.w = surf->size.w;
+        tex_base->size.h = surf->size.h;
         if (destroy_surf)
             omg_base->winmgr->surf_destroy(omg_base->winmgr, surf);
         return tex;

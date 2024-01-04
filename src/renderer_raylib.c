@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_RAYLIB
 #include <omega/window.h>
 #include <omega/omega.h>
+#include <omega/surface_raylib.h>
 #include <omega/texture_raylib.h>
 #define base ((OMG_Renderer*)this)
 #define tex_base ((OMG_Texture*)tex)
@@ -150,6 +151,29 @@ bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint*
     return false;
 }
 
+OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, OMG_SurfaceRaylib* surf, bool destroy_surf) {
+    if (OMG_ISNULL(surf) || !this->raylib->IsImageReady(surf->img))
+        return NULL;
+    OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
+    if (OMG_ISNULL(tex))
+        return NULL;
+    tex->target.texture = this->raylib->LoadTextureFromImage(surf->img);
+    tex->tex = &tex->target.texture;
+    if (!this->raylib->IsTextureReady(*tex->tex)) {
+        OMG_FREE(omg_base->mem, tex);
+        return NULL;
+    }
+    tex->is_target = false;
+    tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
+    tex_base->has_alpha = surf->parent.has_alpha;
+    tex_base->auto_blend = true;
+    tex_base->size.w = surf->parent.size.w;
+    tex_base->size.h = surf->parent.size.h;
+    if (destroy_surf)
+        omg_base->winmgr->surf_destroy(omg_base->winmgr, (OMG_Surface*)surf);
+    return tex;
+}
+
 OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(access, has_alpha);
     OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
@@ -235,6 +259,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->fill_rect = omg_renderer_raylib_fill_rect;
     base->draw_circle = omg_renderer_raylib_draw_circle;
     base->fill_circle = omg_renderer_raylib_fill_circle;
+    base->tex_from_surf = omg_renderer_raylib_tex_from_surf;
     base->tex_create = omg_renderer_raylib_tex_create;
     base->tex_destroy = omg_renderer_raylib_tex_destroy;
     base->copy = omg_renderer_raylib_copy;
