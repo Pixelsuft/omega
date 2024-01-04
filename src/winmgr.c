@@ -29,6 +29,16 @@ bool omg_winmgr_destroy(OMG_Winmgr* this) {
     return false;
 }
 
+OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, const OMG_FPoint* size, bool has_alpha) {
+    OMG_UNUSED(this, size, has_alpha);
+    return NULL;
+}
+
+bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf) {
+    OMG_UNUSED(this, surf);
+    return false;
+}
+
 bool omg_winmgr_init(OMG_Winmgr* this) {
     this->cache = OMG_MALLOC(omg_base->mem, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
     if (OMG_ISNULL(this->cache))
@@ -37,5 +47,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;
     this->window_free = omg_winmgr_window_free;
+    this->surf_create = omg_winmgr_surf_create;
+    this->surf_destroy = omg_winmgr_surf_destroy;
     return false;
 }
