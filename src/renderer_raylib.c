@@ -115,6 +115,18 @@ bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* 
     return false;
 }
 
+bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+    Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
+    this->raylib->DrawCircleLinesV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
+    return false;
+}
+
+bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+    Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
+    this->raylib->DrawCircleV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
+    return false;
+}
+
 OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(access, has_alpha);
     OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
@@ -160,6 +172,8 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->draw_line = omg_renderer_raylib_draw_line;
     base->draw_rect = omg_renderer_raylib_draw_rect;
     base->fill_rect = omg_renderer_raylib_fill_rect;
+    base->draw_circle = omg_renderer_raylib_draw_circle;
+    base->fill_circle = omg_renderer_raylib_fill_circle;
     base->tex_create = omg_renderer_raylib_tex_create;
     base->tex_destroy = omg_renderer_raylib_tex_destroy;
     OMG_END_POINTER_CAST();

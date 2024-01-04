@@ -136,6 +136,7 @@ void app_on_paint(OMG_EventPaint* event) {
     }
     this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 200, 50, 50), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
     this->ren->draw_line(this->ren, &OMG_FRECT_MAKE(0, 100, 200, 200), &OMG_COLOR_MAKE_RGB(0, 0, 255));
+    this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(300, 300), 50.0f, &OMG_COLOR_MAKE_RGBA(0, 0, 255, 128));
     this->ren->flip(this->ren);
 }
 

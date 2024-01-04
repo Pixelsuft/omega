@@ -78,6 +78,11 @@ bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, cons
     return false;
 }
 
+bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+    OMG_UNUSED(this, pos, rad, col);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -106,6 +111,8 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->draw_line = omg_renderer_draw_fill_rect;
     this->draw_rect = omg_renderer_draw_fill_rect;
     this->fill_rect = omg_renderer_draw_fill_rect;
+    this->draw_circle = omg_renderer_draw_circle;
+    this->fill_circle = omg_renderer_draw_circle;
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
     return false;
