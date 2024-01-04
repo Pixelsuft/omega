@@ -47,12 +47,14 @@ OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, const O
     if (OMG_ISNULL(surf))
         return NULL;
     surf->img = this->raylib->LoadImageFromScreen(); // Fuck
-    this->raylib->ImageResize(&surf->img, (int)size->w, (int)size->h);
-    this->raylib->ImageFormat(&surf->img, has_alpha ? PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 : PIXELFORMAT_UNCOMPRESSED_R8G8B8);
     if (!this->raylib->IsImageReady(surf->img)) {
         OMG_FREE(omg_base->mem, surf);
         return NULL;
     }
+    this->raylib->ImageResize(&surf->img, (int)size->w, (int)size->h);
+    this->raylib->ImageFormat(&surf->img, has_alpha ? PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 : PIXELFORMAT_UNCOMPRESSED_R8G8B8);
+    Color col = { .r = 0, .g = 0, .b = 0, .a = 0 };
+    this->raylib->ImageClearBackground(&surf->img, col);
     return surf;
 }
 
@@ -79,6 +81,7 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->window_alloc = omg_winmgr_raylib_window_alloc;
     base->window_free = omg_winmgr_raylib_window_free;
     base->surf_create = omg_winmgr_raylib_surf_create;
+    base->surf_destroy = omg_winmgr_raylib_surf_destroy;
     OMG_END_POINTER_CAST();
     return false;
 }

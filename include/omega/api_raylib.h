@@ -344,6 +344,7 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*UnloadImage)(Image);
     void OMG_RAYLIB_PREFIX (*ImageFormat)(Image*, int);
     void OMG_RAYLIB_PREFIX (*ImageResize)(Image*, int, int);
+    void OMG_RAYLIB_PREFIX (*ImageClearBackground)(Image*, Color);
     Texture2D OMG_RAYLIB_PREFIX (*LoadTexture)(const char*); 
     Texture2D OMG_RAYLIB_PREFIX (*LoadTextureFromImage)(Image);
     TextureCubemap OMG_RAYLIB_PREFIX (*LoadTextureCubemap)(Image, int);

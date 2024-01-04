@@ -83,6 +83,7 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(UnloadImage);
     LOAD_REQUIRED(ImageFormat);
     LOAD_REQUIRED(ImageResize);
+    LOAD_REQUIRED(ImageClearBackground);
     LOAD_REQUIRED(LoadTexture);
     LOAD_REQUIRED(LoadTextureFromImage);
     LOAD_REQUIRED(LoadTextureCubemap);
