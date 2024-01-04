@@ -193,6 +193,7 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw line (", this->sdl2->SDL_GetError(), ")");
     }
+    return res;
 }
 
 bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
@@ -259,6 +260,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->set_scale = omg_renderer_sdl2_set_scale;
     base->set_target = omg_renderer_sdl2_set_target;
     base->draw_point = omg_renderer_sdl2_draw_point;
+    base->draw_line = omg_renderer_sdl2_draw_line;
     base->draw_rect = omg_renderer_sdl2_draw_rect;
     base->fill_rect = omg_renderer_sdl2_fill_rect;
     base->tex_create = omg_renderer_sdl2_tex_create;

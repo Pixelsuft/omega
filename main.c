@@ -18,7 +18,7 @@ typedef struct {
 } App;
 
 int omega_main(OMG_EntryData* data);
-OMG_MAKE_MAIN(omega_main)
+OMG_MAIN_MAKE(omega_main)
 
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
@@ -119,6 +119,7 @@ void app_on_paint(OMG_EventPaint* event) {
         }
     }
     this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 200, 50, 50), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
+    this->ren->draw_line(this->ren, &OMG_FRECT_MAKE(0, 100, 200, 200), &OMG_COLOR_MAKE_RGB(0, 0, 255));
     this->ren->flip(this->ren);
 }
 
