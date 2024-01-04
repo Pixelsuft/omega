@@ -113,6 +113,8 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(DrawLineV);
     LOAD_REQUIRED(DrawLineEx);
     LOAD_REQUIRED(DrawCircleV);
+    LOAD_REQUIRED(DrawEllipse);
+    LOAD_REQUIRED(DrawEllipseLines);
     LOAD_REQUIRED(DrawCircleLinesV);
     LOAD_REQUIRED(DrawRectangleRec);
     LOAD_REQUIRED(DrawRectanglePro);

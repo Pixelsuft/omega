@@ -8,6 +8,7 @@
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
 #define IS_DEFAULT_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f) && (base->offset.x == 0.0f) && (base->offset.y == 0.0f))
+#define HAS_SS() ((this->ss.x != 1.0f) || (this->ss.y != 1.0f))
 
 void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this) {
     if (!omg_base->support_highdpi)
@@ -106,7 +107,7 @@ bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* re
 }
 
 bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
-    if ((this->ss.x != 1.0f) || (this->ss.y != 1.0f)) {
+    if (HAS_SS()) {
         Rectangle rec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y, .width = this->ss.x, .height = this->ss.y };
         this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
         return false;
@@ -117,15 +118,34 @@ bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* 
 }
 
 bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
-    Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
-    this->raylib->DrawCircleLinesV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
+    if (HAS_SS())
+        this->raylib->DrawEllipseLines(
+            (int)(pos->x * this->ss.x),
+            (int)(pos->y * this->ss.y),
+            rad * this->ss.x,
+            rad * this->ss.y,
+            _OMG_RAYLIB_OMG_COLOR(col)
+        );
+    else {
+        Vector2 vec = { .x = pos->x, .y = pos->y };
+        this->raylib->DrawCircleLinesV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
+    }
     return false;
 }
 
 bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
-    Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
-    // TODO: fix scale
-    this->raylib->DrawCircleV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
+    if (HAS_SS())
+        this->raylib->DrawEllipse(
+            (int)(pos->x * this->ss.x),
+            (int)(pos->y * this->ss.y),
+            rad * this->ss.x,
+            rad * this->ss.y,
+            _OMG_RAYLIB_OMG_COLOR(col)
+        );
+    else {
+        Vector2 vec = { .x = pos->x, .y = pos->y };
+        this->raylib->DrawCircleV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
+    }
     return false;
 }
 

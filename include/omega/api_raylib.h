@@ -375,6 +375,8 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*DrawLineEx)(Vector2, Vector2, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawCircleV)(Vector2, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawCircleLinesV)(Vector2, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawEllipse)(int, int, float, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawEllipseLines)(int, int, float, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawRectangleRec)(Rectangle, Color);
     void OMG_RAYLIB_PREFIX (*DrawRectanglePro)(Rectangle, Vector2, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawRectangleLinesEx)(Rectangle, float, Color);
