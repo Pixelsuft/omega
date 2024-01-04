@@ -38,6 +38,10 @@ Pixelsuft -- pixelsuft at github dot com
 #include <string.h>
 #include <omega/api_sdl2_gfx.h>
 
+#define SDL2_GFX_MALLOC(size) (sdl2_handle->SDL_malloc(size))
+#define SDL2_GFX_REALLOC(ptr, size) (sdl2_handle->SDL_realloc(ptr, size))
+#define SDL2_GFX_FREE(ptr) (sdl2_handle->SDL_free(ptr))
+
 static OMG_Sdl2* sdl2_handle = NULL;
 static OMG_Std* std_handle = NULL;
 
@@ -1075,7 +1079,7 @@ int _pieRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t 
 		angle += deltaAngle;
 		numpoints++;
 	}
-	vx = vy = (int16_t *)malloc(2 * sizeof(int16_t) * numpoints);
+	vx = vy = (int16_t *)SDL2_GFX_MALLOC(2 * sizeof(int16_t) * numpoints);
 	if (vx == NULL) {
 		return (-1);
 	}
@@ -1107,7 +1111,7 @@ int _pieRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t 
 			result = polygonRGBA(renderer, vx, vy, numpoints, r, g, b, a);
 		}
 	}
-	free(vx);
+	SDL2_GFX_FREE(vx);
 	return (result);
 }
 
@@ -1168,7 +1172,7 @@ int polygon(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int n)
 		return (-1);
 	}
 	nn = n + 1;
-	points = (SDL_Point *)malloc(sizeof(SDL_Point) * nn);
+	points = (SDL_Point *)SDL2_GFX_MALLOC(sizeof(SDL_Point) * nn);
 	if (points == NULL) {
 		return -1;
 	}
@@ -1179,7 +1183,7 @@ int polygon(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int n)
 	points[n].x = vx[0];
 	points[n].y = vy[0];
 	result |= SDL_RenderDrawLines(renderer, points, nn);
-	free(points);
+	SDL2_GFX_FREE(points);
 	return (result);
 }
 
@@ -1250,15 +1254,15 @@ int filledPolygonRGBAMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t
 		gfxPrimitivesPolyAllocated = *polyAllocated;
 	}
 	if (!gfxPrimitivesPolyAllocated) {
-		gfxPrimitivesPolyInts = (int *)malloc(sizeof(int) * n);
+		gfxPrimitivesPolyInts = (int *)SDL2_GFX_MALLOC(sizeof(int) * n);
 		gfxPrimitivesPolyAllocated = n;
 	}
 	else {
 		if (gfxPrimitivesPolyAllocated < n) {
-			gfxPrimitivesPolyIntsNew = (int *)realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
+			gfxPrimitivesPolyIntsNew = (int *)SDL2_GFX_REALLOC(gfxPrimitivesPolyInts, sizeof(int) * n);
 			if (!gfxPrimitivesPolyIntsNew) {
 				if (!gfxPrimitivesPolyInts) {
-					free(gfxPrimitivesPolyInts);
+					SDL2_GFX_FREE(gfxPrimitivesPolyInts);
 					gfxPrimitivesPolyInts = NULL;
 				}
 				gfxPrimitivesPolyAllocated = 0;
@@ -1427,12 +1431,12 @@ int texturedPolygonMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t *
 		gfxPrimitivesPolyAllocated = *polyAllocated;
 	}
 	if (!gfxPrimitivesPolyAllocated) {
-		gfxPrimitivesPolyInts = (int *)malloc(sizeof(int) * n);
+		gfxPrimitivesPolyInts = (int *)SDL2_GFX_MALLOC(sizeof(int) * n);
 		gfxPrimitivesPolyAllocated = n;
 	}
 	else {
 		if (gfxPrimitivesPolyAllocated < n) {
-			gfxPrimitivesPolyIntsTemp = (int *)realloc(gfxPrimitivesPolyInts, sizeof(int) * n);
+			gfxPrimitivesPolyIntsTemp = (int *)SDL2_GFX_REALLOC(gfxPrimitivesPolyInts, sizeof(int) * n);
 			if (gfxPrimitivesPolyIntsTemp == NULL)
 			{
 				return (-1);
@@ -1579,11 +1583,11 @@ int bezierRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int
 		return (-1);
 	}
 	stepsize = (double)1.0 / (double)s;
-	if ((x = (double *)malloc(sizeof(double) * (n + 1))) == NULL) {
+	if ((x = (double *)SDL2_GFX_MALLOC(sizeof(double) * (n + 1))) == NULL) {
 		return (-1);
 	}
-	if ((y = (double *)malloc(sizeof(double) * (n + 1))) == NULL) {
-		free(x);
+	if ((y = (double *)SDL2_GFX_MALLOC(sizeof(double) * (n + 1))) == NULL) {
+		SDL2_GFX_FREE(x);
 		return (-1);
 	}
 	for (i = 0; i < n; i++) {
@@ -1607,8 +1611,8 @@ int bezierRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int
 		x1 = x2;
 		y1 = y2;
 	}
-	free(x);
-	free(y);
+	SDL2_GFX_FREE(x);
+	SDL2_GFX_FREE(y);
 	return (result);
 }
 
@@ -1891,7 +1895,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 			x1 = x2;
 			x2 = x;
 		}
-		SDL_Point *points = (SDL_Point *)malloc((x2 - x1 + 1) * sizeof(SDL_Point));
+		SDL_Point *points = (SDL_Point *)SDL2_GFX_MALLOC((x2 - x1 + 1) * sizeof(SDL_Point));
 		if (points == NULL)
 			return -1;
 		for (x = x1; x <= x2; x++) {
@@ -1899,7 +1903,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 			points[x - x1].y = y1;
 		}
 		result = SDL_RenderDrawPoints(renderer, points, x2 - x1 + 1);
-		free(points);
+		SDL2_GFX_FREE(points);
 	}
 	else if (x1 == x2) {
 		int y;
@@ -1908,7 +1912,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 			y1 = y2;
 			y2 = y;
 		}
-		SDL_Point *points = (SDL_Point *)malloc((y2 - y1 + 1) * sizeof(SDL_Point));
+		SDL_Point *points = (SDL_Point *)SDL2_GFX_MALLOC((y2 - y1 + 1) * sizeof(SDL_Point));
 		if (points == NULL)
 			return -1;
 		for (y = y1; y <= y2; y++) {
@@ -1916,7 +1920,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 			points[y - y1].y = y;
 		}
 		result = SDL_RenderDrawPoints(renderer, points, y2 - y1 + 1);
-		free(points);
+		SDL2_GFX_FREE(points);
 	}
 	else
 #endif
@@ -2073,11 +2077,11 @@ int filledPolyBezierRGBA(SDL_Renderer* renderer, const int16_t *x, const int16_t
 	int16_t *vx, *vy;
 	if ((n < 7) || (s < 2))
 		return -1;
-	if ((dx = (double *)malloc(sizeof(double) * n)) == NULL) {
+	if ((dx = (double *)SDL2_GFX_MALLOC(sizeof(double) * n)) == NULL) {
 		return (-1);
 	}
-	if ((dy = (double *)malloc(sizeof(double) * n)) == NULL) {
-		free(dx);
+	if ((dy = (double *)SDL2_GFX_MALLOC(sizeof(double) * n)) == NULL) {
+		SDL2_GFX_FREE(dx);
 		return (-1);
 	}
 	for (i = 0; i < n; i++) {
@@ -2086,10 +2090,10 @@ int filledPolyBezierRGBA(SDL_Renderer* renderer, const int16_t *x, const int16_t
 	}
 	nbeziers = (n - 1) / 3;
 	nverts = nbeziers * 4 * s + 1;
-	vx = (int16_t *)malloc(nverts * 2 * sizeof(int16_t));
+	vx = (int16_t *)SDL2_GFX_MALLOC(nverts * 2 * sizeof(int16_t));
 	if (vx == NULL) {
-		free(dy);
-		free(dx);
+		SDL2_GFX_FREE(dy);
+		SDL2_GFX_FREE(dx);
 		return -1;
 	}
 	vy = vx + nverts;
@@ -2110,10 +2114,10 @@ int filledPolyBezierRGBA(SDL_Renderer* renderer, const int16_t *x, const int16_t
 	}
 	vx[j * s * 4] = floor(x1 + 0.5);
 	vy[j * s * 4] = floor(y1 + 0.5);
-	free(dy);
-	free(dx);
+	SDL2_GFX_FREE(dy);
+	SDL2_GFX_FREE(dx);
 	result = filledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-	free(vx);
+	SDL2_GFX_FREE(vx);
 	return (result);
 }
 
@@ -2261,7 +2265,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 	minx = floor(minx);
 	maxx = floor(maxx);
 	prec = floor(pow(2, 19) / prec);
-	list = (float *)malloc(POLYSIZE * sizeof(float));
+	list = (float *)SDL2_GFX_MALLOC(POLYSIZE * sizeof(float));
 	if (list == NULL)
 		return -2;
 	yi = 0;
@@ -2269,7 +2273,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 	y1 = floor(vy[0] * prec) / prec;
 	for (i = 1; i <= n; i++) {
 		if (yi > POLYSIZE - 4) {
-			free(list);
+			SDL2_GFX_FREE(list);
 			return -2;
 		}
 		y2 = floor(vy[i % n] * prec) / prec;
@@ -2319,7 +2323,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 			if ((y -= d) >= y2)
 				break;
 			if (yi > POLYSIZE - 4) {
-				free(list);
+				SDL2_GFX_FREE(list);
 				return -2;
 			}
 			if (y > y1) {
@@ -2336,7 +2340,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 		while (y <= y2) {
 			x = x1 + y0 * (y - y1);
 			if (yi > POLYSIZE - 2) {
-				free(list);
+				SDL2_GFX_FREE(list);
 				return -2;
 			}
 			list[yi++] = x;
@@ -2345,9 +2349,9 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 		}
 	}
 	qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
-	strip = (float *)malloc((maxx - minx + 2) * sizeof(float));
+	strip = (float *)SDL2_GFX_MALLOC((maxx - minx + 2) * sizeof(float));
 	if (strip == NULL) {
-		free(list);
+		SDL2_GFX_FREE(list);
 		return -1;
 	}
 	memset(strip, 0, (maxx - minx + 2) * sizeof(float));
@@ -2412,8 +2416,8 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 			yi++;
 		}
 	}
-	free(list);
-	free(strip);
+	SDL2_GFX_FREE(list);
+	SDL2_GFX_FREE(strip);
 	return result;
 }
 
@@ -2432,7 +2436,7 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 		nverts = 2;
 	if (nverts > 180)
 		nverts = 180;
-	vx = vy = (double *)malloc(2 * sizeof(double) * (nverts + 1));
+	vx = vy = (double *)SDL2_GFX_MALLOC(2 * sizeof(double) * (nverts + 1));
 	if (vx == NULL)
 		return (-1);
 	vy += nverts + 1;
@@ -2444,7 +2448,7 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 	vx[i] = cx;
 	vy[i] = cy;
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts + 1 - (chord != 0), r, g, b, a);
-	free(vx);
+	SDL2_GFX_FREE(vx);
 	return (result);
 }
 
@@ -2463,7 +2467,7 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 		nverts = 2;
 	if (nverts > 360)
 		nverts = 360;
-	vx = vy = (double *)malloc(2 * sizeof(double) * nverts);
+	vx = vy = (double *)SDL2_GFX_MALLOC(2 * sizeof(double) * nverts);
 	if (vx == NULL)
 		return (-1);
 	vy += nverts;
@@ -2475,7 +2479,7 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 		vy[nverts - 1 - i] = cy + (ry - thick / 2) * sin(angle);
 	}
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-	free(vx);
+	SDL2_GFX_FREE(vx);
 	return (result);
 }
 
@@ -2487,7 +2491,7 @@ int aaBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, flo
 	if ((n < 3) || (s < 2))
 		return -1;
 	nverts = n * s * 2 + 2;
-	vx = (double *)malloc(nverts * 2 * sizeof(double));
+	vx = (double *)SDL2_GFX_MALLOC(nverts * 2 * sizeof(double));
 	if (vx == NULL)
 		return -1;
 	vy = vx + nverts;
@@ -2516,7 +2520,7 @@ int aaBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, flo
 	vx[nverts - 1 - i] = x1 - dy;
 	vy[nverts - 1 - i] = y1 + dx;
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-	free(vx);
+	SDL2_GFX_FREE(vx);
 	return (result);
 }
 
@@ -2529,7 +2533,7 @@ int aaFilledPolyBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, 
 		return -1;
 	nbeziers = (n - 1) / 3;
 	nverts = nbeziers * 4 * s + 1;
-	vx = (double *)malloc(nverts * 2 * sizeof(double));
+	vx = (double *)SDL2_GFX_MALLOC(nverts * 2 * sizeof(double));
 	if (vx == NULL)
 		return -1;
 	vy = vx + nverts;
@@ -2551,6 +2555,6 @@ int aaFilledPolyBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, 
 	vx[j * s * 4] = x1;
 	vy[j * s * 4] = y1;
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
-	free(vx);
+	SDL2_GFX_FREE(vx);
 	return (result);
 }

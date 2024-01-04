@@ -1223,6 +1223,7 @@ typedef struct {
     SDL_Surface* OMG_SDL2_STD_PREFIX (*SDL_CreateRGBSurfaceFrom)(void*, int, int, int, int, uint32_t, uint32_t, uint32_t, uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_FreeSurface)(SDL_Surface*);
     SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTexture)(SDL_Renderer*, uint32_t, int, int, int);
+    SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTextureFromSurface)(SDL_Renderer*, SDL_Surface*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyTexture)(SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_QueryTexture)(SDL_Texture*, uint32_t*, int*, int*, int*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetTextureColorMod)(SDL_Texture*, uint8_t, uint8_t, uint8_t);
