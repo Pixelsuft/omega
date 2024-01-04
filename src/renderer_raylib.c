@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_RAYLIB
 #include <omega/window.h>
 #include <omega/omega.h>
+#include <omega/texture_raylib.h>
 #define base ((OMG_Renderer*)this)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -35,14 +36,46 @@ bool omg_renderer_raylib_begin(OMG_RendererRaylib* this) {
     return false;
 }
 
+int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
+    OMG_UNUSED(this);
+    return OMG_REN_DRIVER_OPENGL;
+}
+
+bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
+
+}
+
+bool omg_renderer_raylib_set_target(OMG_RendererRaylib* this, OMG_TextureRaylib* tex) {
+
+}
+
 bool omg_renderer_raylib_flip(OMG_RendererRaylib* this) {
     this->raylib->EndDrawing();
     return false;
 }
 
-int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
-    OMG_UNUSED(this);
-    return OMG_REN_DRIVER_OPENGL;
+bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
+
+}
+
+bool omg_renderer_raylib_draw_line(OMG_RendererRaylib* this, const OMG_FRect* start_end, const OMG_Color* col) {
+
+}
+
+bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
+
+}
+
+bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
+
+}
+
+OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha) {
+
+}
+
+bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex) {
+
 }
 
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
@@ -53,6 +86,14 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->clear = omg_renderer_raylib_clear;
     base->begin = omg_renderer_raylib_begin;
     base->flip = omg_renderer_raylib_flip;
+    base->set_scale = omg_renderer_raylib_set_scale;
+    base->set_target = omg_renderer_raylib_set_target;
+    base->draw_point = omg_renderer_raylib_draw_rect;
+    base->draw_line = omg_renderer_raylib_draw_line;
+    base->draw_rect = omg_renderer_raylib_draw_rect;
+    base->fill_rect = omg_renderer_raylib_fill_rect;
+    base->tex_create = omg_renderer_raylib_tex_create;
+    base->tex_destroy = omg_renderer_raylib_tex_destroy;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
     base->inited = true;

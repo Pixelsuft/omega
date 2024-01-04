@@ -19,9 +19,19 @@ OMG_API bool omg_renderer_raylib_init(OMG_RendererRaylib* this);
 OMG_API bool omg_renderer_raylib_destroy(OMG_RendererRaylib* this);
 OMG_API int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this);
 #if OMG_EXPORT_SHIT
+#include <omega/texture_raylib.h>
+
 OMG_API void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this);
 OMG_API bool omg_renderer_raylib_clear(OMG_RendererRaylib* this, const OMG_Color* col);
 OMG_API bool omg_renderer_raylib_begin(OMG_RendererRaylib* this);
 OMG_API bool omg_renderer_raylib_flip(OMG_RendererRaylib* this);
+OMG_API bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
+OMG_API bool omg_renderer_raylib_set_target(OMG_RendererRaylib* this, OMG_TextureRaylib* tex);
+OMG_API bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_draw_line(OMG_RendererRaylib* this, const OMG_FRect* start_end, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col);
+OMG_API OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha);
+OMG_API bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex);
 #endif
 #endif
