@@ -164,6 +164,8 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, cons
     tex->tex = &tex->target.texture;
     tex->is_target = true;
     tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
+    tex_base->has_alpha = true;
+    tex_base->auto_blend = true;
     tex_base->size.w = size->w;
     tex_base->size.h = size->h;
     return tex;

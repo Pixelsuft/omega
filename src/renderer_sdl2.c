@@ -213,14 +213,24 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     if (base->aa) {
-        aaLineRGBA(
+        /*aaLineRGBA(
             this->ren,
             (int16_t)(start_end->x1 + base->offset.x),
             (int16_t)(start_end->y1 + base->offset.y),
             (int16_t)(start_end->x2 + base->offset.x),
             (int16_t)(start_end->y2 + base->offset.y),
             _r_color, _g_color, _b_color, _a_color
+        );*/
+        SDL2_SCALE_OFF(res);
+        aaLineRGBA(
+            this->ren,
+            (int16_t)((start_end->x1 + base->offset.x) * base->scale.x),
+            (int16_t)((start_end->y1 + base->offset.y) * base->scale.y),
+            (int16_t)((start_end->x2 + base->offset.x) * base->scale.x),
+            (int16_t)((start_end->y2 + base->offset.y) * base->scale.y),
+            _r_color, _g_color, _b_color, _a_color
         );
+        SDL2_SCALE_ON(res);
     }
     else if (this->sdl2->SDL_RenderDrawLineF(this->ren, start_end->x1 + base->offset.x, start_end->y1 + base->offset.y, start_end->x2 + base->offset.x, start_end->y2 + base->offset.y) < 0) {
         res = true;
@@ -338,12 +348,11 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
 
 bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos) {
     SDL_FRect dst_rect;
-    if (OMG_ISNULL(pos)) {
-        dst_rect.x = dst_rect.y = 0.0f;
-    }
-    else {
-        dst_rect.x = pos->x;
-        dst_rect.y = pos->y;
+    dst_rect.x = base->offset.x;
+    dst_rect.y = base->offset.y;
+    if (OMG_ISNOTNULL(pos)) {
+        dst_rect.x += pos->x;
+        dst_rect.y += pos->y;
     }
     dst_rect.w = tex_base->size.w;
     dst_rect.h = tex_base->size.h;
