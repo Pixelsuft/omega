@@ -48,6 +48,7 @@ bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const 
     if (OMG_ISNOTNULL(scale)) {
         this->scale.x = scale->x;
         this->scale.y = scale->y;
+        this->a_scale = (this->scale.x + this->scale.y) / 2.0f;
     }
     return false;
 }
@@ -86,7 +87,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->auto_blend = true;
     this->target = NULL;
     this->offset.x = this->offset.y = 0.0f;
-    this->scale.x = this->scale.y = 1.0f;
+    this->scale.x = this->scale.y = this->a_scale = 1.0f;
     this->dpi_scale.x = this->dpi_scale.y = 1.0f;
     this->color.r = this->color.g = this->color.b = (omg_color_t)0;
     this->color.a = (omg_color_t)255;

@@ -7,10 +7,7 @@
 #define base ((OMG_Renderer*)this)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
-#define IS_DEFAULT_SCALE(offset, scale) ( \
-    (OMG_ISNULL(offset) ? (((base->offset).x == 0.0f) && ((base->offset).y == 0.0f)) : (((offset)->x == 0.0f) && ((offset)->y == 0.0f))) && \
-    (OMG_ISNULL(scale) ? (((base->scale).x == 1.0f) && ((base->scale).y == 1.0f)) : (((scale)->x == 1.0f) && ((scale)->y == 1.0f))) \
-)
+#define IS_DEFAULT_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f) && (base->offset.x == 0.0f) && (base->offset.y == 0.0f))
 
 void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this) {
     if (!omg_base->support_highdpi)
@@ -35,11 +32,6 @@ bool omg_renderer_raylib_clear(OMG_RendererRaylib* this, const OMG_Color* col) {
     return false;
 }
 
-bool omg_renderer_raylib_begin(OMG_RendererRaylib* this) {
-    this->raylib->BeginDrawing();
-    return false;
-}
-
 int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
     OMG_UNUSED(this);
     return OMG_REN_DRIVER_OPENGL;
@@ -47,12 +39,26 @@ int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
 
 bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
     omg_renderer_set_scale(base, offset, scale);
-    if (IS_DEFAULT_SCALE(offset, scale)) {
+    if (IS_DEFAULT_SCALE()) {
         this->raylib->EndMode2D();
     }
     else {
-
+        Camera2D cam;
+        cam.offset.x = base->offset.x;
+        cam.offset.y = base->offset.y;
+        // cam.offset.x = cam.offset.y = 0.0f;
+        cam.zoom = base->a_scale;
+        // cam.zoom = 1.0f;
+        cam.rotation = 0.0f;
+        this->raylib->BeginMode2D(cam);
     }
+    return false;
+}
+
+bool omg_renderer_raylib_begin(OMG_RendererRaylib* this) {
+    this->raylib->BeginDrawing();
+    if (!IS_DEFAULT_SCALE())
+        omg_renderer_raylib_set_scale(this, NULL, NULL);
     return false;
 }
 
