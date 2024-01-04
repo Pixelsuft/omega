@@ -176,7 +176,7 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
         _OMG_NULL_TEXTURE_WARN();
         return true;
     }
-    if (OMG_ISNULL(tex->tex)) {
+    if (OMG_ISNULL(tex->tex) || !(tex->is_target ? this->raylib->IsRenderTextureReady(tex->target) : this->raylib->IsTextureReady(*tex->tex))) {
         _OMG_LOG_WARN(omg_base, "Attempted to free Raylib null texture");
         return true;
     }

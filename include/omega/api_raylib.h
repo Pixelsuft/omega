@@ -338,8 +338,12 @@ typedef struct {
     Vector2 OMG_RAYLIB_PREFIX (*GetMouseWheelMoveV)(void);
     Image  OMG_RAYLIB_PREFIX(*LoadImage)(const char*);
     Image OMG_RAYLIB_PREFIX (*LoadImageRaw)(const char*, int, int, int, int);
+    Image OMG_RAYLIB_PREFIX (*LoadImageFromMemory)(const char*, const unsigned char*, int);
+    Image OMG_RAYLIB_PREFIX (*LoadImageFromScreen)(void);
     bool OMG_RAYLIB_PREFIX (*IsImageReady)(Image);
     void OMG_RAYLIB_PREFIX (*UnloadImage)(Image);
+    void OMG_RAYLIB_PREFIX (*ImageFormat)(Image*, int);
+    void OMG_RAYLIB_PREFIX (*ImageResize)(Image*, int, int);
     Texture2D OMG_RAYLIB_PREFIX (*LoadTexture)(const char*); 
     Texture2D OMG_RAYLIB_PREFIX (*LoadTextureFromImage)(Image);
     TextureCubemap OMG_RAYLIB_PREFIX (*LoadTextureCubemap)(Image, int);

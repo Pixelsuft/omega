@@ -46,11 +46,28 @@ OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, const O
     OMG_SurfaceRaylib* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceRaylib));
     if (OMG_ISNULL(surf))
         return NULL;
-    // TODO
+    surf->img = this->raylib->LoadImageFromScreen(); // Fuck
+    this->raylib->ImageResize(&surf->img, (int)size->w, (int)size->h);
+    this->raylib->ImageFormat(&surf->img, has_alpha ? PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 : PIXELFORMAT_UNCOMPRESSED_R8G8B8);
+    if (!this->raylib->IsImageReady(surf->img)) {
+        OMG_FREE(omg_base->mem, surf);
+        return NULL;
+    }
     return surf;
 }
 
 bool omg_winmgr_raylib_surf_destroy(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf) {
+    if (OMG_ISNULL(surf)) {
+        _OMG_NULL_SURFACE_WARN();
+        return true;
+    }
+    if (OMG_ISNULL(surf->img.data) || !this->raylib->IsImageReady(surf->img)) {
+        _OMG_LOG_WARN(omg_base, "Attempted to free Raylib null surface");
+        return true;
+    }
+    this->raylib->UnloadImage(surf->img);
+    surf->img.data = NULL;
+    OMG_FREE(omg_base->mem, surf);
     return false;
 }
 
