@@ -39,6 +39,35 @@ typedef struct Vector2 {
     float y;
 } Vector2;
 
+typedef struct Vector3 {
+    float x;
+    float y;
+    float z;
+} Vector3;
+
+typedef struct Vector4 {
+    float x;
+    float y;
+    float z;
+    float w;
+} Vector4;
+
+typedef Vector4 Quaternion;
+
+typedef struct Matrix {
+    float m0, m4, m8, m12;
+    float m1, m5, m9, m13;
+    float m2, m6, m10, m14;
+    float m3, m7, m11, m15;
+} Matrix;
+
+typedef struct Rectangle {
+    float x;
+    float y;
+    float width;
+    float height;
+} Rectangle;
+
 typedef enum {
     MOUSE_BUTTON_LEFT    = 0,
     MOUSE_BUTTON_RIGHT   = 1,
@@ -162,6 +191,44 @@ typedef enum {
     KEY_VOLUME_DOWN     = 25        
 } KeyboardKey;
 
+typedef struct Image {
+    void* data;
+    int width;
+    int height;
+    int mipmaps;
+    int format;
+} Image;
+
+typedef struct Texture {
+    unsigned int id;
+    int width;
+    int height;
+    int mipmaps;
+    int format;
+} Texture;
+
+typedef Texture Texture2D;
+
+typedef struct RenderTexture {
+    unsigned int id;
+    Texture texture;
+    Texture depth;
+} RenderTexture;
+
+typedef RenderTexture RenderTexture2D;
+
+typedef struct Camera2D {
+    Vector2 offset;
+    Vector2 target;
+    float rotation;
+    float zoom;
+} Camera2D;
+
+typedef struct Shader {
+    unsigned int id;
+    int* locs;
+} Shader;
+
 typedef enum {
     LOG_ALL = 0,
     LOG_TRACE,
@@ -231,6 +298,26 @@ typedef struct {
     Vector2 OMG_RAYLIB_PREFIX (*GetMouseWheelMoveV)(void);
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
+    void OMG_RAYLIB_PREFIX (*BeginMode2D)(Camera2D);
+    void OMG_RAYLIB_PREFIX (*EndMode2D)(void);
+    void OMG_RAYLIB_PREFIX (*BeginTextureMode)(RenderTexture2D);
+    void OMG_RAYLIB_PREFIX (*EndTextureMode)(void);
+    void OMG_RAYLIB_PREFIX (*BeginShaderMode)(Shader);
+    void OMG_RAYLIB_PREFIX (*EndShaderMode)(void);
+    void OMG_RAYLIB_PREFIX (*BeginBlendMode)(int);
+    void OMG_RAYLIB_PREFIX (*EndBlendMode)(void);
+    void OMG_RAYLIB_PREFIX (*BeginScissorMode)(int, int, int, int);
+    void OMG_RAYLIB_PREFIX (*EndScissorMode)(void);
+    Shader OMG_RAYLIB_PREFIX (*LoadShader)(const char*, const char*);
+    Shader OMG_RAYLIB_PREFIX (*LoadShaderFromMemory)(const char*, const char*);
+    bool OMG_RAYLIB_PREFIX (*IsShaderReady)(Shader);
+    int OMG_RAYLIB_PREFIX (*GetShaderLocation)(Shader, const char*);
+    int OMG_RAYLIB_PREFIX (*GetShaderLocationAttrib)(Shader, const char*);
+    void OMG_RAYLIB_PREFIX (*SetShaderValue)(Shader, int, const void*, int);
+    void OMG_RAYLIB_PREFIX (*SetShaderValueV)(Shader, int, const void*, int, int);
+    void OMG_RAYLIB_PREFIX (*SetShaderValueMatrix)(Shader, int, Matrix);
+    void OMG_RAYLIB_PREFIX (*SetShaderValueTexture)(Shader, int, Texture2D);
+    void OMG_RAYLIB_PREFIX (*UnloadShader)(Shader);
     void OMG_RAYLIB_PREFIX (*ClearBackground)(Color);
     bool OMG_RAYLIB_PREFIX (*IsKeyPressed)(int);
     bool OMG_RAYLIB_PREFIX (*IsKeyPressedRepeat)(int);

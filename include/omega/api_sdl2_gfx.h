@@ -32,13 +32,9 @@ Pixelsuft -- pixelsuft at github dot com
 */
 
 #pragma once
-
-#include <math.h>
-#ifndef M_PI
-#define M_PI 3.1415926535897932384626433832795
-#endif
-#include <omega/ostd.h>
 #include <omega/api_sdl2.h>
+#if OMG_SUPPORT_SDL2
+#include <omega/ostd.h>
 
 #define SDL2_GFX_MAJOR 1
 #define SDL2_GFX_MINOR 0
@@ -106,3 +102,4 @@ SDL2_GFX_STD_PREFIX int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float 
 SDL2_GFX_STD_PREFIX int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry, float start, float end, float thick, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int aaBezierRGBA(SDL_Renderer* renderer, double* x, double* y, int n, int s, float thick, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int aaFilledPolyBezierRGBA(SDL_Renderer* renderer, double* x, double* y, int n, int s, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+#endif

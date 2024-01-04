@@ -34,6 +34,7 @@ Pixelsuft -- pixelsuft at github dot com
 // TODO: Avoid This shit
 #include <omega/api_sdl2_gfx.h>
 
+#if OMG_SUPPORT_SDL2
 #define SDL2_GFX_MALLOC(size) (sdl2_handle->SDL_malloc(size))
 #define SDL2_GFX_REALLOC(ptr, size) (sdl2_handle->SDL_realloc(ptr, size))
 #define SDL2_GFX_FREE(ptr) (sdl2_handle->SDL_free(ptr))
@@ -2515,3 +2516,4 @@ int aaFilledPolyBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, 
 	SDL2_GFX_FREE(vx);
 	return (result);
 }
+#endif
