@@ -471,8 +471,8 @@ int aalineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16
 	return _aalineRGBA(renderer, x1, y1, x2, y2, r, g, b, a, 1);
 }
 
-int circleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-	return ellipseRGBA(renderer, x, y, rad, rad, r, g, b, a);
+int drawCircle(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad) {
+	return drawEllipse(renderer, x, y, rad, rad);
 }
 
 int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t start, int16_t end, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
@@ -656,7 +656,7 @@ int filledCircle(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad) {
 	return filledEllipse(renderer, x, y, rad, rad);
 }
 
-int ellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+int drawEllipse(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry) {
 	int result;
 	int ix, iy;
 	int h, i, j, k;
@@ -669,15 +669,12 @@ int ellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_
 		return (-1);
 	}
 	if (rx == 0) {
-		return (vlineRGBA(renderer, x, y - ry, y + ry, r, g, b, a));
+		return (vline(renderer, x, y - ry, y + ry));
 	}
 	if (ry == 0) {
-		return (hlineRGBA(renderer, x - rx, x + rx, y, r, g, b, a));
+		return (hline(renderer, x - rx, x + rx, y));
 	}
 	result = 0;
-	if (a != 255)
-		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	oh = oi = oj = ok = 0xFFFF;
 	if (rx > ry) {
 		ix = 0;
@@ -1926,7 +1923,7 @@ int thickEllipseRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t xr,
 	int xi, yi, xo, yo, x, y, z;
 	double xi2, yi2, xo2, yo2;
 	if (thick <= 1)
-		return ellipseRGBA(renderer, xc, yc, xr, yr, r, g, b, a);
+		return drawEllipse(renderer, xc, yc, xr, yr);
 	xi = xr - thick / 2;
 	xo = xi + thick - 1;
 	yi = yr - thick / 2;

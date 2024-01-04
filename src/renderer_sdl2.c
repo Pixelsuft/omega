@@ -221,12 +221,11 @@ bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
-    circleRGBA(
+    drawCircle(
         this->ren,
         (int16_t)(pos->x * base->scale.x),
         (int16_t)(pos->y * base->scale.y),
-        (int16_t)rad,
-        0, 0, 255, 128
+        (int16_t)rad
     );
     SDL2_SCALE_ON(res);
     return res;
