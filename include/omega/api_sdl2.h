@@ -1235,7 +1235,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_UnlockTexture)(SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetViewport)(SDL_Renderer*, const SDL_Rect*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetClipRect)(SDL_Renderer*, const SDL_Rect*);
-    int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawBlendMode)(SDL_Renderer*, SDL_ScaleMode);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawBlendMode)(SDL_Renderer*, SDL_BlendMode);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetScale)(SDL_Renderer*, float, float);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetVSync)(SDL_Renderer* renderer, int vsync);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);

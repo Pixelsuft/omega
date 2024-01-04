@@ -263,12 +263,40 @@ float omg_std_roundf(float x) {
     return (float)omg_def_std->round((double)x);
 }
 
-int omg_std_lrint(double x) {
-    return (int)omg_def_std->round(x);
+long omg_std_lrint(double x) {
+    return (long)omg_def_std->round(x);
 }
 
 void omg_std_qsort(void* base, size_t num, size_t size, int (*compare) (const void*, const void*)) {
     OMG_UNUSED(base, num, size, compare); // TODO
+}
+
+int omg_std_abs(int x) {
+    return (x > 0) ? x : (-x);
+}
+
+double omg_std_fabs(double x) {
+    return (x > 0.0) ? x : (-x);
+}
+
+float omg_std_fabsf(float x) {
+    return (x > 0.0f) ? x : (-x);
+}
+
+double omg_std_pow(double base, double exponent) {
+    double res = 1.0;
+    for (double i = 0.0; i < exponent; i++) {
+        res *= base;
+    }
+    return res;
+}
+
+float omg_std_powf(float base, float exponent) {
+    float res = 1.0f;
+    for (float i = 0.0f; i < exponent; i++) {
+        res *= base;
+    }
+    return res;
 }
 
 OMG_Std* omg_std_get_default_handle(void) {
@@ -299,7 +327,7 @@ double omg_dummy_double_func(double x) {
 }
 
 double omg_dummy_double2_func(double x, double y) {
-    return x + y;
+    return x / y;
 }
 
 float omg_dummy_float_func(float x) {
@@ -307,7 +335,7 @@ float omg_dummy_float_func(float x) {
 }
 
 float omg_dummy_float2_func(float x, float y) {
-    return x + y;
+    return x / y;
 }
 
 void omg_std_fill_defaults(OMG_Std* this) {
@@ -355,13 +383,20 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->atan = atan;
     this->atan2 = atan2;
     this->sqrt = sqrt;
+    this->fmod = fmod;
     this->sinf = sinf;
     this->cosf = cosf;
     this->tanf = tanf;
     this->atanf = atanf;
     this->atan2f = atan2f;
     this->sqrtf = sqrtf;
+    this->fmodf = fmodf;
     this->qsort = qsort;
+    this->abs = abs;
+    this->fabs = fabs;
+    this->fabsf = fabsf;
+    this->pow = pow;
+    this->powf = powf;
 #else
     this->sin = omg_dummy_double_func;
     this->cos = omg_dummy_double_func;
@@ -369,13 +404,20 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->atan = omg_dummy_double_func;
     this->atan2 = omg_dummy_double2_func;
     this->sqrt = omg_dummy_double_func;
+    this->fmod = omg_dummy_double2_func;
     this->sinf = omg_dummy_float_func;
     this->cosf = omg_dummy_float_func;
     this->tanf = omg_dummy_float_func;
     this->atanf = omg_dummy_float_func;
     this->atan2f = omg_dummy_float2_func;
     this->sqrtf = omg_dummy_float_func;
+    this->fmodf = omg_dummy_float2_func;
     this->qsort = omg_std_qsort;
+    this->abs = omg_std_abs;
+    this->fabs = omg_std_fabs;
+    this->fabsf = omg_std_fabsf;
+    this->pow = omg_std_pow;
+    this->powf = omg_std_powf;
 #endif
 #if OMG_HAVE_LRINT
     this->lrint = lrint;

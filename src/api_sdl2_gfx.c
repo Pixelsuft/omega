@@ -47,6 +47,7 @@ static OMG_Std* std_handle = NULL;
 
 void omg_sdl2_gfx_set_handle(OMG_Sdl2* sdl2, OMG_Std* std) {
 	sdl2_handle = sdl2;
+	std_handle = std;
 }
 
 int pixel(SDL_Renderer* renderer, int16_t x, int16_t y) {
@@ -840,7 +841,7 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 		}
 		t -= dt;
 		if (s != 0) {
-			cp = (float)abs(d) / (float)abs(s);
+			cp = (float)std_handle->abs(d) / (float)std_handle->abs(s);
 			if (cp > 1.0) {
 				cp = 1.0;
 			}
@@ -886,7 +887,7 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 		}
 		s += ds;
 		if (t != 0) {
-			cp = (float)abs(d) / (float)abs(t);
+			cp = (float)std_handle->abs(d) / (float)std_handle->abs(t);
 			if (cp > 1.0) {
 				cp = 1.0;
 			}
@@ -1286,7 +1287,7 @@ int filledPolygonRGBAMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t
 				gfxPrimitivesPolyInts[ints++] = ((65536 * (y - y1)) / (y2 - y1)) * (x2 - x1) + (65536 * x1);
 			}
 		}
-		qsort(gfxPrimitivesPolyInts, ints, sizeof(int), _gfxPrimitivesCompareInt);
+		std_handle->qsort(gfxPrimitivesPolyInts, ints, sizeof(int), _gfxPrimitivesCompareInt);
 		result = 0;
 		if (a != 255)
 			result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -1471,7 +1472,7 @@ int texturedPolygonMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t *
 				gfxPrimitivesPolyInts[ints++] = ((65536 * (y - y1)) / (y2 - y1)) * (x2 - x1) + (65536 * x1);
 			}
 		}
-		qsort(gfxPrimitivesPolyInts, ints, sizeof(int), _gfxPrimitivesCompareInt);
+		std_handle->qsort(gfxPrimitivesPolyInts, ints, sizeof(int), _gfxPrimitivesCompareInt);
 		for (i = 0; (i < ints); i += 2)
 		{
 			xa = gfxPrimitivesPolyInts[i] + 1;
@@ -1504,7 +1505,7 @@ double _evaluateBezier(double *data, int ndata, double t) {
 	n = ndata - 1;
 	result = 0.0;
 	muk = 1;
-	munk = pow(1 - mu, (double)n);
+	munk = std_handle->pow(1 - mu, (double)n);
 	for (k = 0; k <= n; k++) {
 		nn = n;
 		kn = k;
@@ -1881,8 +1882,9 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 		SDL2_GFX_FREE(points);
 	}
 	else
-#endif
 		result = SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+#endif
+	result = SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 	return result;
 }
 
@@ -2064,14 +2066,14 @@ int filledPolyBezierRGBA(SDL_Renderer* renderer, const int16_t *x, const int16_t
 			t += stepsize;
 			x2 = _evaluateBezier(dx + j * 3, 4, t);
 			y2 = _evaluateBezier(dy + j * 3, 4, t);
-			vx[i + j * s * 4] = floor(x1 + 0.5);
-			vy[i + j * s * 4] = floor(y1 + 0.5);
+			vx[i + j * s * 4] = std_handle->floor(x1 + 0.5);
+			vy[i + j * s * 4] = std_handle->floor(y1 + 0.5);
 			x1 = x2;
 			y1 = y2;
 		}
 	}
-	vx[j * s * 4] = floor(x1 + 0.5);
-	vy[j * s * 4] = floor(y1 + 0.5);
+	vx[j * s * 4] = std_handle->floor(x1 + 0.5);
+	vy[j * s * 4] = std_handle->floor(y1 + 0.5);
 	SDL2_GFX_FREE(dy);
 	SDL2_GFX_FREE(dx);
 	result = filledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
@@ -2103,7 +2105,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				}
 			}
 			s = 8 * ry * ry;
-			dy = fabs(y - cy) - 1.0;
+			dy = std_handle->fabs(y - cy) - 1.0;
 			xi = cx - x;
 			while (1) {
 				dx = (cx - xi - 1) * ry / rx;
@@ -2154,7 +2156,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				}
 			}
 			s = 8 * rx * rx;
-			dx = fabs(x - cx) - 1.0;
+			dx = std_handle->fabs(x - cx) - 1.0;
 			yi = cy - y;
 			while (1) {
 				dy = (cy - yi - 1) * rx / ry;
@@ -2212,7 +2214,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 	prec = 0.00001;
 	for (i = 0; i < n; i++) {
 		double x = vx[i];
-		double y = fabs(vy[i]);
+		double y = std_handle->fabs(vy[i]);
 		if (x < minx)
 			minx = x;
 		if (x > maxx)
@@ -2220,21 +2222,21 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 		if (y > prec)
 			prec = y;
 	}
-	minx = floor(minx);
-	maxx = floor(maxx);
-	prec = floor(pow(2, 19) / prec);
+	minx = std_handle->floor(minx);
+	maxx = std_handle->floor(maxx);
+	prec = std_handle->floor(std_handle->pow(2, 19) / prec);
 	list = (float *)SDL2_GFX_MALLOC(POLYSIZE * sizeof(float));
 	if (list == NULL)
 		return -2;
 	yi = 0;
-	y0 = floor(vy[n - 1] * prec) / prec;
-	y1 = floor(vy[0] * prec) / prec;
+	y0 = std_handle->floor(vy[n - 1] * prec) / prec;
+	y1 = std_handle->floor(vy[0] * prec) / prec;
 	for (i = 1; i <= n; i++) {
 		if (yi > POLYSIZE - 4) {
 			SDL2_GFX_FREE(list);
 			return -2;
 		}
-		y2 = floor(vy[i % n] * prec) / prec;
+		y2 = std_handle->floor(vy[i % n] * prec) / prec;
 		if (((y1 < y2) - (y1 > y2)) == ((y0 < y1) - (y0 > y1))) {
 			list[yi++] = -100002.0;
 			list[yi++] = y1;
@@ -2255,14 +2257,14 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 		y1 = y2;
 	}
 	xi = yi;
-	qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
+	std_handle->qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
 	for (i = 1; i <= n; i++) {
 		double x, y;
 		double d = 0.5 / prec;
 		x1 = vx[i - 1];
-		y1 = floor(vy[i - 1] * prec) / prec;
+		y1 = std_handle->floor(vy[i - 1] * prec) / prec;
 		x2 = vx[i % n];
-		y2 = floor(vy[i % n] * prec) / prec;
+		y2 = std_handle->floor(vy[i % n] * prec) / prec;
 		if (y2 < y1) {
 			double tmp;
 			tmp = x1;
@@ -2294,7 +2296,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 				list[yi++] = y;
 			}
 		}
-		y = floor(y1) + 1.0;
+		y = std_handle->floor(y1) + 1.0;
 		while (y <= y2) {
 			x = x1 + y0 * (y - y1);
 			if (yi > POLYSIZE - 2) {
@@ -2306,13 +2308,13 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 			y += 1.0;
 		}
 	}
-	qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
+	std_handle->qsort(list, yi / 2, sizeof(float) * 2, _gfxPrimitivesCompareFloat2);
 	strip = (float *)SDL2_GFX_MALLOC((maxx - minx + 2) * sizeof(float));
 	if (strip == NULL) {
 		SDL2_GFX_FREE(list);
 		return -1;
 	}
-	memset(strip, 0, (maxx - minx + 2) * sizeof(float));
+	std_handle->memset(strip, 0, (maxx - minx + 2) * sizeof(float));
 	n = yi;
 	yi = list[1];
 	j = 0;
@@ -2370,7 +2372,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 					}
 				}
 			}
-			memset(strip, 0, (maxx - minx + 2) * sizeof(float));
+			std_handle->memset(strip, 0, (maxx - minx + 2) * sizeof(float));
 			yi++;
 		}
 	}
@@ -2385,8 +2387,8 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 	double *vx, *vy;
 	if ((rx <= 0) || (ry <= 0) || (start == end))
 		return -1;
-	start = fmod(start, 360.0) * OMG_M_PI2 / 360.0;
-	end = fmod(end, 360.0) * OMG_M_PI2 / 360.0;
+	start = std_handle->fmod(start, 360.0) * OMG_M_PI2 / 360.0;
+	end = std_handle->fmod(end, 360.0) * OMG_M_PI2 / 360.0;
 	while (start >= end)
 		end += OMG_M_PI2;
 	nverts = (end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI;
@@ -2416,11 +2418,11 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 	double *vx, *vy;
 	if ((rx <= 0) || (ry <= 0) || (start == end) || (thick <= 0))
 		return -1;
-	start = fmod(start, 360.0) * OMG_M_PI2 / 360.0;
-	end = fmod(end, 360.0) * OMG_M_PI2 / 360.0;
+	start = std_handle->fmod(start, 360.0) * OMG_M_PI2 / 360.0;
+	end = std_handle->fmod(end, 360.0) * OMG_M_PI2 / 360.0;
 	while (start >= end)
 		end += OMG_M_PI2;
-	nverts = 2 * floor((end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI);
+	nverts = 2 * std_handle->floor((end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI);
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 360)
