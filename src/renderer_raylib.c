@@ -71,11 +71,33 @@ bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* re
 }
 
 OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha) {
-
+    OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
+    if (OMG_ISNULL(tex))
+        return NULL;
+    // TODO: Does compiler use memset here???
+    tex->target = this->raylib->LoadRenderTexture((int)size->w, (int)size->h);
+    if (!this->raylib->IsRenderTextureReady(tex->target)) {
+        OMG_FREE(omg_base->mem, tex);
+        return NULL;
+    }
+    tex->tex = &tex->target.texture;
+    return tex;
 }
 
 bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex) {
-
+    if (OMG_ISNULL(tex)) {
+        _OMG_NULL_TEXTURE_WARN();
+        return true;
+    }
+    if (OMG_ISNULL(tex->tex)) {
+        _OMG_LOG_WARN(omg_base, "Attempted to free Raylib null texture");
+        return true;
+    }
+    // TODO: Difference between target tex and normal tex
+    this->raylib->UnloadRenderTexture(tex->target);
+    tex->tex = NULL;
+    OMG_FREE(omg_base->mem, tex);
+    return false;
 }
 
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {

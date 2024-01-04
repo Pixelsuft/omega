@@ -7,6 +7,6 @@
 typedef struct {
     OMG_Texture parent;
     Texture2D* tex;
-    RenderTexture2D* target;
+    RenderTexture2D target;
 } OMG_TextureRaylib;
 #endif
