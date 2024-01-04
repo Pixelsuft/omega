@@ -8,7 +8,7 @@ Adopted for Omega (C) 2024 Pixelsuft
 
 This software is provided 'as-is', without any express or implied
 warranty. In no event will the authors be held liable for any damages
-arising from the use of this software.
+aristd_handle->sing from the use of this software.
 
 Permission is granted to anyone to use this software for any purpose,
 including commercial applications, and to alter it and redistribute it
@@ -514,19 +514,19 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 			switch (oct) {
 				case 0:
 				case 3:
-					temp = sin(dstart * OMG_M_PI / 180.);
+					temp = std_handle->sin(dstart * OMG_M_PI / 180.);
 					break;
 				case 1:
 				case 6:
-					temp = cos(dstart * OMG_M_PI / 180.);
+					temp = std_handle->cos(dstart * OMG_M_PI / 180.);
 					break;
 				case 2:
 				case 5:
-					temp = -cos(dstart * OMG_M_PI / 180.);
+					temp = -std_handle->cos(dstart * OMG_M_PI / 180.);
 					break;
 				case 4:
 				case 7:
-					temp = -sin(dstart * OMG_M_PI / 180.);
+					temp = -std_handle->sin(dstart * OMG_M_PI / 180.);
 					break;
 			}
 			temp *= rad;
@@ -543,19 +543,19 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 			{
 			case 0:
 			case 3:
-				temp = sin(dend * OMG_M_PI / 180);
+				temp = std_handle->sin(dend * OMG_M_PI / 180);
 				break;
 			case 1:
 			case 6:
-				temp = cos(dend * OMG_M_PI / 180);
+				temp = std_handle->cos(dend * OMG_M_PI / 180);
 				break;
 			case 2:
 			case 5:
-				temp = -cos(dend * OMG_M_PI / 180);
+				temp = -std_handle->cos(dend * OMG_M_PI / 180);
 				break;
 			case 4:
 			case 7:
-				temp = -sin(dend * OMG_M_PI / 180);
+				temp = -std_handle->sin(dend * OMG_M_PI / 180);
 				break;
 			}
 			temp *= rad;
@@ -802,7 +802,7 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 	dt = 2 * b2;
 	xc2 = 2 * x;
 	yc2 = 2 * y;
-	sab = sqrt((double)(a2 + b2));
+	sab = std_handle->sqrt((double)(a2 + b2));
 	od = (int16_t)std_handle->lrint(sab * 0.01) + 1;
 	dxt = (int16_t)std_handle->lrint((double)a2 / sab) + od;
 	t = 0;
@@ -1026,10 +1026,10 @@ int _pieRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t 
 	}
 	dr = (double)rad;
 	deltaAngle = 3.0 / dr;
-	start_angle = (double)start * (2.0 * OMG_M_PI / 360.0);
-	end_angle = (double)end * (2.0 * OMG_M_PI / 360.0);
+	start_angle = (double)start * (OMG_M_PI2 / 360.0);
+	end_angle = (double)end * (OMG_M_PI2 / 360.0);
 	if (start > end) {
-		end_angle += (2.0 * OMG_M_PI);
+		end_angle += (OMG_M_PI2);
 	}
 	numpoints = 2;
 	angle = start_angle;
@@ -1045,8 +1045,8 @@ int _pieRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t 
 	vx[0] = x;
 	vy[0] = y;
 	angle = start_angle;
-	vx[1] = x + (int)(dr * cos(angle));
-	vy[1] = y + (int)(dr * sin(angle));
+	vx[1] = x + (int)(dr * std_handle->cos(angle));
+	vy[1] = y + (int)(dr * std_handle->sin(angle));
 	if (numpoints < 3) {
 		result = lineRGBA(renderer, vx[0], vy[0], vx[1], vy[1], r, g, b, a);
 	}
@@ -1058,8 +1058,8 @@ int _pieRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t 
 			if (angle > end_angle) {
 				angle = end_angle;
 			}
-			vx[i] = x + (int)(dr * cos(angle));
-			vy[i] = y + (int)(dr * sin(angle));
+			vx[i] = x + (int)(dr * std_handle->cos(angle));
+			vy[i] = y + (int)(dr * std_handle->sin(angle));
 			i++;
 		}
 		if (filled) {
@@ -1637,7 +1637,7 @@ static void x_varthick_line(SDL_Renderer* B, int style,
 	E_diag = -2 * dx;
 	E_square = 2 * dy;
 	length = dx + 1;
-	D = sqrt(dx * dx + dy * dy);
+	D = std_handle->sqrt(dx * dx + dy * dy);
 	w_left = thickness * D + 0.5;
 	w_right = 2.0 * thickness * D + 0.5;
 	w_right -= w_left;
@@ -1725,7 +1725,7 @@ static void y_varthick_line(SDL_Renderer* B, int style,
 	E_diag = -2 * dy;
 	E_square = 2 * dx;
 	length = dy + 1;
-	D = sqrt(dx * dx + dy * dy);
+	D = std_handle->sqrt(dx * dx + dy * dy);
 	w_left = thickness * D + 0.5;
 	w_right = 2.0 * thickness * D + 0.5;
 	w_right -= w_left;
@@ -1889,8 +1889,8 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, int yc, double s, double f) {
 	int result = 0;
 	double a1, a2;
-	a1 = atan2(y, x1);
-	a2 = atan2(y, x2);
+	a1 = std_handle->atan2(y, x1);
+	a2 = std_handle->atan2(y, x2);
 	if (a1 > a2) {
 		double a = a1;
 		a1 = a2;
@@ -1903,12 +1903,12 @@ static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, i
 		if ((a1 > f) && (a2 < s))
 			return result;
 		if ((a1 < s) && (a1 > f))
-			x1 = y / tan(s);
+			x1 = y / std_handle->tan(s);
 		if ((a2 > f) && (a2 < s))
-			x2 = y / tan(f);
+			x2 = y / std_handle->tan(f);
 		if ((a1 < f) && (a2 > s)) {
-			result |= renderdrawline(renderer, x1 + xc, y + yc, y / tan(f) + xc, y + yc);
-			result |= renderdrawline(renderer, y / tan(s) + xc, y + yc, x2 + xc, y + yc);
+			result |= renderdrawline(renderer, x1 + xc, y + yc, y / std_handle->tan(f) + xc, y + yc);
+			result |= renderdrawline(renderer, y / std_handle->tan(s) + xc, y + yc, x2 + xc, y + yc);
 			return result;
 		}
 	}
@@ -1916,9 +1916,9 @@ static int hlinecliparc(SDL_Renderer* renderer, int x1, int x2, int y, int xc, i
 		if ((a1 > f) || (a2 < s))
 			return result;
 		if (a1 < s)
-			x1 = y / tan(s);
+			x1 = y / std_handle->tan(s);
 		if (a2 > f)
-			x2 = y / tan(f);
+			x2 = y / std_handle->tan(f);
 	}
 	result |= renderdrawline(renderer, x1 + xc, y + yc, x2 + xc, y + yc);
 	return result;
@@ -1945,34 +1945,34 @@ int thickEllipseRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t xr,
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	if (xr < yr) {
 		for (x = -xo; x <= -xi; x++) {
-			y = sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
+			y = std_handle->sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
 			result |= renderdrawline(renderer, xc + x, yc - y, xc + x, yc + y);
 		}
 		for (x = -xi + 1; x <= xi - 1; x++) {
-			y = sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
-			z = sqrt(yi2 * (1.0 - x * x / xi2)) + 0.5;
+			y = std_handle->sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
+			z = std_handle->sqrt(yi2 * (1.0 - x * x / xi2)) + 0.5;
 			result |= renderdrawline(renderer, xc + x, yc + z, xc + x, yc + y);
 			result |= renderdrawline(renderer, xc + x, yc - z, xc + x, yc - y);
 		}
 		for (x = xo; x >= xi; x--) {
-			y = sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
+			y = std_handle->sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
 			result |= renderdrawline(renderer, xc + x, yc - y, xc + x, yc + y);
 		}
 	}
 	else
 	{
 		for (y = -yo; y <= -yi; y++) {
-			x = sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
+			x = std_handle->sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
 			result |= renderdrawline(renderer, xc - x, yc + y, xc + x, yc + y);
 		}
 		for (y = -yi + 1; y <= yi - 1; y++) {
-			x = sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
-			z = sqrt(xi2 * (1.0 - y * y / yi2)) + 0.5;
+			x = std_handle->sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
+			z = std_handle->sqrt(xi2 * (1.0 - y * y / yi2)) + 0.5;
 			result |= renderdrawline(renderer, xc + z, yc + y, xc + x, yc + y);
 			result |= renderdrawline(renderer, xc - z, yc + y, xc - x, yc + y);
 		}
 		for (y = yo; y >= yi; y--) {
-			x = sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
+			x = std_handle->sqrt(xo2 * (1.0 - y * y / yo2)) + 0.5;
 			result |= renderdrawline(renderer, xc - x, yc + y, xc + x, yc + y);
 		}
 	}
@@ -2007,17 +2007,17 @@ int thickArcRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t rad, in
 		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	for (y = -ro; y <= -ri; y++) {
-		x = sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
+		x = std_handle->sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
 		result |= hlinecliparc(renderer, -x, x, y, xc, yc, s, f);
 	}
 	for (y = -ri + 1; y <= ri - 1; y++) {
-		x = sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
-		z = sqrt(ri2 * (1.0 - y * y / ri2)) + 0.5;
+		x = std_handle->sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
+		z = std_handle->sqrt(ri2 * (1.0 - y * y / ri2)) + 0.5;
 		result |= hlinecliparc(renderer, z, x, y, xc, yc, s, f);
 		result |= hlinecliparc(renderer, -z, -x, y, xc, yc, s, f);
 	}
 	for (y = ro; y >= ri; y--) {
-		x = sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
+		x = std_handle->sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
 		result |= hlinecliparc(renderer, -x, x, y, xc, yc, s, f);
 	}
 	return result;
@@ -2096,7 +2096,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			s = s * s;
 			x = 0.5;
 			if (s < 1.0) {
-				x = rx * sqrt(1.0 - s);
+				x = rx * std_handle->sqrt(1.0 - s);
 				if (x >= 0.5) {
 					result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					result |= renderdrawline(renderer, cx - x + 1, yi, cx + x - 1, yi);
@@ -2110,7 +2110,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				v = s - 4 * (dx - dy) * (dx - dy);
 				if (v < 0)
 					break;
-				v = (sqrt(v) - 2 * (dx + dy)) / 4;
+				v = (std_handle->sqrt(v) - 2 * (dx + dy)) / 4;
 				if (v < 0)
 					break;
 				if (v > 1.0)
@@ -2125,7 +2125,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				v = s - 4 * (dx - dy) * (dx - dy);
 				if (v < 0)
 					break;
-				v = (sqrt(v) - 2 * (dx + dy)) / 4;
+				v = (std_handle->sqrt(v) - 2 * (dx + dy)) / 4;
 				if (v < 0)
 					break;
 				if (v > 1.0)
@@ -2147,7 +2147,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			s = s * s;
 			y = 0.5;
 			if (s < 1.0) {
-				y = ry * sqrt(1.0 - s);
+				y = ry * std_handle->sqrt(1.0 - s);
 				if (y >= 0.5) {
 					result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					result |= renderdrawline(renderer, xi, cy - y + 1, xi, cy + y - 1);
@@ -2161,7 +2161,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				v = s - 4 * (dy - dx) * (dy - dx);
 				if (v < 0)
 					break;
-				v = (sqrt(v) - 2 * (dy + dx)) / 4;
+				v = (std_handle->sqrt(v) - 2 * (dy + dx)) / 4;
 				if (v < 0)
 					break;
 				if (v > 1.0)
@@ -2176,7 +2176,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 				v = s - 4 * (dy - dx) * (dy - dx);
 				if (v < 0)
 					break;
-				v = (sqrt(v) - 2 * (dy + dx)) / 4;
+				v = (std_handle->sqrt(v) - 2 * (dy + dx)) / 4;
 				if (v < 0)
 					break;
 				if (v > 1.0)
@@ -2385,11 +2385,11 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 	double *vx, *vy;
 	if ((rx <= 0) || (ry <= 0) || (start == end))
 		return -1;
-	start = fmod(start, 360.0) * 2.0 * OMG_M_PI / 360.0;
-	end = fmod(end, 360.0) * 2.0 * OMG_M_PI / 360.0;
+	start = fmod(start, 360.0) * OMG_M_PI2 / 360.0;
+	end = fmod(end, 360.0) * OMG_M_PI2 / 360.0;
 	while (start >= end)
-		end += 2.0 * OMG_M_PI;
-	nverts = (end - start) * sqrt(rx * ry) / OMG_M_PI;
+		end += OMG_M_PI2;
+	nverts = (end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI;
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 180)
@@ -2400,8 +2400,8 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 	vy += nverts + 1;
 	for (i = 0; i < nverts; i++) {
 		double angle = start + (end - start) * (double)i / (double)(nverts - 1);
-		vx[i] = cx + rx * cos(angle);
-		vy[i] = cy + ry * sin(angle);
+		vx[i] = cx + rx * std_handle->cos(angle);
+		vy[i] = cy + ry * std_handle->sin(angle);
 	}
 	vx[i] = cx;
 	vy[i] = cy;
@@ -2416,11 +2416,11 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 	double *vx, *vy;
 	if ((rx <= 0) || (ry <= 0) || (start == end) || (thick <= 0))
 		return -1;
-	start = fmod(start, 360.0) * 2.0 * OMG_M_PI / 360.0;
-	end = fmod(end, 360.0) * 2.0 * OMG_M_PI / 360.0;
+	start = fmod(start, 360.0) * OMG_M_PI2 / 360.0;
+	end = fmod(end, 360.0) * OMG_M_PI2 / 360.0;
 	while (start >= end)
-		end += 2.0 * OMG_M_PI;
-	nverts = 2 * floor((end - start) * sqrt(rx * ry) / OMG_M_PI);
+		end += OMG_M_PI2;
+	nverts = 2 * floor((end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI);
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 360)
@@ -2431,10 +2431,10 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 	vy += nverts;
 	for (i = 0; i < nverts / 2; i++) {
 		double angle = start + (end - start) * (double)i / (double)(nverts / 2 - 1);
-		vx[i] = cx + (rx + thick / 2) * cos(angle);
-		vy[i] = cy + (ry + thick / 2) * sin(angle);
-		vx[nverts - 1 - i] = cx + (rx - thick / 2) * cos(angle);
-		vy[nverts - 1 - i] = cy + (ry - thick / 2) * sin(angle);
+		vx[i] = cx + (rx + thick / 2) * std_handle->cos(angle);
+		vy[i] = cy + (ry + thick / 2) * std_handle->sin(angle);
+		vx[nverts - 1 - i] = cx + (rx - thick / 2) * std_handle->cos(angle);
+		vy[nverts - 1 - i] = cy + (ry - thick / 2) * std_handle->sin(angle);
 	}
 	result = aaFilledPolygonRGBA(renderer, vx, vy, nverts, r, g, b, a);
 	SDL2_GFX_FREE(vx);
@@ -2463,7 +2463,7 @@ int aaBezierRGBA(SDL_Renderer* renderer, double *x, double *y, int n, int s, flo
 		y2 = _evaluateBezier(y, n, t);
 		dx = x2 - x1;
 		dy = y2 - y1;
-		d = thick * 0.5L / sqrt(dx * dx + dy * dy);
+		d = thick * 0.5L / std_handle->sqrt(dx * dx + dy * dy);
 		dx *= d;
 		dy *= d;
 		vx[i] = x1 + dy;

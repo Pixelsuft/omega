@@ -267,6 +267,10 @@ int omg_std_lrint(double x) {
     return (int)omg_def_std->round(x);
 }
 
+void omg_std_qsort(void* base, size_t num, size_t size, int (*compare) (const void*, const void*)) {
+    OMG_UNUSED(base, num, size, compare); // TODO
+}
+
 OMG_Std* omg_std_get_default_handle(void) {
     return omg_def_std;
 }
@@ -350,22 +354,28 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->tan = tan;
     this->atan = atan;
     this->atan2 = atan2;
+    this->sqrt = sqrt;
     this->sinf = sinf;
     this->cosf = cosf;
     this->tanf = tanf;
     this->atanf = atanf;
     this->atan2f = atan2f;
+    this->sqrtf = sqrtf;
+    this->qsort = qsort;
 #else
     this->sin = omg_dummy_double_func;
     this->cos = omg_dummy_double_func;
     this->tan = omg_dummy_double_func;
     this->atan = omg_dummy_double_func;
     this->atan2 = omg_dummy_double2_func;
+    this->sqrt = omg_dummy_double_func;
     this->sinf = omg_dummy_float_func;
     this->cosf = omg_dummy_float_func;
     this->tanf = omg_dummy_float_func;
     this->atanf = omg_dummy_float_func;
     this->atan2f = omg_dummy_float2_func;
+    this->sqrtf = omg_dummy_float_func;
+    this->qsort = omg_std_qsort;
 #endif
 #if OMG_HAVE_LRINT
     this->lrint = lrint;

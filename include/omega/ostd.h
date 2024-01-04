@@ -299,11 +299,14 @@ typedef struct {
     double (*tan)(double x);
     double (*atan)(double x);
     double (*atan2)(double x, double y);
+    double (*sqrt)(double x);
     float (*sinf)(float x);
     float (*cosf)(float x);
     float (*tanf)(float x);
     float (*atanf)(float x);
     float (*atan2f)(float x, float y);
+    float (*sqrtf)(float x);
+    void (*qsort)(void* base, size_t num, size_t size, int (*compare) (const void*, const void*));
     unsigned int (*sleep)(unsigned int);
     void* memory_allocator;
     void* extra;
