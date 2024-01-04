@@ -77,5 +77,9 @@
 #endif
 #endif
 #else
+#if OMG_DLL_BUILD
+#define OMG_API __attribute__((visibility("default")))
+#else
 #define OMG_API OMG_C_EXPORT
+#endif
 #endif
