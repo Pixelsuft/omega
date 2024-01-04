@@ -11,6 +11,7 @@
 #define omg_base ((OMG_Omega*)base->omg)
 #define OMG_TEX_ACCESS_TO_SDL2(access) ((access) == OMG_TEXTURE_ACCESS_STREAMING) ? SDL_TEXTUREACCESS_STREAMING : (((access) == OMG_TEXTURE_ACCESS_TARGET) ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC)
 #define SDL2_TEX_ACCESS_TO_OMG(access) ((access) == SDL_TEXTUREACCESS_STREAMING) ? OMG_TEXTURE_ACCESS_STREAMING : (((access) == SDL_TEXTUREACCESS_TARGET) ? OMG_TEXTURE_ACCESS_TARGET : OMG_TEXTURE_ACCESS_STATIC)
+#define MAKE_SDL2_RECT(rect) { rect->x + base->offset.x, rect->y + base->offset.y, rect->w, rect->h }
 #define APPLY_SDL2_DRAW(res, col) do { \
     uint8_t _a_color = (uint8_t)(col->a * (omg_color_t)255 / OMG_MAX_COLOR); \
     if (this->sdl2->SDL_SetRenderDrawColor( \
@@ -153,7 +154,7 @@ bool omg_renderer_sdl2_draw_point(OMG_RendererSdl2* this, const OMG_FPoint* pos,
         col = &base->color;
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
-    if (this->sdl2->SDL_RenderDrawPointF(this->ren, pos->x, pos->y) < 0) {
+    if (this->sdl2->SDL_RenderDrawPointF(this->ren, pos->x + base->offset.x, pos->y + base->offset.y) < 0) {
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw point (", this->sdl2->SDL_GetError(), ")");
     }
@@ -165,7 +166,8 @@ bool omg_renderer_sdl2_draw_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, 
         col = &base->color;
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
-    if (this->sdl2->SDL_RenderDrawRectF(this->ren, (const SDL_FRect*)rect) < 0) {
+    SDL_FRect sdl_rect = MAKE_SDL2_RECT(rect);
+    if (this->sdl2->SDL_RenderDrawRectF(this->ren, &sdl_rect) < 0) {
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw rect (", this->sdl2->SDL_GetError(), ")");
     }
@@ -177,7 +179,8 @@ bool omg_renderer_sdl2_fill_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, 
         col = &base->color;
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
-    if (this->sdl2->SDL_RenderFillRectF(this->ren, (const SDL_FRect*)rect) < 0) {
+    SDL_FRect sdl_rect = MAKE_SDL2_RECT(rect);
+    if (this->sdl2->SDL_RenderFillRectF(this->ren, &sdl_rect) < 0) {
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to fill rect (", this->sdl2->SDL_GetError(), ")");
     }
@@ -189,7 +192,7 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
         col = &base->color;
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
-    if (this->sdl2->SDL_RenderDrawLineF(this->ren, start_end->x1, start_end->y1, start_end->x2, start_end->y2) < 0) {
+    if (this->sdl2->SDL_RenderDrawLineF(this->ren, start_end->x1 + base->offset.x, start_end->y1 + base->offset.y, start_end->x2 + base->offset.x, start_end->y2 + base->offset.y) < 0) {
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw line (", this->sdl2->SDL_GetError(), ")");
     }
