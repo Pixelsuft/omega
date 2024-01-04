@@ -648,7 +648,7 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 	return (result);
 }
 
-int aacircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+int aaCircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	return aaEllipseRGBA(renderer, x, y, rad, rad, r, g, b, a);
 }
 

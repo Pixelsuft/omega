@@ -63,7 +63,7 @@ SDL2_GFX_STD_PREFIX int thickLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_
 SDL2_GFX_STD_PREFIX int drawCircle(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad);
 SDL2_GFX_STD_PREFIX int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t start, int16_t end,
 								uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-SDL2_GFX_STD_PREFIX int aacircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y,
+SDL2_GFX_STD_PREFIX int aaCircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y,
 									 int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int filledCircle(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad);
 SDL2_GFX_STD_PREFIX int drawEllipse(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry);
