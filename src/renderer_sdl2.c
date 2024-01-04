@@ -221,11 +221,12 @@ bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
-    drawCircle(
+    drawEllipse(
         this->ren,
-        (int16_t)(pos->x * base->scale.x),
-        (int16_t)(pos->y * base->scale.y),
-        (int16_t)rad
+        (int16_t)((pos->x + base->offset.x) * base->scale.x),
+        (int16_t)((pos->y + base->offset.y) * base->scale.y),
+        (int16_t)(rad * base->scale.x),
+        (int16_t)(rad * base->scale.y)
     );
     SDL2_SCALE_ON(res);
     return res;
@@ -235,11 +236,12 @@ bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
-    filledCircle(
+    filledEllipse(
         this->ren,
-        (int16_t)(pos->x * base->scale.x),
-        (int16_t)(pos->y * base->scale.y),
-        (int16_t)rad
+        (int16_t)((pos->x + base->offset.x) * base->scale.x),
+        (int16_t)((pos->y + base->offset.y) * base->scale.y),
+        (int16_t)(rad * base->scale.x),
+        (int16_t)(rad * base->scale.y)
     );
     SDL2_SCALE_ON(res);
     return res;
