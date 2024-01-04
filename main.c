@@ -46,8 +46,9 @@ void app_on_state_changing(OMG_EventStateChanging* event) {
 
 void app_on_mouse_move(OMG_EventMouseMove* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    OMG_UNUSED(this);
-    // OMG_INFO(this->omg, "Mouse Move [", &event->pos, "]");
+    if (event->state & OMG_MBUTTON_LMASK) {
+        printf("1\n");
+    }
 }
 
 void app_on_mouse_button(OMG_EventMouseButton* event) {
