@@ -35,7 +35,12 @@
 static OMG_Kernel32* k32_cache = NULL;
 
 ULONGLONG omg_win_get_tick_count64_emu(void) {
-    return (uint64_t)k32_cache->GetTickCount();
+    uint64_t res = (uint64_t)k32_cache->GetTickCount();
+    while (res < omg_sdl2_cache->_tick64_emu) {
+        res += (uint64_t)sizeof(uint32_t);
+    }
+    k32_cache->_tick64_emu = res;
+    return res;
 }
 
 bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
@@ -74,6 +79,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
     OMG_END_POINTER_CAST();
 #endif
+    this->_tick64_emu = 0;
     k32_cache = this;
     return false;
 }

@@ -546,6 +546,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceCounter)(OMG_WIN_LARGE_INTEGER*);
     DWORD OMG_WIN_STD_PREFIX (*GetTickCount)(void);
     ULONGLONG OMG_WIN_STD_PREFIX (*GetTickCount64)(void);
+    uint64_t _tick64_emu;
 } OMG_Kernel32;
 
 typedef struct {
