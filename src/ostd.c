@@ -312,7 +312,6 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->floorf = floorf;
     this->ceilf = ceilf;
     this->roundf = roundf;
-    this->lrint = lrint;
 #else
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
@@ -327,6 +326,10 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->floorf = omg_std_floorf;
     this->ceilf = omg_std_ceilf;
     this->roundf = omg_std_roundf;
+#endif
+#if OMG_HAVE_LRINT
+    this->lrint = lrint;
+#else
     this->lrint = omg_std_lrint;
 #endif
 #if OMG_HAVE_WCSLEN

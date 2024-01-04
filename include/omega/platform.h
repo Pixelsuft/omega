@@ -63,6 +63,7 @@
 #define OMG_HAVE__ULTOA 0
 #define OMG_HAVE__I64TOA 0
 #define OMG_HAVE__UI64TOA 0
+#define OMG_HAVE_LRINT 1
 #endif
 
 #if OMG_IS_WIN

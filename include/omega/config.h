@@ -57,6 +57,10 @@
 #define OMG_RAYLIB_DYNAMIC 1
 #endif
 
+#ifndef OMG_SUPPORT_LIBMATH
+#define OMG_SUPPORT_LIBMATH 1
+#endif
+
 #ifndef OMG_EXPORT_SHIT
 // Which should be default?
 #define OMG_EXPORT_SHIT OMG_DEBUG && 0
