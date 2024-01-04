@@ -77,6 +77,7 @@ bool omg_renderer_raylib_set_target(OMG_RendererRaylib* this, OMG_TextureRaylib*
         this->raylib->EndTextureMode();
     else
         this->raylib->BeginTextureMode(tex->target);
+    omg_renderer_raylib_set_scale(this, NULL, NULL); // WTF
     return false;
 }
 
@@ -123,6 +124,7 @@ bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint*
 
 bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
     Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
+    // TODO: fix scale
     this->raylib->DrawCircleV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
@@ -139,6 +141,8 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, cons
         return NULL;
     }
     tex->tex = &tex->target.texture;
+    tex->is_target = true;
+    tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
     return tex;
 }
 
@@ -151,10 +155,26 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
         _OMG_LOG_WARN(omg_base, "Attempted to free Raylib null texture");
         return true;
     }
-    // TODO: Difference between target tex and normal tex
-    this->raylib->UnloadRenderTexture(tex->target);
+    if (tex->is_target)
+        this->raylib->UnloadRenderTexture(tex->target);
+    else
+        this->raylib->UnloadTexture(*tex->tex);
     tex->tex = NULL;
     OMG_FREE(omg_base->mem, tex);
+    return false;
+}
+
+bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos) {
+    Vector2 vec;
+    if (OMG_ISNULL(pos)) {
+        vec.x = vec.y = 0.0f;
+    }
+    else {
+        vec.x = pos->x * this->ss.x;
+        vec.y = pos->y * this->ss.y;
+    }
+    // TODO: fix scale
+    this->raylib->DrawTextureV(*tex->tex, vec, tex->tint);
     return false;
 }
 
@@ -176,6 +196,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->fill_circle = omg_renderer_raylib_fill_circle;
     base->tex_create = omg_renderer_raylib_tex_create;
     base->tex_destroy = omg_renderer_raylib_tex_destroy;
+    base->copy = omg_renderer_raylib_copy;
     OMG_END_POINTER_CAST();
     this->ss.x = this->ss.y = 1.0f;
     base->type = OMG_REN_TYPE_RAYLIB;

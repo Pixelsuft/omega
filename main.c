@@ -129,8 +129,8 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
     OMG_FPoint pos;
-    for (pos.x = 100.0f; pos.x < 150.0f; pos.x++) {
-        for (pos.y = 100.0f; pos.y < 150.0f; pos.y++) {
+    for (pos.x = 100.0f; pos.x < 150.0f; pos.x += 2.0f) {
+        for (pos.y = 100.0f; pos.y < 150.0f; pos.y += 2.0f) {
             this->ren->draw_point(this->ren, &pos, &OMG_COLOR_MAKE_RGB(0, 255, 0));
         }
     }
@@ -161,11 +161,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
-#if OMG_SUPPORT_RAYLIB
-    this->omg = (OMG_Omega*)omg_raylib_create(data);
-#endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;

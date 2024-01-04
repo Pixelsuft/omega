@@ -36,5 +36,6 @@ OMG_API bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG
 OMG_API bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 OMG_API OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex);
+OMG_API bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos);
 #endif
 #endif
