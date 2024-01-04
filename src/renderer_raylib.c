@@ -40,15 +40,25 @@ int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
 bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
     omg_renderer_set_scale(base, offset, scale);
     if (IS_DEFAULT_SCALE()) {
+        this->ss.x = this->ss.y = 1.0f;
         this->raylib->EndMode2D();
     }
     else {
         Camera2D cam;
-        cam.offset.x = base->offset.x;
-        cam.offset.y = base->offset.y;
-        // cam.offset.x = cam.offset.y = 0.0f;
-        cam.zoom = base->a_scale;
-        // cam.zoom = 1.0f;
+        if (base->soft_scale) {
+            cam.offset.x = base->offset.x * base->scale.x;
+            cam.offset.y = base->offset.y * base->scale.x;
+            cam.zoom = 1.0f;
+            this->ss.x = base->scale.x;
+            this->ss.y = base->scale.y;
+        }
+        else {
+            cam.offset.x = base->offset.x * base->scale.x;
+            cam.offset.y = base->offset.y * base->scale.y;
+            cam.zoom = base->a_scale;
+            this->ss.x = this->ss.y = 1.0f;
+        }
+        _OMG_LOG_INFO(omg_base, (OMG_FPoint*)&cam.offset, " ", cam.zoom);
         cam.rotation = 0.0f;
         this->raylib->BeginMode2D(cam);
     }
@@ -75,28 +85,28 @@ bool omg_renderer_raylib_flip(OMG_RendererRaylib* this) {
     return false;
 }
 
-bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
-    Vector2 vec = { .x = pos->x, .y = pos->y };
-    this->raylib->DrawPixelV(vec, _OMG_RAYLIB_OMG_COLOR(col));
-    return false;
-}
-
 bool omg_renderer_raylib_draw_line(OMG_RendererRaylib* this, const OMG_FRect* start_end, const OMG_Color* col) {
-    Vector2 vec1 = { .x = start_end->x1, .y = start_end->y1 };
-    Vector2 vec2 = { .x = start_end->x2, .y = start_end->y2 };
+    Vector2 vec1 = { .x = start_end->x1 * this->ss.x, .y = start_end->y1 * this->ss.y };
+    Vector2 vec2 = { .x = start_end->x2 * this->ss.x, .y = start_end->y2 * this->ss.y };
     this->raylib->DrawLineV(vec1, vec2, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    Rectangle rec = { .x = rect->x, .y = rect->y, .width = rect->w, .height = rect->h };
+    Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
     this->raylib->DrawRectangleLinesEx(rec, 1.0f, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    Rectangle rec = { .x = rect->x, .y = rect->y, .width = rect->w, .height = rect->h };
+    Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
     this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
+    return false;
+}
+
+bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
+    Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
+    this->raylib->DrawPixelV(vec, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
@@ -148,6 +158,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->tex_create = omg_renderer_raylib_tex_create;
     base->tex_destroy = omg_renderer_raylib_tex_destroy;
     OMG_END_POINTER_CAST();
+    this->ss.x = this->ss.y = 1.0f;
     base->type = OMG_REN_TYPE_RAYLIB;
     base->inited = true;
     _OMG_LOG_INFO(omg_base, "Raylib renderer created successfuly with opengl driver");
