@@ -32,6 +32,22 @@
         _OMG_SDL2_DRAW_BLEND_WARN(); \
     } \
 } while (0)
+#define SDL2_SCALE_OFF(res) do { \
+    if ((base->scale.x != 1.0f) || (base->scale.y != 1.0f)) { \
+        if (this->sdl2->SDL_RenderSetScale(this->ren, 1.0f, 1.0f) < 0) { \
+            res = true; \
+            _OMG_SDL2_SCALE_WARN(); \
+        } \
+    } \
+} while (0)
+#define SDL2_SCALE_ON(res) do { \
+    if ((base->scale.x != 1.0f) || (base->scale.y != 1.0f)) { \
+        if (this->sdl2->SDL_RenderSetScale(this->ren, base->scale.x, base->scale.y) < 0) { \
+            res = true; \
+            _OMG_SDL2_SCALE_WARN(); \
+        } \
+    } \
+} while (0)
 
 void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
     if (!omg_base->support_highdpi)
@@ -143,8 +159,10 @@ bool omg_renderer_sdl2_set_target(OMG_RendererSdl2* this, OMG_TextureSdl2* tex) 
 bool omg_renderer_sdl2_set_scale(OMG_RendererSdl2* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
     omg_renderer_set_scale(base, offset, scale);
     if (OMG_ISNOTNULL(scale)) {
-        if (this->sdl2->SDL_RenderSetScale(this->ren, scale->x, scale->y) < 0)
-            _OMG_LOG_WARN(omg_base, "Failed to set render scale (", this->sdl2->SDL_GetError(), ")");
+        if (this->sdl2->SDL_RenderSetScale(this->ren, scale->x, scale->y) < 0) {
+            _OMG_SDL2_SCALE_WARN();
+            return true;
+        }
     }
     return false;
 }
@@ -196,6 +214,36 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw line (", this->sdl2->SDL_GetError(), ")");
     }
+    return res;
+}
+
+bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    SDL2_SCALE_OFF(res);
+    circleRGBA(
+        this->ren,
+        (int16_t)(pos->x * base->scale.x),
+        (int16_t)(pos->y * base->scale.y),
+        (int16_t)rad,
+        0, 0, 255, 128
+    );
+    SDL2_SCALE_ON(res);
+    return res;
+}
+
+bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    SDL2_SCALE_OFF(res);
+    filledCircleRGBA(
+        this->ren,
+        (int16_t)(pos->x * base->scale.x),
+        (int16_t)(pos->y * base->scale.y),
+        (int16_t)rad,
+        0, 0, 255, 128
+    );
+    SDL2_SCALE_ON(res);
     return res;
 }
 
@@ -266,6 +314,8 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->draw_line = omg_renderer_sdl2_draw_line;
     base->draw_rect = omg_renderer_sdl2_draw_rect;
     base->fill_rect = omg_renderer_sdl2_fill_rect;
+    base->draw_circle = omg_renderer_sdl2_draw_circle;
+    base->fill_circle = omg_renderer_sdl2_fill_circle;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     OMG_END_POINTER_CAST();
