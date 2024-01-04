@@ -161,6 +161,7 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, O
     tex->tex = &tex->target.texture;
     if (!this->raylib->IsTextureReady(*tex->tex)) {
         OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_ERROR(omg_base, "Failed to create Raylib texture from surface");
         return NULL;
     }
     tex->is_target = false;
@@ -183,6 +184,7 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, cons
     tex->target = this->raylib->LoadRenderTexture((int)size->w, (int)size->h);
     if (!this->raylib->IsRenderTextureReady(tex->target)) {
         OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_ERROR(omg_base, "Failed to create Raylib target texture");
         return NULL;
     }
     tex->tex = &tex->target.texture;
