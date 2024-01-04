@@ -112,6 +112,12 @@ void app_on_paint(OMG_EventPaint* event) {
     //     return;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
+    OMG_FPoint pos;
+    for (pos.x = 100.0f; pos.x < 150.0f; pos.x++) {
+        for (pos.y = 100.0f; pos.y < 150.0f; pos.y++) {
+            this->ren->draw_point(this->ren, &pos, &OMG_COLOR_MAKE_RGBA(255, 0, 0, 128));
+        }
+    }
     this->ren->flip(this->ren);
 }
 

@@ -128,6 +128,35 @@ bool omg_renderer_sdl2_set_scale(OMG_RendererSdl2* this, const OMG_FPoint* offse
     return false;
 }
 
+bool omg_renderer_sdl2_draw_point(OMG_RendererSdl2* this, const OMG_FPoint* pos, const OMG_Color* col) {
+    if (OMG_ISNULL(col))
+        col = &base->color;
+    bool res = false;
+    uint8_t _a_color = (uint8_t)(col->a * (omg_color_t)255 / OMG_MAX_COLOR);
+    if (this->sdl2->SDL_SetRenderDrawColor(
+        this->ren,
+        (uint8_t)(col->r * (omg_color_t)255 / OMG_MAX_COLOR),
+        (uint8_t)(col->g * (omg_color_t)255 / OMG_MAX_COLOR), 
+        (uint8_t)(col->b * (omg_color_t)255 / OMG_MAX_COLOR),
+        _a_color
+    ) < 0) {
+        res = true;
+        _OMG_SDL2_DRAW_COLOR_WARN();
+    }
+    if (
+        base->auto_blend &&
+        (this->sdl2->SDL_SetRenderDrawBlendMode(this->ren, (_a_color == 255) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND) < 0)
+    ) {
+        res = true;
+        _OMG_SDL2_DRAW_BLEND_WARN();
+    }
+    if (this->sdl2->SDL_RenderDrawPointF(this->ren, pos->x, pos->y) < 0) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to draw point (", this->sdl2->SDL_GetError(), ")");
+    }
+    return res;
+}
+
 bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
     if (OMG_ISNOTNULL(base->target))
         omg_renderer_sdl2_set_target(this, NULL);
@@ -191,6 +220,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->flip = omg_renderer_sdl2_flip;
     base->set_scale = omg_renderer_sdl2_set_scale;
     base->set_target = omg_renderer_sdl2_set_target;
+    base->draw_point = omg_renderer_sdl2_draw_point;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     OMG_END_POINTER_CAST();
