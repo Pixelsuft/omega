@@ -61,10 +61,24 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
 
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    if (event->code == OMG_SCANCODE_Q) {
-        // Quit when Q is pressed
-        this->omg->auto_loop_stop(this->omg);
-        return;
+    if (event->is_pressed) {
+        if (event->code == OMG_SCANCODE_Q) {
+            // Quit when Q is pressed
+            this->omg->auto_loop_stop(this->omg);
+            return;
+        }
+        else if (event->code == OMG_SCANCODE_UP) {
+            this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x + 0.25f, this->ren->scale.y + 0.25f));
+        }
+        else if (event->code == OMG_SCANCODE_DOWN) {
+            this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x - 0.25f, this->ren->scale.y - 0.25f));
+        }
+        else if (event->code == OMG_SCANCODE_RIGHT) {
+            this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(this->ren->offset.x + 10.0f, this->ren->offset.y + 10.0f), NULL);
+        }
+        else if (event->code == OMG_SCANCODE_LEFT) {
+            this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(this->ren->offset.x - 10.0f, this->ren->offset.y - 10.0f), NULL);
+        }
     }
     // TODO: print bool
     if (!event->is_repeated)
