@@ -37,7 +37,9 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #elif OMG_IS_UNIX && OMG_HAS_STD
     OMG_UNUSED(adv_fn);
     omg_string_ensure_null((OMG_String*)fn);
-    return dlopen(fn->ptr, RTLD_GLOBAL | RTLD_NOW);
+    void* res = dlopen(fn->ptr, RTLD_GLOBAL | RTLD_NOW);
+    // printf("%s %s %p\n", fn->ptr, dlerror(), res);
+    return res;
 #else
     OMG_UNUSED(fn, adv_fn);
     return NULL;
