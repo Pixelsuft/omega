@@ -514,19 +514,19 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 			switch (oct) {
 				case 0:
 				case 3:
-					temp = sin(dstart * M_PI / 180.);
+					temp = sin(dstart * OMG_M_PI / 180.);
 					break;
 				case 1:
 				case 6:
-					temp = cos(dstart * M_PI / 180.);
+					temp = cos(dstart * OMG_M_PI / 180.);
 					break;
 				case 2:
 				case 5:
-					temp = -cos(dstart * M_PI / 180.);
+					temp = -cos(dstart * OMG_M_PI / 180.);
 					break;
 				case 4:
 				case 7:
-					temp = -sin(dstart * M_PI / 180.);
+					temp = -sin(dstart * OMG_M_PI / 180.);
 					break;
 			}
 			temp *= rad;
@@ -543,19 +543,19 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 			{
 			case 0:
 			case 3:
-				temp = sin(dend * M_PI / 180);
+				temp = sin(dend * OMG_M_PI / 180);
 				break;
 			case 1:
 			case 6:
-				temp = cos(dend * M_PI / 180);
+				temp = cos(dend * OMG_M_PI / 180);
 				break;
 			case 2:
 			case 5:
-				temp = -cos(dend * M_PI / 180);
+				temp = -cos(dend * OMG_M_PI / 180);
 				break;
 			case 4:
 			case 7:
-				temp = -sin(dend * M_PI / 180);
+				temp = -sin(dend * OMG_M_PI / 180);
 				break;
 			}
 			temp *= rad;
@@ -1026,10 +1026,10 @@ int _pieRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t 
 	}
 	dr = (double)rad;
 	deltaAngle = 3.0 / dr;
-	start_angle = (double)start * (2.0 * M_PI / 360.0);
-	end_angle = (double)end * (2.0 * M_PI / 360.0);
+	start_angle = (double)start * (2.0 * OMG_M_PI / 360.0);
+	end_angle = (double)end * (2.0 * OMG_M_PI / 360.0);
 	if (start > end) {
-		end_angle += (2.0 * M_PI);
+		end_angle += (2.0 * OMG_M_PI);
 	}
 	numpoints = 2;
 	angle = start_angle;
@@ -1993,8 +1993,8 @@ int thickArcRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t rad, in
 		end += 360;
 	while (end >= 180)
 		end -= 360;
-	s = M_PI * (double)start / 180.0;
-	f = M_PI * (double)end / 180.0;
+	s = OMG_M_PI * (double)start / 180.0;
+	f = OMG_M_PI * (double)end / 180.0;
 	if (start == end)
 		return 0;
 	ri = rad - thick / 2;
@@ -2385,11 +2385,11 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 	double *vx, *vy;
 	if ((rx <= 0) || (ry <= 0) || (start == end))
 		return -1;
-	start = fmod(start, 360.0) * 2.0 * M_PI / 360.0;
-	end = fmod(end, 360.0) * 2.0 * M_PI / 360.0;
+	start = fmod(start, 360.0) * 2.0 * OMG_M_PI / 360.0;
+	end = fmod(end, 360.0) * 2.0 * OMG_M_PI / 360.0;
 	while (start >= end)
-		end += 2.0 * M_PI;
-	nverts = (end - start) * sqrt(rx * ry) / M_PI;
+		end += 2.0 * OMG_M_PI;
+	nverts = (end - start) * sqrt(rx * ry) / OMG_M_PI;
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 180)
@@ -2416,11 +2416,11 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 	double *vx, *vy;
 	if ((rx <= 0) || (ry <= 0) || (start == end) || (thick <= 0))
 		return -1;
-	start = fmod(start, 360.0) * 2.0 * M_PI / 360.0;
-	end = fmod(end, 360.0) * 2.0 * M_PI / 360.0;
+	start = fmod(start, 360.0) * 2.0 * OMG_M_PI / 360.0;
+	end = fmod(end, 360.0) * 2.0 * OMG_M_PI / 360.0;
 	while (start >= end)
-		end += 2.0 * M_PI;
-	nverts = 2 * floor((end - start) * sqrt(rx * ry) / M_PI);
+		end += 2.0 * OMG_M_PI;
+	nverts = 2 * floor((end - start) * sqrt(rx * ry) / OMG_M_PI);
 	if (nverts < 2)
 		nverts = 2;
 	if (nverts > 360)

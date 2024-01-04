@@ -13,6 +13,15 @@
 #define OMG_ISNULL(ptr) ((ptr) == NULL)
 #define OMG_ISNOTNULL(ptr) ((ptr) != NULL)
 
+#ifdef M_PI
+#define OMG_M_PI M_PI
+#else
+#define OMG_M_PI 3.1415926535897932384626433832795
+#endif
+#define OMG_M_PI2 (OMG_M_PI * 2.0)
+#define OMG_M_PIF ((float)OMG_M_PI)
+#define OMG_M_PIF2 ((float)OMG_M_PI2)
+
 #define OMG_STRING_NONE 0
 #define OMG_STRING_STATIC 1
 #define OMG_STRING_BUFFER 2
