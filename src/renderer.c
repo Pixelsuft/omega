@@ -67,6 +67,16 @@ bool omg_renderer_set_target(OMG_Renderer* this, OMG_Texture* tex) {
     return false;
 }
 
+bool omg_renderer_draw_point(OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col) {
+    OMG_UNUSED(this, pos, col);
+    return false;
+}
+
+bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col) {
+    OMG_UNUSED(this, rect, col);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -89,6 +99,9 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->flip = omg_renderer_flip;
     this->set_scale = omg_renderer_set_scale;
     this->set_target = omg_renderer_set_target;
+    this->draw_point = omg_renderer_draw_point;
+    this->draw_rect = omg_renderer_draw_fill_rect;
+    this->fill_rect = omg_renderer_draw_fill_rect;
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
     return false;

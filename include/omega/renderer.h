@@ -31,6 +31,9 @@ typedef struct OMG_Renderer {
     bool (*flip)(struct OMG_Renderer* this);
     bool (*set_scale)(struct OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
     bool (*set_target)(struct OMG_Renderer* this, OMG_Texture* tex);
+    bool (*draw_point)(struct OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
+    bool (*draw_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
+    bool (*fill_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     OMG_Texture* (*tex_create)(struct OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
     void* omg;
@@ -59,6 +62,8 @@ OMG_API void omg_on_update_window_size(OMG_Renderer* this);
 OMG_API bool omg_renderer_begin(OMG_Renderer* this);
 OMG_API bool omg_renderer_flip(OMG_Renderer* this);
 OMG_API bool omg_renderer_set_target(OMG_Renderer* this, OMG_Texture* tex);
+OMG_API bool omg_renderer_draw_point(OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
+OMG_API bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);
 #endif
