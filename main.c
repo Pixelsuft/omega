@@ -71,21 +71,16 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->omg->auto_loop_stop(this->omg);
             return;
         }
-        else if (event->code == OMG_SCANCODE_R) {
+        else if (event->code == OMG_SCANCODE_R)
             this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0.0f, 0.0f), &OMG_FPOINT_MAKE(1.0f, 1.0f));
-        }
-        else if (event->code == OMG_SCANCODE_UP) {
+        else if (event->code == OMG_SCANCODE_UP)
             this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x, this->ren->scale.y + 0.25f));
-        }
-        else if (event->code == OMG_SCANCODE_DOWN) {
+        else if (event->code == OMG_SCANCODE_DOWN)
             this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x, this->ren->scale.y - 0.25f));
-        }
-        else if (event->code == OMG_SCANCODE_RIGHT) {
+        else if (event->code == OMG_SCANCODE_RIGHT)
             this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x + 0.25f, this->ren->scale.y));
-        }
-        else if (event->code == OMG_SCANCODE_LEFT) {
+        else if (event->code == OMG_SCANCODE_LEFT)
             this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x - 0.25f, this->ren->scale.y));
-        }
     }
     // TODO: print bool
     if (!event->is_repeated)
