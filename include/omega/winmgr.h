@@ -12,6 +12,7 @@ typedef struct OMG_Winmgr {
     bool (*window_free)(struct OMG_Winmgr* this, OMG_Window* window);
     OMG_Surface* (*surf_create)(struct OMG_Winmgr* this, const OMG_FPoint* size, bool has_alpha);
     bool (*surf_destroy)(struct OMG_Winmgr* this, OMG_Surface* surf);
+    int surf_depth;
     bool was_allocated;
 } OMG_Winmgr;
 

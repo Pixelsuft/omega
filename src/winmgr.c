@@ -44,6 +44,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     if (OMG_ISNULL(this->cache))
         return true;
     omg_base->std->memset(this->cache, 0, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
+    this->surf_depth = 32;
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;
     this->window_free = omg_winmgr_window_free;

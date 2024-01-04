@@ -1222,6 +1222,7 @@ typedef struct {
     SDL_Surface* OMG_SDL2_STD_PREFIX (*SDL_CreateRGBSurfaceWithFormatFrom)(void*, int, int, int, int, uint32_t);
     SDL_Surface* OMG_SDL2_STD_PREFIX (*SDL_CreateRGBSurfaceFrom)(void*, int, int, int, int, uint32_t, uint32_t, uint32_t, uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_FreeSurface)(SDL_Surface*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetSurfaceBlendMode)(SDL_Surface*, SDL_BlendMode);
     SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTexture)(SDL_Renderer*, uint32_t, int, int, int);
     SDL_Texture* OMG_SDL2_STD_PREFIX (*SDL_CreateTextureFromSurface)(SDL_Renderer*, SDL_Surface*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyTexture)(SDL_Texture*);
@@ -1237,7 +1238,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetClipRect)(SDL_Renderer*, const SDL_Rect*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawBlendMode)(SDL_Renderer*, SDL_BlendMode);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetScale)(SDL_Renderer*, float, float);
-    int OMG_SDL2_STD_PREFIX (*SDL_RenderSetVSync)(SDL_Renderer* renderer, int vsync);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderSetVSync)(SDL_Renderer*, int);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderClear)(SDL_Renderer*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderCopy)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_Rect*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderCopyF)(SDL_Renderer*, SDL_Texture*, const SDL_Rect*, const SDL_FRect*);
