@@ -53,8 +53,8 @@ int pixel(SDL_Renderer* renderer, int16_t x, int16_t y) {
 
 int pixelRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result = 0;
-	if (a != 255)
-		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	// if (a != 255)
+	//     result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	result |= sdl2_handle->SDL_RenderDrawPoint(renderer, x, y);
 	return result;
@@ -649,7 +649,7 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 }
 
 int aacircleRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-	return aaellipseRGBA(renderer, x, y, rad, rad, r, g, b, a);
+	return aaEllipseRGBA(renderer, x, y, rad, rad, r, g, b, a);
 }
 
 int filledCircle(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad) {
@@ -767,7 +767,7 @@ int drawEllipse(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_
 	return (result);
 }
 
-int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+int aaEllipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_t ry, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result;
 	int i;
 	int a2, b2, ds, dt, dxt, t, s, d;
@@ -806,8 +806,6 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 	xp = x;
 	yp = y - ry;
 	result = 0;
-	if (a != 255)
-		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= pixelRGBA(renderer, xp, yp, r, g, b, a);
 	result |= pixelRGBA(renderer, xc2 - xp, yp, r, g, b, a);
 	result |= pixelRGBA(renderer, xp, yc2 - yp, r, g, b, a);
@@ -2078,7 +2076,6 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 	double s, v, x, y, dx, dy;
 	if ((rx <= 0.0) || (ry <= 0.0))
 		return -1;
-	result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	if (rx >= ry) {
 		n = ry + 1;
 		for (yi = cy - n - 1; yi <= cy + n + 1; yi++) {

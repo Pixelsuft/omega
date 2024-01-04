@@ -12,13 +12,16 @@
 #define OMG_TEX_ACCESS_TO_SDL2(access) ((access) == OMG_TEXTURE_ACCESS_STREAMING) ? SDL_TEXTUREACCESS_STREAMING : (((access) == OMG_TEXTURE_ACCESS_TARGET) ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC)
 #define SDL2_TEX_ACCESS_TO_OMG(access) ((access) == SDL_TEXTUREACCESS_STREAMING) ? OMG_TEXTURE_ACCESS_STREAMING : (((access) == SDL_TEXTUREACCESS_TARGET) ? OMG_TEXTURE_ACCESS_TARGET : OMG_TEXTURE_ACCESS_STATIC)
 #define MAKE_SDL2_RECT(rect) { rect->x + base->offset.x, rect->y + base->offset.y, rect->w, rect->h }
-#define APPLY_SDL2_DRAW(res, col) do { \
+#define APPLY_SDL2_DRAW(res, col) \
+    uint8_t _r_color = (uint8_t)(col->r * (omg_color_t)255 / OMG_MAX_COLOR); \
+    uint8_t _g_color = (uint8_t)(col->g * (omg_color_t)255 / OMG_MAX_COLOR); \
+    uint8_t _b_color = (uint8_t)(col->b * (omg_color_t)255 / OMG_MAX_COLOR); \
     uint8_t _a_color = (uint8_t)(col->a * (omg_color_t)255 / OMG_MAX_COLOR); \
     if (this->sdl2->SDL_SetRenderDrawColor( \
         this->ren, \
-        (uint8_t)(col->r * (omg_color_t)255 / OMG_MAX_COLOR), \
-        (uint8_t)(col->g * (omg_color_t)255 / OMG_MAX_COLOR), \
-        (uint8_t)(col->b * (omg_color_t)255 / OMG_MAX_COLOR), \
+        _r_color, \
+        _g_color, \
+        _b_color, \
         _a_color \
     ) < 0) { \
         res = true; \
@@ -26,12 +29,11 @@
     } \
     if ( \
         base->auto_blend && \
-        (this->sdl2->SDL_SetRenderDrawBlendMode(this->ren, (_a_color == 255) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND) < 0) \
+        (this->sdl2->SDL_SetRenderDrawBlendMode(this->ren, ((_a_color == 255) && !base->aa) ? SDL_BLENDMODE_NONE : SDL_BLENDMODE_BLEND) < 0) \
     ) { \
         res = true; \
         _OMG_SDL2_DRAW_BLEND_WARN(); \
-    } \
-} while (0)
+    }
 #define SDL2_SCALE_OFF(res) do { \
     if ((base->scale.x != 1.0f) || (base->scale.y != 1.0f)) { \
         if (this->sdl2->SDL_RenderSetScale(this->ren, 1.0f, 1.0f) < 0) { \
@@ -221,13 +223,25 @@ bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
-    drawEllipse(
-        this->ren,
-        (int16_t)((pos->x + base->offset.x) * base->scale.x),
-        (int16_t)((pos->y + base->offset.y) * base->scale.y),
-        (int16_t)(rad * base->scale.x),
-        (int16_t)(rad * base->scale.y)
-    );
+    if (base->aa) {
+        aaEllipseRGBA(
+            this->ren,
+            (int16_t)((pos->x + base->offset.x) * base->scale.x),
+            (int16_t)((pos->y + base->offset.y) * base->scale.y),
+            (int16_t)(rad * base->scale.x),
+            (int16_t)(rad * base->scale.y),
+            _r_color, _g_color, _b_color, _a_color
+        );
+    }
+    else {
+        drawEllipse(
+            this->ren,
+            (int16_t)((pos->x + base->offset.x) * base->scale.x),
+            (int16_t)((pos->y + base->offset.y) * base->scale.y),
+            (int16_t)(rad * base->scale.x),
+            (int16_t)(rad * base->scale.y)
+        );
+    }
     SDL2_SCALE_ON(res);
     return res;
 }
@@ -236,13 +250,25 @@ bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
-    filledEllipse(
-        this->ren,
-        (int16_t)((pos->x + base->offset.x) * base->scale.x),
-        (int16_t)((pos->y + base->offset.y) * base->scale.y),
-        (int16_t)(rad * base->scale.x),
-        (int16_t)(rad * base->scale.y)
-    );
+    if (base->aa) {
+        aaFilledEllipseRGBA(
+            this->ren,
+            (int16_t)((pos->x + base->offset.x) * base->scale.x),
+            (int16_t)((pos->y + base->offset.y) * base->scale.y),
+            (int16_t)(rad * base->scale.x),
+            (int16_t)(rad * base->scale.y),
+            _r_color, _g_color, _b_color, _a_color
+        );
+    }
+    else {
+        filledEllipse(
+            this->ren,
+            (int16_t)((pos->x + base->offset.x) * base->scale.x),
+            (int16_t)((pos->y + base->offset.y) * base->scale.y),
+            (int16_t)(rad * base->scale.x),
+            (int16_t)(rad * base->scale.y)
+        );
+    }
     SDL2_SCALE_ON(res);
     return res;
 }
