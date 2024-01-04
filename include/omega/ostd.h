@@ -37,6 +37,10 @@
 #define OMG_FPOINT_MAKE(px, py) ((OMG_FPoint){ .w = (float)(px), .h = (float)(py) })
 #define OMG_DPOINT_MAKE(px, py) ((OMG_DPoint){ .w = (double)(px), .h = (double)(py) })
 
+#define OMG_RECT_MAKE(px, py, pw, ph) ((OMG_Rect){ .x = (int)(px), .y = (int)(py), .w = (int)(pw), .h = (int)(ph) })
+#define OMG_FRECT_MAKE(px, py, pw, ph) ((OMG_FRect){ .x = (float)(px), .y = (float)(py), .w = (float)(pw), .h = (float)(ph) })
+#define OMG_DRECT_MAKE(px, py, pw, ph) ((OMG_DRect){ .x = (double)(px), .y = (double)(py), .w = (double)(pw), .h = (double)(ph) })
+
 #define OMG_COLOR_MAKE_RGB(c_r, c_g, c_b) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)255 })
 #define OMG_COLOR_MAKE_RGBA(c_r, c_g, c_b, c_a) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)(c_a) })
 

@@ -160,6 +160,30 @@ bool omg_renderer_sdl2_draw_point(OMG_RendererSdl2* this, const OMG_FPoint* pos,
     return res;
 }
 
+bool omg_renderer_sdl2_draw_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, const OMG_Color* col) {
+    if (OMG_ISNULL(col))
+        col = &base->color;
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    if (this->sdl2->SDL_RenderDrawRectF(this->ren, (const SDL_FRect*)rect) < 0) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to draw rect (", this->sdl2->SDL_GetError(), ")");
+    }
+    return res;
+}
+
+bool omg_renderer_sdl2_fill_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, const OMG_Color* col) {
+    if (OMG_ISNULL(col))
+        col = &base->color;
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    if (this->sdl2->SDL_RenderFillRectF(this->ren, (const SDL_FRect*)rect) < 0) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to fill rect (", this->sdl2->SDL_GetError(), ")");
+    }
+    return res;
+}
+
 bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
     if (OMG_ISNOTNULL(base->target))
         omg_renderer_sdl2_set_target(this, NULL);
@@ -224,6 +248,8 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->set_scale = omg_renderer_sdl2_set_scale;
     base->set_target = omg_renderer_sdl2_set_target;
     base->draw_point = omg_renderer_sdl2_draw_point;
+    base->draw_rect = omg_renderer_sdl2_draw_rect;
+    base->fill_rect = omg_renderer_sdl2_fill_rect;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     OMG_END_POINTER_CAST();
