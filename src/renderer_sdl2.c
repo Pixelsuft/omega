@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/window.h>
 #include <omega/omega.h>
+#include <omega/surface_sdl2.h>
 #include <omega/texture_sdl2.h>
 #include <omega/api_sdl2_gfx.h>
 #define base ((OMG_Renderer*)this)
@@ -300,6 +301,29 @@ bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
     return false;
 }
 
+OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Surface* surf, bool destroy_surf) {
+    if (OMG_ISNULL(surf))
+        return NULL;
+    OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
+    if (OMG_ISNULL(tex))
+        return NULL;
+    if (win_base->type == OMG_WIN_TYPE_SDL2) {
+        tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, ((OMG_SurfaceSdl2*)surf)->surf);
+        if (OMG_ISNULL(tex->tex)) {
+            OMG_FREE(omg_base->mem, tex);
+            _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture from surface (", this->sdl2->SDL_GetError(), ")");
+            return NULL;
+        }
+        if (destroy_surf)
+            omg_base->winmgr->surf_destroy(omg_base->winmgr, surf);
+        return tex;
+    }
+    else {
+        OMG_FREE(omg_base->mem, tex);
+        return NULL;
+    }
+}
+
 OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
     if (OMG_ISNULL(tex))
@@ -379,6 +403,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->fill_rect = omg_renderer_sdl2_fill_rect;
     base->draw_circle = omg_renderer_sdl2_draw_circle;
     base->fill_circle = omg_renderer_sdl2_fill_circle;
+    base->tex_from_surf = omg_renderer_sdl2_tex_from_surf;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     base->copy = omg_renderer_sdl2_copy;

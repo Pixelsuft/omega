@@ -58,6 +58,8 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_create(OMG_WinmgrSdl2* this, const OMG_FPo
     surf_base->has_alpha = has_alpha;
     if (this->sdl2->SDL_SetSurfaceBlendMode(surf->surf, has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0)
         _OMG_SURF_BLEND_WARN();
+    if (this->sdl2->SDL_SetSurfaceRLE(surf->surf, base->surf_rle ? 1 : 0) < 0)
+        _OMG_LOG_WARN(omg_base, "Failed to set surface RLE (", this->sdl2->SDL_GetError(), ")");
     return surf;
 }
 

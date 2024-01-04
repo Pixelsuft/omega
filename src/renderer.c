@@ -53,6 +53,11 @@ bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const 
     return false;
 }
 
+OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf) {
+    OMG_UNUSED(this, surf, destroy_surf);
+    return NULL;
+}
+
 OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(this, size, access, has_alpha);
     return NULL;
@@ -118,6 +123,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->fill_rect = omg_renderer_draw_fill_rect;
     this->draw_circle = omg_renderer_draw_circle;
     this->fill_circle = omg_renderer_draw_circle;
+    this->tex_from_surf = omg_renderer_tex_from_surf;
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
     this->copy = omg_renderer_copy;
