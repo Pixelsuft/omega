@@ -47,6 +47,10 @@ int omg_sdl2_render_draw_pointf_emu(SDL_Renderer* ren, float px, float py) {
     return omg_sdl2_cache->SDL_RenderDrawPoint(ren, (int)px, (int)py);
 }
 
+int omg_sdl2_render_draw_linef_emu(SDL_Renderer* ren, float x1, float y1, float x2, float y2) {
+    return omg_sdl2_cache->SDL_RenderDrawLine(ren, (int)x1, (int)y1, (int)x2, (int)y2);
+}
+
 int omg_sdl2_render_draw_rectf_emu(SDL_Renderer* ren, const SDL_FRect* rect) {
     if (OMG_ISNULL(rect))
         return omg_sdl2_cache->SDL_RenderDrawRect(ren, NULL);
@@ -189,6 +193,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_RenderCopyEx);
     LOAD_REQUIRED(SDL_RenderDrawPoint);
     LOAD_REQUIRED(SDL_RenderDrawPoints);
+    LOAD_REQUIRED(SDL_RenderDrawLine);
+    LOAD_REQUIRED(SDL_RenderDrawLines);
     LOAD_REQUIRED(SDL_RenderDrawRect);
     LOAD_REQUIRED(SDL_RenderFillRect);
     LOAD_REQUIRED(SDL_SetRenderTarget);
@@ -201,6 +207,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyExF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointsF); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RenderDrawLineF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawRectF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderFillRectF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
@@ -213,6 +220,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
         this->SDL_RenderCopyExF = omg_sdl2_render_copy_exf_emu;
     if (OMG_ISNULL(this->SDL_RenderDrawPointF))
         this->SDL_RenderDrawPointF = omg_sdl2_render_draw_pointf_emu;
+    if (OMG_ISNULL(this->SDL_RenderDrawLineF))
+        this->SDL_RenderDrawLineF = omg_sdl2_render_draw_linef_emu;
     if (OMG_ISNULL(this->SDL_RenderDrawRectF))
         this->SDL_RenderDrawRectF = omg_sdl2_render_draw_rectf_emu;
     if (OMG_ISNULL(this->SDL_RenderFillRectF))

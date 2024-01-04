@@ -32,10 +32,6 @@ Pixelsuft -- pixelsuft at github dot com
 */
 
 // TODO: Avoid This shit
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <string.h>
 #include <omega/api_sdl2_gfx.h>
 
 #define SDL2_GFX_MALLOC(size) (sdl2_handle->SDL_malloc(size))
@@ -76,28 +72,28 @@ int pixelRGBAWeight(SDL_Renderer* renderer, int16_t x, int16_t y, uint8_t r, uin
 }
 
 int hline(SDL_Renderer* renderer, int16_t x1, int16_t x2, int16_t y) {
-	return SDL_RenderDrawLine(renderer, x1, y, x2, y);
+	return sdl2_handle->SDL_RenderDrawLine(renderer, x1, y, x2, y);
 }
 
 int hlineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t x2, int16_t y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-	result |= SDL_RenderDrawLine(renderer, x1, y, x2, y);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	result |= sdl2_handle->SDL_RenderDrawLine(renderer, x1, y, x2, y);
 	return result;
 }
 
 int vline(SDL_Renderer* renderer, int16_t x, int16_t y1, int16_t y2) {
-	return SDL_RenderDrawLine(renderer, x, y1, x, y2);
+	return sdl2_handle->SDL_RenderDrawLine(renderer, x, y1, x, y2);
 }
 
 int vlineRGBA(SDL_Renderer* renderer, int16_t x, int16_t y1, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-	result |= SDL_RenderDrawLine(renderer, x, y1, x, y2);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	result |= sdl2_handle->SDL_RenderDrawLine(renderer, x, y1, x, y2);
 	return result;
 }
 
@@ -134,9 +130,9 @@ int rectangleRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, in
 	rect.h = y2 - y1;
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-	result |= SDL_RenderDrawRect(renderer, &rect);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	result |= sdl2_handle->SDL_RenderDrawRect(renderer, &rect);
 	return result;
 }
 
@@ -262,8 +258,8 @@ int roundedBoxRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2,
 	dy = y2 - y1 - rad - rad;
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	do {
 		xpcx = x + cx;
 		xmcx = x - cx;
@@ -349,22 +345,22 @@ int boxRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t 
 	rect.h = y2 - y1 + 1;
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-	result |= SDL_RenderFillRect(renderer, &rect);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	result |= sdl2_handle->SDL_RenderFillRect(renderer, &rect);
 	return result;
 }
 
 int line(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2) {
-	return SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+	return sdl2_handle->SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 }
 
 int lineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
-	result |= SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	result |= sdl2_handle->SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 	return result;
 }
 
@@ -580,8 +576,8 @@ int arcRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad, int16_t s
 	} while (oct != endoct);
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	do {
 		ypcy = y + cy;
 		ymcy = y - cy;
@@ -679,8 +675,8 @@ int ellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int16_
 	}
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	oh = oi = oj = ok = 0xFFFF;
 	if (rx > ry) {
 		ix = 0;
@@ -813,7 +809,7 @@ int aaellipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, int1
 	yp = y - ry;
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	result |= pixelRGBA(renderer, xp, yp, r, g, b, a);
 	result |= pixelRGBA(renderer, xc2 - xp, yp, r, g, b, a);
 	result |= pixelRGBA(renderer, xp, yc2 - yp, r, g, b, a);
@@ -932,8 +928,8 @@ int filledEllipseRGBA(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rx, 
 	}
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	oh = oi = oj = ok = 0xFFFF;
 	if (rx > ry) {
 		ix = 0;
@@ -1141,7 +1137,7 @@ int polygon(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int n)
 	}
 	points[n].x = vx[0];
 	points[n].y = vy[0];
-	result |= SDL_RenderDrawLines(renderer, points, nn);
+	result |= sdl2_handle->SDL_RenderDrawLines(renderer, points, nn);
 	SDL2_GFX_FREE(points);
 	return (result);
 }
@@ -1153,8 +1149,8 @@ int polygonRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, in
 	}
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	result |= polygon(renderer, vx, vy, n);
 	return (result);
 }
@@ -1290,8 +1286,8 @@ int filledPolygonRGBAMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t
 		std_handle->qsort(gfxPrimitivesPolyInts, ints, sizeof(int), _gfxPrimitivesCompareInt);
 		result = 0;
 		if (a != 255)
-			result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-		result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+			result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+		result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 		for (i = 0; (i < ints); i += 2) {
 			xa = gfxPrimitivesPolyInts[i] + 1;
 			xa = (xa >> 16) + ((xa & 32768) >> 15);
@@ -1339,7 +1335,7 @@ int _HLineTextured(SDL_Renderer* renderer, int16_t x1, int16_t x2, int16_t y, SD
 		source_rect.x = texture_x_walker;
 		dst_rect.x = x1;
 		dst_rect.w = source_rect.w;
-		result = (SDL_RenderCopy(renderer, texture, &source_rect, &dst_rect) == 0);
+		result = (sdl2_handle->SDL_RenderCopy(renderer, texture, &source_rect, &dst_rect) == 0);
 	}
 	else {
 		pixels_written = texture_w - texture_x_walker;
@@ -1347,7 +1343,7 @@ int _HLineTextured(SDL_Renderer* renderer, int16_t x1, int16_t x2, int16_t y, SD
 		source_rect.x = texture_x_walker;
 		dst_rect.x = x1;
 		dst_rect.w = source_rect.w;
-		result |= (SDL_RenderCopy(renderer, texture, &source_rect, &dst_rect) == 0);
+		result |= (sdl2_handle->SDL_RenderCopy(renderer, texture, &source_rect, &dst_rect) == 0);
 		write_width = texture_w;
 		source_rect.x = 0;
 		while (pixels_written < w) {
@@ -1357,7 +1353,7 @@ int _HLineTextured(SDL_Renderer* renderer, int16_t x1, int16_t x2, int16_t y, SD
 			source_rect.w = write_width;
 			dst_rect.x = x1 + pixels_written;
 			dst_rect.w = source_rect.w;
-			result |= (SDL_RenderCopy(renderer, texture, &source_rect, &dst_rect) == 0);
+			result |= (sdl2_handle->SDL_RenderCopy(renderer, texture, &source_rect, &dst_rect) == 0);
 			pixels_written += write_width;
 		}
 	}
@@ -1436,11 +1432,11 @@ int texturedPolygonMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t *
 			maxx = vx[i];
 		}
 	}
-	textureAsTexture = SDL_CreateTextureFromSurface(renderer, texture);
+	textureAsTexture = sdl2_handle->SDL_CreateTextureFromSurface(renderer, texture);
 	if (textureAsTexture == NULL) {
 		return -1;
 	}
-	SDL_SetTextureBlendMode(textureAsTexture, SDL_BLENDMODE_BLEND);
+	sdl2_handle->SDL_SetTextureBlendMode(textureAsTexture, SDL_BLENDMODE_BLEND);
 	result = 0;
 	for (y = miny; (y <= maxy); y++) {
 		ints = 0;
@@ -1482,8 +1478,9 @@ int texturedPolygonMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t *
 			result |= _HLineTextured(renderer, xa, xb, y, textureAsTexture, texture->w, texture->h, texture_dx, texture_dy);
 		}
 	}
-	SDL_RenderPresent(renderer);
-	SDL_DestroyTexture(textureAsTexture);
+	// WTF???
+	// sdl2_handle->SDL_RenderPresent(renderer);
+	sdl2_handle->SDL_DestroyTexture(textureAsTexture);
 	return (result);
 }
 
@@ -1557,8 +1554,8 @@ int bezierRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int
 	y[n] = (double)vy[0];
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	t = 0.0;
 	x1 = (int16_t)std_handle->lrint(_evaluateBezier(x, n + 1, t));
 	y1 = (int16_t)std_handle->lrint(_evaluateBezier(y, n + 1, t));
@@ -1591,7 +1588,7 @@ static void x_perpendicular(SDL_Renderer* B,
 	error = einit;
 	tk = dx + dy - winit;
 	while (tk <= w_left) {
-		SDL_RenderDrawPoint(B, x, y);
+		sdl2_handle->SDL_RenderDrawPoint(B, x, y);
 		if (error >= threshold) {
 			x = x + xstep;
 			error = error + E_diag;
@@ -1608,7 +1605,7 @@ static void x_perpendicular(SDL_Renderer* B,
 	tk = dx + dy + winit;
 	while (tk <= w_right) {
 		if (p)
-			SDL_RenderDrawPoint(B, x, y);
+			sdl2_handle->SDL_RenderDrawPoint(B, x, y);
 		if (error > threshold) {
 			x = x - xstep;
 			error = error + E_diag;
@@ -1620,7 +1617,7 @@ static void x_perpendicular(SDL_Renderer* B,
 		p++;
 	}
 	if (q == 0 && p < 2)
-		SDL_RenderDrawPoint(B, x0, y0);
+		sdl2_handle->SDL_RenderDrawPoint(B, x0, y0);
 }
 
 static void x_varthick_line(SDL_Renderer* B, int style,
@@ -1680,7 +1677,7 @@ static void y_perpendicular(SDL_Renderer* B,
 	error = -einit;
 	tk = dx + dy + winit;
 	while (tk <= w_left) {
-		SDL_RenderDrawPoint(B, x, y);
+		sdl2_handle->SDL_RenderDrawPoint(B, x, y);
 		if (error > threshold) {
 			y = y + ystep;
 			error = error + E_diag;
@@ -1697,7 +1694,7 @@ static void y_perpendicular(SDL_Renderer* B,
 	tk = dx + dy - winit;
 	while (tk <= w_right) {
 		if (p)
-			SDL_RenderDrawPoint(B, x, y);
+			sdl2_handle->SDL_RenderDrawPoint(B, x, y);
 		if (error >= threshold) {
 			y = y - ystep;
 			error = error + E_diag;
@@ -1709,7 +1706,7 @@ static void y_perpendicular(SDL_Renderer* B,
 		p++;
 	}
 	if (q == 0 && p < 2)
-		SDL_RenderDrawPoint(B, x0, y0);
+		sdl2_handle->SDL_RenderDrawPoint(B, x0, y0);
 }
 
 static void y_varthick_line(SDL_Renderer* B, int style,
@@ -1834,8 +1831,8 @@ int thickLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, in
 	}
 	result = 0;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	draw_varthick_line(renderer, LineStyle, x1, y1, x2, y2, (double)width);
 	return (result);
 }
@@ -1846,7 +1843,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 	// WTF???
 #if !defined(__EMSCRIPTEN__) && 0
 	if ((x1 == x2) && (y1 == y2))
-		result = SDL_RenderDrawPoint(renderer, x1, y1);
+		result = sdl2_handle->SDL_RenderDrawPoint(renderer, x1, y1);
 	else if (y1 == y2) {
 		int x;
 		if (x1 > x2) {
@@ -1861,7 +1858,7 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 			points[x - x1].x = x;
 			points[x - x1].y = y1;
 		}
-		result = SDL_RenderDrawPoints(renderer, points, x2 - x1 + 1);
+		result = sdl2_handle->SDL_RenderDrawPoints(renderer, points, x2 - x1 + 1);
 		SDL2_GFX_FREE(points);
 	}
 	else if (x1 == x2) {
@@ -1878,13 +1875,13 @@ static int renderdrawline(SDL_Renderer* renderer, int x1, int y1, int x2, int y2
 			points[y - y1].x = x1;
 			points[y - y1].y = y;
 		}
-		result = SDL_RenderDrawPoints(renderer, points, y2 - y1 + 1);
+		result = sdl2_handle->SDL_RenderDrawPoints(renderer, points, y2 - y1 + 1);
 		SDL2_GFX_FREE(points);
 	}
 	else
-		result = SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+		result = sdl2_handle->SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 #endif
-	result = SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+	result = sdl2_handle->SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 	return result;
 }
 
@@ -1943,8 +1940,8 @@ int thickEllipseRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t xr,
 	xo2 = xo * xo;
 	yo2 = yo * yo;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	if (xr < yr) {
 		for (x = -xo; x <= -xi; x++) {
 			y = std_handle->sqrt(yo2 * (1.0 - x * x / xo2)) + 0.5;
@@ -2006,8 +2003,8 @@ int thickArcRGBA(SDL_Renderer* renderer, int16_t xc, int16_t yc, int16_t rad, in
 	ri2 = ri * ri;
 	ro2 = ro * ro;
 	if (a != 255)
-		result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+		result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	for (y = -ro; y <= -ri; y++) {
 		x = std_handle->sqrt(ro2 * (1.0 - y * y / ro2)) + 0.5;
 		result |= hlinecliparc(renderer, -x, x, y, xc, yc, s, f);
@@ -2086,7 +2083,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 	double s, v, x, y, dx, dy;
 	if ((rx <= 0.0) || (ry <= 0.0))
 		return -1;
-	result |= SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result |= sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	if (rx >= ry) {
 		n = ry + 1;
 		for (yi = cy - n - 1; yi <= cy + n + 1; yi++) {
@@ -2100,7 +2097,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			if (s < 1.0) {
 				x = rx * std_handle->sqrt(1.0 - s);
 				if (x >= 0.5) {
-					result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+					result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					result |= renderdrawline(renderer, cx - x + 1, yi, cx + x - 1, yi);
 				}
 			}
@@ -2117,8 +2114,8 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 					break;
 				if (v > 1.0)
 					v = 1.0;
-				result |= SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
-				result |= SDL_RenderDrawPoint(renderer, xi, yi);
+				result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
+				result |= sdl2_handle->SDL_RenderDrawPoint(renderer, xi, yi);
 				xi -= 1;
 			}
 			xi = cx + x;
@@ -2132,8 +2129,8 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 					break;
 				if (v > 1.0)
 					v = 1.0;
-				result |= SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
-				result |= SDL_RenderDrawPoint(renderer, xi, yi);
+				result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
+				result |= sdl2_handle->SDL_RenderDrawPoint(renderer, xi, yi);
 				xi += 1;
 			}
 		}
@@ -2151,7 +2148,7 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 			if (s < 1.0) {
 				y = ry * std_handle->sqrt(1.0 - s);
 				if (y >= 0.5) {
-					result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+					result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 					result |= renderdrawline(renderer, xi, cy - y + 1, xi, cy + y - 1);
 				}
 			}
@@ -2168,8 +2165,8 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 					break;
 				if (v > 1.0)
 					v = 1.0;
-				result |= SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
-				result |= SDL_RenderDrawPoint(renderer, xi, yi);
+				result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
+				result |= sdl2_handle->SDL_RenderDrawPoint(renderer, xi, yi);
 				yi -= 1;
 			}
 			yi = cy + y;
@@ -2183,8 +2180,8 @@ int aaFilledEllipseRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, fl
 					break;
 				if (v > 1.0)
 					v = 1.0;
-				result |= SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
-				result |= SDL_RenderDrawPoint(renderer, xi, yi);
+				result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, (double)a * v);
+				result |= sdl2_handle->SDL_RenderDrawPoint(renderer, xi, yi);
 				yi += 1;
 			}
 		}
@@ -2208,7 +2205,7 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 	float *list, *strip;
 	if (n < 3)
 		return -1;
-	result = SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	result = sdl2_handle->SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	minx = 99999.0;
 	maxx = -99999.0;
 	prec = 0.00001;
@@ -2363,12 +2360,12 @@ int aaFilledPolygonRGBA(SDL_Renderer* renderer, const double *vx, const double *
 						while (strip[++xi] >= 0.996)
 							;
 						xi--;
-						result |= SDL_SetRenderDrawColor(renderer, r, g, b, a);
+						result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a);
 						result |= renderdrawline(renderer, minx + x0, yi, minx + xi, yi);
 					}
 					else {
-						result |= SDL_SetRenderDrawColor(renderer, r, g, b, a * strip[xi]);
-						result |= SDL_RenderDrawPoint(renderer, minx + xi, yi);
+						result |= sdl2_handle->SDL_SetRenderDrawColor(renderer, r, g, b, a * strip[xi]);
+						result |= sdl2_handle->SDL_RenderDrawPoint(renderer, minx + xi, yi);
 					}
 				}
 			}
