@@ -212,7 +212,17 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
         col = &base->color;
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
-    if (this->sdl2->SDL_RenderDrawLineF(this->ren, start_end->x1 + base->offset.x, start_end->y1 + base->offset.y, start_end->x2 + base->offset.x, start_end->y2 + base->offset.y) < 0) {
+    if (base->aa) {
+        aaLineRGBA(
+            this->ren,
+            (int16_t)(start_end->x1 + base->offset.x),
+            (int16_t)(start_end->y1 + base->offset.y),
+            (int16_t)(start_end->x2 + base->offset.x),
+            (int16_t)(start_end->y2 + base->offset.y),
+            _r_color, _g_color, _b_color, _a_color
+        );
+    }
+    else if (this->sdl2->SDL_RenderDrawLineF(this->ren, start_end->x1 + base->offset.x, start_end->y1 + base->offset.y, start_end->x2 + base->offset.x, start_end->y2 + base->offset.y) < 0) {
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw line (", this->sdl2->SDL_GetError(), ")");
     }

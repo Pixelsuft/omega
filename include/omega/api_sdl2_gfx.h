@@ -56,7 +56,7 @@ SDL2_GFX_STD_PREFIX int roundedBoxRGBA(SDL_Renderer* renderer, int16_t x1, int16
 									   int16_t y2, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int lineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1,
 								 int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-SDL2_GFX_STD_PREFIX int aalineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1,
+SDL2_GFX_STD_PREFIX int aaLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1,
 								   int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 SDL2_GFX_STD_PREFIX int thickLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2,
 									  uint8_t width, uint8_t r, uint8_t g, uint8_t b, uint8_t a);

@@ -368,7 +368,7 @@ int lineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t
 #define AAlevels 256
 #define AAbits 8
 
-int _aalineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a, int draw_endpoint) {
+int _aaLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a, int draw_endpoint) {
 	int32_t xx0, yy0, xx1, yy1;
 	int result;
 	uint32_t intshift, erracc, erradj;
@@ -397,38 +397,38 @@ int _aalineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int1
 	}
 	if (dx == 0) {
 		if (draw_endpoint) {
-			return (vlineRGBA(renderer, x1, y1, y2, r, g, b, a));
+			return (vline(renderer, x1, y1, y2));
 		}
 		else {
 			if (dy > 0) {
-				return (vlineRGBA(renderer, x1, yy0, yy0 + dy, r, g, b, a));
+				return (vline(renderer, x1, yy0, yy0 + dy));
 			}
 			else {
-				return (pixelRGBA(renderer, x1, y1, r, g, b, a));
+				return (pixel(renderer, x1, y1));
 			}
 		}
 	}
 	else if (dy == 0) {
 		if (draw_endpoint) {
-			return (hlineRGBA(renderer, x1, x2, y1, r, g, b, a));
+			return (hline(renderer, x1, x2, y1));
 		}
 		else
 		{
 			if (dx > 0) {
-				return (hlineRGBA(renderer, xx0, xx0 + (xdir * dx), y1, r, g, b, a));
+				return (hline(renderer, xx0, xx0 + (xdir * dx), y1));
 			}
 			else {
-				return (pixelRGBA(renderer, x1, y1, r, g, b, a));
+				return (pixel(renderer, x1, y1));
 			}
 		}
 	}
 	else if ((dx == dy) && (draw_endpoint)) {
-		return (lineRGBA(renderer, x1, y1, x2, y2, r, g, b, a));
+		return (line(renderer, x1, y1, x2, y2));
 	}
 	result = 0;
 	erracc = 0;
 	intshift = 32 - AAbits;
-	result |= pixelRGBA(renderer, x1, y1, r, g, b, a);
+	result |= pixel(renderer, x1, y1);
 	if (dy > dx) {
 		erradj = ((dx << 16) / dy) << 16;
 		x0pxdir = xx0 + xdir;
@@ -467,8 +467,8 @@ int _aalineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int1
 	return (result);
 }
 
-int aalineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-	return _aalineRGBA(renderer, x1, y1, x2, y2, r, g, b, a, 1);
+int aaLineRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+	return _aaLineRGBA(renderer, x1, y1, x2, y2, r, g, b, a, 1);
 }
 
 int drawCircle(SDL_Renderer* renderer, int16_t x, int16_t y, int16_t rad) {
@@ -1161,13 +1161,13 @@ int aapolygonRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, 
 	y2++;
 	result = 0;
 	for (i = 1; i < n; i++) {
-		result |= _aalineRGBA(renderer, *x1, *y1, *x2, *y2, r, g, b, a, 0);
+		result |= _aaLineRGBA(renderer, *x1, *y1, *x2, *y2, r, g, b, a, 0);
 		x1 = x2;
 		y1 = y2;
 		x2++;
 		y2++;
 	}
-	result |= _aalineRGBA(renderer, *x1, *y1, *vx, *vy, r, g, b, a, 0);
+	result |= _aaLineRGBA(renderer, *x1, *y1, *vx, *vy, r, g, b, a, 0);
 	return (result);
 }
 
