@@ -294,6 +294,16 @@ typedef struct {
     float (*ceilf)(float x);
     float (*roundf)(float x);
     int (*lrint)(double x);
+    double (*sin)(double x);
+    double (*cos)(double x);
+    double (*tan)(double x);
+    double (*atan)(double x);
+    double (*atan2)(double x, double y);
+    float (*sinf)(float x);
+    float (*cosf)(float x);
+    float (*tanf)(float x);
+    float (*atanf)(float x);
+    float (*atan2f)(float x, float y);
     unsigned int (*sleep)(unsigned int);
     void* memory_allocator;
     void* extra;

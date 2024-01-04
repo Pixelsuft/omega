@@ -290,6 +290,22 @@ bool omg_std_lib_free(void* lib) {
     return false;
 }
 
+double omg_dummy_double_func(double x) {
+    return x;
+}
+
+double omg_dummy_double2_func(double x, double y) {
+    return x + y;
+}
+
+float omg_dummy_float_func(float x) {
+    return x;
+}
+
+float omg_dummy_float2_func(float x, float y) {
+    return x + y;
+}
+
 void omg_std_fill_defaults(OMG_Std* this) {
     // TODO: lrint
     this->lib_load = omg_std_lib_load; // TODO: these 3
@@ -308,6 +324,7 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strnlen = strnlen;
     this->floor = floor;
     this->ceil = ceil;
+    // TODO: use libmath macro for these
     this->round = round;
     this->floorf = floorf;
     this->ceilf = ceilf;
@@ -326,6 +343,29 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->floorf = omg_std_floorf;
     this->ceilf = omg_std_ceilf;
     this->roundf = omg_std_roundf;
+#endif
+#if OMG_USE_LIBMATH
+    this->sin = sin;
+    this->cos = cos;
+    this->tan = tan;
+    this->atan = atan;
+    this->atan2 = atan2;
+    this->sinf = sinf;
+    this->cosf = cosf;
+    this->tanf = tanf;
+    this->atanf = atanf;
+    this->atan2f = atan2f;
+#else
+    this->sin = omg_dummy_double_func;
+    this->cos = omg_dummy_double_func;
+    this->tan = omg_dummy_double_func;
+    this->atan = omg_dummy_double_func;
+    this->atan2 = omg_dummy_double2_func;
+    this->sinf = omg_dummy_float_func;
+    this->cosf = omg_dummy_float_func;
+    this->tanf = omg_dummy_float_func;
+    this->atanf = omg_dummy_float_func;
+    this->atan2f = omg_dummy_float2_func;
 #endif
 #if OMG_HAVE_LRINT
     this->lrint = lrint;
