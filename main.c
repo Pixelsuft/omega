@@ -10,6 +10,7 @@ typedef struct {
     OMG_Omega* omg;
     OMG_Window* win;
     OMG_Renderer* ren;
+    OMG_Surface* surf;
     OMG_Texture* tex;
     OMG_Clock* clock;
     omg_color_t bg_col;
@@ -23,6 +24,7 @@ OMG_MAIN_MAKE(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->ren->tex_destroy(this->ren, this->tex);
+    this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -207,6 +209,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->bg_col = 0.0f;
     this->bg_fow = true;
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
+    this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(200, 200), true);
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->ren->soft_scale = true;
     this->ren->aa = true;
