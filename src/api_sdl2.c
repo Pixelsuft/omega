@@ -74,7 +74,12 @@ int omg_sdl2_render_fill_rectf_emu(SDL_Renderer* ren, const SDL_FRect* rect) {
 }
 
 uint64_t omg_sdl2_get_ticks64_emu(void) {
-    return (uint64_t)omg_sdl2_cache->SDL_GetTicks();
+    uint64_t res = (uint64_t)omg_sdl2_cache->SDL_GetTicks();
+    while (res < omg_sdl2_cache->_tick64_emu) {
+        res += (uint64_t)sizeof(uint32_t);
+    }
+    omg_sdl2_cache->_tick64_emu = res;
+    return res;
 }
 
 static bool omg_sdl2_already_loaded = false;
@@ -237,6 +242,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
         this->is_first = true;
         omg_sdl2_cache = this;
     }
+    this->_tick64_emu = 0;
     return false;
 }
 
