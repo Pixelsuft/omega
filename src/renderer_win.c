@@ -42,6 +42,7 @@ bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
     this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
+    this->g32->DeleteObject(brush);
     return false;
 }
 
