@@ -53,8 +53,8 @@
 } while (0)
 
 void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
-    if (!omg_base->support_highdpi)
-        return;
+    // if (!omg_base->support_highdpi)
+    //     return;
     int win_w, win_h, ren_w, ren_h;
     this->sdl2->SDL_GetWindowSize(this->win, &win_w, &win_h);
     if (this->sdl2->SDL_GetRendererOutputSize(this->ren, &ren_w, &ren_h) < 0) {

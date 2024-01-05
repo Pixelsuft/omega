@@ -13,8 +13,8 @@
 #define RAYLIB_HAS_SS() ((this->ss.x != 1.0f) || (this->ss.y != 1.0f))
 
 void omg_renderer_raylib_update_scale(OMG_RendererRaylib* this) {
-    if (!omg_base->support_highdpi)
-        return;
+    // if (!omg_base->support_highdpi)
+    //     return;
     base->size.w = (float)this->raylib->GetRenderWidth();
     base->size.h = (float)this->raylib->GetRenderHeight();
     base->dpi_scale.x = base->size.w / (float)this->raylib->GetScreenWidth();
@@ -269,6 +269,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     this->ss.x = this->ss.y = 1.0f;
     base->type = OMG_REN_TYPE_RAYLIB;
     base->inited = true;
+    omg_renderer_raylib_update_scale(this);
     _OMG_LOG_INFO(omg_base, "Raylib renderer created successfuly with opengl driver");
     return false;
 }

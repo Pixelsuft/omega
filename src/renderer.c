@@ -30,7 +30,7 @@ void omg_on_update_window_size(OMG_Renderer* this) {
 
 int omg_renderer_get_supported_drivers(OMG_Renderer* this) {
     OMG_UNUSED(this);
-    return OMG_REN_DRIVER_NONE;
+    return OMG_REN_DRIVER_SOFTWARE;
 }
 
 void omg_renderer_fill_on_create(OMG_Renderer* this) {

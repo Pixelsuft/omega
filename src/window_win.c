@@ -3,9 +3,11 @@
 #if OMG_SUPPORT_WIN
 #include <omega/omega_win.h>
 #include <omega/renderer_sdl2.h>
+#include <omega/renderer_win.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 #define ren_sdl2 ((OMG_RendererSdl2*)base->ren)
+#define ren_win ((OMG_RendererWin*)base->ren)
 #define RET_DEF_PROC() this->u32->DefWindowProcW(hwnd, msg, wparam, lparam)
 #ifdef SetWindowLongPtrW
 #define GET_WIN_STYLE() (int64_t)this->u32->GetWindowLongW(this->hwnd, GWL_STYLE)
@@ -314,8 +316,7 @@ static const OMG_Scancode OMG_windows_scancode_table[] = {
 	OMG_SCANCODE_UNKNOWN
 };
 
-static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_pressed, uint32_t mouse_flags, bool swap_buttons, uint8_t button, uint32_t mouse_id)
-{
+static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_pressed, uint32_t mouse_flags, bool swap_buttons, uint8_t button, uint32_t mouse_id) {
     if (swap_buttons) {
         if (button == OMG_MBUTTON_LEFT) {
             button = OMG_MBUTTON_RIGHT;
@@ -353,8 +354,7 @@ static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_
     }
 }
 
-static void omg_win_windows_check_mouse_buttons(OMG_WindowWin* this, WPARAM wparam, uint32_t mouse_id)
-{
+static void omg_win_windows_check_mouse_buttons(OMG_WindowWin* this, WPARAM wparam, uint32_t mouse_id) {
     if (wparam != this->last_mouse_state) {
         uint32_t mouse_flags = this->mouse_state_cache;
         this->last_mouse_state = wparam;
@@ -371,8 +371,7 @@ bool omg_window_win_show(OMG_WindowWin* this, bool show) {
     return false;
 }
 
-static OMG_Scancode omg_window_win_code_to_scancode(OMG_WindowWin* this, LPARAM lparam, WPARAM wparam)
-{
+static OMG_Scancode omg_window_win_code_to_scancode(OMG_WindowWin* this, LPARAM lparam, WPARAM wparam) {
     // Thanks to SDL2
     OMG_Scancode code;
     uint8_t index;
@@ -510,9 +509,10 @@ bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
 }
 
 bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
-    if (base->ren_type != OMG_REN_TYPE_SDL2)
+    if (base->ren_type != OMG_REN_TYPE_SDL2 && base->ren_type != OMG_REN_TYPE_WIN)
         base->ren_type = OMG_REN_TYPE_AUTO;
     if (base->ren_type == OMG_REN_TYPE_AUTO) {
+        // TODO: check win
         base->ren_type = OMG_SUPPORT_SDL2 ? OMG_REN_TYPE_SDL2 : OMG_REN_TYPE_NONE;
         if (base->ren_type == OMG_REN_TYPE_NONE)
             return true;
@@ -521,6 +521,22 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
             base->ren_type = OMG_REN_TYPE_AUTO;
         }
         return res;
+    }
+    if (base->ren_type == OMG_REN_TYPE_WIN) {
+        base->ren = OMG_MALLOC(omg_base->mem, sizeof(OMG_RendererWin));
+        if (OMG_ISNULL(base->ren))
+            return true;
+        omg_renderer_fill_on_create(base->ren);
+        ren_win->g32 = this->g32;
+        ren_win->u32 = this->u32;
+        ren_win->hwnd = this->hwnd;
+        base->ren->was_allocated = true;
+        base->ren->win = this;
+        base->ren->omg = omg_base;
+        OMG_BEGIN_POINTER_CAST();
+        base->ren->init = omg_renderer_win_init;
+        OMG_END_POINTER_CAST();
+        return false;
     }
 #if OMG_SUPPORT_SDL2
     if (base->ren_type == OMG_REN_TYPE_SDL2) {
@@ -1180,6 +1196,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_win_check_dark_mode(this);
     base->scale.x = 0.0f; // Hack
     omg_window_win_update_scale(this);
+    // TODO: Do I really need a DC here?
     this->hdc = this->u32->GetDC(this->hwnd);
     if (OMG_ISNULL(this->hdc))
         _OMG_LOG_WARN(omg_base, "Failed to create HDC");
