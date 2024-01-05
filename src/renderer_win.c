@@ -34,7 +34,7 @@ bool omg_renderer_win_destroy(OMG_RendererWin* this) {
 }
 
 bool omg_renderer_win_begin(OMG_RendererWin* this) {
-    this->cur_hpdc = this->u32->BeginPaint(this->hwnd, &this->ps);
+    this->cur_hpdc = this->hpdc = this->u32->BeginPaint(this->hwnd, &this->ps);
     return OMG_ISNULL(this->hpdc);
 }
 
