@@ -617,6 +617,7 @@ typedef struct {
     HDC OMG_WIN_STD_PREFIX (*BeginPaint)(HWND, LPPAINTSTRUCT);
     HDC OMG_WIN_STD_PREFIX (*EndPaint)(HWND, const PAINTSTRUCT*);
     int OMG_WIN_STD_PREFIX (*FillRect)(HDC, const RECT*, HBRUSH);
+    int OMG_WIN_STD_PREFIX (*FrameRect)(HDC, const RECT*, HBRUSH);
 } OMG_User32;
 
 typedef struct {

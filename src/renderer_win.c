@@ -46,17 +46,34 @@ bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     return false;
 }
 
-bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col) {
+bool omg_renderer_win_draw_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
-    RECT fill_rect = {
+    if (OMG_ISNULL(brush))
+        return true;
+    RECT w_rect = {
         .left = (LONG)((rect->x + base->offset.x) * base->scale.x),
         .top = (LONG)((rect->y + base->offset.y) * base->scale.y),
         .right = (LONG)((rect->w + rect->x + base->offset.x) * base->scale.x),
         .bottom = (LONG)((rect->h + rect->y + base->offset.y) * base->scale.y)
     };
-    this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
+    bool res = !this->u32->FrameRect(this->cur_hwdc, &w_rect, brush);
     this->g32->DeleteObject(brush);
-    return false;
+    return res;
+}
+
+bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col) {
+    HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+    if (OMG_ISNULL(brush))
+        return true;
+    RECT w_rect = {
+        .left = (LONG)((rect->x + base->offset.x) * base->scale.x),
+        .top = (LONG)((rect->y + base->offset.y) * base->scale.y),
+        .right = (LONG)((rect->w + rect->x + base->offset.x) * base->scale.x),
+        .bottom = (LONG)((rect->h + rect->y + base->offset.y) * base->scale.y)
+    };
+    bool res = !this->u32->FillRect(this->cur_hwdc, &w_rect, brush);
+    this->g32->DeleteObject(brush);
+    return res;
 }
 
 bool omg_renderer_win_flip(OMG_RendererWin* this) {
@@ -78,6 +95,7 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->begin = omg_renderer_win_begin;
     base->clear = omg_renderer_win_clear;
     base->flip = omg_renderer_win_flip;
+    base->draw_rect;
     base->fill_rect = omg_renderer_win_fill_rect;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
