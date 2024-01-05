@@ -13,6 +13,8 @@
     (int)((col)->b * (omg_color_t)255 / OMG_MAX_COLOR) \
 ))
 
+// TODO: why this peace of shit is so laggy?
+
 void omg_renderer_win_update_scale(OMG_RendererWin* this) {
     if (omg_base->support_highdpi) {
         base->dpi_scale.x = win_base->scale.w;
