@@ -40,25 +40,21 @@ bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
     this->g32->SelectObject(this->cur_hpdc, brush);
-    this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
+    // this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
     this->g32->Rectangle(this->cur_hpdc, 0, 0, (int)base->size.w, (int)base->size.h);
     this->g32->DeleteObject(brush);
     return false;
 }
 
 bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col) {
-    // WTF why this doesn't work???
-    // HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
-    OMG_UNUSED(col);
-    HBRUSH brush = this->g32->CreateSolidBrush(RGB(0, 0, 255));
-    this->g32->SelectObject(this->ps.hdc, brush);
-    this->g32->Rectangle(
-        this->ps.hdc,
-        (int)rect->x,
-        (int)rect->y,
-        (int)(rect->w + rect->x),
-        (int)(rect->h + rect->y)
-    );
+    HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+    RECT fill_rect = {
+        .left = (LONG)(rect->x),
+        .top = (LONG)(rect->y),
+        .right = (LONG)(rect->w + rect->x),
+        .bottom = (LONG)(rect->h + rect->y)
+    };
+    this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
     this->g32->DeleteObject(brush);
     return false;
 }

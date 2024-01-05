@@ -141,6 +141,12 @@
 #ifndef IMAGE_CURSOR
 #define IMAGE_CURSOR 2
 #endif
+#ifndef TRANSPARENT
+#define TRANSPARENT 1
+#endif
+#ifndef OPAQUE
+#define OPAQUE 2
+#endif
 #ifndef LR_DEFAULTSIZE
 #define LR_DEFAULTSIZE 0x0040
 #endif
@@ -622,6 +628,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*DeleteObject)(HGDIOBJ);
     HBRUSH OMG_WIN_STD_PREFIX (*CreateSolidBrush)(COLORREF);
     HGDIOBJ OMG_WIN_STD_PREFIX (*SelectObject)(HDC, HGDIOBJ);
+    int OMG_WIN_STD_PREFIX (*SetBkMode)(HDC, int);
+    COLORREF OMG_WIN_STD_PREFIX (*SetBkColor)(HDC, COLORREF);
     BOOL OMG_WIN_STD_PREFIX (*Rectangle)(HDC, int, int, int, int);
 } OMG_Gdi32;
 

@@ -606,13 +606,13 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #endif
     switch (msg) {
         case WM_PAINT: {
-            PAINTSTRUCT ps;
-            this->u32->BeginPaint(this->hwnd, &ps);
+            /*PAINTSTRUCT ps;
+            this->u32->BeginPaint(this->hwnd, &ps);*/
             OMG_EventPaint event;
             MAKE_EVENT(&event);
             event.win = this;
             omg_base->on_paint(&event);
-            this->u32->EndPaint(this->hwnd, &ps);
+            // this->u32->EndPaint(this->hwnd, &ps);
             return RET_DEF_PROC();
         }
         case WM_MOUSEMOVE: {
