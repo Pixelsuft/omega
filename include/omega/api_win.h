@@ -617,6 +617,7 @@ typedef struct {
     HDC OMG_WIN_STD_PREFIX (*CreateCompatibleDC)(HDC);
     BOOL OMG_WIN_STD_PREFIX (*DeleteDC)(HDC);
     HBITMAP OMG_WIN_STD_PREFIX (*CreateCompatibleBitmap)(HDC, int, int);
+    BOOL OMG_WIN_STD_PREFIX (*DeleteObject)(HGDIOBJ);
 } OMG_Gdi32;
 
 typedef struct {

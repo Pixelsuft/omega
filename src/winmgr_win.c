@@ -49,23 +49,36 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint
         return NULL;
     surf->dc = this->g32->CreateCompatibleDC(NULL);
     if (OMG_ISNULL(surf->dc)) {
-        _OMG_LOG_ERROR(omg_base, "Failed to create Win32 surface");
         OMG_FREE(omg_base->mem, surf);
+        _OMG_LOG_ERROR(omg_base, "Failed to create Win32 HDC for surface");
         return NULL;
     }
+    surf->bm = this->g32->CreateCompatibleBitmap(surf->dc, (int)size->w, (int)size->h);
+    if (OMG_ISNULL(surf->bm)) {
+        this->g32->DeleteDC(surf->dc);
+        OMG_FREE(omg_base->mem, surf);
+        _OMG_LOG_ERROR(omg_base, "Failed to create Win32 bitmap for surface");
+        return NULL;
+    }
+    surf_base->size.w = size->w;
+    surf_base->size.h = size->h;
     surf_base->has_alpha = has_alpha;
     return surf;
 }
 
 bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
-    if (OMG_ISNULL(surf)) {
+    if (OMG_ISNULL(surf) || OMG_ISNULL(surf->dc) || OMG_ISNULL(surf->bm)) {
         _OMG_NULL_SURFACE_WARN();
         return true;
     }
     bool res = false;
+    if (!this->g32->DeleteObject(surf->bm)) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
+    }
     if (!this->g32->DeleteDC(surf->dc)) {
         res = true;
-        _OMG_LOG_WARN(omg_base, "Failed to delete surface");
+        _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
     }
     OMG_FREE(omg_base->mem, surf);
     return res;

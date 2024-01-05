@@ -200,6 +200,7 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(CreateCompatibleDC);
     LOAD_REQUIRED(DeleteDC);
     LOAD_REQUIRED(CreateCompatibleBitmap);
+    LOAD_REQUIRED(DeleteObject);
     OMG_END_POINTER_CAST();
     return false;
 }
