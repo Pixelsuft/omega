@@ -63,6 +63,25 @@ void omg_sdl2_fill_std(OMG_OmegaSdl2* this) {
     base->std->floorf = this->sdl2->SDL_floorf;
     base->std->ceilf = this->sdl2->SDL_ceilf;
     base->std->roundf = this->sdl2->SDL_roundf;
+    base->std->sin = this->sdl2->SDL_sin;
+    base->std->cos = this->sdl2->SDL_cos;
+    base->std->tan = this->sdl2->SDL_tan;
+    base->std->atan2 = this->sdl2->SDL_atan2;
+    base->std->sqrt = this->sdl2->SDL_sqrt;
+    base->std->fmod = this->sdl2->SDL_fmod;
+    base->std->sinf = this->sdl2->SDL_sinf;
+    base->std->cosf = this->sdl2->SDL_cosf;
+    base->std->tanf = this->sdl2->SDL_tanf;
+    base->std->atanf = this->sdl2->SDL_atanf;
+    base->std->atan2f = this->sdl2->SDL_atan2f;
+    base->std->sqrtf = this->sdl2->SDL_sqrtf;
+    base->std->fmodf = this->sdl2->SDL_fmodf;
+    base->std->qsort = this->sdl2->SDL_qsort;
+    base->std->abs = this->sdl2->SDL_abs;
+    base->std->fabs = this->sdl2->SDL_fabs;
+    base->std->fabsf = this->sdl2->SDL_fabsf;
+    base->std->pow = this->sdl2->SDL_pow;
+    base->std->powf = this->sdl2->SDL_powf;
 }
 
 bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data) {

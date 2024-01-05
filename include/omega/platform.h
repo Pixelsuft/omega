@@ -67,10 +67,6 @@
 #define OMG_HAVE_QSORT (OMG_HAS_STD)
 #endif
 
-#ifndef OMG_IMPL_PEI386_RUNTIME_RELOCATOR
-#define OMG_IMPL_PEI386_RUNTIME_RELOCATOR (OMG_IS_WIN && !OMG_IS_VC && !OMG_HAS_STD)
-#endif
-
 #if OMG_IS_WIN
 #if OMG_DLL_BUILD
 #define OMG_API OMG_C_EXPORT __declspec(dllexport)
