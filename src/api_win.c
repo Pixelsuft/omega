@@ -156,6 +156,7 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(TranslateMessage);
     LOAD_REQUIRED(DispatchMessageW);
     LOAD_REQUIRED(InvalidateRect);
+    LOAD_REQUIRED(InvalidateRgn);
     LOAD_REQUIRED(UpdateWindow);
     LOAD_REQUIRED(DefWindowProcW);
     LOAD_REQUIRED(GetSysColorBrush);

@@ -592,6 +592,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*TranslateMessage)(const MSG*);
     LRESULT OMG_WIN_STD_PREFIX (*DispatchMessageW)(const MSG*);
     BOOL OMG_WIN_STD_PREFIX (*InvalidateRect)(HWND, const RECT*, BOOL);
+    BOOL OMG_WIN_STD_PREFIX (*InvalidateRgn)(HWND, HRGN, BOOL);
     BOOL OMG_WIN_STD_PREFIX (*UpdateWindow)(HWND);
     LRESULT OMG_WIN_STD_PREFIX (*DefWindowProcW)(HWND, UINT, WPARAM, LPARAM);
     HBRUSH OMG_WIN_STD_PREFIX (*GetSysColorBrush)(int);

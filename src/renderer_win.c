@@ -14,6 +14,7 @@
 ))
 
 // TODO: why this peace of shit is so laggy?
+// Update: It works fine in ReactOS, so let's fuck ms again!!!
 
 void omg_renderer_win_update_scale(OMG_RendererWin* this) {
     if (omg_base->support_highdpi) {
