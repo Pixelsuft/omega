@@ -36,7 +36,7 @@ static OMG_Kernel32* k32_cache = NULL;
 
 ULONGLONG omg_win_get_tick_count64_emu(void) {
     uint64_t res = (uint64_t)k32_cache->GetTickCount();
-    while (res < omg_sdl2_cache->_tick64_emu) {
+    while (res < k32_cache->_tick64_emu) {
         res += (uint64_t)sizeof(uint32_t);
     }
     k32_cache->_tick64_emu = res;
