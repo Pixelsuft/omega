@@ -633,6 +633,7 @@ typedef struct {
     COLORREF OMG_WIN_STD_PREFIX (*SetBkColor)(HDC, COLORREF);
     COLORREF OMG_WIN_STD_PREFIX (*SetPixel)(HDC, int, int, COLORREF);
     BOOL OMG_WIN_STD_PREFIX (*Rectangle)(HDC, int, int, int, int);
+    BOOL OMG_WIN_STD_PREFIX (*Ellipse)(HDC, int, int, int, int);
 } OMG_Gdi32;
 
 typedef struct {

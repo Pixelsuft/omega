@@ -14,6 +14,8 @@
 ))
 #define OMG_NO_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f))
 
+// TODO: fix transparency
+
 void omg_renderer_win_update_scale(OMG_RendererWin* this) {
     if (omg_base->support_highdpi) {
         base->dpi_scale.x = win_base->scale.w;
@@ -42,7 +44,7 @@ bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     // RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
     this->g32->SelectObject(this->cur_hpdc, brush);
     // this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
-    this->g32->Rectangle(this->cur_hpdc, 0, 0, (int)base->size.w, (int)base->size.h);
+    this->g32->Rectangle(this->cur_hpdc, -1, -1, (int)base->size.w + 2, (int)base->size.h + 2);
     this->g32->DeleteObject(brush);
     return false;
 }
@@ -101,6 +103,23 @@ bool omg_renderer_win_draw_point(OMG_RendererWin* this, const OMG_FPoint* pos, c
     return omg_renderer_win_fill_rect(this, &rect, col);
 }
 
+bool omg_renderer_win_fill_circle(OMG_RendererWin* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+    HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+    if (OMG_ISNULL(brush))
+        return true;
+    // TODO: without border
+    this->g32->SelectObject(this->cur_hpdc, brush);
+    bool res = !this->g32->Ellipse(
+        this->cur_hpdc,
+        (int)((pos->x + base->offset.x - rad) * base->scale.x),
+        (int)((pos->y + base->offset.y - rad) * base->scale.y),
+        (int)((pos->x + base->offset.x + rad) * base->scale.x),
+        (int)((pos->y + base->offset.y + rad) * base->scale.y)
+    );
+    this->g32->DeleteObject(brush);
+    return res;
+}
+
 bool omg_renderer_win_flip(OMG_RendererWin* this) {
     bool res = false;
     this->u32->EndPaint(this->hwnd, &this->ps);
@@ -124,9 +143,11 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->draw_rect = omg_renderer_win_draw_rect;
     base->fill_rect = omg_renderer_win_fill_rect;
     base->draw_point = omg_renderer_win_draw_point;
+    base->fill_circle = omg_renderer_win_fill_circle;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
     base->soft_scale = true; // IDK how without
+    base->aa = true;
     base->inited = true;
     omg_renderer_win_update_scale(this);
     _OMG_LOG_INFO(omg_base, "Win32 renderer created successfuly");

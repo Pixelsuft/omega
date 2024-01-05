@@ -30,5 +30,6 @@ OMG_API bool omg_renderer_win_draw_line(OMG_RendererWin* this, const OMG_FRect* 
 OMG_API bool omg_renderer_win_draw_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_win_draw_point(OMG_RendererWin* this, const OMG_FPoint* pos, const OMG_Color* col);
+OMG_API bool omg_renderer_win_fill_circle(OMG_RendererWin* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 #endif
 #endif
