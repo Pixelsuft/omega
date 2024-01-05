@@ -5,12 +5,12 @@
 #include <omega/omega_win.h>
 #endif
 #if OMG_HAS_STD
-#include <math.h>
 #include <string.h>
 #if OMG_IS_UNIX
 #include <unistd.h>
 #endif
 #endif
+#include <math.h>
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
 
 // Some of the C std is taken from:
@@ -339,7 +339,7 @@ float omg_dummy_float2_func(float x, float y) {
 }
 
 void omg_std_fill_defaults(OMG_Std* this) {
-    // TODO: lrint
+    // TODO: fix float funcs to compile without stdlib???
     this->lib_load = omg_std_lib_load; // TODO: these 3
     this->lib_func = omg_std_lib_func;
     this->lib_free = omg_std_lib_free;
@@ -391,7 +391,6 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->atan2f = atan2f;
     this->sqrtf = sqrtf;
     this->fmodf = fmodf;
-    this->qsort = qsort;
     this->abs = abs;
     this->fabs = fabs;
     this->fabsf = fabsf;
@@ -412,12 +411,16 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->atan2f = omg_dummy_float2_func;
     this->sqrtf = omg_dummy_float_func;
     this->fmodf = omg_dummy_float2_func;
-    this->qsort = omg_std_qsort;
     this->abs = omg_std_abs;
     this->fabs = omg_std_fabs;
     this->fabsf = omg_std_fabsf;
     this->pow = omg_std_pow;
     this->powf = omg_std_powf;
+#endif
+#if OMG_HAVE_QSORT
+    this->qsort = qsort;
+#else
+    this->qsort = omg_std_qsort;
 #endif
 #if OMG_HAVE_LRINT
     this->lrint = lrint;
