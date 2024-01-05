@@ -338,8 +338,44 @@ float omg_dummy_float2_func(float x, float y) {
     return x / y;
 }
 
+double omg_std_atan2(double x, double y) {
+    return omg_def_std->atan(x / y);
+}
+
+float omg_std_atan2f(float x, float y) {
+    return (float)omg_def_std->atan2((double)x, (double)y);
+}
+
+double omg_std_fmod(double x, double y) {
+    // TODO: trunc function
+    return x - ((double)((int32_t)(x / y))) * y;
+}
+
+float omg_std_fmodf(float x, float y) {
+    return (float)omg_def_std->fmod((double)x, (double)y);
+}
+
+float omg_std_sinf(float x) {
+    return (float)omg_def_std->sin((double)x);
+}
+
+float omg_std_cosf(float x) {
+    return (float)omg_def_std->cos((double)x);
+}
+
+float omg_std_tanf(float x) {
+    return (float)omg_def_std->tan((double)x);
+}
+
+float omg_std_atanf(float x) {
+    return (float)omg_def_std->atan((double)x);
+}
+
+float omg_std_sqrtf(float x) {
+    return (float)omg_def_std->sqrt((double)x);
+}
+
 void omg_std_fill_defaults(OMG_Std* this) {
-    // TODO: fix float funcs to compile without stdlib???
     this->lib_load = omg_std_lib_load; // TODO: these 3
     this->lib_func = omg_std_lib_func;
     this->lib_free = omg_std_lib_free;
@@ -354,13 +390,6 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strlen = strlen;
     this->strcmp = strcmp;
     this->strnlen = strnlen;
-    this->floor = floor;
-    this->ceil = ceil;
-    // TODO: use libmath macro for these
-    this->round = round;
-    this->floorf = floorf;
-    this->ceilf = ceilf;
-    this->roundf = roundf;
 #else
     this->memset = omg_std_memset;
     this->memcpy = omg_std_memcpy;
@@ -369,34 +398,55 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->strcmp = omg_std_strcmp;
     this->strlen = omg_std_strlen;
     this->strnlen = omg_std_strnlen;
-    this->floor = omg_std_floor;
-    this->ceil = omg_std_ceil;
-    this->round = omg_std_round;
-    this->floorf = omg_std_floorf;
-    this->ceilf = omg_std_ceilf;
-    this->roundf = omg_std_roundf;
 #endif
 #if OMG_USE_LIBMATH
-    this->sin = sin;
-    this->cos = cos;
-    this->tan = tan;
-    this->atan = atan;
+#if OMG_USE_LIBMATH_EXTRA
+    this->round = round;
+    this->floorf = floorf;
+    this->ceilf = ceilf;
+    this->roundf = roundf;
     this->atan2 = atan2;
-    this->sqrt = sqrt;
+    this->atan2f = atan2f;
     this->fmod = fmod;
+    this->fmodf = fmodf;
     this->sinf = sinf;
     this->cosf = cosf;
     this->tanf = tanf;
     this->atanf = atanf;
     this->atan2f = atan2f;
     this->sqrtf = sqrtf;
-    this->fmodf = fmodf;
-    this->abs = abs;
-    this->fabs = fabs;
     this->fabsf = fabsf;
-    this->pow = pow;
     this->powf = powf;
 #else
+    this->round = omg_std_round;
+    this->floorf = omg_std_floorf;
+    this->ceilf = omg_std_ceilf;
+    this->roundf = omg_std_roundf;
+    this->atan2 = omg_std_atan2;
+    this->atan2f = omg_std_atan2f;
+    this->fmod = omg_std_fmod;
+    this->fmodf = omg_std_fmodf;
+    this->sinf = omg_std_sinf;
+    this->cosf = omg_std_cosf;
+    this->tanf = omg_std_tanf;
+    this->atanf = omg_std_atanf;
+    this->sqrtf = omg_std_sqrtf;
+    this->fabsf = omg_std_fabsf;
+    this->powf = omg_std_powf;
+#endif
+    this->floor = floor;
+    this->ceil = ceil;
+    this->sin = sin;
+    this->cos = cos;
+    this->tan = tan;
+    this->atan = atan;
+    this->sqrt = sqrt;
+    this->abs = abs;
+    this->fabs = fabs;
+    this->pow = pow;
+#else
+    this->floor = omg_std_floor;
+    this->ceil = omg_std_ceil;
     this->sin = omg_dummy_double_func;
     this->cos = omg_dummy_double_func;
     this->tan = omg_dummy_double_func;
@@ -422,7 +472,7 @@ void omg_std_fill_defaults(OMG_Std* this) {
 #else
     this->qsort = omg_std_qsort;
 #endif
-#if OMG_HAVE_LRINT
+#if OMG_HAVE_LRINT && OMG_USE_LIBMATH
     this->lrint = lrint;
 #else
     this->lrint = omg_std_lrint;

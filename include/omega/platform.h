@@ -63,7 +63,7 @@
 #define OMG_HAVE__ULTOA 0
 #define OMG_HAVE__I64TOA 0
 #define OMG_HAVE__UI64TOA 0
-#define OMG_HAVE_LRINT 1
+#define OMG_HAVE_LRINT OMG_HAS_STD
 #define OMG_HAVE_QSORT (OMG_HAS_STD)
 #endif
 

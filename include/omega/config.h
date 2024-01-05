@@ -60,6 +60,9 @@
 #ifndef OMG_USE_LIBMATH
 #define OMG_USE_LIBMATH 1
 #endif
+#ifndef OMG_USE_LIBMATH_EXTRA
+#define OMG_USE_LIBMATH_EXTRA OMG_HAS_STD
+#endif
 
 #ifndef OMG_EXPORT_SHIT
 // Which should be default?
