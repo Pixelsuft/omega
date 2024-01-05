@@ -24,6 +24,16 @@ static const char ntoa_table[] = {
 };
 static OMG_Std* omg_def_std = NULL;
 
+#if OMG_IMPL_PEI386_RUNTIME_RELOCATOR
+void _pei386_runtime_relocator(void) {
+	static bool s_relocated = false;
+	if(s_relocated) {
+		return;
+	}
+	s_relocated = true;
+}
+#endif
+
 void* omg_std_memset(void* dst, register int val, register size_t len) {
     register unsigned char *ptr = (unsigned char*)dst;
     while (len-- > 0)

@@ -58,7 +58,7 @@
 #endif
 
 #ifndef OMG_USE_LIBMATH
-#define OMG_USE_LIBMATH 1
+#define OMG_USE_LIBMATH 0
 #endif
 #ifndef OMG_USE_LIBMATH_EXTRA
 #define OMG_USE_LIBMATH_EXTRA OMG_HAS_STD
