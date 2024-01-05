@@ -3,7 +3,9 @@
 #if OMG_SUPPORT_RAYLIB
 #include <omega/entry.h>
 #if !OMG_RAYLIB_DYNAMIC
+#define Rectangle RL_Rectangle
 #include <raylib.h>
+#undef Rectangle
 #endif
 #define OMG_RAYLIB_PREFIX
 
@@ -61,12 +63,12 @@ typedef struct Matrix {
     float m3, m7, m11, m15;
 } Matrix;
 
-typedef struct Rectangle {
+typedef struct RL_Rectangle {
     float x;
     float y;
     float width;
     float height;
-} Rectangle;
+} RL_Rectangle;
 
 typedef enum {
     MOUSE_BUTTON_LEFT    = 0,
@@ -354,7 +356,7 @@ typedef struct {
     bool OMG_RAYLIB_PREFIX (*IsRenderTextureReady)(RenderTexture2D);
     void OMG_RAYLIB_PREFIX (*UnloadRenderTexture)(RenderTexture2D);
     void OMG_RAYLIB_PREFIX (*UpdateTexture)(Texture2D, const void*);
-    void OMG_RAYLIB_PREFIX (*UpdateTextureRec)(Texture2D, Rectangle, const void*);  
+    void OMG_RAYLIB_PREFIX (*UpdateTextureRec)(Texture2D, RL_Rectangle, const void*);  
     void OMG_RAYLIB_PREFIX (*BeginDrawing)(void);
     void OMG_RAYLIB_PREFIX (*EndDrawing)(void);
     void OMG_RAYLIB_PREFIX (*BeginMode2D)(Camera2D);
@@ -379,7 +381,7 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*UnloadShader)(Shader);
     void OMG_RAYLIB_PREFIX (*ClearBackground)(Color);
     void OMG_RAYLIB_PREFIX (*DrawTextureV)(Texture2D, Vector2, Color);
-    void OMG_RAYLIB_PREFIX (*DrawTexturePro)(Texture2D, Rectangle, Rectangle, Vector2, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawTexturePro)(Texture2D, RL_Rectangle, RL_Rectangle, Vector2, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawPixelV)(Vector2, Color);
     void OMG_RAYLIB_PREFIX (*DrawLineV)(Vector2, Vector2, Color);
     void OMG_RAYLIB_PREFIX (*DrawLineEx)(Vector2, Vector2, float, Color);
@@ -387,11 +389,11 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*DrawCircleLinesV)(Vector2, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawEllipse)(int, int, float, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawEllipseLines)(int, int, float, float, Color);
-    void OMG_RAYLIB_PREFIX (*DrawRectangleRec)(Rectangle, Color);
-    void OMG_RAYLIB_PREFIX (*DrawRectanglePro)(Rectangle, Vector2, float, Color);
-    void OMG_RAYLIB_PREFIX (*DrawRectangleLinesEx)(Rectangle, float, Color);
-    void OMG_RAYLIB_PREFIX (*DrawRectangleRounded)(Rectangle, float, int, Color);
-    void OMG_RAYLIB_PREFIX (*DrawRectangleRoundedLines)(Rectangle, float, int, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawRectangleRec)(RL_Rectangle, Color);
+    void OMG_RAYLIB_PREFIX (*DrawRectanglePro)(RL_Rectangle, Vector2, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawRectangleLinesEx)(RL_Rectangle, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawRectangleRounded)(RL_Rectangle, float, int, Color);
+    void OMG_RAYLIB_PREFIX (*DrawRectangleRoundedLines)(RL_Rectangle, float, int, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawPoly)(Vector2, int, float, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawPolyLines)(Vector2, int, float, float, Color);
     void OMG_RAYLIB_PREFIX (*DrawPolyLinesEx)(Vector2, int, float, float, float, Color);

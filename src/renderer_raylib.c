@@ -97,20 +97,20 @@ bool omg_renderer_raylib_draw_line(OMG_RendererRaylib* this, const OMG_FRect* st
 }
 
 bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
+    RL_Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
     this->raylib->DrawRectangleLinesEx(rec, 1.0f, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
+    RL_Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
     this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
     if (RAYLIB_HAS_SS()) {
-        Rectangle rec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y, .width = this->ss.x, .height = this->ss.y };
+        RL_Rectangle rec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y, .width = this->ss.x, .height = this->ss.y };
         this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
         return false;
     }
@@ -217,8 +217,8 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
 
 bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos) {
     if (RAYLIB_HAS_SS()) {
-        Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
-        Rectangle dst;
+        RL_Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
+        RL_Rectangle dst;
         if (OMG_ISNULL(pos)) {
             dst.x = dst.y = 0.0f;
         }
