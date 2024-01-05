@@ -25,26 +25,21 @@ void omg_renderer_win_update_scale(OMG_RendererWin* this) {
 bool omg_renderer_win_destroy(OMG_RendererWin* this) {
     if (OMG_ISNOTNULL(this->hwdc)) {
         this->u32->ReleaseDC(this->hwnd, this->hwdc);
-        this->hwdc = NULL;
+        this->hwdc = this->cur_hwdc = NULL;
     }
-    this->hpdc = NULL;
+    this->hpdc = this->cur_hpdc = NULL;
     return false;
 }
 
 bool omg_renderer_win_begin(OMG_RendererWin* this) {
-    this->hpdc = this->u32->BeginPaint(this->hwnd, &this->ps);
+    this->cur_hpdc = this->u32->BeginPaint(this->hwnd, &this->ps);
     return OMG_ISNULL(this->hpdc);
 }
 
 bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
-    float g = col->g;
-    // WTF
-    if (col->r == 0.0f)
-        return true;
-    // printf("%f %f %f\n", col->r, col->g, col->b);
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
-    this->u32->FillRect(this->hwdc, &fill_rect, brush);
+    this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
     return false;
 }
 
@@ -59,7 +54,7 @@ bool omg_renderer_win_flip(OMG_RendererWin* this) {
 bool omg_renderer_win_init(OMG_RendererWin* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
-    this->hwdc = this->u32->GetDC(this->hwnd);
+    this->cur_hwdc = this->hwdc = this->u32->GetDC(this->hwnd);
     if (OMG_ISNULL(this->hwdc))
         _OMG_LOG_WARN(omg_base, "Failed to get Win32 HDC for window");
     base->_on_update_window_size = omg_renderer_win_update_scale;

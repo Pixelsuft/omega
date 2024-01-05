@@ -141,7 +141,7 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(300, 300), 50.0f, &OMG_COLOR_MAKE_RGBA(0, 0, 255, 128));
     this->ren->set_target(this->ren, this->tex);
     // Drawing on a texture
-    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
+    // this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
     this->ren->set_target(this->ren, NULL);
     this->ren->copy(this->ren, this->tex, &OMG_FPOINT_MAKE(400, 200));
     this->ren->flip(this->ren);
@@ -149,8 +149,8 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_on_expose(OMG_EventExpose* event) {
     // Be careful with pointer casting
-    //app_on_update((OMG_EventUpdate*)event);
-    //app_on_paint((OMG_EventPaint*)event);
+    app_on_update((OMG_EventUpdate*)event);
+    app_on_paint((OMG_EventPaint*)event);
 }
 
 void app_on_size_change(OMG_EventResize* event) {

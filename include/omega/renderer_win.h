@@ -8,7 +8,9 @@ typedef struct {
     OMG_Renderer parent;
     PAINTSTRUCT ps;
     HDC hpdc;
+    HDC cur_hpdc;
     HDC hwdc;
+    HDC cur_hwdc;
     HWND hwnd;
     OMG_User32* u32;
     OMG_Gdi32* g32;
