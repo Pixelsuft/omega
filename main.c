@@ -149,8 +149,8 @@ void app_on_paint(OMG_EventPaint* event) {
 
 void app_on_expose(OMG_EventExpose* event) {
     // Be careful with pointer casting
-    app_on_update((OMG_EventUpdate*)event);
-    app_on_paint((OMG_EventPaint*)event);
+    //app_on_update((OMG_EventUpdate*)event);
+    //app_on_paint((OMG_EventPaint*)event);
 }
 
 void app_on_size_change(OMG_EventResize* event) {

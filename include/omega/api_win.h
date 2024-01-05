@@ -3,8 +3,6 @@
 #include <omega/ostd.h>
 #if OMG_IS_WIN
 #define WIN32_LEAN_AND_MEAN
-// Fuck Windows
-#define Rectangle WIN_Rectangle
 #if OMG_WINAPI_DYNAMIC
 #include <libloaderapi.h>
 #include <basetsd.h>
@@ -13,7 +11,6 @@
 #include <windows.h>
 #include <windowsx.h>
 #endif
-#undef Rectangle
 #define OMG_WIN_STD_PREFIX WINAPI
 
 #if OMG_WIN_PRECISE_ENCODING

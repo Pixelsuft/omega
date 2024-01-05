@@ -7,6 +7,11 @@
 #define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
+#define _OMG_WIN_OMG_RGB(col) (RGB( \
+    (int)((col)->r * (omg_color_t)255 / OMG_MAX_COLOR),\
+    (int)((col)->g * (omg_color_t)255 / OMG_MAX_COLOR),\
+    (int)((col)->b * (omg_color_t)255 / OMG_MAX_COLOR) \
+))
 
 void omg_renderer_win_update_scale(OMG_RendererWin* this) {
     if (omg_base->support_highdpi) {
@@ -18,18 +23,28 @@ void omg_renderer_win_update_scale(OMG_RendererWin* this) {
 }
 
 bool omg_renderer_win_destroy(OMG_RendererWin* this) {
-    this->hdc = NULL;
+    if (OMG_ISNOTNULL(this->hwdc)) {
+        this->u32->ReleaseDC(this->hwnd, this->hwdc);
+        this->hwdc = NULL;
+    }
+    this->hpdc = NULL;
     return false;
 }
 
 bool omg_renderer_win_begin(OMG_RendererWin* this) {
-    this->hdc = this->u32->BeginPaint(this->hwnd, &this->ps);
-    return OMG_ISNULL(this->hdc);
+    this->hpdc = this->u32->BeginPaint(this->hwnd, &this->ps);
+    return OMG_ISNULL(this->hpdc);
 }
 
 bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
-    HBRUSH brush = this->g32->CreateSolidBrush(RGB(0, 0, 0));
-    this->g32->SelectObject(this->hdc, (HGDIOBJ)brush);
+    float g = col->g;
+    // WTF
+    if (col->r == 0.0f)
+        return true;
+    // printf("%f %f %f\n", col->r, col->g, col->b);
+    HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+    RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
+    this->u32->FillRect(this->hwdc, &fill_rect, brush);
     return false;
 }
 
@@ -44,6 +59,9 @@ bool omg_renderer_win_flip(OMG_RendererWin* this) {
 bool omg_renderer_win_init(OMG_RendererWin* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
+    this->hwdc = this->u32->GetDC(this->hwnd);
+    if (OMG_ISNULL(this->hwdc))
+        _OMG_LOG_WARN(omg_base, "Failed to get Win32 HDC for window");
     base->_on_update_window_size = omg_renderer_win_update_scale;
     base->destroy = omg_renderer_win_destroy;
     base->begin = omg_renderer_win_begin;
