@@ -766,7 +766,12 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_ERASEBKGND: {
-            return TRUE;
+            /*HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+            RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
+            this->g32->SelectObject(this->cur_hpdc, brush);
+            this->g32->Rectangle(this->cur_hpdc, 0, 0, (int)base->size.w, (int)base->size.h);
+            return TRUE;*/
+            return RET_DEF_PROC();
         }
         case WM_MOUSELEAVE: {
             this->is_mouse_left = true;

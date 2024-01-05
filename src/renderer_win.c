@@ -46,6 +46,23 @@ bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     return false;
 }
 
+bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col) {
+    // WTF why this doesn't work???
+    // HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+    OMG_UNUSED(col);
+    HBRUSH brush = this->g32->CreateSolidBrush(RGB(0, 0, 255));
+    this->g32->SelectObject(this->ps.hdc, brush);
+    this->g32->Rectangle(
+        this->ps.hdc,
+        (int)rect->x,
+        (int)rect->y,
+        (int)(rect->w + rect->x),
+        (int)(rect->h + rect->y)
+    );
+    this->g32->DeleteObject(brush);
+    return false;
+}
+
 bool omg_renderer_win_flip(OMG_RendererWin* this) {
     bool res = false;
     this->u32->EndPaint(this->hwnd, &this->ps);
@@ -65,6 +82,7 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->begin = omg_renderer_win_begin;
     base->clear = omg_renderer_win_clear;
     base->flip = omg_renderer_win_flip;
+    base->fill_rect = omg_renderer_win_fill_rect;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
     base->inited = true;

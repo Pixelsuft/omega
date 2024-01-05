@@ -22,9 +22,10 @@ OMG_API bool omg_renderer_win_destroy(OMG_RendererWin* this);
 #if OMG_EXPORT_SHIT
 #include <omega/texture_win.h>
 
-void omg_renderer_win_update_scale(OMG_RendererWin* this);
-bool omg_renderer_win_begin(OMG_RendererWin* this);
-bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col);
-bool omg_renderer_win_flip(OMG_RendererWin* this);
+OMG_API void omg_renderer_win_update_scale(OMG_RendererWin* this);
+OMG_API bool omg_renderer_win_begin(OMG_RendererWin* this);
+OMG_API bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col);
+OMG_API bool omg_renderer_win_flip(OMG_RendererWin* this);
+OMG_API bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col);
 #endif
 #endif
