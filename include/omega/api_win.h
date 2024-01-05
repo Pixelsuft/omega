@@ -615,6 +615,7 @@ typedef struct {
     HANDLE handle;
     int OMG_WIN_STD_PREFIX (*GetDeviceCaps)(HDC, int);
     HDC OMG_WIN_STD_PREFIX (*CreateCompatibleDC)(HDC);
+    BOOL OMG_WIN_STD_PREFIX (*DeleteDC)(HDC);
     HBITMAP OMG_WIN_STD_PREFIX (*CreateCompatibleBitmap)(HDC, int, int);
 } OMG_Gdi32;
 

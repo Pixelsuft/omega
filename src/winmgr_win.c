@@ -4,6 +4,7 @@
 
 #if OMG_SUPPORT_WIN
 #define base ((OMG_Winmgr*)this)
+#define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)
 #include <omega/surface_win.h>
 
@@ -43,11 +44,31 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
 }
 
 OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint* size, bool has_alpha) {
-    return NULL;
+    OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
+    if (OMG_ISNULL(surf))
+        return NULL;
+    surf->dc = this->g32->CreateCompatibleDC(NULL);
+    if (OMG_ISNULL(surf->dc)) {
+        _OMG_LOG_ERROR(omg_base, "Failed to create Win32 surface");
+        OMG_FREE(omg_base->mem, surf);
+        return NULL;
+    }
+    surf_base->has_alpha = has_alpha;
+    return surf;
 }
 
 bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
-    return false;
+    if (OMG_ISNULL(surf)) {
+        _OMG_NULL_SURFACE_WARN();
+        return true;
+    }
+    bool res = false;
+    if (!this->g32->DeleteDC(surf->dc)) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to delete surface");
+    }
+    OMG_FREE(omg_base->mem, surf);
+    return res;
 }
 
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
