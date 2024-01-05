@@ -622,6 +622,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*DeleteObject)(HGDIOBJ);
     HBRUSH OMG_WIN_STD_PREFIX (*CreateSolidBrush)(COLORREF);
     HGDIOBJ OMG_WIN_STD_PREFIX (*SelectObject)(HDC, HGDIOBJ);
+    BOOL OMG_WIN_STD_PREFIX (*Rectangle)(HDC, int, int, int, int);
 } OMG_Gdi32;
 
 typedef struct {

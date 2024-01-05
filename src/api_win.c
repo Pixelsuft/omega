@@ -205,6 +205,7 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(DeleteObject);
     LOAD_REQUIRED(CreateSolidBrush);
     LOAD_REQUIRED(SelectObject);
+    LOAD_REQUIRED(Rectangle);
     OMG_END_POINTER_CAST();
     return false;
 }

@@ -13,9 +13,6 @@
     (int)((col)->b * (omg_color_t)255 / OMG_MAX_COLOR) \
 ))
 
-// TODO: why this peace of shit is so laggy?
-// Update: It works fine in ReactOS, so let's fuck ms again!!!
-
 void omg_renderer_win_update_scale(OMG_RendererWin* this) {
     if (omg_base->support_highdpi) {
         base->dpi_scale.x = win_base->scale.w;
@@ -42,7 +39,9 @@ bool omg_renderer_win_begin(OMG_RendererWin* this) {
 bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
+    this->g32->SelectObject(this->cur_hpdc, brush);
     this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
+    this->g32->Rectangle(this->cur_hpdc, 0, 0, (int)base->size.w, (int)base->size.h);
     this->g32->DeleteObject(brush);
     return false;
 }
