@@ -26,7 +26,9 @@ OMG_API void omg_renderer_win_update_scale(OMG_RendererWin* this);
 OMG_API bool omg_renderer_win_begin(OMG_RendererWin* this);
 OMG_API bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col);
 OMG_API bool omg_renderer_win_flip(OMG_RendererWin* this);
+OMG_API bool omg_renderer_win_draw_line(OMG_RendererWin* this, const OMG_FRect* start_end, const OMG_Color* col);
 OMG_API bool omg_renderer_win_draw_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col);
+OMG_API bool omg_renderer_win_draw_point(OMG_RendererWin* this, const OMG_FPoint* pos, const OMG_Color* col);
 #endif
 #endif

@@ -208,6 +208,7 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(SelectObject);
     LOAD_REQUIRED(SetBkMode);
     LOAD_REQUIRED(SetBkColor);
+    LOAD_REQUIRED(SetPixel);
     LOAD_REQUIRED(Rectangle);
     OMG_END_POINTER_CAST();
     return false;

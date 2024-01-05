@@ -12,6 +12,7 @@
     (int)((col)->g * (omg_color_t)255 / OMG_MAX_COLOR),\
     (int)((col)->b * (omg_color_t)255 / OMG_MAX_COLOR) \
 ))
+#define OMG_NO_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f))
 
 void omg_renderer_win_update_scale(OMG_RendererWin* this) {
     if (omg_base->support_highdpi) {
@@ -76,6 +77,30 @@ bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, co
     return res;
 }
 
+bool omg_renderer_win_draw_line(OMG_RendererWin* this, const OMG_FRect* start_end, const OMG_Color* col) {
+    HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
+    if (OMG_ISNULL(brush))
+        return true;
+    // TODO: https://stackoverflow.com/questions/53270959/cwinapi-simple-program-drawing-lines
+    OMG_UNUSED(start_end);
+    bool res = true;
+    this->g32->DeleteObject(brush);
+    return res;
+}
+
+bool omg_renderer_win_draw_point(OMG_RendererWin* this, const OMG_FPoint* pos, const OMG_Color* col) {
+    if (OMG_NO_SCALE()) {
+        return !this->g32->SetPixel(
+            this->cur_hpdc,
+            (int)(pos->x + base->offset.x),
+            (int)(pos->y + base->offset.y),
+            _OMG_WIN_OMG_RGB(col)
+        );
+    }
+    OMG_FRect rect = { .x = pos->x, .y = pos->y, .w = 1.0f, .h = 1.0f };
+    return omg_renderer_win_fill_rect(this, &rect, col);
+}
+
 bool omg_renderer_win_flip(OMG_RendererWin* this) {
     bool res = false;
     this->u32->EndPaint(this->hwnd, &this->ps);
@@ -95,8 +120,10 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->begin = omg_renderer_win_begin;
     base->clear = omg_renderer_win_clear;
     base->flip = omg_renderer_win_flip;
-    base->draw_rect;
+    base->draw_line = omg_renderer_win_draw_line;
+    base->draw_rect = omg_renderer_win_draw_rect;
     base->fill_rect = omg_renderer_win_fill_rect;
+    base->draw_point = omg_renderer_win_draw_point;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
     base->soft_scale = true; // IDK how without

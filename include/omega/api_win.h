@@ -631,6 +631,7 @@ typedef struct {
     HGDIOBJ OMG_WIN_STD_PREFIX (*SelectObject)(HDC, HGDIOBJ);
     int OMG_WIN_STD_PREFIX (*SetBkMode)(HDC, int);
     COLORREF OMG_WIN_STD_PREFIX (*SetBkColor)(HDC, COLORREF);
+    COLORREF OMG_WIN_STD_PREFIX (*SetPixel)(HDC, int, int, COLORREF);
     BOOL OMG_WIN_STD_PREFIX (*Rectangle)(HDC, int, int, int, int);
 } OMG_Gdi32;
 
