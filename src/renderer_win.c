@@ -38,7 +38,7 @@ bool omg_renderer_win_begin(OMG_RendererWin* this) {
 
 bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
-    RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
+    // RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
     this->g32->SelectObject(this->cur_hpdc, brush);
     // this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
     this->g32->Rectangle(this->cur_hpdc, 0, 0, (int)base->size.w, (int)base->size.h);
@@ -49,10 +49,10 @@ bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
 bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     RECT fill_rect = {
-        .left = (LONG)(rect->x),
-        .top = (LONG)(rect->y),
-        .right = (LONG)(rect->w + rect->x),
-        .bottom = (LONG)(rect->h + rect->y)
+        .left = (LONG)((rect->x + base->offset.x) * base->scale.x),
+        .top = (LONG)((rect->y + base->offset.y) * base->scale.y),
+        .right = (LONG)((rect->w + rect->x + base->offset.x) * base->scale.x),
+        .bottom = (LONG)((rect->h + rect->y + base->offset.y) * base->scale.y)
     };
     this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
     this->g32->DeleteObject(brush);
@@ -81,6 +81,7 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->fill_rect = omg_renderer_win_fill_rect;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
+    base->soft_scale = true; // IDK how without
     base->inited = true;
     omg_renderer_win_update_scale(this);
     _OMG_LOG_INFO(omg_base, "Win32 renderer created successfuly");
