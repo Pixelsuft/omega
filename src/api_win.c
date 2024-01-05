@@ -165,6 +165,7 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(ReleaseDC);
     LOAD_REQUIRED(BeginPaint);
     LOAD_REQUIRED(EndPaint);
+    LOAD_REQUIRED(FillRect);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwareness);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwarenessContext);
@@ -201,6 +202,8 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(DeleteDC);
     LOAD_REQUIRED(CreateCompatibleBitmap);
     LOAD_REQUIRED(DeleteObject);
+    LOAD_REQUIRED(CreateSolidBrush);
+    LOAD_REQUIRED(SelectObject);
     OMG_END_POINTER_CAST();
     return false;
 }

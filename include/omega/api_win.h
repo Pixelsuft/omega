@@ -102,6 +102,9 @@
 #ifndef IS_SURROGATE_PAIR
 #define IS_SURROGATE_PAIR(h, l) (IS_HIGH_SURROGATE(h) && IS_LOW_SURROGATE(l))
 #endif
+#ifndef RGB
+#define RGB ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#endif
 #ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x10
 #endif
@@ -609,6 +612,7 @@ typedef struct {
     int OMG_WIN_STD_PREFIX (*ReleaseDC)(HWND, HDC);
     HDC OMG_WIN_STD_PREFIX (*BeginPaint)(HWND, LPPAINTSTRUCT);
     HDC OMG_WIN_STD_PREFIX (*EndPaint)(HWND, const PAINTSTRUCT*);
+    int OMG_WIN_STD_PREFIX (*FillRect)(HDC, const RECT*, HBRUSH);
 } OMG_User32;
 
 typedef struct {
@@ -618,6 +622,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*DeleteDC)(HDC);
     HBITMAP OMG_WIN_STD_PREFIX (*CreateCompatibleBitmap)(HDC, int, int);
     BOOL OMG_WIN_STD_PREFIX (*DeleteObject)(HGDIOBJ);
+    HBRUSH OMG_WIN_STD_PREFIX (*CreateSolidBrush)(COLORREF);
+    HGDIOBJ OMG_WIN_STD_PREFIX (*SelectObject)(HDC, HGDIOBJ);
 } OMG_Gdi32;
 
 typedef struct {

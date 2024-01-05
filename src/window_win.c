@@ -529,6 +529,7 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
         omg_renderer_fill_on_create(base->ren);
         ren_win->g32 = this->g32;
         ren_win->u32 = this->u32;
+        ren_win->dwm = this->dwm;
         ren_win->hwnd = this->hwnd;
         base->ren->was_allocated = true;
         base->ren->win = this;
