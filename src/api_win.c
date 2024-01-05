@@ -197,6 +197,8 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
 #endif
     OMG_BEGIN_POINTER_CAST();
     LOAD_REQUIRED(GetDeviceCaps);
+    LOAD_REQUIRED(CreateCompatibleDC);
+    LOAD_REQUIRED(CreateCompatibleBitmap);
     OMG_END_POINTER_CAST();
     return false;
 }

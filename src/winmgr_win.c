@@ -1,10 +1,12 @@
 #include <omega/window_win.h>
 #include <omega/winmgr_win.h>
 #include <omega/omega.h>
-#define base ((OMG_Winmgr*)this)
-#define omg_base ((OMG_Omega*)base->omg)
 
 #if OMG_SUPPORT_WIN
+#define base ((OMG_Winmgr*)this)
+#define omg_base ((OMG_Omega*)base->omg)
+#include <omega/surface_win.h>
+
 OMG_WindowWin* omg_winmgr_win_window_alloc(OMG_WinmgrWin* this) {
     OMG_WindowWin* result = OMG_MALLOC(omg_base->mem, sizeof(OMG_WindowWin));
     if (OMG_ISNULL(result)) {
@@ -40,6 +42,14 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
     return false;
 }
 
+OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint* size, bool has_alpha) {
+    return NULL;
+}
+
+bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
+    return false;
+}
+
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -47,6 +57,8 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->destroy = omg_winmgr_win_destroy;
     base->window_alloc = omg_winmgr_win_window_alloc;
     base->window_free = omg_winmgr_win_window_free;
+    base->surf_create = omg_winmgr_win_surf_create;
+    base->surf_destroy = omg_winmgr_win_surf_destroy;
     OMG_END_POINTER_CAST();
     return false;
 }

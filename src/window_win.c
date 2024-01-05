@@ -1002,6 +1002,10 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
         }
         case WM_DESTROY: {
             this->destroyed = true;
+            if (OMG_ISNOTNULL(this->hdc)) {
+                this->u32->ReleaseDC(this->hwnd, this->hdc);
+                this->hdc = NULL;
+            }
             OMG_EventClose event;
             MAKE_EVENT(&event);
             event.win = this;
@@ -1097,6 +1101,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->destroyed = false;
     this->is_mouse_left = true;
     this->is_focused = false;
+    this->hdc = NULL;
     this->high_surrogate = 0;
     this->mouse_state_cache = 0;
     this->last_mouse_state = 0;
@@ -1175,6 +1180,9 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_win_check_dark_mode(this);
     base->scale.x = 0.0f; // Hack
     omg_window_win_update_scale(this);
+    this->hdc = this->u32->GetDC(this->hwnd);
+    if (OMG_ISNULL(this->hdc))
+        _OMG_LOG_WARN(omg_base, "Failed to create HDC");
     OMG_BEGIN_POINTER_CAST();
     base->set_state = omg_window_win_set_state;
     base->set_sys_button = omg_window_win_set_sys_button;

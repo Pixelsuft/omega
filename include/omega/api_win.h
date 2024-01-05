@@ -614,6 +614,8 @@ typedef struct {
 typedef struct {
     HANDLE handle;
     int OMG_WIN_STD_PREFIX (*GetDeviceCaps)(HDC, int);
+    HDC OMG_WIN_STD_PREFIX (*CreateCompatibleDC)(HDC);
+    HBITMAP OMG_WIN_STD_PREFIX (*CreateCompatibleBitmap)(HDC, int, int);
 } OMG_Gdi32;
 
 typedef struct {
