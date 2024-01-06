@@ -155,6 +155,7 @@ OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, const OMG_FPo
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 bitmap for texture");
         return NULL;
     }
+    this->g32->SelectObject(tex->dc, tex->bm);
     tex_base->has_alpha = has_alpha;
     tex_base->auto_blend = true;
     tex_base->size.w = size->w;
