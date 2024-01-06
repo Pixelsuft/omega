@@ -543,7 +543,7 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
         return NULL;
     }
     OMG_BEGIN_POINTER_CAST();
-    if (omg_string_ensure_null(path))
+    if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     file = omg_file_from_path(this, file, path, mode);
     file->rw = this->sdl2->SDL_RWFromFile(path, path->ptr);
