@@ -147,6 +147,12 @@
 #ifndef OPAQUE
 #define OPAQUE 2
 #endif
+#ifndef NULL_BRUSH
+#define NULL_BRUSH 5
+#endif
+#ifndef PS_SOLID
+#define PS_SOLID 0
+#endif 
 #ifndef HALFTONE
 #define HALFTONE 4
 #endif
@@ -670,6 +676,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*BitBlt)(HDC, int, int, int, int, HDC, int, int, DWORD);
     BOOL OMG_WIN_STD_PREFIX (*StretchBlt)(HDC, int, int, int, int, HDC, int, int, int, int, DWORD);
     int OMG_WIN_STD_PREFIX (*SetStretchBltMode)(HDC, int);
+    HGDIOBJ OMG_WIN_STD_PREFIX (*GetStockObject)(int);
+    HPEN OMG_WIN_STD_PREFIX (*CreatePen)(int, int, COLORREF);
 } OMG_Gdi32;
 
 typedef struct {

@@ -226,6 +226,8 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(BitBlt);
     LOAD_REQUIRED(StretchBlt);
     LOAD_REQUIRED(SetStretchBltMode);
+    LOAD_REQUIRED(GetStockObject);
+    LOAD_REQUIRED(CreatePen);
     OMG_END_POINTER_CAST();
     return false;
 }
