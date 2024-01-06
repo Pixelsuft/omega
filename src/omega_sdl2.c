@@ -10,6 +10,9 @@
 #include <emscripten.h>
 #endif
 #define base ((OMG_Omega*)this)
+#define file_base ((OMG_File*)file)
+#define file_omg ((OMG_OmegaSdl2*)file_base->omg)
+#define file_omg_base ((OMG_Omega*)file_base->omg)
 #define winmgr_sdl2 ((OMG_WinmgrSdl2*)base->winmgr)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
@@ -26,7 +29,11 @@
         win = base->winmgr->cache[i]; \
         break; \
     } \
-} \
+}
+#define OMG_SDL2_FILE_MODE(mode, str_mode) do { \
+    if (mode == OMG_FILE_MODE_R) \
+        str_mode = "r"; \
+} while (0)
 
 void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;
@@ -514,6 +521,41 @@ bool omg_sdl2_alloc_winmgr(OMG_OmegaSdl2* this) {
     return false;
 }
 
+bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
+    bool res = false;
+    if (OMG_ISNULL(file->rw)) {
+        if (file->rw->close(file->rw) < 0) {
+            _OMG_LOG_WARN(file_omg_base, "Failed to close SDL2 RWops for file ", file_base->fp->ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+            res = true;
+        }
+    }
+    OMG_BEGIN_POINTER_CAST();
+    omg_file_destroy(file);
+    OMG_END_POINTER_CAST();
+    return res;
+}
+
+OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode) {
+    const char* str_mode = NULL;
+    OMG_SDL2_FILE_MODE(mode, str_mode);
+    if (OMG_ISNULL(str_mode)) {
+        _OMG_LOG_ERROR(base, "Invalid mode for opening file ", path->ptr);
+        return NULL;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    if (omg_string_ensure_null(path))
+        return NULL;
+    file = omg_file_from_path(this, file, path, mode);
+    file->rw = this->sdl2->SDL_RWFromFile(path, path->ptr);
+    if (OMG_ISNULL(file->rw)) {
+        _OMG_LOG_ERROR(base, "Failed to create SDL2 RWops from file ", path->ptr," (", this->sdl2->SDL_GetError(), ")");
+        omg_file_destroy(file);
+        return NULL;
+    }
+    OMG_END_POINTER_CAST();
+    return file;
+}
+
 bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
     bool result = base->app_quit((OMG_Omega*)this);
     if (base->should_free_std) {
@@ -586,6 +628,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->auto_loop_run = omg_sdl2_auto_loop_run;
     base->winmgr_alloc = omg_sdl2_alloc_winmgr;
     base->destroy = omg_sdl2_destroy;
+    base->file_from_path = omg_sdl2_file_from_path;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;
