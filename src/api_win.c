@@ -103,6 +103,18 @@ bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
 #endif
     OMG_BEGIN_POINTER_CAST();
     LOAD_REQUIRED_UGLY(RtlGetVersion);
+    LOAD_REQUIRED_UGLY(floor);
+    LOAD_REQUIRED_UGLY(ceil);
+    LOAD_REQUIRED_UGLY(sin);
+    LOAD_REQUIRED_UGLY(cos);
+    LOAD_REQUIRED_UGLY(tan);
+    LOAD_REQUIRED_UGLY(atan);
+    LOAD_REQUIRED_UGLY(atan2);
+    LOAD_REQUIRED_UGLY(sqrt);
+    LOAD_REQUIRED_UGLY(qsort);
+    LOAD_REQUIRED_UGLY(abs);
+    LOAD_REQUIRED_UGLY(fabs);
+    LOAD_REQUIRED_UGLY(pow);
     OMG_END_POINTER_CAST();
     return false;
 }

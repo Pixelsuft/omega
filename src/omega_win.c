@@ -285,6 +285,18 @@ void omg_win_fill_std(OMG_OmegaWin* this) {
     /* base->std->lib_load = omg_win_std_lib_load;
     base->std->lib_func = omg_win_std_lib_func;
     base->std->lib_free = omg_win_std_lib_free; */
+    base->std->floor = this->nt->floor;
+    base->std->ceil = this->nt->ceil;
+    base->std->sin = this->nt->sin;
+    base->std->cos = this->nt->cos;
+    base->std->tan = this->nt->tan;
+    base->std->atan = this->nt->atan;
+    base->std->atan2 = this->nt->atan2;
+    base->std->sqrt = this->nt->sqrt;
+    base->std->qsort = this->nt->qsort;
+    base->std->abs = this->nt->abs;
+    base->std->fabs = this->nt->fabs;
+    base->std->pow = this->nt->pow;
 }
 
 bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
@@ -331,22 +343,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     else
         base->should_free_mem = false;
-    if (OMG_ISNULL(base->std)) {
-        base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
-        if (OMG_ISNULL(base->std)) {
-            if (this->should_free_k32) {
-                omg_winapi_kernel32_free(this->k32);
-                this->k32 = NULL;
-            }
-            return true;
-        }
-        omg_std_fill_defaults(base->std);
-        omg_std_set_default_handle(base->std);
-        omg_win_fill_std(this);
-        base->should_free_std = true;
-    }
-    else
-        base->should_free_std = false;
     if (OMG_ISNULL(this->nt)) {
         this->nt = OMG_MALLOC(base->mem, sizeof(OMG_Ntdll));
         if (OMG_ISNULL(this->nt)) {
@@ -368,6 +364,22 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     else
         this->should_free_ntdll = false;
+    if (OMG_ISNULL(base->std)) {
+        base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
+        if (OMG_ISNULL(base->std)) {
+            if (this->should_free_k32) {
+                omg_winapi_kernel32_free(this->k32);
+                this->k32 = NULL;
+            }
+            return true;
+        }
+        omg_std_fill_defaults(base->std);
+        omg_std_set_default_handle(base->std);
+        omg_win_fill_std(this);
+        base->should_free_std = true;
+    }
+    else
+        base->should_free_std = false;
     OMG_WIN_NTDLL_OSVERSIONINFOEXW os_ver_info;
     os_ver_info.dwOSVersionInfoSize = sizeof(OMG_WIN_NTDLL_OSVERSIONINFOEXW);
     this->nt->RtlGetVersion(&os_ver_info);
