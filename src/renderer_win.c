@@ -148,7 +148,7 @@ OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, const OMG_FPo
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 HDC for texture");
         return NULL;
     }
-    tex->bm = this->g32->CreateCompatibleBitmap(tex->dc, (int)size->w, (int)size->h);
+    tex->bm = this->g32->CreateCompatibleBitmap(this->hwdc, (int)size->w, (int)size->h);
     if (OMG_ISNULL(tex->bm)) {
         this->g32->DeleteDC(tex->dc);
         OMG_FREE(omg_base->mem, tex);
