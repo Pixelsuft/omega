@@ -191,7 +191,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    if (0 && this->win->type == OMG_WIN_TYPE_WIN)
+    if (this->win->type == OMG_WIN_TYPE_WIN)
         this->win->ren_type = OMG_REN_TYPE_WIN;
     if (this->win->renderer_alloc(this->win) || this->win->ren->init(this->win->ren)) {
         OMG_ERROR(this->omg, "OMG Renderer Init fail");
