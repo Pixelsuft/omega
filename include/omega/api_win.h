@@ -147,6 +147,12 @@
 #ifndef OPAQUE
 #define OPAQUE 2
 #endif
+#ifndef HALFTONE
+#define HALFTONE 4
+#endif
+#ifndef STRETCH_HALFTONE
+#define STRETCH_HALFTONE HALFTONE
+#endif
 #ifndef LR_DEFAULTSIZE
 #define LR_DEFAULTSIZE 0x0040
 #endif
@@ -662,6 +668,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*Rectangle)(HDC, int, int, int, int);
     BOOL OMG_WIN_STD_PREFIX (*Ellipse)(HDC, int, int, int, int);
     BOOL OMG_WIN_STD_PREFIX (*BitBlt)(HDC, int, int, int, int, HDC, int, int, DWORD);
+    BOOL OMG_WIN_STD_PREFIX (*StretchBlt)(HDC, int, int, int, int, HDC, int, int, int, int, DWORD);
+    int OMG_WIN_STD_PREFIX (*SetStretchBltMode)(HDC, int);
 } OMG_Gdi32;
 
 typedef struct {

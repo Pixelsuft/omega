@@ -182,11 +182,12 @@ bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
 }
 
 bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos) {
-    this->g32->BitBlt(
+    this->g32->SetStretchBltMode(this->cur_hpdc, HALFTONE);
+    this->g32->StretchBlt(
         this->cur_hpdc,
         (int)((pos->x + base->offset.x) * base->scale.x), (int)((pos->y + base->offset.y) * base->scale.y),
         (int)(tex_base->size.w * base->scale.x), (int)(tex_base->size.h * base->scale.y),
-        tex->dc, 0, 0,
+        tex->dc, 0, 0, (int)tex_base->size.w, (int)tex_base->size.h,
         SRCCOPY
     );
     return false;

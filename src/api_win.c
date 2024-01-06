@@ -224,6 +224,8 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(Rectangle);
     LOAD_REQUIRED(Ellipse);
     LOAD_REQUIRED(BitBlt);
+    LOAD_REQUIRED(StretchBlt);
+    LOAD_REQUIRED(SetStretchBltMode);
     OMG_END_POINTER_CAST();
     return false;
 }
