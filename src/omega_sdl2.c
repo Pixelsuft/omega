@@ -5,6 +5,9 @@
 #include <omega/window_sdl2.h>
 #include <omega/winmgr_sdl2.h>
 #include <omega/clock_sdl2.h>
+#if OMG_IS_EMSCRIPTEN
+#include <emscripten.h>
+#endif
 #define base ((OMG_Omega*)this)
 #define winmgr_sdl2 ((OMG_WinmgrSdl2*)base->winmgr)
 #define MAKE_EVENT(event) do { \
@@ -403,29 +406,53 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
     }
 }
 
-void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
-    base->looping = true;
-    OMG_EventUpdate u_event;
-    OMG_EventPaint p_event;
-    while (base->looping) {
-        omg_sdl2_poll_events(this);
-        if (!base->looping)
-            break;
-        MAKE_EVENT_STATIC(&u_event);
-        base->on_update(&u_event);
-        if (base->enable_paint) {
-            for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
-                if (OMG_ISNULL(base->winmgr->cache[i]) || !base->winmgr->cache[i]->enable_paint)
-                    continue;
-                MAKE_EVENT_STATIC(&p_event);
-                p_event.win = base->winmgr->cache[i];
-                base->on_paint(&p_event);
-            }
-        }
-    }
+void omg_sdl2_auto_loop_on_stop(OMG_OmegaSdl2* this) {
     OMG_EventLoopStop ls_event;
     MAKE_EVENT_STATIC(&ls_event);
     base->on_loop_stop(&ls_event);
+}
+
+void omg_sdl2_auto_loop_tick(OMG_OmegaSdl2* this) {
+    omg_sdl2_poll_events(this);
+    if (!base->looping) {
+#if OMG_IS_EMSCRIPTEN
+        omg_sdl2_auto_loop_on_stop(this);
+#endif
+        return;
+    }
+    MAKE_EVENT_STATIC(&this->u_event);
+    base->on_update(&this->u_event);
+    if (!base->looping) {
+#if OMG_IS_EMSCRIPTEN
+        omg_sdl2_auto_loop_on_stop(this);
+#endif
+        return;
+    }
+    if (base->enable_paint) {
+        for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
+            if (OMG_ISNULL(base->winmgr->cache[i]) || !base->winmgr->cache[i]->enable_paint)
+                continue;
+            MAKE_EVENT_STATIC(&this->p_event);
+            this->p_event.win = base->winmgr->cache[i];
+            base->on_paint(&this->p_event);
+        }
+    }
+#if OMG_IS_EMSCRIPTEN
+    if (!base->looping)
+        omg_sdl2_auto_loop_on_stop(this);
+#endif
+}
+
+void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
+    base->looping = true;
+#if OMG_IS_EMSCRIPTEN
+    emscripten_set_main_loop_arg((em_arg_callback_func)&omg_sdl2_auto_loop_tick, (void*)this, -1, 1);
+#else
+    while (base->looping) {
+        omg_sdl2_auto_loop_tick(this);
+    }
+    omg_sdl2_auto_loop_on_stop(this);
+#endif
 }
 
 bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {

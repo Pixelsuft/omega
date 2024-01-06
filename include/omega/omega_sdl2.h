@@ -7,6 +7,8 @@
 typedef struct {
     OMG_Omega parent;
     OMG_Sdl2 sdl2_stk;
+    OMG_EventUpdate u_event;
+    OMG_EventPaint p_event;
     SDL_Event ev;
     OMG_Sdl2* sdl2;
     bool should_free_sdl2;
@@ -29,6 +31,8 @@ OMG_API void omg_sdl2_delay(OMG_OmegaSdl2* this, double seconds);
 OMG_API int omg_sdl2_set_text_input_state(OMG_OmegaSdl2* this, int state);
 OMG_API void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_poll_events(OMG_OmegaSdl2* this);
+OMG_API void omg_sdl2_auto_loop_on_stop(OMG_OmegaSdl2* this);
+OMG_API void omg_sdl2_auto_loop_tick(OMG_OmegaSdl2* this) 
 OMG_API bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data);
 OMG_API bool omg_sdl2_log_warn_str(OMG_OmegaSdl2* this, const OMG_String* data);
 OMG_API bool omg_sdl2_log_error_str(OMG_OmegaSdl2* this, const OMG_String* data);
