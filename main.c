@@ -1,10 +1,8 @@
 #include <omega/omega.h>
 #include <omega/entry.h>
-#include <omega/clock.h>
 #include <omega/omega_win.h>
 #include <omega/omega_sdl2.h>
 #include <omega/omega_raylib.h>
-#include <omega/window_win.h>
 
 typedef struct {
     OMG_Omega* omg;
@@ -12,6 +10,7 @@ typedef struct {
     OMG_Renderer* ren;
     OMG_Surface* surf;
     OMG_Texture* tex;
+    OMG_File* file;
     OMG_Clock* clock;
     omg_color_t bg_col;
     bool bg_fow;
@@ -25,6 +24,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->ren->tex_destroy(this->ren, this->tex);
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
+    this->file->destroy(this->file);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -198,6 +198,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_R);
     this->clock = this->omg->clock;
     this->ren = this->win->ren;
     this->win->allow_alt = false;

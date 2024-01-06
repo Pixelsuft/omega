@@ -5,6 +5,7 @@
 #include <omega/window_sdl2.h>
 #include <omega/winmgr_sdl2.h>
 #include <omega/clock_sdl2.h>
+#include <omega/filesystem_sdl2.h>
 #if OMG_IS_EMSCRIPTEN
 #include <emscripten.h>
 #endif
@@ -573,6 +574,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     }
     else
         base->should_free_std = false;
+    base->sz_file = sizeof(OMG_FileSdl2);
     base->app_init = omg_sdl2_app_init;
     base->app_quit = omg_sdl2_app_quit;
     base->delay = omg_sdl2_delay;

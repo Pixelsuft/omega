@@ -8,6 +8,7 @@
 #define OMG_TEXTURE_ACCESS_STREAMING 3
 
 typedef struct {
+    void* extra1;
     OMG_FPoint size;
     bool auto_blend;
     bool has_alpha;

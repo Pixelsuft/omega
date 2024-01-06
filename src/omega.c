@@ -213,6 +213,30 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_text_input = omg_event_on_text_input;
 }
 
+bool omg_file_destroy(OMG_File* file) {
+    if (file->was_allocated) {
+        file->was_allocated = false;
+        OMG_FREE(((OMG_Omega*)file->omg)->mem, file);
+    }
+    return false;
+}
+
+OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode) {
+    if (OMG_ISNULL(file)) {
+        file = OMG_MALLOC(this->mem, this->sz_file);
+        if (OMG_ISNULL(file))
+            return NULL;
+        file->was_allocated = true;
+    }
+    else
+        file->was_allocated = false;
+    file->omg = this;
+    file->fp = path;
+    file->mode = mode;
+    file->destroy = omg_file_destroy;
+    return file;
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
@@ -225,6 +249,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->enable_paint = true;
     this->supports_screen_keyboard = false;
     this->should_free_mem = false;
+    this->sz_file = sizeof(OMG_File);
     this->theme = OMG_THEME_NONE;
     this->scale.x = this->scale.y = 1.0f;
     if (this->log_level == -1)
@@ -250,6 +275,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
     this->winmgr_alloc = omg_alloc_winmgr;
+    this->file_from_path = omg_file_from_path;
     omg_reset_event_handlers(this);
     omg_def_omega = this;
     return false;

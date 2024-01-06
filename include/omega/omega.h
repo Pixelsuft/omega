@@ -8,6 +8,7 @@
 #include <omega/window.h>
 #include <omega/events.h>
 #include <omega/keyboard.h>
+#include <omega/filesystem.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
@@ -63,6 +64,7 @@ typedef struct OMG_Omega {
     void* extra4;
     void* extra5;
     void* event_arg;
+    size_t sz_file;
     bool (*omg_init)(struct OMG_Omega* this);
     bool (*app_init)(struct OMG_Omega* this);
     bool (*app_quit)(struct OMG_Omega* this);
@@ -80,6 +82,7 @@ typedef struct OMG_Omega {
     int (*set_text_input_state)(struct OMG_Omega* this, int state);
     OMG_Window* (*window_alloc)(struct OMG_Omega* this);
     bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
+    OMG_File* (*file_from_path)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
     void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
@@ -130,6 +133,7 @@ OMG_API bool omg_alloc_winmgr(OMG_Omega* this);
 OMG_API bool omg_app_init(OMG_Omega* this);
 OMG_API bool omg_app_quit(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
+OMG_API OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);
