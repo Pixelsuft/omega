@@ -162,6 +162,9 @@
 #ifndef IDC_ARROW
 #define IDC_ARROW MAKEINTRESOURCEW(32512)
 #endif
+#ifndef SRCCOPY
+#define SRCCOPY (DWORD)0x00CC0020
+#endif
 #ifndef SW_HIDE
 #define SW_HIDE 0
 #endif
@@ -658,6 +661,7 @@ typedef struct {
     COLORREF OMG_WIN_STD_PREFIX (*SetPixel)(HDC, int, int, COLORREF);
     BOOL OMG_WIN_STD_PREFIX (*Rectangle)(HDC, int, int, int, int);
     BOOL OMG_WIN_STD_PREFIX (*Ellipse)(HDC, int, int, int, int);
+    BOOL OMG_WIN_STD_PREFIX (*BitBlt)(HDC, int, int, int, int, HDC, int, int, DWORD);
 } OMG_Gdi32;
 
 typedef struct {

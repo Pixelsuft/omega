@@ -223,6 +223,7 @@ bool omg_winapi_gdi32_load(OMG_Gdi32* this) {
     LOAD_REQUIRED(SetPixel);
     LOAD_REQUIRED(Rectangle);
     LOAD_REQUIRED(Ellipse);
+    LOAD_REQUIRED(BitBlt);
     OMG_END_POINTER_CAST();
     return false;
 }

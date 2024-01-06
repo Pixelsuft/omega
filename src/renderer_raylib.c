@@ -80,6 +80,7 @@ bool omg_renderer_raylib_set_target(OMG_RendererRaylib* this, OMG_TextureRaylib*
         this->raylib->EndTextureMode();
     else
         this->raylib->BeginTextureMode(tex->target);
+    base->target = tex_base;
     omg_renderer_raylib_set_scale(this, NULL, NULL); // WTF
     return false;
 }

@@ -42,8 +42,8 @@ bool omg_renderer_win_begin(OMG_RendererWin* this) {
 bool omg_renderer_win_clear(OMG_RendererWin* this, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     // RECT fill_rect = { .left = 0, .top = 0, .right = (LONG)base->size.w, .bottom = (LONG)base->size.h };
-    this->g32->SelectObject(this->cur_hpdc, brush);
     // this->u32->FillRect(this->cur_hwdc, &fill_rect, brush);
+    this->g32->SelectObject(this->cur_hpdc, brush);
     this->g32->Rectangle(this->cur_hpdc, -1, -1, (int)base->size.w + 2, (int)base->size.h + 2);
     this->g32->DeleteObject(brush);
     return false;
@@ -59,7 +59,7 @@ bool omg_renderer_win_draw_rect(OMG_RendererWin* this, const OMG_FRect* rect, co
         .right = (LONG)((rect->w + rect->x + base->offset.x) * base->scale.x),
         .bottom = (LONG)((rect->h + rect->y + base->offset.y) * base->scale.y)
     };
-    bool res = !this->u32->FrameRect(this->cur_hwdc, &w_rect, brush);
+    bool res = !this->u32->FrameRect(this->cur_hpdc, &w_rect, brush);
     this->g32->DeleteObject(brush);
     return res;
 }
@@ -74,7 +74,7 @@ bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* rect, co
         .right = (LONG)((rect->w + rect->x + base->offset.x) * base->scale.x),
         .bottom = (LONG)((rect->h + rect->y + base->offset.y) * base->scale.y)
     };
-    bool res = !this->u32->FillRect(this->cur_hwdc, &w_rect, brush);
+    bool res = !this->u32->FillRect(this->cur_hpdc, &w_rect, brush);
     this->g32->DeleteObject(brush);
     return res;
 }
@@ -131,8 +131,9 @@ bool omg_renderer_win_flip(OMG_RendererWin* this) {
 
 bool omg_renderer_win_set_target(OMG_RendererWin* this, OMG_TextureWin* tex) {
     this->cur_hwdc = OMG_ISNULL(tex) ? this->hwdc : tex->dc;
-    if (OMG_ISNOTNULL(this->cur_hpdc))
+    if (1 || OMG_ISNOTNULL(this->cur_hpdc))
         this->cur_hpdc = OMG_ISNULL(tex) ? this->hpdc : tex->dc;
+    base->target = tex_base;
     return false;
 }
 
@@ -180,7 +181,13 @@ bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
 }
 
 bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos) {
-    OMG_UNUSED(this, tex, pos);
+    this->g32->BitBlt(
+        this->cur_hpdc,
+        (int)((pos->x + base->offset.x) * base->scale.x), (int)((pos->y + base->offset.y) * base->scale.y),
+        (int)(tex_base->size.w * base->scale.x), (int)(tex_base->size.h * base->scale.y),
+        tex->dc, 0, 0,
+        SRCCOPY
+    );
     return false;
 }
 
