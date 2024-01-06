@@ -129,6 +129,50 @@ typedef enum
 #define SDL_TEXTEDITINGEVENT_TEXT_SIZE (32)
 #define SDL_TEXTINPUTEVENT_TEXT_SIZE (32)
 
+#define SDL_RWOPS_UNKNOWN   0U
+#define SDL_RWOPS_WINFILE   1U
+#define SDL_RWOPS_STDFILE   2U
+#define SDL_RWOPS_JNIFILE   3U
+#define SDL_RWOPS_MEMORY    4U
+#define SDL_RWOPS_MEMORY_RO 5U
+
+#define RW_SEEK_SET 0
+#define RW_SEEK_CUR 1
+#define RW_SEEK_END 2
+
+typedef struct SDL_RWops {
+    int64_t (OMG_SDL2_STD_PREFIX* size) (struct SDL_RWops*);
+    int64_t (OMG_SDL2_STD_PREFIX* seek) (struct SDL_RWops*, int64_t, int);
+    size_t (OMG_SDL2_STD_PREFIX* read) (struct SDL_RWops*, void*, size_t, size_t);
+    size_t (OMG_SDL2_STD_PREFIX* write) (struct SDL_RWops*, const void*, size_t, size_t);
+    int (OMG_SDL2_STD_PREFIX* close)(struct SDL_RWops*);
+    uint32_t type;
+    union {
+#if defined(__WIN32__) || defined(__GDK__)
+        struct
+        {
+            SDL_bool append;
+            void *h;
+            struct
+            {
+                void *data;
+                size_t size;
+                size_t left;
+            } buffer;
+        } windowsio;
+#endif
+        struct {
+            uint8_t* base;
+            uint8_t* here;
+            uint8_t* stop;
+        } mem;
+        struct {
+            void* data1;
+            void* data2;
+        } unknown;
+    } hidden;
+} SDL_RWops;
+
 typedef void SDL_Window;
 typedef void SDL_Renderer;
 typedef void SDL_BlitMap;
@@ -1281,6 +1325,21 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderTarget)(SDL_Renderer*, SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRenderDrawColor)(SDL_Renderer*, uint8_t, uint8_t, uint8_t, uint8_t);
     void OMG_SDL2_STD_PREFIX (*SDL_RenderPresent)(SDL_Renderer*);
+    SDL_RWops* OMG_SDL2_STD_PREFIX (*SDL_RWFromFile)(const char*, const char*);
+    SDL_RWops* OMG_SDL2_STD_PREFIX (*SDL_RWFromMem)(void*, int);
+    SDL_RWops* OMG_SDL2_STD_PREFIX (*SDL_RWFromConstMem)(const void*, int);
+    SDL_RWops* OMG_SDL2_STD_PREFIX (*SDL_AllocRW)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_FreeRW)(SDL_RWops*);
+    int64_t OMG_SDL2_STD_PREFIX (*SDL_RWsize)(SDL_RWops*);
+    int64_t OMG_SDL2_STD_PREFIX (*SDL_RWseek)(SDL_RWops*, int64_t, int);
+    int64_t OMG_SDL2_STD_PREFIX (*SDL_RWtell)(SDL_RWops*);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_RWread)(SDL_RWops*, void*, size_t, size_t);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_RWwrite)(SDL_RWops*, const void*, size_t, size_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_RWclose)(SDL_RWops*);
+    void* OMG_SDL2_STD_PREFIX (*SDL_LoadFile_RW)(SDL_RWops*, size_t*, int);
+    void* OMG_SDL2_STD_PREFIX (*SDL_LoadFile)(const char*, size_t*);
+    uint8_t OMG_SDL2_STD_PREFIX (*SDL_ReadU8)(SDL_RWops*);
+    size_t OMG_SDL2_STD_PREFIX (*SDL_WriteU8)(SDL_RWops*, uint8_t);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;

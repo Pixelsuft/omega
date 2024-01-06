@@ -226,8 +226,16 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_SetRenderTarget);
     LOAD_REQUIRED(SDL_SetRenderDrawColor);
     LOAD_REQUIRED(SDL_RenderPresent);
+    LOAD_REQUIRED(SDL_RWFromFile);
+    LOAD_REQUIRED(SDL_RWFromMem);
+    LOAD_REQUIRED(SDL_RWFromConstMem);
+    LOAD_REQUIRED(SDL_AllocRW);
+    LOAD_REQUIRED(SDL_FreeRW);
+    LOAD_REQUIRED(SDL_ReadU8);
+    LOAD_REQUIRED(SDL_WriteU8);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
+    LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.6
     LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyExF); // 2.0.10
@@ -236,6 +244,14 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawLineF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawRectF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderFillRectF); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RWsize); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RWseek); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RWtell); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RWread); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RWwrite); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_RWclose); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_LoadFile); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometryRaw); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometry); // 2.0.18
