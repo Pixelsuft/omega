@@ -123,9 +123,65 @@ bool omg_renderer_win_fill_circle(OMG_RendererWin* this, const OMG_FPoint* pos, 
 bool omg_renderer_win_flip(OMG_RendererWin* this) {
     bool res = false;
     this->u32->EndPaint(this->hwnd, &this->ps);
-    if (OMG_ISNOTNULL(this->dwm->DwmFlush))
+    this->cur_hpdc = NULL;
+    if (win_base->vsync && OMG_ISNOTNULL(this->dwm->DwmFlush))
         this->dwm->DwmFlush();
     return res;
+}
+
+bool omg_renderer_win_set_target(OMG_RendererWin* this, OMG_TextureWin* tex) {
+    this->cur_hwdc = OMG_ISNULL(tex) ? this->hwdc : tex->dc;
+    if (OMG_ISNOTNULL(this->cur_hpdc))
+        this->cur_hpdc = OMG_ISNULL(tex) ? this->hpdc : tex->dc;
+    return false;
+}
+
+OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, const OMG_FPoint* size, int access, bool has_alpha) {
+    OMG_UNUSED(access);
+    OMG_TextureWin* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureWin));
+    if (OMG_ISNULL(tex))
+        return NULL;
+    tex->dc = this->g32->CreateCompatibleDC(this->hwdc);
+    if (OMG_ISNULL(tex->dc)) {
+        OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_ERROR(omg_base, "Failed to create Win32 HDC for texture");
+        return NULL;
+    }
+    tex->bm = this->g32->CreateCompatibleBitmap(tex->dc, (int)size->w, (int)size->h);
+    if (OMG_ISNULL(tex->bm)) {
+        this->g32->DeleteDC(tex->dc);
+        OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_ERROR(omg_base, "Failed to create Win32 bitmap for texture");
+        return NULL;
+    }
+    tex_base->has_alpha = has_alpha;
+    tex_base->auto_blend = true;
+    tex_base->size.w = size->w;
+    tex_base->size.h = size->h;
+    return tex;
+}
+
+bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
+    if (OMG_ISNULL(tex) || OMG_ISNULL(tex->dc) || OMG_ISNULL(tex->bm)) {
+        _OMG_NULL_TEXTURE_WARN();
+        return true;
+    }
+    bool res = false;
+    if (!this->g32->DeleteObject(tex->bm)) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
+    }
+    if (!this->g32->DeleteDC(tex->dc)) {
+        res = true;
+        _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
+    }
+    OMG_FREE(omg_base->mem, tex);
+    return  res;
+}
+
+bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos) {
+    OMG_UNUSED(this, tex, pos);
+    return false;
 }
 
 bool omg_renderer_win_init(OMG_RendererWin* this) {
@@ -144,6 +200,10 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->fill_rect = omg_renderer_win_fill_rect;
     base->draw_point = omg_renderer_win_draw_point;
     base->fill_circle = omg_renderer_win_fill_circle;
+    base->set_target = omg_renderer_win_set_target;
+    base->tex_create = omg_renderer_win_tex_create;
+    base->tex_destroy = omg_renderer_win_tex_destroy;
+    base->copy = omg_renderer_win_copy;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_RAYLIB;
     base->soft_scale = true; // IDK how without
