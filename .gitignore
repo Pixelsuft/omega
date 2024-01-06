@@ -5,6 +5,7 @@
 __pycache__
 SDL2
 raylib
+embuild
 CMakeCache
 build
 Release
