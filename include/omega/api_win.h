@@ -213,6 +213,15 @@
 #ifndef TRUNCATE_EXISTING
 #define TRUNCATE_EXISTING 5
 #endif
+#ifndef FILE_BEGIN
+#define FILE_BEGIN 0
+#endif
+#ifndef FILE_CURRENT
+#define FILE_CURRENT 1
+#endif
+#ifndef FILE_END
+#define FILE_END 2
+#endif
 #ifndef INVALID_HANDLE_VALUE
 #define INVALID_HANDLE_VALUE ((HANDLE) (LONG_PTR)-1)
 #endif
@@ -637,6 +646,7 @@ typedef struct {
     HANDLE OMG_WIN_STD_PREFIX (*CreateFileW)(LPCWSTR, DWORD, DWORD, void*, DWORD, DWORD, HANDLE);
     DWORD OMG_WIN_STD_PREFIX (*GetFileSize)(HANDLE, LPDWORD);
     DWORD OMG_WIN_STD_PREFIX (*GetFileSizeEx)(HANDLE, PLARGE_INTEGER);
+    BOOL OMG_WIN_STD_PREFIX (*SetFilePointerEx)(HANDLE, LARGE_INTEGER, PLARGE_INTEGER, DWORD);
     uint64_t _tick64_emu;
 } OMG_Kernel32;
 

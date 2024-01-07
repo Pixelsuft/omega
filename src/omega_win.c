@@ -354,6 +354,23 @@ int64_t omg_win_file_get_size(OMG_FileWin* file) {
     return (int64_t)size_buf.QuadPart;
 }
 
+int64_t omg_win_file_seek(OMG_FileWin* file, int64_t offset, int whence) {
+    if (OMG_ISNULL(file_omg->k32->SetFilePointerEx)) {
+        _OMG_LOG_WARN(file_omg_base, "Seek in not supported for Win32 file ", file_base->fp.ptr);
+        return -1;
+    }
+    LARGE_INTEGER res_buf;
+    LARGE_INTEGER inp_val;
+    inp_val.QuadPart = (LONGLONG)offset;
+    if (!file_omg->k32->SetFilePointerEx(file->handle, inp_val, &res_buf, (
+        (whence == OMG_FILE_SEEK_END) ? FILE_END : ((whence == OMG_FILE_SEEK_CUR) ? FILE_CURRENT : FILE_BEGIN)
+    ))) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to seek Win32 file ", file_base->fp.ptr);
+        return -1;
+    }
+    return (int64_t)res_buf.QuadPart;
+}
+
 OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
     OMG_BEGIN_POINTER_CAST();
     if (omg_string_ensure_null((OMG_String*)path))
@@ -407,6 +424,7 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
     }
     file_base->destroy = omg_win_file_destroy;
     file_base->get_size = omg_win_file_get_size;
+    file_base->seek = omg_win_file_seek;
     OMG_END_POINTER_CAST();
     return file;
 }
