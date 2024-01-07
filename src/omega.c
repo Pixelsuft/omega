@@ -232,6 +232,10 @@ int64_t omg_file_seek(OMG_File* file, int64_t offset, int whence) {
     return -1;
 }
 
+int64_t omg_file_tell(OMG_File* file) {
+    return file->seek(file, 0, OMG_FILE_SEEK_CUR);
+}
+
 OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode) {
     if (OMG_ISNULL(file)) {
         file = OMG_MALLOC(this->mem, this->sz_file);
@@ -247,6 +251,7 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
     file->destroy = omg_file_destroy;
     file->get_size = omg_file_get_size;
     file->seek = omg_file_seek;
+    file->tell = omg_file_tell;
     return file;
 }
 

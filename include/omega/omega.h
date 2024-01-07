@@ -137,6 +137,7 @@ OMG_API bool omg_file_destroy(OMG_File* file);
 #if OMG_EXPORT_SHIT
 OMG_API int64_t omg_file_get_size(OMG_File* file);
 OMG_API int64_t omg_file_seek(OMG_File* file, int64_t offset, int whence);
+OMG_API int64_t omg_file_tell(OMG_File* file);
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);

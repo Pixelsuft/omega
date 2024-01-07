@@ -48,6 +48,7 @@ typedef struct OMG_File {
     bool (*destroy)(struct OMG_File* file);
     int64_t (*get_size)(struct OMG_File* file);
     int64_t (*seek)(struct OMG_File* file, int64_t offset, int whence);
+    int64_t (*tell)(struct OMG_File* file);
     void* extra1;
     void* omg;
     const OMG_String* fp;
