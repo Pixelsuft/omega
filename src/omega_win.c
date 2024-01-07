@@ -322,12 +322,18 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
 }
 
 bool omg_win_file_destroy(OMG_FileWin* file) {
+    bool res = false;
+    if (OMG_ISNOTNULL(file->handle)) {
+        if (!file_omg->k32->CloseHandle(file->handle))
+            res = true;
+        file->handle = NULL;
+    }
     if (OMG_ISNOTNULL(file->w_fp)) {
         OMG_FREE(file_omg_base->mem, file->w_fp);
         file->w_fp = NULL;
     }
     omg_file_destroy((OMG_File*)file);
-    return false;
+    return res;
 }
 
 OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
@@ -353,6 +359,34 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
     int out_len = this->k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, path->len, file->w_fp, (int)count);
     if (out_len > 0)
         file->w_fp[out_len] = L'\0';
+    DWORD need_access = 0;
+    if ((mode % 6) != OMG_FILE_MODE_W)
+        need_access |= GENERIC_READ;
+    if ((mode % 6) != OMG_FILE_MODE_R)
+        need_access |= GENERIC_WRITE;
+    DWORD create_mode = 0;
+    if (((mode % 3) == OMG_FILE_MODE_R) || ((mode % 6) == OMG_FILE_MODE_A))
+        create_mode = OPEN_EXISTING;
+    else if ((mode % 3) == OMG_FILE_MODE_W)
+        create_mode = CREATE_ALWAYS;
+    else if ((mode % 3) == OMG_FILE_MODE_A)
+        create_mode = OPEN_ALWAYS;
+    DWORD shared_ops = 0;
+    shared_ops |= FILE_SHARE_READ;
+    file->handle = this->k32->CreateFileW(
+        file->w_fp,
+        need_access,
+        shared_ops,
+        NULL,
+        create_mode,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if ((file->handle == INVALID_HANDLE_VALUE)/* || OMG_ISNULL(file->handle)*/) {
+        _OMG_LOG_ERROR(base, "Failed to open Win32 file ", path->ptr);
+        omg_file_destroy((OMG_File*)file);
+        return NULL;
+    }
     file_base->destroy = omg_win_file_destroy;
     OMG_END_POINTER_CAST();
     return file;
