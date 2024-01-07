@@ -45,6 +45,7 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
         if (this->sdl2->SDL_WasInit(0) > 0)
             this->sdl2->SDL_Quit();
         omg_sdl2_dll_free(this->sdl2);
+        OMG_FREE(omg_base->mem, this->sdl2);
         this->sdl2 = NULL;
     }
 #endif
