@@ -10,7 +10,7 @@
 #include <omega/filesystem_win.h>
 #define base ((OMG_Omega*)this)
 #define file_base ((OMG_File*)file)
-#define file_omg ((OMG_OmegaSdl2*)file_base->omg)
+#define file_omg ((OMG_OmegaWin*)file_base->omg)
 #define file_omg_base ((OMG_Omega*)file_base->omg)
 #define winmgr_win ((OMG_WinmgrWin*)base->winmgr)
 #define MAKE_EVENT(event) do { \
@@ -322,6 +322,10 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
 }
 
 bool omg_win_file_destroy(OMG_FileWin* file) {
+    if (OMG_ISNOTNULL(file->w_fp)) {
+        OMG_FREE(file_omg_base->mem, file->w_fp);
+        file->w_fp = NULL;
+    }
     omg_file_destroy((OMG_File*)file);
     return false;
 }
@@ -333,6 +337,22 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
     file = omg_file_from_path(this, file, path, mode);
     if (OMG_ISNULL(file))
         return NULL;
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, path, this->k32);
+    if (count == 0) {
+        _OMG_LOG_ERROR(base, "Failed to open Win32 file ", path->ptr);
+        omg_file_destroy((OMG_File*)file);
+        return NULL;
+    }
+    file->w_fp = OMG_MALLOC(base->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(file->w_fp)) {
+        _OMG_LOG_ERROR(base, "Failed to open Win32 file ", path->ptr);
+        omg_file_destroy((OMG_File*)file);
+        return NULL;
+    }
+    int out_len = this->k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, path->len, file->w_fp, (int)count);
+    if (out_len > 0)
+        file->w_fp[out_len] = L'\0';
     file_base->destroy = omg_win_file_destroy;
     OMG_END_POINTER_CAST();
     return file;
