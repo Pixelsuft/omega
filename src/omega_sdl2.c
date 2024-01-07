@@ -553,6 +553,13 @@ size_t omg_sdl2_file_read(OMG_FileSdl2* file, void* buf, size_t size, size_t max
     return res;
 }
 
+size_t omg_sdl2_file_write(OMG_FileSdl2* file, const void* buf, size_t size, size_t num) {
+    size_t res = file->rw->write(file->rw, buf, size, num);
+    if (res < (num * size))
+        _OMG_LOG_WARN(file_omg_base, "Failed to write file ", file_base->fp->ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+    return res;
+}
+
 OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode) {
     const char* str_mode = NULL;
     _OMG_FILE_MODE_TO_STD(mode, str_mode);
@@ -574,6 +581,7 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
     file_base->get_size = omg_sdl2_file_get_size;
     file_base->seek = omg_sdl2_file_seek;
     file_base->read = omg_sdl2_file_read;
+    file_base->write = omg_sdl2_file_write;
     OMG_END_POINTER_CAST();
     return file;
 }

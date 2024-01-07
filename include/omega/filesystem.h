@@ -50,6 +50,7 @@ typedef struct OMG_File {
     int64_t (*seek)(struct OMG_File* file, int64_t offset, int whence);
     int64_t (*tell)(struct OMG_File* file);
     size_t (*read)(struct OMG_File* file, void* buf, size_t size, size_t maxnum);
+    size_t (*write)(struct OMG_File* file, const void* buf, size_t size, size_t num);
     void* extra1;
     void* omg;
     const OMG_String* fp;
