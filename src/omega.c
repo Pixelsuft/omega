@@ -332,7 +332,7 @@ int64_t omg_file_std_tell(OMG_FileStd* file) {
 
 size_t omg_file_std_read(OMG_FileStd* file, void* buf, size_t size, size_t maxnum) {
     size_t res = fread(buf, size, maxnum, file->file);
-    if ((res < (size * maxnum)) && !feof(file->file)) {
+    if ((res < (size * maxnum)) && !feof(((FILE*)file->file))) {
         _OMG_LOG_WARN(file_omg, "Failed to read std file ", file_base->fp.ptr);
     }
     return res;

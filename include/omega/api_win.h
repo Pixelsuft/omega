@@ -177,6 +177,48 @@
 #ifndef SRCCOPY
 #define SRCCOPY (DWORD)0x00CC0020
 #endif
+#ifndef GENERIC_WRITE
+#define GENERIC_WRITE 0x40000000
+#endif
+#ifndef GENERIC_READ
+#define GENERIC_READ 0x80000000
+#endif
+#ifndef FILE_SHARE_READ
+#define FILE_SHARE_READ 0x00000001
+#endif
+#ifndef FILE_SHARE_WRITE
+#define FILE_SHARE_WRITE 0x00000002
+#endif
+#ifndef CREATE_NEW
+#define CREATE_NEW 1
+#endif
+#ifndef CREATE_NEW
+#define CREATE_NEW 1
+#endif
+#ifndef CREATE_ALWAYS
+#define CREATE_ALWAYS 2
+#endif
+#ifndef OPEN_EXISTING
+#define OPEN_EXISTING 3
+#endif
+#ifndef OPEN_ALWAYS
+#define OPEN_ALWAYS 4
+#endif
+#ifndef TRUNCATE_EXISTING
+#define TRUNCATE_EXISTING 5
+#endif
+#ifndef FILE_SHARE_DELETE
+#define FILE_SHARE_DELETE 0x00000004
+#endif
+#ifndef FILE_ATTRIBUTE_NORMAL
+#define FILE_ATTRIBUTE_NORMAL 0x00000080
+#endif
+#ifndef FILE_FLAG_POSIX_SEMANTICS
+#define FILE_FLAG_POSIX_SEMANTICS 0x1000000
+#endif
+#ifndef FILE_FLAG_OVERLAPPED
+#define FILE_FLAG_OVERLAPPED 0x40000000
+#endif
 #ifndef SW_HIDE
 #define SW_HIDE 0
 #endif
@@ -582,6 +624,8 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*QueryPerformanceCounter)(OMG_WIN_LARGE_INTEGER*);
     DWORD OMG_WIN_STD_PREFIX (*GetTickCount)(void);
     ULONGLONG OMG_WIN_STD_PREFIX (*GetTickCount64)(void);
+    BOOL OMG_WIN_STD_PREFIX (*CloseHandle)(HANDLE);
+    HANDLE OMG_WIN_STD_PREFIX (*CreateFileW)(LPCWSTR, DWORD, DWORD, LPSECURITY_ATTRIBUTES, DWORD, DWORD, HANDLE);
     uint64_t _tick64_emu;
 } OMG_Kernel32;
 

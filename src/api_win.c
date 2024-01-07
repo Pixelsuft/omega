@@ -72,6 +72,8 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(QueryPerformanceFrequency);
     LOAD_REQUIRED(QueryPerformanceCounter);
     LOAD_REQUIRED(GetTickCount);
+    LOAD_REQUIRED(CloseHandle);
+    LOAD_REQUIRED(CreateFileW);
     LOAD_REQUIRED_COMPAT(AttachConsole);
     LOAD_REQUIRED_COMPAT(GetTickCount64);
     if (OMG_ISNULL(this->GetTickCount64))
