@@ -272,9 +272,6 @@ typedef union {
 } OMG_DRect;
 
 typedef struct {
-    void* (*lib_load)(const OMG_String* fn, const wchar_t* adv_fn);
-    void* (*lib_func)(void* lib, const OMG_String* func_name);
-    bool (*lib_free)(void* lib);
     void* (*memset)(void* dst, register int val, register size_t len);
     void* (*memcpy)(void* dst, const void* src, size_t len);
     void* (*memmove)(void* dst, const void* src, size_t len);
