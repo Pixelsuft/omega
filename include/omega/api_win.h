@@ -601,19 +601,19 @@ typedef struct {
 } OMG_WIN_MINMAXINFO, *OMG_WIN_PMINMAXINFO, *OMG_WIN_LPMINMAXINFO;
 
 #if !OMG_WINAPI_DYNAMIC && !OMG_WINAPI_DYNAMIC_UGLY
-OMG_WIN_STD_PREFIX void RtlGetVersion(OMG_WIN_NTDLL_OSVERSIONINFOEXW* version_information);
-OMG_WIN_STD_PREFIX double floor(double);
-OMG_WIN_STD_PREFIX double ceil(double);
-OMG_WIN_STD_PREFIX double sin(double);
-OMG_WIN_STD_PREFIX double cos(double);
-OMG_WIN_STD_PREFIX double tan(double);
-OMG_WIN_STD_PREFIX double atan(double);
-OMG_WIN_STD_PREFIX double atan2(double, double);
-OMG_WIN_STD_PREFIX double sqrt(double);
-OMG_WIN_STD_PREFIX void qsort(void*, size_t, size_t, int (*) (const void*, const void*));
-OMG_WIN_STD_PREFIX int abs(int n);
-OMG_WIN_STD_PREFIX double fabs(double n);
-OMG_WIN_STD_PREFIX double pow(double, double);
+void OMG_WIN_STD_PREFIX RtlGetVersion(OMG_WIN_NTDLL_OSVERSIONINFOEXW* version_information);
+double OMG_WIN_STD_PREFIX floor(double);
+double OMG_WIN_STD_PREFIX ceil(double);
+double OMG_WIN_STD_PREFIX sin(double);
+double OMG_WIN_STD_PREFIX cos(double);
+double OMG_WIN_STD_PREFIX tan(double);
+double OMG_WIN_STD_PREFIX atan(double);
+double OMG_WIN_STD_PREFIX atan2(double, double);
+double OMG_WIN_STD_PREFIX sqrt(double);
+void OMG_WIN_STD_PREFIX qsort(void*, size_t, size_t, int (*) (const void*, const void*));
+int OMG_WIN_STD_PREFIX abs(int n);
+double OMG_WIN_STD_PREFIX fabs(double n);
+double OMG_WIN_STD_PREFIX pow(double, double);
 #endif
 
 typedef struct {

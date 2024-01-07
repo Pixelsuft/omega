@@ -286,10 +286,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 
 void omg_win_fill_std(OMG_OmegaWin* this) {
     base->std->memory_allocator = base->mem;
-    // TODO
-    /* base->std->lib_load = omg_win_std_lib_load;
-    base->std->lib_func = omg_win_std_lib_func;
-    base->std->lib_free = omg_win_std_lib_free; */
+    OMG_BEGIN_POINTER_CAST();
     base->std->floor = this->nt->floor;
     base->std->ceil = this->nt->ceil;
     base->std->sin = this->nt->sin;
@@ -302,6 +299,7 @@ void omg_win_fill_std(OMG_OmegaWin* this) {
     base->std->abs = this->nt->abs;
     base->std->fabs = this->nt->fabs;
     base->std->pow = this->nt->pow;
+    OMG_END_POINTER_CAST();
 }
 
 bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
