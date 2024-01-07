@@ -534,9 +534,15 @@ bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
 
 int64_t omg_sdl2_file_get_size(OMG_FileSdl2* file) {
     int64_t res = file->rw->size(file->rw);
-    if (res < -1) {
+    if (res < -1)
         _OMG_LOG_WARN(file_omg_base, "Failed to get size for file ", file_base->fp->ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
-    }
+    return res;
+}
+
+int64_t omg_sdl2_file_seek(OMG_FileSdl2* file, int64_t offset, int whence) {
+    int64_t res = file->rw->seek(file->rw, offset, whence);
+    if (res < 0)
+        _OMG_LOG_WARN(file_omg_base, "Failed to seek file ", file_base->fp->ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
     return res;
 }
 
@@ -559,6 +565,7 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
     }
     file_base->destroy = omg_sdl2_file_destroy;
     file_base->get_size = omg_sdl2_file_get_size;
+    file_base->seek = omg_sdl2_file_seek;
     OMG_END_POINTER_CAST();
     return file;
 }
