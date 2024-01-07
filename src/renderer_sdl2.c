@@ -81,9 +81,9 @@ int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name)
         return OMG_REN_DRIVER_UNKNOWN;
     if (!omg_base->std->strcmp(name, "direct3d"))
         return OMG_REN_DRIVER_D3D9;
-    if (!omg_base->std->strcmp(name, "direct3d11") && (this->win_build_num >= 7600))
+    if (!omg_base->std->strcmp(name, "direct3d11"))
         return OMG_REN_DRIVER_D3D11;
-    if (!omg_base->std->strcmp(name, "direct3d12") && (this->win_build_num >= 10240))
+    if (!omg_base->std->strcmp(name, "direct3d12"))
         return OMG_REN_DRIVER_D3D12;
     if (!omg_base->std->strcmp(name, "opengl"))
         return OMG_REN_DRIVER_OPENGL;
@@ -416,9 +416,9 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     int sdl2_driver;
     if (base->driver == OMG_REN_DRIVER_AUTO) {
         sdl2_driver = -1;
-        if (this->id_cache[8] & OMG_REN_DRIVER_D3D12)
+        if ((this->id_cache[8] & OMG_REN_DRIVER_D3D12) && (this->win_build_num >= 10240))
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D12);
-        else if (this->id_cache[8] & OMG_REN_DRIVER_D3D11)
+        else if ((this->id_cache[8] & OMG_REN_DRIVER_D3D11) && (this->win_build_num >= 7600))
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D11);
         else if (this->id_cache[8] & OMG_REN_DRIVER_D3D9)
             sdl2_driver = omg_renderer_sdl2_get_renderer_id(this, OMG_REN_DRIVER_D3D9);
