@@ -550,7 +550,7 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     file = omg_file_from_path(this, file, path, mode);
-    file->rw = this->sdl2->SDL_RWFromFile(path, path->ptr);
+    file->rw = this->sdl2->SDL_RWFromFile("123", "r");
     if (OMG_ISNULL(file->rw)) {
         _OMG_LOG_ERROR(base, "Failed to create SDL2 RWops from file ", path->ptr," (", this->sdl2->SDL_GetError(), ")");
         omg_file_destroy(file);
