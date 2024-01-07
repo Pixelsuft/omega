@@ -207,11 +207,12 @@ void app_init(App* this, OMG_EntryData* data) {
     // I'm lazy for fail checks here, but you shouldn't :)
     size_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);
-    char* file_buf = OMG_MALLOC(this->omg->mem, file_size + 1);
-    this->file->read(this->file, file_buf, 1, file_size);
-    file_buf[file_size] = '\0';
-    OMG_INFO(this->omg, file_buf);
-    OMG_FREE(this->omg->mem, file_buf);
+    OMG_String file_buf;
+    omg_string_init_dynamic(&file_buf, NULL);
+    omg_string_resize(&file_buf, file_size);
+    this->file->read(this->file, file_buf.ptr, 1, file_size);
+    OMG_INFO(this->omg, "File content: ", &file_buf);
+    omg_string_destroy(&file_buf);
     this->clock = this->omg->clock;
     this->ren = this->win->ren;
     this->win->allow_alt = false;
