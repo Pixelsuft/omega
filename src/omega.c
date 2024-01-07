@@ -306,6 +306,30 @@ int64_t omg_file_std_get_size(OMG_FileStd* file) {
     return (int64_t)res;
 }
 
+int64_t omg_file_std_seek(OMG_FileStd* file, int64_t offset, int whence) {
+    if (fseek(file->file, (long)offset, (
+        (whence == OMG_FILE_SEEK_END) ? SEEK_END : ((whence == OMG_FILE_SEEK_CUR) ? SEEK_CUR : SEEK_SET)
+    )) != 0) {
+        _OMG_LOG_WARN(file_omg, "Failed to seek std file ", file_base->fp.ptr);
+        return -2;
+    }
+    long res = ftell(file->file);
+    if (res < 0) {
+        _OMG_LOG_WARN(file_omg, "Failed to get pos for std file ", file_base->fp.ptr);
+        res = -1;
+    }
+    return (int64_t)res;
+}
+
+int64_t omg_file_std_tell(OMG_FileStd* file) {
+    long res = ftell(file->file);
+    if (res < 0) {
+        _OMG_LOG_WARN(file_omg, "Failed to get pos for std file ", file_base->fp.ptr);
+        res = -1;
+    }
+    return (int64_t)res;
+}
+
 OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode) {
     const char* str_mode = NULL;
     _OMG_FILE_MODE_TO_STD(mode, str_mode);
@@ -327,6 +351,8 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
     }
     file_base->destroy = omg_file_std_destroy;
     file_base->get_size = omg_file_std_get_size;
+    file_base->seek = omg_file_std_seek;
+    file_base->tell = omg_file_std_tell;
     OMG_END_POINTER_CAST();
     return file;
 }
