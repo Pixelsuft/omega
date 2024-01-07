@@ -236,6 +236,11 @@ int64_t omg_file_tell(OMG_File* file) {
     return file->seek(file, 0, OMG_FILE_SEEK_CUR);
 }
 
+size_t omg_file_read(OMG_File* file, void* buf, size_t size, size_t maxnum) {
+    OMG_UNUSED(file, buf, size, maxnum);
+    return 0;
+}
+
 OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode) {
     if (OMG_ISNULL(file)) {
         file = OMG_MALLOC(this->mem, this->sz_file);
@@ -252,6 +257,7 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
     file->get_size = omg_file_get_size;
     file->seek = omg_file_seek;
     file->tell = omg_file_tell;
+    file->read = omg_file_read;
     return file;
 }
 

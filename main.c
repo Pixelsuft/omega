@@ -198,13 +198,20 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_R);
+    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RB);
     if (OMG_ISNULL(this->file)) {
         OMG_ERROR(this->omg, "OMG File Open Fail");
         this->omg->destroy(this->omg);
         return;
     }
-    OMG_INFO(this->omg, "File size: ", (int)this->file->get_size(this->file));
+    // I'm lazy for fail checks here, but you shouldn't :)
+    size_t file_size = this->file->get_size(this->file);
+    OMG_INFO(this->omg, "File size: ", (int)file_size);
+    char* file_buf = OMG_MALLOC(this->omg->mem, file_size + 1);
+    this->file->read(this->file, file_buf, 1, file_size);
+    file_buf[file_size] = '\0';
+    OMG_INFO(this->omg, file_buf);
+    OMG_FREE(this->omg->mem, file_buf);
     this->clock = this->omg->clock;
     this->ren = this->win->ren;
     this->win->allow_alt = false;
