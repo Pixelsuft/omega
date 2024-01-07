@@ -135,8 +135,14 @@
 #ifndef ERROR_INVALID_HANDLE
 #define ERROR_INVALID_HANDLE 0x6
 #endif
+#ifndef NO_ERROR
+#define NO_ERROR 0
+#endif
 #ifndef ERROR_GEN_FAILURE
 #define ERROR_GEN_FAILURE 0x1F
+#endif
+#ifndef INVALID_FILE_SIZE
+#define INVALID_FILE_SIZE ((DWORD)0xffffffff)
 #endif
 #ifndef IMAGE_CURSOR
 #define IMAGE_CURSOR 2
@@ -629,6 +635,8 @@ typedef struct {
     ULONGLONG OMG_WIN_STD_PREFIX (*GetTickCount64)(void);
     BOOL OMG_WIN_STD_PREFIX (*CloseHandle)(HANDLE);
     HANDLE OMG_WIN_STD_PREFIX (*CreateFileW)(LPCWSTR, DWORD, DWORD, void*, DWORD, DWORD, HANDLE);
+    DWORD OMG_WIN_STD_PREFIX (*GetFileSize)(HANDLE, LPDWORD);
+    DWORD OMG_WIN_STD_PREFIX (*GetFileSizeEx)(HANDLE, PLARGE_INTEGER);
     uint64_t _tick64_emu;
 } OMG_Kernel32;
 

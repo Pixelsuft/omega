@@ -336,6 +336,24 @@ bool omg_win_file_destroy(OMG_FileWin* file) {
     return res;
 }
 
+int64_t omg_win_file_get_size(OMG_FileWin* file) {
+    if (OMG_ISNULL(file_omg->k32->GetFileSize)) {
+        DWORD size_high = 0;
+        DWORD size_low = file_omg->k32->GetFileSize(file->handle, &size_high);
+        if ((size_low == INVALID_FILE_SIZE) && (size_high == 0) && (file_omg->k32->GetLastError() != NO_ERROR)) {
+            _OMG_LOG_WARN(file_omg_base, "Failed to get size for Win32 file ", file_base->fp.ptr);
+            return -2;
+        }
+        return ((int64_t)size_high << 32) | (int64_t)size_low;
+    }
+    LARGE_INTEGER size_buf;
+    if (!file_omg->k32->GetFileSizeEx(file->handle, &size_buf)) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to get size for Win32 file ", file_base->fp.ptr);
+        return -2;
+    }
+    return (int64_t)size_buf.QuadPart;
+}
+
 OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
     OMG_BEGIN_POINTER_CAST();
     if (omg_string_ensure_null((OMG_String*)path))
@@ -388,6 +406,7 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
         return NULL;
     }
     file_base->destroy = omg_win_file_destroy;
+    file_base->get_size = omg_win_file_get_size;
     OMG_END_POINTER_CAST();
     return file;
 }
