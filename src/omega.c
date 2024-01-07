@@ -221,6 +221,11 @@ bool omg_file_destroy(OMG_File* file) {
     return false;
 }
 
+int64_t omg_file_get_size(OMG_File* file) {
+    OMG_UNUSED(file);
+    return -1;
+}
+
 OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode) {
     if (OMG_ISNULL(file)) {
         file = OMG_MALLOC(this->mem, this->sz_file);
@@ -234,6 +239,7 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
     file->fp = path;
     file->mode = mode;
     file->destroy = omg_file_destroy;
+    file->get_size = omg_file_get_size;
     return file;
 }
 

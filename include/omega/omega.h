@@ -135,6 +135,7 @@ OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
 OMG_API bool omg_file_destroy(OMG_File* file);
 #if OMG_EXPORT_SHIT
+OMG_API int64_t omg_file_get_size(OMG_File* file);
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
 OMG_API void omg_event_on_update(OMG_EventUpdate* event);

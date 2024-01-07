@@ -30,10 +30,6 @@
         break; \
     } \
 }
-#define OMG_SDL2_FILE_MODE(mode, str_mode) do { \
-    if (mode == OMG_FILE_MODE_R) \
-        str_mode = "r"; \
-} while (0)
 
 void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;
@@ -535,9 +531,17 @@ bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
     return res;
 }
 
+int64_t omg_sdl2_file_get_size(OMG_FileSdl2* file) {
+    int64_t res = file->rw->size(file->rw);
+    if (res < -1) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to get size for file ", file_base->fp->ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+    }
+    return res;
+}
+
 OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode) {
     const char* str_mode = NULL;
-    OMG_SDL2_FILE_MODE(mode, str_mode);
+    _OMG_FILE_MODE_TO_STD(mode, str_mode);
     if (OMG_ISNULL(str_mode)) {
         _OMG_LOG_ERROR(base, "Invalid mode for opening file ", path->ptr);
         return NULL;
@@ -552,6 +556,8 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
         omg_file_destroy(file);
         return NULL;
     }
+    file_base->destroy = omg_sdl2_file_destroy;
+    file_base->get_size = omg_sdl2_file_get_size;
     OMG_END_POINTER_CAST();
     return file;
 }
