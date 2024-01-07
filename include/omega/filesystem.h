@@ -25,6 +25,18 @@
         str_mode = "w+b"; \
     else if (mode == OMG_FILE_MODE_APB) \
         str_mode = "a+b"; \
+    else if (mode == OMG_FILE_MODE_RT) \
+        str_mode = "rt"; \
+    else if (mode == OMG_FILE_MODE_WT) \
+        str_mode = "wt"; \
+    else if (mode == OMG_FILE_MODE_AT) \
+        str_mode = "at"; \
+    else if (mode == OMG_FILE_MODE_RPT) \
+        str_mode = "r+t"; \
+    else if (mode == OMG_FILE_MODE_WPT) \
+        str_mode = "w+t"; \
+    else if (mode == OMG_FILE_MODE_APT) \
+        str_mode = "a+t"; \
 } while (0)
 
 #define OMG_FILE_MODE_R 1
@@ -39,6 +51,12 @@
 #define OMG_FILE_MODE_RPB 10
 #define OMG_FILE_MODE_WPB 11
 #define OMG_FILE_MODE_APB 12
+#define OMG_FILE_MODE_RT 13
+#define OMG_FILE_MODE_WT 14
+#define OMG_FILE_MODE_AT 15
+#define OMG_FILE_MODE_RPT 16
+#define OMG_FILE_MODE_WPT 17
+#define OMG_FILE_MODE_APT 18
 
 #define OMG_FILE_SEEK_SET 0
 #define OMG_FILE_SEEK_CUR 1
@@ -57,3 +75,9 @@ typedef struct OMG_File {
     int mode;
     bool was_allocated;
 } OMG_File;
+
+#if OMG_HAS_STD
+typedef struct {
+    void* file;
+} OMG_FileStd;
+#endif

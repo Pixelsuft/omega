@@ -1,4 +1,9 @@
 #include <omega/omega.h>
+#if OMG_HAS_STD
+#include <stdio.h>
+#endif
+#define file_base ((OMG_File*)file)
+#define file_omg ((OMG_Omega*)file_base->omg)
 
 static OMG_Omega* omg_def_omega = NULL;
 
@@ -267,6 +272,47 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
     return file;
 }
 
+#if OMG_HAS_STD
+bool omg_file_std_destroy(OMG_FileStd* file) {
+    bool res = false;
+    if (OMG_ISNULL(file->file)) {
+        if (fclose(file->file) != 0) {
+            _OMG_LOG_WARN(file_omg, "Failed to std close file ", file_base->fp->ptr);
+        }
+        file->file = NULL;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    omg_file_destroy(file);
+    OMG_END_POINTER_CAST();
+    return res;
+}
+
+OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode) {
+    const char* str_mode = NULL;
+    _OMG_FILE_MODE_TO_STD(mode, str_mode);
+    if (OMG_ISNULL(str_mode)) {
+        _OMG_LOG_ERROR(this, "Invalid mode for opening file ", path->ptr);
+        return NULL;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    file = omg_file_from_path(this, file, path, mode);
+    if (OMG_ISNULL(file))
+        return NULL;
+    file->file = fopen(path->ptr, str_mode);
+    if (OMG_ISNULL(file->file)) {
+        _OMG_LOG_ERROR(this, "Failed to std open file ", path->ptr);
+        omg_file_destroy(file);
+        return NULL;
+    }
+    file_base->destroy = omg_file_std_destroy;
+    OMG_END_POINTER_CAST();
+    return file;
+}
+
+#endif
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
@@ -286,7 +332,6 @@ bool omg_omg_init(OMG_Omega* this) {
         this->log_level = OMG_LOG_MIN_LEVEL;
     if (this->log_level_omg == -1)
         this->log_level_omg = OMG_LOG_OMG_MIN_LEVEL;
-    // TODO: probably also handle long functions
     if (OMG_ISNULL(this->log_info_str))
         this->log_info_str = omg_log_info_str;
     if (OMG_ISNULL(this->log_warn_str))
@@ -305,7 +350,13 @@ bool omg_omg_init(OMG_Omega* this) {
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
     this->winmgr_alloc = omg_alloc_winmgr;
+#if OMG_HAS_STD
+    OMG_BEGIN_POINTER_CAST();
+    this->file_from_path = omg_file_std_from_path;
+    OMG_END_POINTER_CAST();
+#else
     this->file_from_path = omg_file_from_path;
+#endif
     omg_reset_event_handlers(this);
     omg_def_omega = this;
     return false;

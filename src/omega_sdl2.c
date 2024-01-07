@@ -520,11 +520,12 @@ bool omg_sdl2_alloc_winmgr(OMG_OmegaSdl2* this) {
 
 bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
     bool res = false;
-    if (OMG_ISNULL(file->rw)) {
+    if (OMG_ISNOTNULL(file->rw)) {
         if (file->rw->close(file->rw) < 0) {
             _OMG_LOG_WARN(file_omg_base, "Failed to close SDL2 RWops for file ", file_base->fp->ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
             res = true;
         }
+        file->rw = NULL;
     }
     OMG_BEGIN_POINTER_CAST();
     omg_file_destroy(file);
@@ -571,6 +572,8 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     file = omg_file_from_path(this, file, path, mode);
+    if (OMG_ISNULL(file))
+        return NULL;
     file->rw = this->sdl2->SDL_RWFromFile(path->ptr, str_mode);
     if (OMG_ISNULL(file->rw)) {
         _OMG_LOG_ERROR(base, "Failed to create SDL2 RWops from file ", path->ptr," (", this->sdl2->SDL_GetError(), ")");
