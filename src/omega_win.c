@@ -374,14 +374,27 @@ int64_t omg_win_file_seek(OMG_FileWin* file, int64_t offset, int whence) {
 size_t omg_win_file_read(OMG_FileWin* file, void* buf, size_t size, size_t maxnum) {
     if (OMG_ISNULL(file_omg->k32->ReadFile)) {
         _OMG_LOG_WARN(file_omg_base, "Reading in not supported for Win32 file ", file_base->fp.ptr);
-        return -1;
+        return 0;
     }
     DWORD bytes_read;
     if (!file_omg->k32->ReadFile(file->handle, buf, (size * maxnum), &bytes_read, NULL)) {
         _OMG_LOG_WARN(file_omg_base, "Failed to read Win32 file ", file_base->fp.ptr);
-        return -2;
+        return 0;
     }
-    return (int64_t)bytes_read;
+    return (size_t)bytes_read;
+}
+
+size_t omg_win_file_write(OMG_FileWin* file, const void* buf, size_t size, size_t num) {
+    if (OMG_ISNULL(file_omg->k32->WriteFile)) {
+        _OMG_LOG_WARN(file_omg_base, "Writing in not supported for Win32 file ", file_base->fp.ptr);
+        return 0;
+    }
+    DWORD written;
+    if (!file_omg->k32->WriteFile(file->handle, buf, (DWORD)(size * num), &written, NULL)) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to write Win32 file ", file_base->fp.ptr);
+        return 0;
+    }
+    return (size_t)written;
 }
 
 OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
@@ -439,6 +452,7 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
     file_base->get_size = omg_win_file_get_size;
     file_base->seek = omg_win_file_seek;
     file_base->read = omg_win_file_read;
+    file_base->write = omg_win_file_write;
     OMG_END_POINTER_CAST();
     return file;
 }
