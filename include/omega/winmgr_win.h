@@ -2,6 +2,8 @@
 #include <omega/winmgr.h>
 
 #if OMG_SUPPORT_WIN
+#include <omega/api_sdl2.h>
+
 typedef struct {
     OMG_Winmgr parent;
     OMG_User32* u32;
@@ -9,6 +11,9 @@ typedef struct {
     OMG_Kernel32* k32;
     OMG_Dwmapi* dwm;
     OMG_Uxtheme* uxtheme;
+#if OMG_SUPPORT_SDL2
+    OMG_Sdl2* sdl2;
+#endif
     int win_build_num;
 } OMG_WinmgrWin;
 

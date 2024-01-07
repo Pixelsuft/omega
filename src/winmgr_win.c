@@ -40,6 +40,14 @@ bool omg_winmgr_win_window_free(OMG_WinmgrWin* this, OMG_WindowWin* window) {
 
 bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
     omg_winmgr_destroy((OMG_Winmgr*)this);
+#if OMG_SUPPORT_SDL2
+    if (OMG_ISNOTNULL(this->sdl2)) {
+        if (this->sdl2->SDL_WasInit(0) > 0)
+            this->sdl2->SDL_Quit();
+        omg_sdl2_dll_free(this->sdl2);
+        this->sdl2 = NULL;
+    }
+#endif
     return false;
 }
 
@@ -87,6 +95,9 @@ bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
+#if OMG_SUPPORT_SDL2
+    this->sdl2 = NULL;
+#endif
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_winmgr_win_destroy;
     base->window_alloc = omg_winmgr_win_window_alloc;

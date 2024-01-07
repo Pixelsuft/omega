@@ -1190,6 +1190,7 @@ typedef struct SDL_Surface {
 typedef struct {
     void* handle;
     int OMG_SDL2_STD_PREFIX (*SDL_Init)(uint32_t);
+    uint32_t OMG_SDL2_STD_PREFIX (*SDL_WasInit)(uint32_t);
     void OMG_SDL2_STD_PREFIX (*SDL_Quit)(void);
     void OMG_SDL2_STD_PREFIX (*SDL_GetVersion)(SDL_version*);
     void OMG_SDL2_STD_PREFIX (*SDL_Delay)(uint32_t);
