@@ -493,6 +493,7 @@ bool omg_raylib_app_init(OMG_OmegaRaylib* this) {
         }
         base->clock->was_allocated = true;
         base->clock->omg = this;
+        base->clock->inited = false;
         ((OMG_ClockRaylib*)base->clock)->raylib = this->raylib;
         OMG_BEGIN_POINTER_CAST();
         base->clock->init = omg_clock_raylib_init;

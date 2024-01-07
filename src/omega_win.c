@@ -182,6 +182,7 @@ bool omg_win_app_init(OMG_OmegaWin* this) {
         }
         base->clock->was_allocated = true;
         base->clock->omg = this;
+        base->clock->inited = false;
         ((OMG_ClockWin*)base->clock)->k32 = this->k32;
         OMG_BEGIN_POINTER_CAST();
         base->clock->init = omg_clock_win_init;

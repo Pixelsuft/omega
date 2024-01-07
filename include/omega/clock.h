@@ -17,6 +17,7 @@ typedef struct OMG_Clock {
     double speed;
     bool wait_for_limit;
     bool high_perf;
+    bool inited;
     bool was_allocated;
 } OMG_Clock;
 

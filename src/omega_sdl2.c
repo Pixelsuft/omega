@@ -474,6 +474,7 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
             return true;
         }
         base->clock->was_allocated = true;
+        base->clock->inited = false;
         base->clock->omg = this;
         ((OMG_ClockSdl2*)base->clock)->sdl2 = this->sdl2;
         OMG_BEGIN_POINTER_CAST();

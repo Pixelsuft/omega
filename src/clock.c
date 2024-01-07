@@ -98,6 +98,7 @@ bool omg_clock_update_hp(OMG_Clock* this) {
 bool omg_clock_init(OMG_Clock* this, bool high_perf) {
     this->high_perf = high_perf;
     this->wait_for_limit = true;
+    this->inited = true;
     this->dt = 0.0;
     this->fps_limit = this->dt_limit = 0.0;
     this->speed = 1.0;
