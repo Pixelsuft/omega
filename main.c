@@ -198,7 +198,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RB);
+    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     if (OMG_ISNULL(this->file)) {
         OMG_ERROR(this->omg, "OMG File Open Fail");
         this->omg->destroy(this->omg);

@@ -330,6 +330,22 @@ int64_t omg_file_std_tell(OMG_FileStd* file) {
     return (int64_t)res;
 }
 
+size_t omg_file_std_read(OMG_FileStd* file, void* buf, size_t size, size_t maxnum) {
+    size_t res = fread(buf, size, maxnum, file->file);
+    if ((res < (size * maxnum)) && !feof(file->file)) {
+        _OMG_LOG_WARN(file_omg, "Failed to read std file ", file_base->fp.ptr);
+    }
+    return res;
+}
+
+size_t omg_file_std_write(OMG_FileStd* file, const void* buf, size_t size, size_t num) {
+    size_t res = fwrite(buf, size, num, file->file);
+    if (res < (size * num)) {
+        _OMG_LOG_WARN(file_omg, "Failed to write std file ", file_base->fp.ptr);
+    }
+    return res;
+}
+
 OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode) {
     const char* str_mode = NULL;
     _OMG_FILE_MODE_TO_STD(mode, str_mode);
@@ -353,6 +369,8 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
     file_base->get_size = omg_file_std_get_size;
     file_base->seek = omg_file_std_seek;
     file_base->tell = omg_file_std_tell;
+    file_base->read = omg_file_std_read;
+    file_base->write = omg_file_std_write;
     OMG_END_POINTER_CAST();
     return file;
 }

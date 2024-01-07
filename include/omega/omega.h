@@ -146,6 +146,8 @@ OMG_API bool omg_file_std_destroy(OMG_FileStd* file);
 OMG_API int64_t omg_file_std_get_size(OMG_FileStd* file);
 OMG_API int64_t omg_file_std_seek(OMG_FileStd* file, int64_t offset, int whence);
 OMG_API int64_t omg_file_std_tell(OMG_FileStd* file);
+OMG_API size_t omg_file_std_read(OMG_FileStd* file, void* buf, size_t size, size_t maxnum);
+OMG_API size_t omg_file_std_write(OMG_FileStd* file, const void* buf, size_t size, size_t num);
 #endif
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);
