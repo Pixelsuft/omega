@@ -173,7 +173,7 @@ typedef struct {
     size_t len;
     int type;
     char* ptr;
-    char buf[];
+    // char buf[];
 } OMG_String;
 
 typedef float omg_color_t;

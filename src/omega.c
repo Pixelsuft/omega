@@ -261,7 +261,10 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
     else
         file->was_allocated = false;
     file->omg = this;
-    file->fp = path;
+    if (omg_string_init_dynamic(&file->fp, path)) {
+        OMG_FREE(this->mem, file);
+        return NULL;
+    }
     file->mode = mode;
     file->destroy = omg_file_destroy;
     file->get_size = omg_file_get_size;
@@ -277,7 +280,7 @@ bool omg_file_std_destroy(OMG_FileStd* file) {
     bool res = false;
     if (OMG_ISNULL(file->file)) {
         if (fclose(file->file) != 0) {
-            _OMG_LOG_WARN(file_omg, "Failed to std close file ", file_base->fp->ptr);
+            _OMG_LOG_WARN(file_omg, "Failed to std close file ", file_base->fp.ptr);
         }
         file->file = NULL;
     }

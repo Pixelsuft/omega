@@ -63,6 +63,7 @@
 #define OMG_FILE_SEEK_END 2
 
 typedef struct OMG_File {
+    OMG_String fp;
     bool (*destroy)(struct OMG_File* file);
     int64_t (*get_size)(struct OMG_File* file);
     int64_t (*seek)(struct OMG_File* file, int64_t offset, int whence);
@@ -71,7 +72,6 @@ typedef struct OMG_File {
     size_t (*write)(struct OMG_File* file, const void* buf, size_t size, size_t num);
     void* extra1;
     void* omg;
-    const OMG_String* fp;
     int mode;
     bool was_allocated;
 } OMG_File;
