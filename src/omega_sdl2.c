@@ -450,7 +450,7 @@ void omg_sdl2_auto_loop_tick(OMG_OmegaSdl2* this) {
 void omg_sdl2_auto_loop_run(OMG_OmegaSdl2* this) {
     base->looping = true;
 #if OMG_IS_EMSCRIPTEN
-    emscripten_set_main_loop_arg((em_arg_callback_func)&omg_sdl2_auto_loop_tick, (void*)this, -1, 1);
+    emscripten_set_main_loop_arg((em_arg_callback_func)omg_sdl2_auto_loop_tick, (void*)this, -1, 1);
 #else
     while (base->looping) {
         omg_sdl2_auto_loop_tick(this);
