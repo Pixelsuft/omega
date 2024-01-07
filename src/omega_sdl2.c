@@ -527,9 +527,7 @@ bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
         }
         file->rw = NULL;
     }
-    OMG_BEGIN_POINTER_CAST();
-    omg_file_destroy(file);
-    OMG_END_POINTER_CAST();
+    omg_file_destroy((OMG_File*)file);
     return res;
 }
 

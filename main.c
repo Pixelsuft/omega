@@ -205,11 +205,12 @@ void app_init(App* this, OMG_EntryData* data) {
         return;
     }
     // I'm lazy for fail checks here, but you shouldn't :)
-    size_t file_size = this->file->get_size(this->file);
+    int64_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);
     OMG_String file_buf;
     omg_string_init_dynamic(&file_buf, NULL);
-    omg_string_resize(&file_buf, file_size);
+    if (file_size > 0)
+        omg_string_resize(&file_buf, (size_t)file_size);
     this->file->read(this->file, file_buf.ptr, 1, file_size);
     OMG_INFO(this->omg, "File content: ", &file_buf);
     OMG_INFO(this->omg, "File pos: ", (int)this->file->tell(this->file));

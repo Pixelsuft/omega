@@ -37,6 +37,10 @@ OMG_API void omg_win_poll_events(OMG_OmegaWin* this);
 OMG_API void omg_win_update_scale(OMG_OmegaWin* this);
 #if OMG_EXPORT_SHIT
 #include <omega/window_win.h>
+#include <omega/filesystem_win.h>
+
+OMG_API OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode);
+OMG_API bool omg_win_file_destroy(OMG_FileWin* file);
 OMG_API void omg_win_attach_console(OMG_OmegaWin* this);
 OMG_API bool omg_win_app_init(OMG_OmegaWin* this);
 OMG_API bool omg_win_app_quit(OMG_OmegaWin* this);

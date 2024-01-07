@@ -7,7 +7,11 @@
 #include <omega/window_win.h>
 #include <omega/winmgr_win.h>
 #include <omega/clock_win.h>
+#include <omega/filesystem_win.h>
 #define base ((OMG_Omega*)this)
+#define file_base ((OMG_File*)file)
+#define file_omg ((OMG_OmegaSdl2*)file_base->omg)
+#define file_omg_base ((OMG_Omega*)file_base->omg)
 #define winmgr_win ((OMG_WinmgrWin*)base->winmgr)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
@@ -317,6 +321,23 @@ bool omg_win_alloc_winmgr(OMG_OmegaWin* this) {
     return false;
 }
 
+bool omg_win_file_destroy(OMG_FileWin* file) {
+    omg_file_destroy((OMG_File*)file);
+    return false;
+}
+
+OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
+    OMG_BEGIN_POINTER_CAST();
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    file = omg_file_from_path(this, file, path, mode);
+    if (OMG_ISNULL(file))
+        return NULL;
+    file_base->destroy = omg_win_file_destroy;
+    OMG_END_POINTER_CAST();
+    return file;
+}
+
 bool omg_win_init(OMG_OmegaWin* this) {
     // TODO: cleanups on errors
     if (OMG_ISNULL(this->k32)) {
@@ -387,6 +408,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     this->win_major_ver = (int)os_ver_info.dwMajorVersion;
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
     this->win_build_number = (int)os_ver_info.dwBuildNumber;
+    base->sz_file = sizeof(OMG_FileWin);
     if (OMG_ISNULL(this->dwm)) {
         this->dwm = OMG_MALLOC(base->mem, sizeof(OMG_Dwmapi));
         if (OMG_ISNULL(this->dwm)) {
@@ -443,6 +465,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->auto_loop_run = omg_win_auto_loop_run;
     base->winmgr_alloc = omg_win_alloc_winmgr;
     base->destroy = omg_win_destroy;
+    base->file_from_path = omg_win_file_from_path;
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Win32 backend");
     // TODO: correct version by check build number

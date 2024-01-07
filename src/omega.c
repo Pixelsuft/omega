@@ -220,6 +220,7 @@ void omg_reset_event_handlers(OMG_Omega* this) {
 }
 
 bool omg_file_destroy(OMG_File* file) {
+    omg_string_destroy(&file->fp);
     if (file->was_allocated) {
         file->was_allocated = false;
         OMG_FREE(((OMG_Omega*)file->omg)->mem, file);
