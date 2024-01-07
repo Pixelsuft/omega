@@ -79,6 +79,8 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED_COMPAT(GetTickCount64);
     LOAD_REQUIRED_COMPAT(GetFileSizeEx);
     LOAD_REQUIRED_COMPAT(SetFilePointerEx);
+    LOAD_REQUIRED_COMPAT(CancelSynchronousIo);
+    LOAD_REQUIRED_COMPAT(ReadFile);
     if (OMG_ISNULL(this->GetTickCount64))
         this->GetTickCount64 = omg_win_get_tick_count64_emu;
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT

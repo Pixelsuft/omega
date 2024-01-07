@@ -366,9 +366,22 @@ int64_t omg_win_file_seek(OMG_FileWin* file, int64_t offset, int whence) {
         (whence == OMG_FILE_SEEK_END) ? FILE_END : ((whence == OMG_FILE_SEEK_CUR) ? FILE_CURRENT : FILE_BEGIN)
     ))) {
         _OMG_LOG_WARN(file_omg_base, "Failed to seek Win32 file ", file_base->fp.ptr);
-        return -1;
+        return -2;
     }
     return (int64_t)res_buf.QuadPart;
+}
+
+size_t omg_win_file_read(OMG_FileWin* file, void* buf, size_t size, size_t maxnum) {
+    if (OMG_ISNULL(file_omg->k32->ReadFile)) {
+        _OMG_LOG_WARN(file_omg_base, "Reading in not supported for Win32 file ", file_base->fp.ptr);
+        return -1;
+    }
+    DWORD bytes_read;
+    if (!file_omg->k32->ReadFile(file->handle, buf, (size * maxnum), &bytes_read, NULL)) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to read Win32 file ", file_base->fp.ptr);
+        return -2;
+    }
+    return (int64_t)bytes_read;
 }
 
 OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
@@ -425,6 +438,7 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
     file_base->destroy = omg_win_file_destroy;
     file_base->get_size = omg_win_file_get_size;
     file_base->seek = omg_win_file_seek;
+    file_base->read = omg_win_file_read;
     OMG_END_POINTER_CAST();
     return file;
 }
