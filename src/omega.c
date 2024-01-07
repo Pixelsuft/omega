@@ -276,6 +276,7 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
 }
 
 #if OMG_HAS_STD
+// TODO: support 64-bit types
 bool omg_file_std_destroy(OMG_FileStd* file) {
     bool res = false;
     if (OMG_ISNULL(file->file)) {
@@ -288,6 +289,21 @@ bool omg_file_std_destroy(OMG_FileStd* file) {
     omg_file_destroy(file);
     OMG_END_POINTER_CAST();
     return res;
+}
+
+int64_t omg_file_std_get_size(OMG_FileStd* file) {
+    long pos = ftell(file->file);
+    if (fseek(file->file, 0, SEEK_END) != 0) {
+        _OMG_LOG_WARN(file_omg, "Failed to get size for std file ", file_base->fp.ptr);
+        return -2;
+    }
+    long res = ftell(file->file);
+    fseek(file->file, pos, SEEK_SET);
+    if (res < 0)
+        _OMG_LOG_WARN(file_omg, "Failed to get size for std file ", file_base->fp.ptr);
+    if (res == -1)
+        res = -2;
+    return (int64_t)res;
 }
 
 OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode) {
@@ -310,10 +326,10 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
         return NULL;
     }
     file_base->destroy = omg_file_std_destroy;
+    file_base->get_size = omg_file_std_get_size;
     OMG_END_POINTER_CAST();
     return file;
 }
-
 #endif
 
 bool omg_omg_init(OMG_Omega* this) {

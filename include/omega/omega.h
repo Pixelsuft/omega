@@ -143,6 +143,7 @@ OMG_API size_t omg_file_write(OMG_File* file, const void* buf, size_t size, size
 #if OMG_HAS_STD
 OMG_API OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode);
 OMG_API bool omg_file_std_destroy(OMG_FileStd* file);
+OMG_API int64_t omg_file_std_get_size(OMG_FileStd* file);
 #endif
 // Should I always export events?
 OMG_API void omg_event_on_quit(OMG_EventQuit* event);

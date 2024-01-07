@@ -78,6 +78,7 @@ typedef struct OMG_File {
 
 #if OMG_HAS_STD
 typedef struct {
+    OMG_File parent;
     void* file;
 } OMG_FileStd;
 #endif
