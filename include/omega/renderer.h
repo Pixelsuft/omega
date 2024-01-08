@@ -12,6 +12,8 @@
 #define _OMG_NULL_TEX_CHECK()
 #endif
 
+#define OMG_REN_TEXTURE_FROM_FILE(ren, path) ren->tex_from_surf(ren, ((OMG_Omega*)ren->omg)->winmgr->surf_from_path(((OMG_Omega*)ren->omg)->winmgr, path), true)
+
 #define OMG_REN_TYPE_NONE 0
 #define OMG_REN_TYPE_AUTO 1
 #define OMG_REN_TYPE_WIN 2

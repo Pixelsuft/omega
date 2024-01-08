@@ -245,9 +245,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
     this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(200, 200), true);
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
-    this->tex2 = this->ren->tex_from_surf(this->ren, 
-        this->omg->winmgr->surf_from_path(this->omg->winmgr, &OMG_STRING_MAKE_STATIC("assets/sprite.png")),
-    true);
+    this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
