@@ -80,7 +80,10 @@ bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* o
         }
         cam.target.x = cam.target.y = 0.0f;
         cam.rotation = 0.0f;
-        this->raylib->BeginMode2D(cam);
+        if (base->soft_scale && base->soft_offset)
+            this->raylib->EndMode2D();
+        else
+            this->raylib->BeginMode2D(cam);
     }
     return false;
 }
@@ -124,8 +127,10 @@ bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* re
 }
 
 bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
+    // WTF
+    float fuck_raylib_y = OMG_ISNULL(base->target) ? (rect->y + this->so.y) : (rect->y - this->so.y);
     RL_Rectangle rec = {
-        .x = (rect->x + this->so.x) * this->ss.x, .y = (rect->y + this->so.y) * this->ss.y,
+        .x = (rect->x + this->so.x) * this->ss.x, .y = (fuck_raylib_y) * this->ss.y,
         .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
     };
     this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
