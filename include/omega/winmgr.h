@@ -19,6 +19,7 @@ typedef struct OMG_Winmgr {
     bool (*image_loader_alloc)(struct OMG_Winmgr* this);
     int surf_depth;
     bool surf_rle;
+    bool inited;
     bool was_allocated;
 } OMG_Winmgr;
 

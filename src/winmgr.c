@@ -14,6 +14,8 @@ bool omg_winmgr_window_free(OMG_Winmgr* this, OMG_Window* window) {
 }
 
 bool omg_winmgr_destroy(OMG_Winmgr* this) {
+    if (!this->inited)
+        return false;
     if (OMG_ISNOTNULL(this->cache)) {
         for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
             OMG_Window* win = this->cache[i];
@@ -84,5 +86,6 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_destroy = omg_winmgr_surf_destroy;
     this->surf_from_path = omg_winmgr_surf_from_path;
     this->image_loader_alloc = omg_winmgr_image_loader_alloc;
+    this->inited = true;
     return false;
 }

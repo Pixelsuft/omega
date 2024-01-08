@@ -76,6 +76,7 @@ bool omg_alloc_winmgr(OMG_Omega* this) {
         return false;
     this->winmgr->omg = this;
     this->winmgr->was_allocated = true;
+    this->winmgr->inited = false;
     this->winmgr->init = omg_winmgr_init;
     return false;
 }
@@ -83,7 +84,8 @@ bool omg_alloc_winmgr(OMG_Omega* this) {
 bool omg_free_winmgr(OMG_Omega* this) {
     if (OMG_ISNULL(this->winmgr))
         return false;
-    this->winmgr->destroy(this->winmgr);
+    if (this->winmgr->inited)
+        this->winmgr->destroy(this->winmgr);
     if (this->winmgr->was_allocated) {
         OMG_FREE(this->mem, this->winmgr);
         this->winmgr = NULL;
