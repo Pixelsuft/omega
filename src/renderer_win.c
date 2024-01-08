@@ -199,6 +199,7 @@ bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
 }
 
 bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos) {
+    _OMG_NULL_TEX_CHECK();
     this->g32->SetStretchBltMode(this->cur_hpdc, HALFTONE);
     this->g32->StretchBlt(
         this->cur_hpdc,

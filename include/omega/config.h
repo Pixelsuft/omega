@@ -98,6 +98,13 @@
 #define OMG_WIN_PRECISE_ENCODING 1
 #endif
 
+#ifndef OMG_NULL_SURF_CHECK
+#define OMG_NULL_SURF_CHECK 1
+#endif
+#ifndef OMG_NULL_TEX_CHECK
+#define OMG_NULL_TEX_CHECK 1
+#endif
+
 #ifndef OMG_MAX_COLOR
 #define OMG_MAX_COLOR ((omg_color_t)255)
 #endif

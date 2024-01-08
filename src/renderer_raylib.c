@@ -217,6 +217,7 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
 }
 
 bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos) {
+    _OMG_NULL_TEX_CHECK();
     if (RAYLIB_HAS_SS()) {
         RL_Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
         RL_Rectangle dst;

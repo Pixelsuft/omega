@@ -3,6 +3,15 @@
 #include <omega/surface.h>
 #include <omega/texture.h>
 
+#if OMG_NULL_TEX_CHECK
+#define _OMG_NULL_TEX_CHECK() do { \
+    if (OMG_ISNULL(tex)) \
+        return true; \
+} while (0)
+#else
+#define _OMG_NULL_TEX_CHECK()
+#endif
+
 #define OMG_REN_TYPE_NONE 0
 #define OMG_REN_TYPE_AUTO 1
 #define OMG_REN_TYPE_WIN 2

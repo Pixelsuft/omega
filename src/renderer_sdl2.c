@@ -375,6 +375,7 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
 }
 
 bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos) {
+    _OMG_NULL_TEX_CHECK();
     SDL_FRect dst_rect;
     dst_rect.x = base->offset.x;
     dst_rect.y = base->offset.y;
