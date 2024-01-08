@@ -18,8 +18,14 @@ bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
 }
 
 void* omg_image_loader_sdl2_image_from_fp(OMG_ImageLoaderSdl2* this, const OMG_String* path) {
-    OMG_UNUSED(this, path);
-    return NULL;
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    SDL_Surface* res = this->img.IMG_Load(path->ptr);
+    if (OMG_ISNULL(res)) {
+        _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_image image ", path->ptr, " (", IMG_GETERROR(), ")");
+        return NULL;
+    }
+    return (void*)res;
 }
 
 bool omg_image_loader_sdl2_init(OMG_ImageLoaderSdl2* this) {

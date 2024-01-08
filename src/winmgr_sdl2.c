@@ -82,6 +82,28 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
     return false;
 }
 
+#if OMG_SUPPORT_SDL2_IMAGE
+OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_path(OMG_WinmgrSdl2* this, const OMG_String* path) {
+    OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
+    if (OMG_ISNULL(surf))
+        return NULL;
+    surf->surf = (SDL_Surface*)base->img->image_from_fp_internal(base->img, path);
+    if (OMG_ISNULL(surf->surf)) {
+        OMG_FREE(omg_base->mem, surf);
+        return NULL;
+    }
+    surf_base->has_alpha = true; // TODO: check pixel format for alpha
+    surf_base->size.w = (float)surf->surf->w;
+    surf_base->size.h = (float)surf->surf->h;
+    surf_base->data = (void*)surf->surf->pixels;
+    if (this->sdl2->SDL_SetSurfaceBlendMode(surf->surf, surf_base->has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0)
+        _OMG_SURF_BLEND_WARN();
+    if (this->sdl2->SDL_SetSurfaceRLE(surf->surf, base->surf_rle ? 1 : 0) < 0)
+        _OMG_LOG_WARN(omg_base, "Failed to set surface RLE (", this->sdl2->SDL_GetError(), ")");
+    return surf;
+}
+#endif
+
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -94,6 +116,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)omg_image_loader_sdl2_init;
+    base->surf_from_path = omg_winmgr_sdl2_surf_from_path;
 #endif
     OMG_END_POINTER_CAST();
     return false;

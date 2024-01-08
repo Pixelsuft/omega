@@ -15,7 +15,7 @@ typedef struct OMG_Winmgr {
     OMG_Window* (*window_alloc)(struct OMG_Winmgr* this);
     bool (*window_free)(struct OMG_Winmgr* this, OMG_Window* window);
     OMG_Surface* (*surf_create)(struct OMG_Winmgr* this, const OMG_FPoint* size, bool has_alpha);
-    OMG_Surface* (*surf_from_path)(struct OMG_Winmgr* this, const OMG_String* fp);
+    OMG_Surface* (*surf_from_path)(struct OMG_Winmgr* this, const OMG_String* path);
     bool (*surf_destroy)(struct OMG_Winmgr* this, OMG_Surface* surf);
     bool (*image_loader_alloc)(struct OMG_Winmgr* this);
     int surf_depth;
@@ -31,4 +31,5 @@ OMG_API bool omg_winmgr_destroy(OMG_Winmgr* this);
 OMG_API OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, const OMG_FPoint* size, bool has_alpha);
 OMG_API bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf);
 OMG_API bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this);
+OMG_API OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path);
 #endif

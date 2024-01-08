@@ -50,9 +50,8 @@ bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf) {
     return false;
 }
 
-OMG_Surface* omg_winmgr_surf_from_path(struct OMG_Winmgr* this, const OMG_String* fp) {
-    // TODO
-    OMG_UNUSED(this, fp);
+OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path) {
+    OMG_UNUSED(this, path);
     return NULL;
 }
 
