@@ -10,6 +10,7 @@ typedef struct {
     OMG_Renderer* ren;
     OMG_Surface* surf;
     OMG_Texture* tex;
+    OMG_Texture* tex2;
     OMG_File* file;
     OMG_Clock* clock;
     omg_color_t bg_col;
@@ -22,6 +23,7 @@ OMG_MAIN_MAKE(omega_main)
 
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
+    this->ren->tex_destroy(this->ren, this->tex2);
     this->ren->tex_destroy(this->ren, this->tex);
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
     this->file->destroy(this->file);
@@ -145,6 +147,7 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(50, 50, 100, 100), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 255));
     this->ren->set_target(this->ren, NULL);
     this->ren->copy(this->ren, this->tex, &OMG_FPOINT_MAKE(400, 200));
+    this->ren->copy(this->ren, this->tex2, &OMG_FPOINT_MAKE(200, 400));
     this->ren->flip(this->ren);
     // printf("%i\n", this->clock->get_fps(this->clock));
     // this->omg->delay(this->omg, 1.0 / 60.0);
@@ -206,6 +209,9 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    this->ren = this->win->ren;
+    this->ren->soft_scale = true;
+    this->ren->aa = true;
     this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     if (OMG_ISNULL(this->file)) {
         OMG_ERROR(this->omg, "OMG File Open Fail");
@@ -224,7 +230,6 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, "File pos: ", (int)this->file->tell(this->file));
     omg_string_destroy(&file_buf);
     this->clock = this->omg->clock;
-    this->ren = this->win->ren;
     this->win->allow_alt = false;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
@@ -241,8 +246,9 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
     this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(200, 200), true);
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
-    this->ren->soft_scale = true;
-    this->ren->aa = true;
+    this->tex2 = this->ren->tex_from_surf(this->ren, 
+        this->omg->winmgr->surf_from_path(this->omg->winmgr, &OMG_STRING_MAKE_STATIC("assets/sprite.png")),
+    true);
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
