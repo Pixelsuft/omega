@@ -39,6 +39,7 @@ typedef struct {
     void OMG_SDL2_IMAGE_STD_PREFIX (*IMG_Quit)(void);
     SDL_Surface* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTyped_RW)(SDL_RWops*, int, const char*);
     SDL_Surface* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_Load)(const char*);
+    SDL_Surface* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_Load_RW)(SDL_RWops*, int);
     SDL_Texture* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTexture)(SDL_Renderer*, const char*);
     SDL_Texture* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTexture_RW)(SDL_Renderer*, SDL_RWops*, int);
     SDL_Texture* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTextureTyped_RW)(SDL_Renderer*, SDL_RWops*, int, const char*);
