@@ -54,7 +54,7 @@ OMG_Surface* omg_winmgr_surf_from_path(struct OMG_Winmgr* this, const OMG_String
     return NULL;
 }
 
-bool omg_winmgr_init_image_loader(OMG_Winmgr* this) {
+bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this) {
     if (OMG_ISNULL(this->img)) {
         this->img = OMG_MALLOC(omg_base->mem, this->sz_image_loader);
         if (OMG_ISNULL(this->img))
@@ -63,6 +63,7 @@ bool omg_winmgr_init_image_loader(OMG_Winmgr* this) {
     }
     else
         this->img->was_allocated = false;
+    this->img->inited = false;
     this->img->init = omg_image_loader_init;
     return false;
 }
@@ -82,6 +83,6 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_create = omg_winmgr_surf_create;
     this->surf_destroy = omg_winmgr_surf_destroy;
     this->surf_from_path = omg_winmgr_surf_from_path;
-    this->init_image_loader = omg_winmgr_init_image_loader;
+    this->image_loader_alloc = omg_winmgr_image_loader_alloc;
     return false;
 }

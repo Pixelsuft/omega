@@ -191,6 +191,14 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    if (
+        this->omg->winmgr->image_loader_alloc(this->omg->winmgr) ||
+        this->omg->winmgr->img->init(this->omg->winmgr->img)
+    ) {
+        OMG_ERROR(this->omg, "OMG Image Loader Init Fail");
+        this->omg->destroy(this->omg);
+        return;
+    }
     if (this->win->type == OMG_WIN_TYPE_WIN && 0)
         this->win->ren_type = OMG_REN_TYPE_WIN;
     if (this->win->renderer_alloc(this->win) || this->win->ren->init(this->win->ren)) {
