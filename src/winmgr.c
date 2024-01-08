@@ -69,6 +69,7 @@ bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this) {
     OMG_BEGIN_POINTER_CAST();
     this->img->init = this->_img_init_ptr;
     OMG_END_POINTER_CAST();
+    this->img->omg = omg_base;
     return false;
 }
 
@@ -81,6 +82,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->sz_image_loader = sizeof(OMG_ImageLoader);
     this->surf_rle = true;
     this->img = NULL;
+    this->image_formats = OMG_IMG_FORMAT_BMP | OMG_IMG_FORMAT_JPG | OMG_IMG_FORMAT_PNG;
     this->_img_init_ptr = (void*)omg_image_loader_init;
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;

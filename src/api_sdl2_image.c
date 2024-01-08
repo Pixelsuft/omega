@@ -12,6 +12,7 @@ static OMG_Sdl2Image* omg_sdl2_image_cache = NULL;
 static bool omg_sdl2_image_already_loaded = false;
 
 bool omg_sdl2_image_dll_load(OMG_Sdl2Image* this, const OMG_String* dll_path) {
+    // TODO: do I really need to cache it if it loads once????
 #if OMG_SDL2_IMAGE_DYNAMIC
     if (OMG_ISNULL(dll_path))
 #if OMG_IS_WIN

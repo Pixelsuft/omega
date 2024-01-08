@@ -11,7 +11,7 @@ void* omg_image_loader_image_from_fp(OMG_ImageLoader* this, const OMG_String* pa
 }
 
 bool omg_image_loader_init(OMG_ImageLoader* this) {
-    this->inited = true;
+    this->inited = false;
     this->type = OMG_IMAGE_LOADER_TYPE_NONE;
     this->destroy = omg_image_loader_destroy;
     this->image_from_fp_internal = omg_image_loader_image_from_fp;

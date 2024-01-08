@@ -4,8 +4,17 @@
 #define OMG_IMAGE_LOADER_TYPE_NONE 0
 #define OMG_IMAGE_LOADER_TYPE_SDL2 1
 
+#define OMG_IMG_FORMAT_BMP (1 << 1)
+#define OMG_IMG_FORMAT_JPG (1 << 2)
+#define OMG_IMG_FORMAT_PNG (1 << 3)
+#define OMG_IMG_FORMAT_TIF (1 << 4)
+#define OMG_IMG_FORMAT_WEBP (1 << 5)
+#define OMG_IMG_FORMAT_JXL (1 << 6)
+#define OMG_IMG_FORMAT_AVIF (1 << 7)
+
 typedef struct OMG_ImageLoader {
     int type;
+    void* omg;
     bool (*init)(struct OMG_ImageLoader* this);
     void* (*image_from_fp_internal)(struct OMG_ImageLoader* this, const OMG_String* path);
     bool (*destroy)(struct OMG_ImageLoader* this);
