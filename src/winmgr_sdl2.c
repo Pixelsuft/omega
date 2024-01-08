@@ -4,6 +4,7 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/winmgr_sdl2.h>
 #include <omega/surface_sdl2.h>
+#include <omega/image_sdl2.h>
 #define base ((OMG_Winmgr*)this)
 #define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -90,6 +91,10 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->window_free = omg_winmgr_sdl2_window_free;
     base->surf_create = omg_winmgr_sdl2_surf_create;
     base->surf_destroy = omg_winmgr_sdl2_surf_destroy;
+#if OMG_SUPPORT_SDL2_IMAGE
+    base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
+    base->_img_init_ptr = (void*)omg_image_loader_sdl2_init;
+#endif
     OMG_END_POINTER_CAST();
     return false;
 }

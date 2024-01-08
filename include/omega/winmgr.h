@@ -8,6 +8,7 @@ typedef struct OMG_Winmgr {
     void* omg;
     OMG_Window** cache;
     OMG_ImageLoader* img;
+    void* _img_init_ptr;
     size_t sz_image_loader;
     bool (*init)(struct OMG_Winmgr* this);
     bool (*destroy)(struct OMG_Winmgr* this);

@@ -66,7 +66,9 @@ bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this) {
     else
         this->img->was_allocated = false;
     this->img->inited = false;
-    this->img->init = omg_image_loader_init;
+    OMG_BEGIN_POINTER_CAST();
+    this->img->init = this->_img_init_ptr;
+    OMG_END_POINTER_CAST();
     return false;
 }
 
@@ -79,6 +81,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->sz_image_loader = sizeof(OMG_ImageLoader);
     this->surf_rle = true;
     this->img = NULL;
+    this->_img_init_ptr = (void*)omg_image_loader_init;
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;
     this->window_free = omg_winmgr_window_free;
