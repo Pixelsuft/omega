@@ -48,6 +48,9 @@ bool omg_image_loader_sdl2_init(OMG_ImageLoaderSdl2* this) {
         omg_sdl2_image_dll_free(&this->img);
         return true;
     }
+    if (res < sdl2_formats) {
+        _OMG_LOG_WARN(omg_base, "Failed to init some SDL2_image formats (", IMG_GETERROR(), ")");
+    }
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_image_loader_sdl2_destroy;
     base->image_from_fp_internal = omg_image_loader_sdl2_image_from_fp;
