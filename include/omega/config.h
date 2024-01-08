@@ -50,6 +50,13 @@
 #define OMG_SUPPORT_SDL2_MAIN 1
 #endif
 
+#ifndef OMG_SUPPORT_SDL2_IMAGE
+#define OMG_SUPPORT_SDL2_IMAGE 1
+#endif
+#ifndef OMG_SDL2_IMAGE_DYNAMIC
+#define OMG_SDL2_IMAGE_DYNAMIC 1
+#endif
+
 #ifndef OMG_SUPPORT_RAYLIB
 #define OMG_SUPPORT_RAYLIB 1
 #endif

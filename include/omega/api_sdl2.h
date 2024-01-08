@@ -54,8 +54,7 @@
 #define SDL_TRUE 1
 typedef int SDL_bool;
 #else
-typedef enum
-{
+typedef enum {
     SDL_FALSE = 0,
     SDL_TRUE = 1
 } SDL_bool;
@@ -761,8 +760,7 @@ typedef struct SDL_Color {
     uint8_t a;
 } SDL_Color;
 
-typedef enum
-{
+typedef enum {
     SDL_WINDOWEVENT_NONE,
     SDL_WINDOWEVENT_SHOWN,
     SDL_WINDOWEVENT_HIDDEN,
@@ -784,8 +782,7 @@ typedef enum
     SDL_WINDOWEVENT_DISPLAY_CHANGED
 } SDL_WindowEventID;
 
-typedef enum
-{
+typedef enum {
     SDL_FIRSTEVENT = 0,
     SDL_QUIT = 0x100,
     SDL_APP_TERMINATING,
