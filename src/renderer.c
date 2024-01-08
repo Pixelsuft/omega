@@ -99,6 +99,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->omg = win_base->omg;
     this->aa = false;
     this->soft_scale = false;
+    this->soft_offset = false;
     this->auto_blend = true;
     this->target = NULL;
     this->offset.x = this->offset.y = 0.0f;

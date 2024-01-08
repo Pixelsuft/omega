@@ -44,20 +44,37 @@ bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* o
     omg_renderer_set_scale(base, offset, scale);
     if (IS_DEFAULT_SCALE()) {
         this->ss.x = this->ss.y = 1.0f;
+        this->so.x = this->so.y = 0.0f;
         this->raylib->EndMode2D();
     }
     else {
         Camera2D cam;
         if (base->soft_scale) {
-            cam.offset.x = base->offset.x * base->scale.x;
-            cam.offset.y = base->offset.y * base->scale.y;
+            if (base->soft_offset) {
+                this->so.x = base->offset.x;
+                this->so.y = base->offset.y;
+                cam.offset.x = cam.offset.y = 0.0f;
+            }
+            else {
+                cam.offset.x = base->offset.x * base->scale.x;
+                cam.offset.y = base->offset.y * base->scale.y;
+                this->so.x = this->so.y = 0.0f;
+            }
             cam.zoom = 1.0f;
             this->ss.x = base->scale.x;
             this->ss.y = base->scale.y;
         }
         else {
-            cam.offset.x = base->offset.x * base->scale.x;
-            cam.offset.y = base->offset.y * base->scale.y;
+            if (base->soft_offset) {
+                this->so.x = base->offset.x;
+                this->so.y = base->offset.y;
+                cam.offset.x = cam.offset.y = 0.0f;
+            }
+            else {
+                cam.offset.x = base->offset.x * base->scale.x;
+                cam.offset.y = base->offset.y * base->scale.y;
+                this->so.x = this->so.y = 0.0f;
+            }
             cam.zoom = base->a_scale;
             this->ss.x = this->ss.y = 1.0f;
         }
@@ -91,31 +108,40 @@ bool omg_renderer_raylib_flip(OMG_RendererRaylib* this) {
 }
 
 bool omg_renderer_raylib_draw_line(OMG_RendererRaylib* this, const OMG_FRect* start_end, const OMG_Color* col) {
-    Vector2 vec1 = { .x = start_end->x1 * this->ss.x, .y = start_end->y1 * this->ss.y };
-    Vector2 vec2 = { .x = start_end->x2 * this->ss.x, .y = start_end->y2 * this->ss.y };
+    Vector2 vec1 = { .x = (start_end->x1 + this->so.x) * this->ss.x, .y = (start_end->y1 + this->so.y) * this->ss.y };
+    Vector2 vec2 = { .x = (start_end->x2 + this->so.x) * this->ss.x, .y = (start_end->y2 + this->so.y) * this->ss.y };
     this->raylib->DrawLineV(vec1, vec2, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    RL_Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
+    RL_Rectangle rec = {
+        .x = (rect->x + this->so.x) * this->ss.x, .y = (rect->y + this->so.y) * this->ss.y,
+        .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
+    };
     this->raylib->DrawRectangleLinesEx(rec, 1.0f, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    RL_Rectangle rec = { .x = rect->x * this->ss.x, .y = rect->y * this->ss.y, .width = rect->w * this->ss.x, .height = rect->h * this->ss.y };
+    RL_Rectangle rec = {
+        .x = (rect->x + this->so.x) * this->ss.x, .y = (rect->y + this->so.y) * this->ss.y,
+        .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
+    };
     this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
 bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* pos, const OMG_Color* col) {
     if (RAYLIB_HAS_SS()) {
-        RL_Rectangle rec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y, .width = this->ss.x, .height = this->ss.y };
+        RL_Rectangle rec = {
+            .x = (pos->x + this->so.x) * this->ss.x, .y = (pos->y + this->so.y) * this->ss.y,
+            .width = this->ss.x, .height = this->ss.y
+        };
         this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(col));
         return false;
     }
-    Vector2 vec = { .x = pos->x * this->ss.x, .y = pos->y * this->ss.y };
+    Vector2 vec = { .x = pos->x + this->so.x, .y = pos->y + this->so.y };
     this->raylib->DrawPixelV(vec, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
@@ -123,14 +149,14 @@ bool omg_renderer_raylib_draw_point(OMG_RendererRaylib* this, const OMG_FPoint* 
 bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
     if (RAYLIB_HAS_SS())
         this->raylib->DrawEllipseLines(
-            (int)(pos->x * this->ss.x),
-            (int)(pos->y * this->ss.y),
+            (int)((pos->x + this->so.x) * this->ss.x),
+            (int)((pos->y + this->so.y) * this->ss.y),
             rad * this->ss.x,
             rad * this->ss.y,
             _OMG_RAYLIB_OMG_COLOR(col)
         );
     else {
-        Vector2 vec = { .x = pos->x, .y = pos->y };
+        Vector2 vec = { .x = pos->x + this->so.x, .y = pos->y + this->so.y };
         this->raylib->DrawCircleLinesV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
     }
     return false;
@@ -139,14 +165,14 @@ bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint*
 bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
     if (RAYLIB_HAS_SS())
         this->raylib->DrawEllipse(
-            (int)(pos->x * this->ss.x),
-            (int)(pos->y * this->ss.y),
+            (int)((pos->x + this->so.x) * this->ss.x),
+            (int)((pos->y + this->so.y) * this->ss.y),
             rad * this->ss.x,
             rad * this->ss.y,
             _OMG_RAYLIB_OMG_COLOR(col)
         );
     else {
-        Vector2 vec = { .x = pos->x, .y = pos->y };
+        Vector2 vec = { .x = pos->x + this->so.x, .y = pos->y + this->so.y };
         this->raylib->DrawCircleV(vec, rad, _OMG_RAYLIB_OMG_COLOR(col));
     }
     return false;
@@ -222,11 +248,12 @@ bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, 
         RL_Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
         RL_Rectangle dst;
         if (OMG_ISNULL(pos)) {
-            dst.x = dst.y = 0.0f;
+            dst.x = this->so.x;
+            dst.y = this->so.y;
         }
         else {
-            dst.x = pos->x * this->ss.x;
-            dst.y = pos->y * this->ss.y;
+            dst.x = (pos->x + this->so.x) * this->ss.x;
+            dst.y = (pos->y + this->so.y) * this->ss.y;
         }
         dst.width = tex_base->size.w * this->ss.x;
         dst.height = tex_base->size.h * this->ss.y;
@@ -236,11 +263,12 @@ bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, 
     else {
         Vector2 vec;
         if (OMG_ISNULL(pos)) {
-            vec.x = vec.y = 0.0f;
+            vec.x = this->so.x;
+            vec.y = this->so.y;
         }
         else {
-            vec.x = pos->x * this->ss.x;
-            vec.y = pos->y * this->ss.y;
+            vec.x = pos->x + this->so.x;
+            vec.y = pos->y + this->so.y;
         }
         this->raylib->DrawTextureV(*tex->tex, vec, tex->tint);
     }
@@ -269,6 +297,9 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->copy = omg_renderer_raylib_copy;
     OMG_END_POINTER_CAST();
     this->ss.x = this->ss.y = 1.0f;
+    this->so.x = this->so.y = 0.0f;
+    base->soft_offset = true;
+    base->soft_scale = true;
     base->type = OMG_REN_TYPE_RAYLIB;
     base->inited = true;
     omg_renderer_raylib_update_scale(this);

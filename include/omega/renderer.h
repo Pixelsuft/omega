@@ -64,6 +64,7 @@ typedef struct OMG_Renderer {
     int type;
     bool aa;
     bool soft_scale;
+    bool soft_offset;
     bool auto_blend;
     bool inited;
     bool was_allocated;

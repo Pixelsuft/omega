@@ -14,6 +14,7 @@ typedef struct {
     OMG_Renderer parent;
     OMG_Raylib* raylib;
     OMG_FPoint ss;
+    OMG_FPoint so;
 } OMG_RendererRaylib;
 
 OMG_API bool omg_renderer_raylib_init(OMG_RendererRaylib* this);

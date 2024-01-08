@@ -210,7 +210,6 @@ void app_init(App* this, OMG_EntryData* data) {
         return;
     }
     this->ren = this->win->ren;
-    this->ren->soft_scale = true;
     this->ren->aa = true;
     this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     if (OMG_ISNULL(this->file)) {
