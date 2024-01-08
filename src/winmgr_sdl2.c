@@ -92,7 +92,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_path(OMG_WinmgrSdl2* this, const OMG_
         OMG_FREE(omg_base->mem, surf);
         return NULL;
     }
-    surf_base->has_alpha = true; // TODO: check pixel format for alpha
+    surf_base->has_alpha = surf->surf->format->Amask > 0;
     surf_base->size.w = (float)surf->surf->w;
     surf_base->size.h = (float)surf->surf->h;
     surf_base->data = (void*)surf->surf->pixels;
@@ -115,7 +115,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->surf_destroy = omg_winmgr_sdl2_surf_destroy;
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
-    base->_img_init_ptr = (void*)omg_image_loader_sdl2_init;
+    base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);
     base->surf_from_path = omg_winmgr_sdl2_surf_from_path;
 #endif
     OMG_END_POINTER_CAST();
