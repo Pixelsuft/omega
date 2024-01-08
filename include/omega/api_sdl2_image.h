@@ -47,7 +47,6 @@ typedef struct {
     int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SavePNG_RW)(SDL_Surface*, SDL_RWops*, int);
     int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SaveJPG)(SDL_Surface*, const char*);
     int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SaveJPG_RW)(SDL_Surface*, SDL_RWops*, int);
-    bool is_first;
 } OMG_Sdl2Image;
 
 OMG_API bool omg_sdl2_image_dll_load(OMG_Sdl2Image* this, const OMG_String* dll_path);

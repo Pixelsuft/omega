@@ -8,11 +8,7 @@
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
 
-static OMG_Sdl2Image* omg_sdl2_image_cache = NULL;
-static bool omg_sdl2_image_already_loaded = false;
-
 bool omg_sdl2_image_dll_load(OMG_Sdl2Image* this, const OMG_String* dll_path) {
-    // TODO: do I really need to cache it if it loads once????
 #if OMG_SDL2_IMAGE_DYNAMIC
     if (OMG_ISNULL(dll_path))
 #if OMG_IS_WIN
@@ -41,21 +37,10 @@ bool omg_sdl2_image_dll_load(OMG_Sdl2Image* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(IMG_SaveJPG);
     LOAD_REQUIRED(IMG_SaveJPG_RW);
     OMG_END_POINTER_CAST();
-    if (omg_sdl2_image_already_loaded) {
-        this->is_first = false;
-    }
-    else {
-        omg_sdl2_image_already_loaded = true;
-        this->is_first = true;
-    }
     return false;
 }
 
 bool omg_sdl2_image_dll_free(OMG_Sdl2Image* this) {
-    if (!this->is_first)
-        return false;
-    omg_sdl2_image_already_loaded = false;
-    omg_sdl2_image_cache = NULL;
 #if OMG_SDL2_IMAGE_DYNAMIC
     return omg_static_lib_free(this->handle);
 #else
