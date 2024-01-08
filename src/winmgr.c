@@ -26,6 +26,15 @@ bool omg_winmgr_destroy(OMG_Winmgr* this) {
         OMG_FREE(omg_base->mem, this->cache);
         this->cache = NULL;
     }
+    if (OMG_ISNOTNULL(this->img)) {
+        if (this->img->inited)
+            this->img->destroy(this->img);
+        if (this->img->was_allocated) {
+            this->img->was_allocated = false;
+            OMG_FREE(omg_base->mem, this->img);
+            this->img = NULL;
+        }
+    }
     return false;
 }
 
@@ -39,17 +48,40 @@ bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf) {
     return false;
 }
 
+OMG_Surface* omg_winmgr_surf_from_path(struct OMG_Winmgr* this, const OMG_String* fp) {
+    // TODO
+    OMG_UNUSED(this, fp);
+    return NULL;
+}
+
+bool omg_winmgr_init_image_loader(OMG_Winmgr* this) {
+    if (OMG_ISNULL(this->img)) {
+        this->img = OMG_MALLOC(omg_base->mem, this->sz_image_loader);
+        if (OMG_ISNULL(this->img))
+            return true;
+        this->img->was_allocated = true;
+    }
+    else
+        this->img->was_allocated = false;
+    this->img->init = omg_image_loader_init;
+    return false;
+}
+
 bool omg_winmgr_init(OMG_Winmgr* this) {
     this->cache = OMG_MALLOC(omg_base->mem, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
     if (OMG_ISNULL(this->cache))
         return true;
     omg_base->std->memset(this->cache, 0, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
     this->surf_depth = 32;
+    this->sz_image_loader = sizeof(OMG_ImageLoader);
     this->surf_rle = true;
+    this->img = NULL;
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;
     this->window_free = omg_winmgr_window_free;
     this->surf_create = omg_winmgr_surf_create;
     this->surf_destroy = omg_winmgr_surf_destroy;
+    this->surf_from_path = omg_winmgr_surf_from_path;
+    this->init_image_loader = omg_winmgr_init_image_loader;
     return false;
 }
