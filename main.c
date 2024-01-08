@@ -26,7 +26,6 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->ren->tex_destroy(this->ren, this->tex2);
     this->ren->tex_destroy(this->ren, this->tex);
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
-    this->file->destroy(this->file);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -170,11 +169,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
-#if OMG_SUPPORT_RAYLIB
-    this->omg = (OMG_Omega*)omg_raylib_create(data);
-#endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -229,6 +228,7 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, "File content: ", &file_buf);
     OMG_INFO(this->omg, "File pos: ", (int)this->file->tell(this->file));
     omg_string_destroy(&file_buf);
+    this->file->destroy(this->file);
     this->clock = this->omg->clock;
     this->win->allow_alt = false;
     this->omg->event_arg = this;

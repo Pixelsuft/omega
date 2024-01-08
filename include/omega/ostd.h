@@ -63,6 +63,13 @@
     OMG_FRect*: omg_string_add_frect, \
     OMG_DRect*: omg_string_add_drect, \
     OMG_String*: omg_string_add, \
+    const OMG_Point*: omg_string_add_point, \
+    const const OMG_FPoint*: omg_string_add_fpoint, \
+    const OMG_DPoint*: omg_string_add_dpoint, \
+    const OMG_Rect*: omg_string_add_rect, \
+    const OMG_FRect*: omg_string_add_frect, \
+    const OMG_DRect*: omg_string_add_drect, \
+    const OMG_String*: omg_string_add, \
     void*: omg_string_add_pointer, \
     const void*: omg_string_add_pointer \
 )

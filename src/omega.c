@@ -352,15 +352,15 @@ OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* m
 // TODO: support 64-bit types
 bool omg_file_std_destroy(OMG_FileStd* file) {
     bool res = false;
-    if (OMG_ISNULL(file->file)) {
-        if (fclose(file->file) != 0) {
-            _OMG_LOG_WARN(file_omg, "Failed to std close file ", file_base->fp.ptr);
-        }
-        file->file = NULL;
-    }
+    FILE* handle = (FILE*)file->file;
+    file->file = NULL;
     OMG_BEGIN_POINTER_CAST();
     omg_file_destroy(file);
     OMG_END_POINTER_CAST();
+    if (OMG_ISNULL(handle)) {
+        if (fclose(handle) != 0)
+            res = true;
+    }
     return res;
 }
 
@@ -462,7 +462,6 @@ bool omg_omg_init(OMG_Omega* this) {
     this->enable_paint = true;
     this->supports_screen_keyboard = false;
     this->should_free_mem = false;
-    this->sz_file = sizeof(OMG_File);
     this->theme = OMG_THEME_NONE;
     this->scale.x = this->scale.y = 1.0f;
     if (this->log_level == -1)
@@ -490,8 +489,10 @@ bool omg_omg_init(OMG_Omega* this) {
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_path = omg_file_std_from_path;
+    this->sz_file = sizeof(OMG_FileStd);
 #else
     this->file_from_path = omg_file_from_path;
+    this->sz_file = sizeof(OMG_File);
 #endif
     this->file_from_mem = omg_file_from_mem;
     OMG_END_POINTER_CAST();
