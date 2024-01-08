@@ -314,7 +314,6 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
             _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture from surface (", this->sdl2->SDL_GetError(), ")");
             return NULL;
         }
-        tex_base->auto_blend = true;
         tex_base->has_alpha = surf->has_alpha;
         tex_base->size.w = surf->size.w;
         tex_base->size.h = surf->size.h;
@@ -352,7 +351,6 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_
         tex_base->size.w = (float)qw;
         tex_base->size.h = (float)qh;
     }
-    tex_base->auto_blend = true;
     tex_base->has_alpha = true;
     if (this->sdl2->SDL_SetTextureBlendMode(tex->tex, has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0)
         _OMG_LOG_WARN(omg_base, "Failed to set texture scale mode (", this->sdl2->SDL_GetError(), ")");

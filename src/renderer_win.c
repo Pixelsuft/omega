@@ -174,7 +174,6 @@ OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, const OMG_FPo
     }
     this->g32->SelectObject(tex->dc, tex->bm);
     tex_base->has_alpha = has_alpha;
-    tex_base->auto_blend = true;
     tex_base->size.w = size->w;
     tex_base->size.h = size->h;
     return tex;

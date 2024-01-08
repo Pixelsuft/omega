@@ -10,6 +10,5 @@
 typedef struct {
     void* extra1;
     OMG_FPoint size;
-    bool auto_blend;
     bool has_alpha;
 } OMG_Texture;
