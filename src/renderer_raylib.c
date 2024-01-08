@@ -127,8 +127,6 @@ bool omg_renderer_raylib_draw_rect(OMG_RendererRaylib* this, const OMG_FRect* re
 }
 
 bool omg_renderer_raylib_fill_rect(OMG_RendererRaylib* this, const OMG_FRect* rect, const OMG_Color* col) {
-    if (rect->w == 100.0f)
-        _OMG_LOG_INFO(omg_base, rect, " ", &this->so, " ", &this->ss);
     RL_Rectangle rec = {
         .x = (rect->x + this->so.x) * this->ss.x, .y = (rect->y + this->so.y) * this->ss.y,
         .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
