@@ -267,13 +267,54 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
         return NULL;
     }
     file->mode = mode;
-    file_base->type = OMG_FILE_TYPE_UNKNOWN;
+    file->type = OMG_FILE_TYPE_UNKNOWN;
     file->destroy = omg_file_destroy;
     file->get_size = omg_file_get_size;
     file->seek = omg_file_seek;
     file->tell = omg_file_tell;
     file->read = omg_file_read;
     file->write = omg_file_write;
+    return file;
+}
+
+int64_t omg_file_mem_get_size(OMG_FileMem* file) {
+    return (int64_t)(file->stop - file->base);
+}
+
+int64_t omg_file_mem_seek(OMG_FileMem* file, int64_t offset, int whence) {
+    uint8_t* newpos;
+    if (whence == OMG_FILE_SEEK_END)
+        newpos = file->stop + offset;
+    else if (whence == OMG_FILE_SEEK_CUR)
+        newpos = file->here + offset;
+    else
+        newpos = file->base + offset;
+    if (newpos < file->base)
+        newpos = file->base;
+    if (newpos > file->stop)
+        newpos = file->stop;
+    file->here = newpos;
+    return (int64_t)(file->here - file->base);
+}
+
+OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* mem, size_t size, bool read_only) {
+    if (OMG_ISNULL(file)) {
+        file = OMG_MALLOC(this->mem, sizeof(OMG_FileMem));
+        if (OMG_ISNULL(file))
+            return NULL;
+        file_base->was_allocated = true;
+    }
+    else
+        file_base->was_allocated = false;
+    file_base->omg = this;
+    file_base->type = read_only ? OMG_FILE_TYPE_MEMORY_RO : OMG_FILE_TYPE_MEMORY;
+    OMG_BEGIN_POINTER_CAST();
+    file_base->get_size = omg_file_mem_get_size;
+    file_base->seek = omg_file_mem_seek;
+    OMG_END_POINTER_CAST();
+    file->base = (uint8_t*)mem;
+    file->here = file->base;
+    file->stop = file->base + size;
     return file;
 }
 
@@ -416,13 +457,14 @@ bool omg_omg_init(OMG_Omega* this) {
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
     this->winmgr_alloc = omg_alloc_winmgr;
-#if OMG_HAS_STD
     OMG_BEGIN_POINTER_CAST();
+#if OMG_HAS_STD
     this->file_from_path = omg_file_std_from_path;
-    OMG_END_POINTER_CAST();
 #else
     this->file_from_path = omg_file_from_path;
 #endif
+    this->file_from_mem = omg_file_from_mem;
+    OMG_END_POINTER_CAST();
     omg_reset_event_handlers(this);
     omg_def_omega = this;
     return false;

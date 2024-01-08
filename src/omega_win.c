@@ -395,6 +395,7 @@ size_t omg_win_file_write(OMG_FileWin* file, const void* buf, size_t size, size_
     return (size_t)written;
 }
 
+// TODO: Append Mode
 OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
     OMG_BEGIN_POINTER_CAST();
     if (omg_string_ensure_null((OMG_String*)path))

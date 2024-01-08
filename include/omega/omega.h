@@ -83,6 +83,7 @@ typedef struct OMG_Omega {
     OMG_Window* (*window_alloc)(struct OMG_Omega* this);
     bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
     OMG_File* (*file_from_path)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
+    OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
     void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
@@ -142,6 +143,9 @@ OMG_API int64_t omg_file_seek(OMG_File* file, int64_t offset, int whence);
 OMG_API int64_t omg_file_tell(OMG_File* file);
 OMG_API size_t omg_file_read(OMG_File* file, void* buf, size_t size, size_t maxnum);
 OMG_API size_t omg_file_write(OMG_File* file, const void* buf, size_t size, size_t num);
+OMG_API OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* mem, size_t size, bool read_only);
+OMG_API int64_t omg_file_mem_get_size(OMG_FileMem* file);
+OMG_API int64_t omg_file_mem_seek(OMG_FileMem* file, int64_t offset, int whence);
 #if OMG_HAS_STD
 OMG_API OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode);
 OMG_API bool omg_file_std_destroy(OMG_FileStd* file);
