@@ -197,7 +197,6 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, O
     tex->is_target = false;
     tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
     tex_base->has_alpha = surf->parent.has_alpha;
-    tex_base->auto_blend = true;
     tex_base->size.w = surf->parent.size.w;
     tex_base->size.h = surf->parent.size.h;
     if (destroy_surf)
