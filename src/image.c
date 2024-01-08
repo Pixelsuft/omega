@@ -5,9 +5,9 @@ bool omg_image_loader_destroy(OMG_ImageLoader* this) {
     return false;
 }
 
-void* omg_image_loader_image_from_fp(OMG_ImageLoader* this, const OMG_String* path) {
-    OMG_UNUSED(this, path);
-    return NULL;
+bool omg_image_loader_image_from_fp(OMG_ImageLoader* this, const OMG_String* path, void* buf) {
+    OMG_UNUSED(this, path, buf);
+    return true;
 }
 
 bool omg_image_loader_init(OMG_ImageLoader* this) {

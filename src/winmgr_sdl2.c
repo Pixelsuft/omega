@@ -87,8 +87,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_path(OMG_WinmgrSdl2* this, const OMG_
     OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
         return NULL;
-    surf->surf = (SDL_Surface*)base->img->image_from_fp_internal(base->img, path);
-    if (OMG_ISNULL(surf->surf)) {
+    if (base->img->image_from_fp_internal(base->img, path, (void*)&surf->surf)) {
         OMG_FREE(omg_base->mem, surf);
         return NULL;
     }
