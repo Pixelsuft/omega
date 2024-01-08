@@ -146,6 +146,9 @@ OMG_API size_t omg_file_write(OMG_File* file, const void* buf, size_t size, size
 OMG_API OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* mem, size_t size, bool read_only);
 OMG_API int64_t omg_file_mem_get_size(OMG_FileMem* file);
 OMG_API int64_t omg_file_mem_seek(OMG_FileMem* file, int64_t offset, int whence);
+OMG_API int64_t omg_file_mem_tell(OMG_FileMem* file);
+OMG_API size_t omg_file_mem_read(OMG_FileMem* file, void* buf, size_t size, size_t maxnum);
+OMG_API size_t omg_file_mem_write(OMG_FileMem* file, const void* buf, size_t size, size_t num);
 #if OMG_HAS_STD
 OMG_API OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OMG_String* path, int mode);
 OMG_API bool omg_file_std_destroy(OMG_FileStd* file);

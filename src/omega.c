@@ -277,6 +277,7 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
     return file;
 }
 
+// Thanks to SDL2
 int64_t omg_file_mem_get_size(OMG_FileMem* file) {
     return (int64_t)(file->stop - file->base);
 }
@@ -297,6 +298,27 @@ int64_t omg_file_mem_seek(OMG_FileMem* file, int64_t offset, int whence) {
     return (int64_t)(file->here - file->base);
 }
 
+int64_t omg_file_mem_tell(OMG_FileMem* file) {
+    return (int64_t)(file->here - file->base);
+}
+
+static size_t omg_file_mem_io(OMG_FileMem* file, void* dst, const void* src, size_t size) {
+    const size_t mem_available = (size_t)(file->stop - file->here);
+    if (size > mem_available)
+        size = mem_available;
+    file_omg->std->memcpy(dst, src, size);
+    file->here += size;
+    return size;
+}
+
+size_t omg_file_mem_read(OMG_FileMem* file, void* buf, size_t size, size_t maxnum) {
+    return omg_file_mem_io(file, buf, file->here, size * maxnum);
+}
+
+size_t omg_file_mem_write(OMG_FileMem* file, const void* buf, size_t size, size_t num) {
+    return omg_file_mem_io(file, file->here, buf, size * num);
+}
+
 OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* mem, size_t size, bool read_only) {
     if (OMG_ISNULL(file)) {
         file = OMG_MALLOC(this->mem, sizeof(OMG_FileMem));
@@ -311,6 +333,9 @@ OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* m
     OMG_BEGIN_POINTER_CAST();
     file_base->get_size = omg_file_mem_get_size;
     file_base->seek = omg_file_mem_seek;
+    file_base->tell = omg_file_mem_tell;
+    file_base->read = omg_file_mem_read;
+    file_base->write = omg_file_mem_write;
     OMG_END_POINTER_CAST();
     file->base = (uint8_t*)mem;
     file->here = file->base;
