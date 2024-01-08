@@ -122,6 +122,7 @@ bool omg_window_raylib_renderer_alloc(OMG_WindowRaylib* this) {
         return true;
     omg_renderer_fill_on_create(base->ren);
     base->ren->was_allocated = true;
+    base->ren->inited = false;
     base->ren->win = this;
     OMG_BEGIN_POINTER_CAST();
     base->ren->get_supported_drivers = omg_renderer_raylib_get_supported_drivers;

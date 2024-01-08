@@ -38,6 +38,7 @@ bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this) {
         ren_sdl2->id_cache[0] = -1;
         ren_sdl2->win_build_num = 0; // TODO
         base->ren->was_allocated = true;
+        base->ren->inited = false;
         base->ren->win = this;
         OMG_BEGIN_POINTER_CAST();
         base->ren->init = omg_renderer_sdl2_init;
