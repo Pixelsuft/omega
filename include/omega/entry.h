@@ -12,7 +12,7 @@ typedef struct {
     OMG_WIN_ENTRY_HINST* hInst;
     wchar_t* cmdline;
     char* cmdline_s;
-    char* argv;
+    char** argv;
     int cmdshow;
     int argc;
 } OMG_EntryData;

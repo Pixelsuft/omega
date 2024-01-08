@@ -267,6 +267,7 @@ OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* 
         return NULL;
     }
     file->mode = mode;
+    file_base->type = OMG_FILE_TYPE_UNKNOWN;
     file->destroy = omg_file_destroy;
     file->get_size = omg_file_get_size;
     file->seek = omg_file_seek;
@@ -366,6 +367,7 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
         omg_file_destroy(file);
         return NULL;
     }
+    file_base->type = OMG_FILE_TYPE_STDFILE;
     file_base->destroy = omg_file_std_destroy;
     file_base->get_size = omg_file_std_get_size;
     file_base->seek = omg_file_std_seek;

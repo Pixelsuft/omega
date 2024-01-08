@@ -62,6 +62,13 @@
 #define OMG_FILE_SEEK_CUR 1
 #define OMG_FILE_SEEK_END 2
 
+#define OMG_FILE_TYPE_UNKNOWN 0
+#define OMG_FILE_TYPE_WINFILE 1
+#define OMG_FILE_TYPE_STDFILE 2
+#define OMG_FILE_TYPE_JNIFILE 3
+#define OMG_FILE_TYPE_MEMORY 4
+#define OMG_FILE_TYPE_MEMORY_RO 5
+
 typedef struct OMG_File {
     OMG_String fp;
     bool (*destroy)(struct OMG_File* file);
@@ -73,8 +80,16 @@ typedef struct OMG_File {
     void* extra1;
     void* omg;
     int mode;
+    int type;
     bool was_allocated;
 } OMG_File;
+
+typedef struct {
+    OMG_File parent;
+    uint8_t* base;
+    uint8_t* here;
+    uint8_t* stop;
+} OMG_FileMem;
 
 #if OMG_HAS_STD
 typedef struct {

@@ -578,6 +578,7 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
         omg_file_destroy(file);
         return NULL;
     }
+    file_base->type = (int)file->rw->type;
     file_base->destroy = omg_sdl2_file_destroy;
     file_base->get_size = omg_sdl2_file_get_size;
     file_base->seek = omg_sdl2_file_seek;

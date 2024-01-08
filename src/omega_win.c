@@ -446,6 +446,7 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
         omg_file_destroy((OMG_File*)file);
         return NULL;
     }
+    file_base->type = OMG_FILE_TYPE_WINFILE;
     file_base->destroy = omg_win_file_destroy;
     file_base->get_size = omg_win_file_get_size;
     file_base->seek = omg_win_file_seek;
