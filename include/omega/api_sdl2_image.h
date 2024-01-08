@@ -22,6 +22,13 @@ typedef enum {
     IMG_INIT_JXL    = 0x00000010,
     IMG_INIT_AVIF   = 0x00000020
 } IMG_InitFlags;
+
+typedef struct {
+	int w, h;
+	int count;
+	SDL_Surface** frames;
+	int* delays;
+} IMG_Animation;
 #else
 #define OMG_SDL2_IMAGE_STD_PREFIX SDLCALL
 #endif
@@ -30,7 +37,14 @@ typedef struct {
     void* handle;
     int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_Init)(int);
     void OMG_SDL2_IMAGE_STD_PREFIX (*IMG_Quit)(void);
-    SDL_Surface* OMG_SDL2_IMAGE_STD_PREFIX IMG_LoadTyped_RW(SDL_RWops*, int, const char*);
+    SDL_Surface* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTyped_RW)(SDL_RWops*, int, const char*);
     SDL_Surface* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_Load)(const char*);
+    SDL_Texture* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTexture)(SDL_Renderer*, const char*);
+    SDL_Texture* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTexture_RW)(SDL_Renderer*, SDL_RWops*, int);
+    SDL_Texture* OMG_SDL2_IMAGE_STD_PREFIX (*IMG_LoadTextureTyped_RW)(SDL_Renderer*, SDL_RWops*, int, const char*);
+    int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SavePNG)(SDL_Surface*, const char*);
+    int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SavePNG_RW)(SDL_Surface*, SDL_RWops*, int);
+    int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SaveJPG)(SDL_Surface*, const char*);
+    int OMG_SDL2_IMAGE_STD_PREFIX (*IMG_SaveJPG_RW)(SDL_Surface*, SDL_RWops*, int);
 } OMG_Sdl2Image;
 #endif
