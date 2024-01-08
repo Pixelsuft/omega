@@ -316,6 +316,8 @@ size_t omg_file_mem_read(OMG_FileMem* file, void* buf, size_t size, size_t maxnu
 }
 
 size_t omg_file_mem_write(OMG_FileMem* file, const void* buf, size_t size, size_t num) {
+    if (file_base->type == OMG_FILE_TYPE_MEMORY_RO)
+        return 0;
     return omg_file_mem_io(file, file->here, buf, size * num);
 }
 
