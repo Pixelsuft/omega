@@ -7,7 +7,7 @@
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = (omg_static_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
-#if OMG_SDL2_COMOMG_SDL2_COMPAT_STATIC
+#if OMG_SDL2_COMPAT_STATIC
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = NULL
 #else
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
@@ -85,21 +85,26 @@ uint64_t omg_sdl2_get_ticks64_emu(void) {
 static bool omg_sdl2_already_loaded = false;
 
 bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
+    if (omg_sdl2_already_loaded) {
+        this->handle = omg_sdl2_cache->handle;
+    }
+    else {
 #if OMG_SDL2_DYNAMIC
-    if (OMG_ISNULL(dll_path))
+        if (OMG_ISNULL(dll_path))
 #if OMG_IS_WIN
-        this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("SDL2.dll"), L"SDL2.dll");
+            this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("SDL2.dll"), L"SDL2.dll");
 #else
-        this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("libSDL2.so"), NULL);
+            this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("libSDL2.so"), NULL);
 #endif
-    else
-        this->handle = omg_static_lib_load(dll_path, NULL);
-    if (OMG_ISNULL(this->handle))
-        return true;
+        else
+            this->handle = omg_static_lib_load(dll_path, NULL);
+        if (OMG_ISNULL(this->handle))
+            return true;
 #else
-    OMG_UNUSED(dll_path);
-    SDL_VERSION(&this->ver);
+        OMG_UNUSED(dll_path);
+        SDL_VERSION(&this->ver);
 #endif
+    }
     OMG_BEGIN_POINTER_CAST();
     LOAD_REQUIRED(SDL_GetVersion);
 #if OMG_SDL2_DYNAMIC
