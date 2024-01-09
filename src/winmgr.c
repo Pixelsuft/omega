@@ -13,6 +13,19 @@ bool omg_winmgr_window_free(OMG_Winmgr* this, OMG_Window* window) {
     return OMG_FREE(omg_base->mem, window);
 }
 
+bool omg_winmgr_image_loader_free(OMG_Winmgr* this) {
+    if (OMG_ISNOTNULL(this->img)) {
+        if (this->img->inited)
+            this->img->destroy(this->img);
+        if (this->img->was_allocated) {
+            this->img->was_allocated = false;
+            OMG_FREE(omg_base->mem, this->img);
+            this->img = NULL;
+        }
+    }
+    return false;
+}
+
 bool omg_winmgr_destroy(OMG_Winmgr* this) {
     if (!this->inited)
         return false;
@@ -28,15 +41,7 @@ bool omg_winmgr_destroy(OMG_Winmgr* this) {
         OMG_FREE(omg_base->mem, this->cache);
         this->cache = NULL;
     }
-    if (OMG_ISNOTNULL(this->img)) {
-        if (this->img->inited)
-            this->img->destroy(this->img);
-        if (this->img->was_allocated) {
-            this->img->was_allocated = false;
-            OMG_FREE(omg_base->mem, this->img);
-            this->img = NULL;
-        }
-    }
+    this->image_loader_free(this);
     return false;
 }
 
@@ -90,6 +95,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_destroy = omg_winmgr_surf_destroy;
     this->surf_from_path = omg_winmgr_surf_from_path;
     this->image_loader_alloc = omg_winmgr_image_loader_alloc;
+    this->image_loader_free = omg_winmgr_image_loader_free;
     this->inited = true;
     return false;
 }
