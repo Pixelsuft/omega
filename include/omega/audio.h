@@ -21,7 +21,11 @@ typedef struct OMG_Audio {
     bool (*init)(struct OMG_Audio* this);
     bool (*destroy)(struct OMG_Audio* this);
     int init_flags;
+    int freq;
     int type;
+    int channels;
+    int chunk_size;
+    bool use_float32;
     bool inited;
     bool was_allocated;
 } OMG_Audio;
