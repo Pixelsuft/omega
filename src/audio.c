@@ -48,6 +48,11 @@ bool omg_audio_mus_set_volume(OMG_Audio* this, OMG_Music* mus, float volume) {
     return false;
 }
 
+bool omg_audio_mus_stop(OMG_Audio* this, OMG_Music* mus) {
+    OMG_UNUSED(this, mus);
+    return false;
+}
+
 bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
@@ -56,5 +61,6 @@ bool omg_audio_init(OMG_Audio* this) {
     this->mus_destroy = omg_audio_mus_destroy;
     this->mus_play = omg_audio_mus_play;
     this->mus_set_volume = omg_audio_mus_set_volume;
+    this->mus_stop = omg_audio_mus_stop;
     return false;
 }
