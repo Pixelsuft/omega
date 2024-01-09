@@ -96,7 +96,6 @@ typedef struct {
     const char* OMG_SDL2_MIXER_STD_PREFIX (*Mix_GetMusicArtistTag)(const Mix_Music*);
     const char* OMG_SDL2_MIXER_STD_PREFIX (*Mix_GetMusicAlbumTag)(const Mix_Music*);
     const char* OMG_SDL2_MIXER_STD_PREFIX (*Mix_GetMusicCopyrightTag)(const Mix_Music*);
-    const char* OMG_SDL2_MIXER_STD_PREFIX (*Mix_GetMusicTitle)(const Mix_Music*);
     void OMG_SDL2_MIXER_STD_PREFIX (*Mix_HookMusic)(void (OMG_SDL2_MIXER_STD_PREFIX*)(void*, uint8_t*, int), void*);
     void OMG_SDL2_MIXER_STD_PREFIX (*Mix_HookMusicFinished)(void (OMG_SDL2_MIXER_STD_PREFIX *)(void));
     void* OMG_SDL2_MIXER_STD_PREFIX (*Mix_GetMusicHookData)(void);

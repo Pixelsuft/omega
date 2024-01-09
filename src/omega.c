@@ -37,6 +37,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->log_level = this->log_level_omg = this->log_level_lib = -1;
     this->sdl2_dll_path = NULL;
     this->sdl2_image_dll_path = NULL;
+    this->sdl2_mixer_dll_path = NULL;
     this->log_info_str = NULL;
     this->log_warn_str = NULL;
     this->log_error_str = NULL;
