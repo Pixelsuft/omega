@@ -271,6 +271,38 @@ typedef enum {
     BLEND_CUSTOM_SEPARATE
 } BlendMode;
 
+typedef struct Wave {
+    unsigned int frameCount;
+    unsigned int sampleRate;
+    unsigned int sampleSize;
+    unsigned int channels;
+    void* data;
+} Wave;
+
+typedef struct rAudioBuffer rAudioBuffer;
+typedef struct rAudioProcessor rAudioProcessor;
+
+typedef struct AudioStream {
+    rAudioBuffer* buffer;
+    rAudioProcessor* processor;
+    unsigned int sampleRate;
+    unsigned int sampleSize;
+    unsigned int channels;
+} AudioStream;
+
+typedef struct Sound {
+    AudioStream stream;
+    unsigned int frameCount;
+} Sound;
+
+typedef struct Music {
+    AudioStream stream;
+    unsigned int frameCount;
+    bool looping;
+    int ctxType;
+    void* ctxData;
+} Music;
+
 typedef enum {
     LOG_ALL = 0,
     LOG_TRACE,
@@ -282,7 +314,8 @@ typedef enum {
     LOG_NONE
 } TraceLogLevel;
 
-typedef void (*TraceLogCallback)(int logLevel, const char *text, va_list args);
+typedef void (*TraceLogCallback)(int, const char*, va_list);
+typedef void (*AudioCallback)(void*, unsigned int);
 #endif
 
 typedef struct {
@@ -405,6 +438,41 @@ typedef struct {
     int OMG_RAYLIB_PREFIX (*GetKeyPressed)(void);
     int OMG_RAYLIB_PREFIX (*GetCharPressed)(void);
     void OMG_RAYLIB_PREFIX (*SetExitKey)(int);
+    void OMG_RAYLIB_PREFIX (*InitAudioDevice)(void);
+    void OMG_RAYLIB_PREFIX (*CloseAudioDevice)(void);
+    bool OMG_RAYLIB_PREFIX (*IsAudioDeviceReady)(void);
+    void OMG_RAYLIB_PREFIX (*SetMasterVolume)(float);
+    float OMG_RAYLIB_PREFIX (*GetMasterVolume)(void);
+    Sound OMG_RAYLIB_PREFIX (*LoadSound)(const char*);
+    Sound OMG_RAYLIB_PREFIX (*LoadSoundAlias)(Sound);
+    bool OMG_RAYLIB_PREFIX (*IsSoundReady)(Sound);
+    void OMG_RAYLIB_PREFIX (*UpdateSound)(Sound, const void*, int);
+    void OMG_RAYLIB_PREFIX (*UnloadSound)(Sound);
+    void OMG_RAYLIB_PREFIX (*UnloadSoundAlias)(Sound);
+    void OMG_RAYLIB_PREFIX (*PlaySound)(Sound);       
+    void OMG_RAYLIB_PREFIX (*StopSound)(Sound);       
+    void OMG_RAYLIB_PREFIX (*PauseSound)(Sound);      
+    void OMG_RAYLIB_PREFIX (*ResumeSound)(Sound);     
+    bool OMG_RAYLIB_PREFIX (*IsSoundPlaying)(Sound);  
+    void OMG_RAYLIB_PREFIX (*SetSoundVolume)(Sound, float);
+    void OMG_RAYLIB_PREFIX (*SetSoundPitch)(Sound, float);
+    void OMG_RAYLIB_PREFIX (*SetSoundPan)(Sound, float);
+    Music OMG_RAYLIB_PREFIX (*LoadMusicStream)(const char*);
+    Music OMG_RAYLIB_PREFIX (*LoadMusicStreamFromMemory)(const char*, const unsigned char*, int); 
+    bool OMG_RAYLIB_PREFIX (*IsMusicReady)(Music);    
+    void OMG_RAYLIB_PREFIX (*UnloadMusicStream)(Music);
+    void OMG_RAYLIB_PREFIX (*PlayMusicStream)(Music); 
+    bool OMG_RAYLIB_PREFIX (*IsMusicStreamPlaying)(Music);
+    void OMG_RAYLIB_PREFIX (*UpdateMusicStream)(Music);
+    void OMG_RAYLIB_PREFIX (*StopMusicStream)(Music); 
+    void OMG_RAYLIB_PREFIX (*PauseMusicStream)(Music);
+    void OMG_RAYLIB_PREFIX (*ResumeMusicStream)(Music);
+    void OMG_RAYLIB_PREFIX (*SeekMusicStream)(Music, float);              
+    void OMG_RAYLIB_PREFIX (*SetMusicVolume)(Music, float);
+    void OMG_RAYLIB_PREFIX (*SetMusicPitch)(Music, float);
+    void OMG_RAYLIB_PREFIX (*SetMusicPan)(Music, float);
+    float OMG_RAYLIB_PREFIX (*GetMusicTimeLength)(Music);
+    float OMG_RAYLIB_PREFIX (*GetMusicTimePlayed)(Music); 
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);
