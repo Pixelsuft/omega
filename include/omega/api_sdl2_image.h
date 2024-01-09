@@ -3,7 +3,7 @@
 #if OMG_SUPPORT_SDL2_IMAGE
 #include <omega/entry.h>
 #include <omega/api_sdl2.h>
-#if !OMG_SDL2_DYNAMIC
+#if !OMG_SDL2_IMAGE_DYNAMIC
 #if OMG_IS_VC || OMG_IS_UNIX || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID
 #include <SDL_image.h>
 #else
@@ -11,7 +11,7 @@
 #endif
 #endif
 
-#if OMG_SDL2_DYNAMIC
+#if OMG_SDL2_IMAGE_DYNAMIC
 #define OMG_SDL2_IMAGE_STD_PREFIX
 
 typedef enum {
