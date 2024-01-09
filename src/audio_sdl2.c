@@ -6,6 +6,9 @@
 #define mus_base ((OMG_Music*)mus)
 #define omg_base ((OMG_Omega*)base->omg)
 #define MIX_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)omg_base)->sdl2->SDL_GetError() : "")
+#define MUS_IS_PLAYING() (cur_mus_cache == mus->mus)
+
+static Mix_Music* cur_mus_cache = NULL;
 
 bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
     if (!base->inited)
@@ -43,6 +46,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
         _OMG_LOG_ERROR(omg_base, "Failed to open music ", path->ptr, " (", MIX_GETERROR(), ")");
         return NULL;
     }
+    mus->vol_cache = MIX_MAX_VOLUME;
     return mus;
 }
 
@@ -61,7 +65,15 @@ bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops,
         _OMG_LOG_WARN(omg_base, "Failed to play music (", MIX_GETERROR(), ")");
         return true;
     }
-    this->mix.Mix_VolumeMusic(MIX_MAX_VOLUME / 10); // TODO Temporary Hack
+    cur_mus_cache = mus->mus;
+    this->mix.Mix_VolumeMusic(mus->vol_cache);
+    return false;
+}
+
+bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, float volume) {
+    mus->vol_cache = (int)(volume * (float)MIX_MAX_VOLUME);
+    if (MUS_IS_PLAYING())
+        this->mix.Mix_VolumeMusic(mus->vol_cache);
     return false;
 }
 
@@ -117,6 +129,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
     base->mus_destroy = omg_audio_sdl2_mus_destroy;
     base->mus_play = omg_audio_sdl2_mus_play;
+    base->mus_set_volume = omg_audio_sdl2_mus_set_volume;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_SDL2;
     base->inited = true;

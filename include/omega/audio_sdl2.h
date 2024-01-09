@@ -7,6 +7,7 @@
 typedef struct {
     OMG_Music base;
     Mix_Music* mus;
+    int vol_cache;
 } OMG_MusicSdl2;
 
 typedef struct {
@@ -17,6 +18,7 @@ typedef struct {
 
 OMG_API bool omg_audio_sdl2_init(OMG_AudioSdl2* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, float volume);
 OMG_API bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops, double pos, double fade_in);
 OMG_API bool omg_audio_sdl2_mus_destroy(OMG_AudioSdl2* this, OMG_MusicSdl2* mus);
 OMG_API OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const OMG_String* path);
