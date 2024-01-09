@@ -8,9 +8,11 @@ typedef struct {
     OMG_Omega* omg;
     OMG_Window* win;
     OMG_Renderer* ren;
+    OMG_Audio* audio;
     OMG_Surface* surf;
     OMG_Texture* tex;
     OMG_Texture* tex2;
+    OMG_Music* mus;
     OMG_File* file;
     OMG_Clock* clock;
     omg_color_t bg_col;
@@ -26,6 +28,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->ren->tex_destroy(this->ren, this->tex2);
     this->ren->tex_destroy(this->ren, this->tex);
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
+    this->audio->mus_destroy(this->audio, this->mus);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -213,15 +216,12 @@ void app_init(App* this, OMG_EntryData* data) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
         return;
     }
+    this->audio = this->omg->audio;
     this->ren = this->win->ren;
     this->ren->aa = true;
-    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
-    if (OMG_ISNULL(this->file)) {
-        OMG_ERROR(this->omg, "OMG File Open Fail");
-        this->omg->destroy(this->omg);
-        return;
-    }
     // I'm lazy for fail checks here, but you shouldn't :)
+    this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
+    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);
     OMG_String file_buf;

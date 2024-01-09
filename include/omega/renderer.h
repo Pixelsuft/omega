@@ -3,15 +3,6 @@
 #include <omega/surface.h>
 #include <omega/texture.h>
 
-#if OMG_NULL_TEX_CHECK
-#define _OMG_NULL_TEX_CHECK() do { \
-    if (OMG_ISNULL(tex)) \
-        return true; \
-} while (0)
-#else
-#define _OMG_NULL_TEX_CHECK()
-#endif
-
 #define OMG_REN_TEXTURE_FROM_FILE(ren, path) ren->tex_from_surf(ren, ((OMG_Omega*)ren->omg)->winmgr->surf_from_path(((OMG_Omega*)ren->omg)->winmgr, path), true)
 
 #define OMG_REN_TYPE_NONE 0
