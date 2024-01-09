@@ -34,6 +34,7 @@ typedef struct OMG_Audio {
     void* extra1;
     bool (*init)(struct OMG_Audio* this);
     bool (*destroy)(struct OMG_Audio* this);
+    bool (*update)(struct OMG_Audio* this);
     OMG_Music* (*mus_from_fp)(struct OMG_Audio* this, OMG_Music* mus, const OMG_String* path);
     bool (*mus_destroy)(struct OMG_Audio* this, OMG_Music* mus);
     bool (*mus_play)(struct OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in);
@@ -57,6 +58,7 @@ typedef struct OMG_Audio {
 OMG_API void omg_audio_fill_on_create(OMG_Audio* this);
 OMG_API bool omg_audio_init(OMG_Audio* this);
 OMG_API bool omg_audio_destroy(OMG_Audio* this);
+OMG_API bool omg_audio_update(OMG_Audio* this);
 OMG_API bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_audio_mus_set_volume(OMG_Audio* this, OMG_Music* mus, float volume);

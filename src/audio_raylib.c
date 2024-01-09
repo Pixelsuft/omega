@@ -13,6 +13,11 @@ bool omg_audio_raylib_destroy(OMG_AudioRaylib* this) {
     return false;
 }
 
+bool omg_audio_raylib_update(OMG_AudioRaylib* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
 bool omg_audio_raylib_mus_set_volume(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float volume) {
     _OMG_NULL_MUS_CHECK();
     this->raylib->SetMusicVolume(mus->mus, volume);
@@ -71,6 +76,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
         return true;
     }
     OMG_BEGIN_POINTER_CAST();
+    base->update = omg_audio_raylib_update;
     base->destroy = omg_audio_raylib_destroy;
     base->mus_from_fp = omg_audio_raylib_mus_from_fp;
     base->mus_destroy = omg_audio_raylib_mus_destroy;

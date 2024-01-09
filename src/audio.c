@@ -23,6 +23,11 @@ void omg_audio_fill_on_create(OMG_Audio* this) {
     this->use_float32 = true;
 }
 
+bool omg_audio_update(OMG_Audio* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
 OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_String* path) {
     OMG_UNUSED(this, mus, path);
     return NULL;
@@ -57,6 +62,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
     this->destroy = omg_audio_destroy;
+    this->update = omg_audio_update;
     this->mus_from_fp = omg_audio_mus_from_fp;
     this->mus_destroy = omg_audio_mus_destroy;
     this->mus_play = omg_audio_mus_play;

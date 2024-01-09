@@ -113,6 +113,7 @@ void app_on_update(OMG_EventUpdate* event) {
         return;
     }
     this->omg->enable_paint = true;
+    this->audio->update(this->audio);
     if (this->bg_fow) {
         this->bg_col += this->clock->dt * 100.0f;
         if (this->bg_col >= OMG_MAX_COLOR) {
