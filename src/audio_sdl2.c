@@ -13,7 +13,7 @@ bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
     this->mix.Mix_CloseAudio();
     this->mix.Mix_Quit();
     res = omg_sdl2_mixer_dll_free(&this->mix) || res;
-    return false;
+    return res;
 }
 
 bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {

@@ -5,7 +5,9 @@
 #include <omega/winmgr_raylib.h>
 #include <omega/window_raylib.h>
 #include <omega/clock_raylib.h>
+#include <omega/audio_raylib.h>
 #define base ((OMG_Omega*)this)
+#define audio_raylib ((OMG_AudioRaylib*)base->audio)
 #define winmgr_raylib ((OMG_WinmgrRaylib*)base->winmgr)
 #define MOUSE_FILL_STATE(state) do { \
     state = 0; \
@@ -513,6 +515,30 @@ bool omg_raylib_app_quit(OMG_OmegaRaylib* this) {
     return false;
 }
 
+bool omg_raylib_audio_alloc(OMG_OmegaRaylib* this) {
+    if (base->audio_type == OMG_AUDIO_TYPE_AUTO) {
+        base->audio_type = OMG_AUDIO_TYPE_RAYLIB;
+    }
+    OMG_BEGIN_POINTER_CAST();
+    if (base->audio_type == OMG_AUDIO_TYPE_RAYLIB) {
+        if (OMG_ISNULL(base->audio)) {
+            base->audio = OMG_MALLOC(base->mem, sizeof(OMG_AudioRaylib));
+            if (OMG_ISNULL(base->audio))
+                return true;
+            base->audio->was_allocated = true;
+        }
+        else
+            base->audio->was_allocated = false;
+        omg_audio_fill_on_create(base->audio);
+        base->audio->omg = this;
+        audio_raylib->raylib = this->raylib;
+        base->audio->init = omg_audio_raylib_init;
+        return false;
+    }
+    OMG_END_POINTER_CAST();
+    return true;
+}
+
 bool omg_raylib_destroy(OMG_OmegaRaylib* this) {
     bool result = base->app_quit((OMG_Omega*)this);
     if (base->should_free_std) {
@@ -584,6 +610,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->app_init = omg_raylib_app_init;
     base->app_quit = omg_raylib_app_quit;
     base->delay = omg_raylib_delay;
+    base->audio_alloc = omg_raylib_audio_alloc;
     base->winmgr_alloc = omg_raylib_alloc_winmgr;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
