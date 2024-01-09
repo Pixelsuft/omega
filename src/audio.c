@@ -38,11 +38,17 @@ bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus) {
     return false;
 }
 
+bool omg_audio_mus_play(OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in) {
+    OMG_UNUSED(this, mus, loops, pos, fade_in);
+    return false;
+}
+
 bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
     this->destroy = omg_audio_destroy;
     this->mus_from_fp = omg_audio_mus_from_fp;
     this->mus_destroy = omg_audio_mus_destroy;
+    this->mus_play = omg_audio_mus_play;
     return false;
 }

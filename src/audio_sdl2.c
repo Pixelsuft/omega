@@ -46,6 +46,25 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
     return mus;
 }
 
+bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops, double pos, double fade_in) {
+    int res;
+    if ((pos == 0.0) && (fade_in == 0.0)) {
+        res = this->mix.Mix_PlayMusic(mus->mus, loops);
+    }
+    else if (pos == 0.0) {
+        res = this->mix.Mix_FadeInMusic(mus->mus, loops, (int)(fade_in * 1000.0));
+    }
+    else {
+        res = this->mix.Mix_FadeInMusicPos(mus->mus, loops, (int)(fade_in * 1000.0), pos);
+    }
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to play music (", MIX_GETERROR(), ")");
+        return true;
+    }
+    this->mix.Mix_VolumeMusic(MIX_MAX_VOLUME / 10); // TODO Temporary Hack
+    return false;
+}
+
 bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     omg_audio_init(base);
     if (omg_sdl2_mixer_dll_load(&this->mix, omg_base->sdl2_mixer_dll_path)) {
@@ -97,6 +116,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
     base->mus_destroy = omg_audio_sdl2_mus_destroy;
+    base->mus_play = omg_audio_sdl2_mus_play;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_SDL2;
     base->inited = true;

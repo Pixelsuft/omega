@@ -254,6 +254,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
+    this->audio->mus_play(this->audio, this->mus, -1, 0.0, 0.0);
     OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     // this->clock->set_fps_limit(this->clock, 5.0);
     this->clock->reset(this->clock);
