@@ -51,6 +51,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
 }
 
 bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops, double pos, double fade_in) {
+    _OMG_NULL_MUS_CHECK();
     int res;
     if ((pos == 0.0) && (fade_in == 0.0)) {
         res = this->mix.Mix_PlayMusic(mus->mus, loops);
@@ -71,6 +72,7 @@ bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops,
 }
 
 bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, float volume) {
+    _OMG_NULL_MUS_CHECK();
     mus->vol_cache = (int)(volume * (float)MIX_MAX_VOLUME);
     if (MUS_IS_PLAYING())
         this->mix.Mix_VolumeMusic(mus->vol_cache);
@@ -78,6 +80,7 @@ bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, floa
 }
 
 bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
+    _OMG_NULL_MUS_CHECK();
     if (MUS_IS_PLAYING())
         this->mix.Mix_HaltMusic();
     return false;
