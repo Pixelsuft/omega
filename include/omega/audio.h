@@ -20,11 +20,16 @@ typedef struct OMG_Audio {
     void* extra1;
     bool (*init)(struct OMG_Audio* this);
     bool (*destroy)(struct OMG_Audio* this);
+    const OMG_String* dev_name;
     int init_flags;
     int freq;
     int type;
     int channels;
     int chunk_size;
+    bool allow_freq_change;
+    bool allow_format_change;
+    bool allow_channels_change;
+    bool allow_samples_change;
     bool use_float32;
     bool inited;
     bool was_allocated;

@@ -13,6 +13,11 @@ void omg_audio_fill_on_create(OMG_Audio* this) {
     this->freq = 41000;
     this->channels = 2;
     this->chunk_size = 2048;
+    this->dev_name = NULL;
+    this->allow_freq_change = true;
+    this->allow_format_change = true;
+    this->allow_channels_change = true;
+    this->allow_samples_change = true;
     this->use_float32 = true;
 }
 

@@ -51,13 +51,17 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
             base->use_float32 ? AUDIO_F32SYS : MIX_DEFAULT_FORMAT,
             base->channels,
             base->chunk_size,
-            NULL,
-            SDL_AUDIO_ALLOW_ANY_CHANGE
+            (OMG_ISNOTNULL(base->dev_name) && !omg_string_ensure_null((OMG_String*)base->dev_name)) ? base->dev_name->ptr : NULL,
+            (base->allow_channels_change ? SDL_AUDIO_ALLOW_CHANNELS_CHANGE : 0) |
+            (base->allow_format_change ? SDL_AUDIO_ALLOW_FORMAT_CHANGE : 0) |
+            (base->allow_freq_change ? SDL_AUDIO_ALLOW_FREQUENCY_CHANGE : 0) |
+            (base->allow_samples_change ? SDL_AUDIO_ALLOW_SAMPLES_CHANGE : 0)
         );
     if (res < 0) {
         _OMG_LOG_ERROR(omg_base, "Failed to open SDL2_mixer audio device (", MIX_GETERROR(), ")");
         this->mix.Mix_Quit();
         omg_sdl2_mixer_dll_free(&this->mix);
+        return true;
     }
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
