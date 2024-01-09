@@ -9,6 +9,7 @@
 #include <omega/events.h>
 #include <omega/keyboard.h>
 #include <omega/filesystem.h>
+#include <omega/audio.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
@@ -54,6 +55,7 @@ typedef struct OMG_Omega {
     OMG_EntryData* entry_data;
     OMG_Winmgr* winmgr;
     OMG_Clock* clock;
+    OMG_Audio* audio;
     OMG_Window** omg_window_cache;
     OMG_String* sdl2_dll_path;
     OMG_String* sdl2_image_dll_path;
@@ -82,8 +84,8 @@ typedef struct OMG_Omega {
     void (*auto_loop_run)(struct OMG_Omega* this);
     void (*auto_loop_stop)(struct OMG_Omega* this);
     int (*set_text_input_state)(struct OMG_Omega* this, int state);
-    OMG_Window* (*window_alloc)(struct OMG_Omega* this);
-    bool (*window_free)(struct OMG_Omega* this, OMG_Window* window);
+    bool (*audio_alloc)(struct OMG_Omega* this);
+    bool (*audio_free)(struct OMG_Omega* this);
     OMG_File* (*file_from_path)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
     void (*reset_event_handlers)(struct OMG_Omega* this);
@@ -133,6 +135,7 @@ OMG_API bool omg_destroy(OMG_Omega* this);
 OMG_API bool omg_omg_init(OMG_Omega* this);
 OMG_API void omg_reset_event_handlers(OMG_Omega* this);
 OMG_API bool omg_alloc_winmgr(OMG_Omega* this);
+OMG_API bool omg_audio_alloc(OMG_Omega* this);
 OMG_API bool omg_app_init(OMG_Omega* this);
 OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
@@ -179,6 +182,7 @@ OMG_API void omg_event_on_keyboard(OMG_EventKeyboard* event);
 OMG_API void omg_event_on_text_input(OMG_EventTextInput* event);
 OMG_API int omg_set_text_input_state(OMG_Omega* this, int state);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
+OMG_API bool omg_audio_free(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
 OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);

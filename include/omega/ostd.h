@@ -2,14 +2,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <omega/platform.h>
-#if OMG_HAS_STD
-// TODO: should I use it when building app, not omega???
-#include <stdlib.h>
-#include <stdio.h>
-#endif
 #if OMG_IS_UNIX
 #include <stddef.h>
 #endif
+#include <stdarg.h>
 
 #define OMG_ISNULL(ptr) ((ptr) == NULL)
 #define OMG_ISNOTNULL(ptr) ((ptr) != NULL)

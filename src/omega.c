@@ -34,6 +34,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->entry_data = data;
     this->mem = NULL;
     this->winmgr = NULL;
+    this->audio = NULL;
     this->log_level = this->log_level_omg = this->log_level_lib = -1;
     this->sdl2_dll_path = NULL;
     this->sdl2_image_dll_path = NULL;
@@ -107,6 +108,7 @@ bool omg_app_quit(OMG_Omega* this) {
         this->keyboard_state = NULL;
         this->keymap = NULL;
     }
+    this->audio_free(this);
     return false;
 }
 
@@ -451,6 +453,24 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
 }
 #endif
 
+bool omg_audio_alloc(OMG_Omega* this) {
+    OMG_UNUSED(this);
+    return false;
+}
+
+bool omg_audio_free(OMG_Omega* this) {
+    if (OMG_ISNULL(this->audio))
+        return false;
+    if (this->audio->inited)
+        this->audio->destroy(this->audio);
+    if (this->audio->was_allocated) {
+        this->audio->was_allocated = false;
+        OMG_FREE(this->mem, this->audio);
+        this->audio = NULL;
+    }
+    return false;    
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
@@ -487,6 +507,9 @@ bool omg_omg_init(OMG_Omega* this) {
     this->delay = omg_delay;
     this->reset_event_handlers = omg_reset_event_handlers;
     this->winmgr_alloc = omg_alloc_winmgr;
+    this->winmgr_free = omg_free_winmgr;
+    this->audio_alloc = omg_audio_alloc;
+    this->audio_free = omg_audio_free;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_path = omg_file_std_from_path;

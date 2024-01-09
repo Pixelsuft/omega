@@ -6,6 +6,7 @@
 #endif
 #if OMG_HAS_STD
 #include <string.h>
+#include <stdlib.h>
 #if OMG_IS_UNIX
 #include <unistd.h>
 #endif
