@@ -6,6 +6,7 @@
 #include <omega/winmgr_sdl2.h>
 #include <omega/clock_sdl2.h>
 #include <omega/filesystem_sdl2.h>
+#include <omega/audio_sdl2.h>
 #if OMG_IS_EMSCRIPTEN
 #include <emscripten.h>
 #endif
@@ -13,6 +14,7 @@
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_OmegaSdl2*)file_base->omg)
 #define file_omg_base ((OMG_Omega*)file_base->omg)
+#define audio_sdl2 ((OMG_AudioSdl2*)base->audio)
 #define winmgr_sdl2 ((OMG_WinmgrSdl2*)base->winmgr)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
@@ -588,6 +590,32 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
     return file;
 }
 
+bool omg_sdl2_audio_alloc(OMG_OmegaSdl2* this) {
+    if (base->audio_type == OMG_AUDIO_TYPE_AUTO) {
+        base->audio_type = OMG_AUDIO_TYPE_SDL2;
+    }
+    OMG_BEGIN_POINTER_CAST();
+#if OMG_SUPPORT_SDL2_MIXER
+    if (base->audio_type == OMG_AUDIO_TYPE_SDL2) {
+        if (OMG_ISNULL(base->audio)) {
+            base->audio = OMG_MALLOC(base->mem, sizeof(OMG_AudioSdl2));
+            if (OMG_ISNULL(base->audio))
+                return true;
+            base->audio->was_allocated = true;
+        }
+        else
+            base->audio->was_allocated = false;
+        omg_audio_fill_on_create(base->audio);
+        base->audio->omg = this;
+        audio_sdl2->sdl2 = this->sdl2;
+        base->audio->init = omg_audio_sdl2_init;
+        return false;
+    }
+#endif
+    OMG_END_POINTER_CAST();
+    return true;
+}
+
 bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
     bool result = base->app_quit((OMG_Omega*)this);
     if (base->should_free_std) {
@@ -659,6 +687,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->log_fatal_str = omg_sdl2_log_fatal_str;
     base->auto_loop_run = omg_sdl2_auto_loop_run;
     base->winmgr_alloc = omg_sdl2_alloc_winmgr;
+    base->audio_alloc = omg_sdl2_audio_alloc;
     base->destroy = omg_sdl2_destroy;
     base->file_from_path = omg_sdl2_file_from_path;
     OMG_END_POINTER_CAST();
