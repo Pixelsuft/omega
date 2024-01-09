@@ -151,23 +151,22 @@ bool omg_renderer_sdl2_clear(OMG_RendererSdl2* this, const OMG_Color* col) {
     return res;
 }
 
+bool omg_renderer_sdl2_set_scale(OMG_RendererSdl2* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
+    omg_renderer_set_scale(base, offset, scale);
+    if (this->sdl2->SDL_RenderSetScale(this->ren, base->scale.x, base->scale.y) < 0) {
+        _OMG_SDL2_SCALE_WARN();
+        return true;
+    }
+    return false;
+}
+
 bool omg_renderer_sdl2_set_target(OMG_RendererSdl2* this, OMG_TextureSdl2* tex) {
     if (this->sdl2->SDL_SetRenderTarget(this->ren, OMG_ISNULL(tex) ? NULL : tex->tex) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set render target (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
     base->target = tex_base;
-    return false;
-}
-
-bool omg_renderer_sdl2_set_scale(OMG_RendererSdl2* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
-    omg_renderer_set_scale(base, offset, scale);
-    if (OMG_ISNOTNULL(scale)) {
-        if (this->sdl2->SDL_RenderSetScale(this->ren, scale->x, scale->y) < 0) {
-            _OMG_SDL2_SCALE_WARN();
-            return true;
-        }
-    }
+    omg_renderer_sdl2_set_scale(this, NULL, NULL);
     return false;
 }
 
