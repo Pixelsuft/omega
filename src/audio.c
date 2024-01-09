@@ -1,4 +1,6 @@
 #include <omega/audio.h>
+#include <omega/omega.h>
+#define omg_base ((OMG_Omega*)this->omg)
 
 bool omg_audio_destroy(OMG_Audio* this) {
     OMG_UNUSED(this);
@@ -21,9 +23,26 @@ void omg_audio_fill_on_create(OMG_Audio* this) {
     this->use_float32 = true;
 }
 
+OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_String* path) {
+    OMG_UNUSED(this, mus, path);
+    return NULL;
+}
+
+bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus) {
+    if (OMG_ISNULL(mus))
+        return false;
+    if (mus->was_allocated) {
+        mus->was_allocated = false;
+        OMG_FREE(omg_base->mem, mus);
+    }
+    return false;
+}
+
 bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
     this->destroy = omg_audio_destroy;
+    this->mus_from_fp = omg_audio_mus_from_fp;
+    this->mus_destroy = omg_audio_mus_destroy;
     return false;
 }

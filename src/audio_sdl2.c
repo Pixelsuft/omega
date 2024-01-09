@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_SDL2_MIXER
 #include <omega/omega_sdl2.h>
 #define base ((OMG_Audio*)this)
+#define mus_base ((OMG_Music*)mus)
 #define omg_base ((OMG_Omega*)base->omg)
 #define MIX_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)omg_base)->sdl2->SDL_GetError() : "")
 
@@ -14,6 +15,35 @@ bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
     this->mix.Mix_Quit();
     res = omg_sdl2_mixer_dll_free(&this->mix) || res;
     return res;
+}
+
+bool omg_audio_sdl2_mus_destroy(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
+    if (OMG_ISNULL(mus) || OMG_ISNULL(mus->mus))
+        return false;
+    this->mix.Mix_FreeMusic(mus->mus);
+    mus->mus = NULL;
+    omg_audio_mus_destroy(base, mus_base);
+    return false;
+}
+
+OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const OMG_String* path) {
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicSdl2));
+        if (OMG_ISNULL(mus))
+            return NULL;
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    mus->mus = this->mix.Mix_LoadMUS(path->ptr);
+    if (OMG_ISNULL(mus->mus)) {
+        omg_audio_mus_destroy(base, mus_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open music ", path->ptr, " (", MIX_GETERROR(), ")");
+        return NULL;
+    }
+    return mus;
 }
 
 bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
@@ -65,6 +95,8 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     }
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
+    base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
+    base->mus_destroy = omg_audio_sdl2_mus_destroy;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_SDL2;
     base->inited = true;
