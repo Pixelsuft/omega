@@ -114,6 +114,7 @@ typedef struct OMG_Omega {
     int log_level_omg;
     int log_level;
     int type;
+    int audio_type;
     int theme;
     int app_theme;
     bool emulate_mouse;
