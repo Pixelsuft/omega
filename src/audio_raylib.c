@@ -14,7 +14,11 @@ bool omg_audio_raylib_destroy(OMG_AudioRaylib* this) {
 }
 
 bool omg_audio_raylib_update(OMG_AudioRaylib* this) {
-    OMG_UNUSED(this);
+    for (size_t i = 0; i < OMG_MAX_PLAYING_MUSIC; i++) {
+        if (OMG_ISNOTNULL(this->mus_play_cache[i]) && this->raylib->IsMusicStreamPlaying(this->mus_play_cache[i]->mus)) {
+            this->raylib->UpdateMusicStream(this->mus_play_cache[i]->mus);
+        }
+    }
     return false;
 }
 
@@ -30,6 +34,12 @@ bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int 
     mus->mus.looping = loops == -1;
     if (pos > 0.0)
         this->raylib->SeekMusicStream(mus->mus, (float)pos);
+    for (size_t i = 0; i < OMG_MAX_PLAYING_MUSIC; i++) {
+        if (OMG_ISNULL(this->mus_play_cache[i]) || !this->raylib->IsMusicStreamPlaying(this->mus_play_cache[i]->mus)) {
+            this->mus_play_cache[i] = mus;
+            break;
+        }
+    }
     this->raylib->PlayMusicStream(mus->mus);
     return false;
 }
@@ -37,6 +47,12 @@ bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int 
 bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
     if (OMG_ISNULL(mus))
         return false;
+    for (size_t i = 0; i < OMG_MAX_PLAYING_MUSIC; i++) {
+        if (this->mus_play_cache[i] == mus) {
+            this->mus_play_cache[i] = NULL;
+            break;
+        }
+    }
     this->raylib->UnloadMusicStream(mus->mus);
     omg_audio_mus_destroy(base, mus_base);
     return false;
@@ -75,6 +91,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
         _OMG_LOG_ERROR(omg_base, "Failed to init Raylib audio device");
         return true;
     }
+    omg_base->std->memset(this->mus_play_cache, 0, sizeof(OMG_MusicRaylib*) * OMG_MAX_PLAYING_MUSIC);
     OMG_BEGIN_POINTER_CAST();
     base->update = omg_audio_raylib_update;
     base->destroy = omg_audio_raylib_destroy;
