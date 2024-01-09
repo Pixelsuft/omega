@@ -36,21 +36,20 @@ bool omg_image_loader_sdl2_init(OMG_ImageLoaderSdl2* this) {
         return true;
     }
     int sdl2_formats = 0;
-    int need_format = omg_base->winmgr->image_formats & (~OMG_IMG_FORMAT_BMP);
-    if (need_format & OMG_IMG_FORMAT_JPG)
+    if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_JPG)
         sdl2_formats |= IMG_INIT_JPG;
-    if (need_format & OMG_IMG_FORMAT_PNG)
+    if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_PNG)
         sdl2_formats |= IMG_INIT_PNG;
-    if (need_format & OMG_IMG_FORMAT_TIF)
+    if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_TIF)
         sdl2_formats |= IMG_INIT_TIF;
-    if (need_format & OMG_IMG_FORMAT_WEBP)
+    if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_WEBP)
         sdl2_formats |= IMG_INIT_WEBP;
-    if (need_format & OMG_IMG_FORMAT_JXL)
+    if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_JXL)
         sdl2_formats |= IMG_INIT_JXL;
-    if (need_format & OMG_IMG_FORMAT_AVIF)
+    if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_AVIF)
         sdl2_formats |= IMG_INIT_AVIF;
     int res = this->img.IMG_Init(sdl2_formats);
-    if ((need_format != 0) && (res == 0)) {
+    if ((sdl2_formats != 0) && (res == 0)) {
         _OMG_LOG_ERROR(omg_base, "Failed to init SDL2_image (", IMG_GETERROR(), ")");
         omg_sdl2_image_dll_free(&this->img);
         return true;
