@@ -32,6 +32,10 @@ bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int 
     OMG_UNUSED(fade_in);
     _OMG_NULL_MUS_CHECK();
     mus->mus.looping = loops == -1;
+    if (this->raylib->IsMusicStreamPlaying(mus->mus)) {
+        this->raylib->SeekMusicStream(mus->mus, (float)pos);
+        return false;
+    }
     if (pos > 0.0)
         this->raylib->SeekMusicStream(mus->mus, (float)pos);
     for (size_t i = 0; i < OMG_MAX_PLAYING_MUSIC; i++) {
