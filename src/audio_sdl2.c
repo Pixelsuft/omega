@@ -1,11 +1,11 @@
 #include <omega/audio_sdl2.h>
 
 #if OMG_SUPPORT_SDL2_MIXER
-#include <omega/omega_sdl2.h>
+#include <omega/omega.h>
 #define base ((OMG_Audio*)this)
 #define mus_base ((OMG_Music*)mus)
 #define omg_base ((OMG_Omega*)base->omg)
-#define MIX_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)omg_base)->sdl2->SDL_GetError() : "")
+#define MIX_GETERROR() (OMG_ISNULL(this->sdl2) ? "" : this->sdl2->SDL_GetError())
 #define MUS_IS_PLAYING() (cur_mus_cache == mus->mus)
 
 static Mix_Music* cur_mus_cache = NULL;
