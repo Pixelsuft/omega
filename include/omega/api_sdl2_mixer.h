@@ -70,6 +70,7 @@ typedef struct _Mix_Music Mix_Music;
 
 typedef struct {
     void* handle;
+    const SDL_version* OMG_SDL2_MIXER_STD_PREFIX (*Mix_Linked_Version)(void);
     int OMG_SDL2_MIXER_STD_PREFIX (*Mix_Init)(int);
     void OMG_SDL2_MIXER_STD_PREFIX (*Mix_Quit)(void);
     int OMG_SDL2_MIXER_STD_PREFIX (*Mix_OpenAudio)(int, uint16_t, int, int);
@@ -135,6 +136,7 @@ typedef struct {
     int OMG_SDL2_MIXER_STD_PREFIX (*Mix_SetMusicCMD)(const char*);
     Mix_Chunk* OMG_SDL2_MIXER_STD_PREFIX (*Mix_GetChunk)(int);
     void OMG_SDL2_MIXER_STD_PREFIX (*Mix_CloseAudio)(void);
+    SDL_version ver;
 } OMG_Sdl2Mixer;
 
 OMG_API bool omg_sdl2_mixer_dll_load(OMG_Sdl2Mixer* this, const OMG_String* dll_path);
