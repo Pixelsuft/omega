@@ -69,6 +69,7 @@ void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
 
 bool omg_renderer_sdl2_destroy(OMG_RendererSdl2* this) {
     if (base->inited) {
+        omg_sdl2_gfx_set_handle(NULL, NULL);
         this->sdl2->SDL_DestroyRenderer(this->ren);
         this->ren = NULL;
         base->inited = false;

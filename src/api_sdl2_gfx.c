@@ -42,7 +42,16 @@ Pixelsuft -- pixelsuft at github dot com
 static OMG_Sdl2* sdl2_handle = NULL;
 static OMG_Std* std_handle = NULL;
 
+static int *gfxPrimitivesPolyIntsGlobal = NULL;
+static int gfxPrimitivesPolyAllocatedGlobal = 0;
+
 void omg_sdl2_gfx_set_handle(OMG_Sdl2* sdl2, OMG_Std* std) {
+	if (OMG_ISNULL(std)) {
+		if (OMG_ISNOTNULL(gfxPrimitivesPolyIntsGlobal)) {
+			SDL2_GFX_FREE(gfxPrimitivesPolyIntsGlobal);
+			gfxPrimitivesPolyIntsGlobal = NULL;
+		}
+	}
 	sdl2_handle = sdl2;
 	std_handle = std;
 }
@@ -200,8 +209,7 @@ int roundedRectangleRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t
 }
 
 int roundedBoxRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2,
-				   int16_t y2, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+				   int16_t y2, int16_t rad, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result;
 	int16_t w, h, r2, tmp;
 	int16_t cx = 0;
@@ -311,8 +319,7 @@ int roundedBoxRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2,
 	return (result);
 }
 
-int boxRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-{
+int boxRGBA(SDL_Renderer* renderer, int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
 	int result;
 	int16_t tmp;
 	SDL_Rect rect;
@@ -1174,9 +1181,6 @@ int aapolygonRGBA(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, 
 int _gfxPrimitivesCompareInt(const void *a, const void *b) {
 	return (*(const int *)a) - (*(const int *)b);
 }
-
-static int *gfxPrimitivesPolyIntsGlobal = NULL;
-static int gfxPrimitivesPolyAllocatedGlobal = 0;
 
 int filledPolygonRGBAMT(SDL_Renderer* renderer, const int16_t *vx, const int16_t *vy, int n, uint8_t r, uint8_t g, uint8_t b, uint8_t a, int **polyInts, int *polyAllocated) {
 	int result;
