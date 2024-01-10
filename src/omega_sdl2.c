@@ -484,8 +484,7 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
         base->clock->init = omg_clock_sdl2_init;
         OMG_END_POINTER_CAST();
     }
-    // TODO: SDL_INIT_AUDIO hack
-    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO | (OMG_SUPPORT_SDL2_MIXER ? SDL_INIT_AUDIO : 0)) < 0) {
+    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
         if (base->clock->was_allocated) {
             OMG_FREE(base->mem, base->clock);
             base->clock = NULL;

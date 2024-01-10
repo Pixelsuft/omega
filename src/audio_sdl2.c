@@ -19,6 +19,9 @@ bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
     bool res = false;
     this->mix.Mix_CloseAudio();
     this->mix.Mix_Quit();
+    if (OMG_ISNOTNULL(this->sdl2)) {
+        this->sdl2->SDL_AudioQuit();
+    }
     res = omg_sdl2_mixer_dll_free(&this->mix) || res;
     cur_mus_cache = NULL;
     cur_audio_cache = NULL;
@@ -171,6 +174,10 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     if (omg_sdl2_mixer_dll_load(&this->mix, omg_base->sdl2_mixer_dll_path)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_mixer dll");
         return true;
+    }
+    if (OMG_ISNOTNULL(this->sdl2)) {
+        if (this->sdl2->SDL_AudioInit(NULL) < 0)
+            _OMG_LOG_WARN(omg_base, "Failed to init SDL2 Audio (", MIX_GETERROR(), ")");
     }
     int mix_formats = 0;
     if (base->init_flags & OMG_AUDIO_FORMAT_FLAC)
