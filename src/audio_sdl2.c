@@ -8,7 +8,9 @@
 #define omg_base ((OMG_Omega*)base->omg)
 #define MIX_GETERROR() (OMG_ISNULL(this->sdl2) ? "" : this->sdl2->SDL_GetError())
 #define MUS_IS_PLAYING() (cur_mus_cache == mus->mus)
+#define SND_IS_PLAYING() (snd->channel >= 0)
 
+static OMG_AudioSdl2* cur_audio_cache = NULL;
 static Mix_Music* cur_mus_cache = NULL;
 
 bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
@@ -18,6 +20,8 @@ bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
     this->mix.Mix_CloseAudio();
     this->mix.Mix_Quit();
     res = omg_sdl2_mixer_dll_free(&this->mix) || res;
+    cur_mus_cache = NULL;
+    cur_audio_cache = NULL;
     return res;
 }
 
@@ -87,9 +91,16 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
     return false;
 }
 
+bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
+    if (SND_IS_PLAYING())
+        this->mix.Mix_HaltChannel(snd->channel);
+    return false;
+}
+
 bool omg_audio_sdl2_snd_destroy(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
     if (OMG_ISNULL(snd) || OMG_ISNULL(snd->chunk))
         return false;
+    omg_audio_sdl2_snd_stop(this, snd);
     this->mix.Mix_FreeChunk(snd->chunk);
     snd->chunk = NULL;
     omg_audio_snd_destroy(base, snd_base);
@@ -118,8 +129,41 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
         _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr, " (", MIX_GETERROR(), ")");
         return NULL;
     }
+    snd->channel = -2;
     snd->vol_cache = MIX_MAX_VOLUME;
     return snd;
+}
+
+bool omg_audio_sdl2_snd_set_volume(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, float volume) {
+    snd->vol_cache = (int)(volume * (float)MIX_MAX_VOLUME);
+    this->mix.Mix_VolumeChunk(snd->chunk, snd->vol_cache);
+    return false;
+}
+
+void omg_audio_sdl2_channel_finish_cb(int channel) {
+    if (OMG_ISNULL(cur_audio_cache) || (channel < 0))
+        return;
+    OMG_SoundSdl2* snd = cur_audio_cache->play_cache[channel];
+    if (OMG_ISNULL(snd))
+        return;
+    snd->channel = -2;
+}
+
+bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops, double fade_in) {
+    omg_audio_sdl2_snd_stop(this, snd);
+    int channel = -1;
+    if (fade_in > 0.0)
+        snd->channel = this->mix.Mix_FadeInChannelTimed(channel, snd->chunk, loops, (int)(fade_in * 1000.0), -1);
+    else
+        snd->channel = this->mix.Mix_PlayChannelTimed(channel, snd->chunk, loops, -1);
+    if (snd->channel < 0) {
+        snd->channel = -2;
+        _OMG_LOG_ERROR(omg_base, "Failed to play sound (", MIX_GETERROR(), ")");
+        return true;
+    }
+    this->play_cache[snd->channel] = snd;
+    this->mix.Mix_ChannelFinished(omg_audio_sdl2_channel_finish_cb);
+    return false;
 }
 
 bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
@@ -169,8 +213,9 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
         omg_sdl2_mixer_dll_free(&this->mix);
         return true;
     }
-    if (MIX_CHANNELS != OMG_MAX_PLAYING_MUSIC)
-        this->mix.Mix_AllocateChannels(OMG_MAX_PLAYING_MUSIC);
+    if (MIX_CHANNELS != OMG_MAX_PLAYING_SOUND)
+        this->mix.Mix_AllocateChannels(OMG_MAX_PLAYING_SOUND);
+    omg_base->std->memset(this->play_cache, 0, sizeof(OMG_SoundSdl2*) * OMG_MAX_PLAYING_SOUND);
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
@@ -180,8 +225,12 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_stop = omg_audio_sdl2_mus_stop;
     base->snd_from_fp = omg_audio_sdl2_snd_from_fp;
     base->snd_destroy = omg_audio_sdl2_snd_destroy;
+    base->snd_play = omg_audio_sdl2_snd_play;
+    base->snd_stop = omg_audio_sdl2_snd_stop;
+    base->snd_set_volume = omg_audio_sdl2_snd_set_volume;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_SDL2;
+    cur_audio_cache = this;
     base->inited = true;
     return false;
 }

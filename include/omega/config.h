@@ -125,6 +125,9 @@
 #ifndef OMG_MAX_PLAYING_MUSIC
 #define OMG_MAX_PLAYING_MUSIC 8
 #endif
+#ifndef OMG_MAX_PLAYING_SOUND
+#define OMG_MAX_PLAYING_SOUND 8
+#endif
 
 #ifndef OMG_MAX_COLOR
 #define OMG_MAX_COLOR ((omg_color_t)255)
