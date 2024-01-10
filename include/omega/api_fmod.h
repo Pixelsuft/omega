@@ -30,6 +30,19 @@ typedef struct FMOD_GEOMETRY       FMOD_GEOMETRY;
 typedef struct FMOD_SYNCPOINT      FMOD_SYNCPOINT;
 typedef struct FMOD_ASYNCREADINFO  FMOD_ASYNCREADINFO;
 
+typedef unsigned int FMOD_DEBUG_FLAGS;
+#define FMOD_DEBUG_LEVEL_NONE                       0x00000000
+#define FMOD_DEBUG_LEVEL_ERROR                      0x00000001
+#define FMOD_DEBUG_LEVEL_WARNING                    0x00000002
+#define FMOD_DEBUG_LEVEL_LOG                        0x00000004
+#define FMOD_DEBUG_TYPE_MEMORY                      0x00000100
+#define FMOD_DEBUG_TYPE_FILE                        0x00000200
+#define FMOD_DEBUG_TYPE_CODEC                       0x00000400
+#define FMOD_DEBUG_TYPE_TRACE                       0x00000800
+#define FMOD_DEBUG_DISPLAY_TIMESTAMPS               0x00010000
+#define FMOD_DEBUG_DISPLAY_LINENUMBERS              0x00020000
+#define FMOD_DEBUG_DISPLAY_THREAD                   0x00040000
+
 typedef unsigned int FMOD_MEMORY_TYPE;
 #define FMOD_MEMORY_NORMAL                          0x00000000
 #define FMOD_MEMORY_STREAM_FILE                     0x00000001
@@ -449,6 +462,141 @@ typedef struct FMOD_REVERB_PROPERTIES {
     float EarlyLateMix;
     float WetLevel;
 } FMOD_REVERB_PROPERTIES;
+
+typedef enum FMOD_CHANNELCONTROL_TYPE {
+    FMOD_CHANNELCONTROL_CHANNEL,
+    FMOD_CHANNELCONTROL_CHANNELGROUP,
+    FMOD_CHANNELCONTROL_MAX,
+    FMOD_CHANNELCONTROL_FORCEINT = 65536
+} FMOD_CHANNELCONTROL_TYPE;
+
+typedef enum FMOD_DSP_CALLBACK_TYPE {
+    FMOD_DSP_CALLBACK_DATAPARAMETERRELEASE,
+    FMOD_DSP_CALLBACK_MAX,
+    FMOD_DSP_CALLBACK_FORCEINT = 65536
+} FMOD_DSP_CALLBACK_TYPE;
+
+typedef enum FMOD_CHANNELCONTROL_CALLBACK_TYPE {
+    FMOD_CHANNELCONTROL_CALLBACK_END,
+    FMOD_CHANNELCONTROL_CALLBACK_VIRTUALVOICE,
+    FMOD_CHANNELCONTROL_CALLBACK_SYNCPOINT,
+    FMOD_CHANNELCONTROL_CALLBACK_OCCLUSION,
+    FMOD_CHANNELCONTROL_CALLBACK_MAX,
+    FMOD_CHANNELCONTROL_CALLBACK_FORCEINT = 65536
+} FMOD_CHANNELCONTROL_CALLBACK_TYPE;
+
+typedef FMOD_RESULT (F_CALL *FMOD_DEBUG_CALLBACK)           (FMOD_DEBUG_FLAGS flags, const char *file, int line, const char* func, const char* message);
+typedef FMOD_RESULT (F_CALL *FMOD_SYSTEM_CALLBACK)          (FMOD_SYSTEM *system, FMOD_SYSTEM_CALLBACK_TYPE type, void *commanddata1, void* commanddata2, void *userdata);
+typedef FMOD_RESULT (F_CALL *FMOD_CHANNELCONTROL_CALLBACK)  (FMOD_CHANNELCONTROL *channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbacktype, void *commanddata1, void *commanddata2);
+typedef FMOD_RESULT (F_CALL *FMOD_DSP_CALLBACK)             (FMOD_DSP *dsp, FMOD_DSP_CALLBACK_TYPE type, void *data);
+typedef FMOD_RESULT (F_CALL *FMOD_SOUND_NONBLOCK_CALLBACK)  (FMOD_SOUND*, FMOD_RESULT result);
+typedef FMOD_RESULT (F_CALL *FMOD_SOUND_PCMREAD_CALLBACK)   (FMOD_SOUND*, void *data, unsigned int datalen);
+typedef FMOD_RESULT (F_CALL *FMOD_SOUND_PCMSETPOS_CALLBACK) (FMOD_SOUND*, int subsound, unsigned int position, FMOD_TIMEUNIT postype);
+typedef FMOD_RESULT (F_CALL *FMOD_FILE_OPEN_CALLBACK)       (const char *name, unsigned int *filesize, void **handle, void *userdata);
+typedef FMOD_RESULT (F_CALL *FMOD_FILE_CLOSE_CALLBACK)      (void *handle, void *userdata);
+typedef FMOD_RESULT (F_CALL *FMOD_FILE_READ_CALLBACK)       (void *handle, void *buffer, unsigned int sizebytes, unsigned int *bytesread, void *userdata);
+typedef FMOD_RESULT (F_CALL *FMOD_FILE_SEEK_CALLBACK)       (void *handle, unsigned int pos, void *userdata);
+typedef FMOD_RESULT (F_CALL *FMOD_FILE_ASYNCREAD_CALLBACK)  (FMOD_ASYNCREADINFO *info, void *userdata);
+typedef FMOD_RESULT (F_CALL *FMOD_FILE_ASYNCCANCEL_CALLBACK)(FMOD_ASYNCREADINFO *info, void *userdata);
+typedef void        (F_CALL *FMOD_FILE_ASYNCDONE_FUNC)      (FMOD_ASYNCREADINFO *info, FMOD_RESULT result);
+typedef void*       (F_CALL *FMOD_MEMORY_ALLOC_CALLBACK)    (unsigned int size, FMOD_MEMORY_TYPE type, const char *sourcestr);
+typedef void*       (F_CALL *FMOD_MEMORY_REALLOC_CALLBACK)  (void *ptr, unsigned int size, FMOD_MEMORY_TYPE type, const char *sourcestr);
+typedef void        (F_CALL *FMOD_MEMORY_FREE_CALLBACK)     (void *ptr, FMOD_MEMORY_TYPE type, const char *sourcestr);
+typedef float       (F_CALL *FMOD_3D_ROLLOFF_CALLBACK)      (FMOD_CHANNELCONTROL *channelcontrol, float distance);
+
+typedef enum FMOD_CHANNELORDER {
+    FMOD_CHANNELORDER_DEFAULT,
+    FMOD_CHANNELORDER_WAVEFORMAT,
+    FMOD_CHANNELORDER_PROTOOLS,
+    FMOD_CHANNELORDER_ALLMONO,
+    FMOD_CHANNELORDER_ALLSTEREO,
+    FMOD_CHANNELORDER_ALSA,
+    FMOD_CHANNELORDER_MAX,
+    FMOD_CHANNELORDER_FORCEINT = 65536
+} FMOD_CHANNELORDER;
+
+typedef struct FMOD_GUID {
+    unsigned int   Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    unsigned char  Data4[8];
+} FMOD_GUID;
+
+typedef enum FMOD_TAGDATATYPE {
+    FMOD_TAGDATATYPE_BINARY,
+    FMOD_TAGDATATYPE_INT,
+    FMOD_TAGDATATYPE_FLOAT,
+    FMOD_TAGDATATYPE_STRING,
+    FMOD_TAGDATATYPE_STRING_UTF16,
+    FMOD_TAGDATATYPE_STRING_UTF16BE,
+    FMOD_TAGDATATYPE_STRING_UTF8,
+    FMOD_TAGDATATYPE_MAX,
+    FMOD_TAGDATATYPE_FORCEINT = 65536
+} FMOD_TAGDATATYPE;
+
+typedef struct FMOD_TAG {
+    FMOD_TAGTYPE      type;
+    FMOD_TAGDATATYPE  datatype;
+    char             *name;
+    void             *data;
+    unsigned int      datalen;
+    FMOD_BOOL         updated;
+} FMOD_TAG;
+
+typedef struct FMOD_CREATESOUNDEXINFO {
+    int                            cbsize;
+    unsigned int                   length;
+    unsigned int                   fileoffset;
+    int                            numchannels;
+    int                            defaultfrequency;
+    FMOD_SOUND_FORMAT              format;
+    unsigned int                   decodebuffersize;
+    int                            initialsubsound;
+    int                            numsubsounds;
+    int                           *inclusionlist;
+    int                            inclusionlistnum;
+    FMOD_SOUND_PCMREAD_CALLBACK    pcmreadcallback;
+    FMOD_SOUND_PCMSETPOS_CALLBACK  pcmsetposcallback;
+    FMOD_SOUND_NONBLOCK_CALLBACK   nonblockcallback;
+    const char                    *dlsname;
+    const char                    *encryptionkey;
+    int                            maxpolyphony;
+    void                          *userdata;
+    FMOD_SOUND_TYPE                suggestedsoundtype;
+    FMOD_FILE_OPEN_CALLBACK        fileuseropen;
+    FMOD_FILE_CLOSE_CALLBACK       fileuserclose;
+    FMOD_FILE_READ_CALLBACK        fileuserread;
+    FMOD_FILE_SEEK_CALLBACK        fileuserseek;
+    FMOD_FILE_ASYNCREAD_CALLBACK   fileuserasyncread;
+    FMOD_FILE_ASYNCCANCEL_CALLBACK fileuserasynccancel;
+    void                          *fileuserdata;
+    int                            filebuffersize;
+    FMOD_CHANNELORDER              channelorder;
+    FMOD_SOUNDGROUP               *initialsoundgroup;
+    unsigned int                   initialseekposition;
+    FMOD_TIMEUNIT                  initialseekpostype;
+    int                            ignoresetfilesystem;
+    unsigned int                   audioqueuepolicy;
+    unsigned int                   minmidigranularity;
+    int                            nonblockthreadid;
+    FMOD_GUID                     *fsbguid;
+} FMOD_CREATESOUNDEXINFO;
+
+typedef enum FMOD_TAGTYPE {
+    FMOD_TAGTYPE_UNKNOWN,
+    FMOD_TAGTYPE_ID3V1,
+    FMOD_TAGTYPE_ID3V2,
+    FMOD_TAGTYPE_VORBISCOMMENT,
+    FMOD_TAGTYPE_SHOUTCAST,
+    FMOD_TAGTYPE_ICECAST,
+    FMOD_TAGTYPE_ASF,
+    FMOD_TAGTYPE_MIDI,
+    FMOD_TAGTYPE_PLAYLIST,
+    FMOD_TAGTYPE_FMOD,
+    FMOD_TAGTYPE_USER,
+    FMOD_TAGTYPE_MAX,
+    FMOD_TAGTYPE_FORCEINT = 65536
+} FMOD_TAGTYPE;
 #endif
 
 #define OMG_FMOD_STD_PREFIX F_CALL
@@ -464,7 +612,27 @@ typedef struct {
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Close)(FMOD_SYSTEM*);
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Update)(FMOD_SYSTEM*);
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_GetVersion)(FMOD_SYSTEM*, unsigned int*);
-    
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_CreateSound)(FMOD_SYSTEM*, const char*, FMOD_MODE, FMOD_CREATESOUNDEXINFO*, FMOD_SOUND**);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_CreateStream)(FMOD_SYSTEM*, const char*, FMOD_MODE, FMOD_CREATESOUNDEXINFO*, FMOD_SOUND**);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_PlaySound)(FMOD_SYSTEM*, FMOD_SOUND*, FMOD_CHANNELGROUP*, FMOD_BOOL, FMOD_CHANNEL**);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_GetChannel)(FMOD_SYSTEM*, int, FMOD_CHANNEL**);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_SetReverbProperties)(FMOD_SYSTEM*, int, const FMOD_REVERB_PROPERTIES*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_GetReverbProperties)(FMOD_SYSTEM*, int, FMOD_REVERB_PROPERTIES*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_Release)(FMOD_SOUND*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetName)(FMOD_SOUND*, char*, int);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetLength)(FMOD_SOUND*, unsigned int*, FMOD_TIMEUNIT);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetFormat)(FMOD_SOUND*, FMOD_SOUND_TYPE*, FMOD_SOUND_FORMAT*, int*, int*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetNumTags)(FMOD_SOUND*, int*, int*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetTag)(FMOD_SOUND*, const char*, int, FMOD_TAG*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_SetMode)(FMOD_SOUND*, FMOD_MODE);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetMode)(FMOD_SOUND*, FMOD_MODE*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_SetLoopCount)(FMOD_SOUND*, int);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetLoopCount)(FMOD_SOUND*, int*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetMusicNumChannels)(FMOD_SOUND*, int*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_SetMusicChannelVolume)(FMOD_SOUND*, int, float);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetMusicChannelVolume)(FMOD_SOUND*, int, float*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_SetMusicSpeed)(FMOD_SOUND*, float);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Sound_GetMusicSpeed)(FMOD_SOUND*, float*);
 } OMG_Fmod;
 
 OMG_API bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path);
