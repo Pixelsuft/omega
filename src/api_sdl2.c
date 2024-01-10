@@ -262,6 +262,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometryRaw); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometry); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
+    LOAD_REQUIRED_COMPAT(SDL_GetDefaultAudioInfo); // 2.24.0
     if (OMG_ISNULL(this->SDL_RenderCopyF))
         this->SDL_RenderCopyF = omg_sdl2_render_copyf_emu;
     if (OMG_ISNULL(this->SDL_RenderCopyExF))

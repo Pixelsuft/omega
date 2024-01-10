@@ -483,7 +483,8 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
         base->clock->init = omg_clock_sdl2_init;
         OMG_END_POINTER_CAST();
     }
-    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO) < 0) {
+    // SDL Audio hack
+    if (this->sdl2->SDL_Init(SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_VIDEO | (OMG_SUPPORT_SDL2_MIXER ? SDL_INIT_AUDIO : 0)) < 0) {
         if (base->clock->was_allocated) {
             OMG_FREE(base->mem, base->clock);
             base->clock = NULL;
@@ -607,9 +608,6 @@ bool omg_sdl2_audio_alloc(OMG_OmegaSdl2* this) {
             base->audio->was_allocated = false;
         omg_audio_fill_on_create(base->audio);
         base->audio->omg = this;
-        base->audio->chunk_size = 2048;
-        base->audio->freq = MIX_DEFAULT_FREQUENCY;
-        base->audio->channels = MIX_DEFAULT_CHANNELS;
         audio_sdl2->sdl2 = this->sdl2;
         base->audio->init = omg_audio_sdl2_init;
         return false;

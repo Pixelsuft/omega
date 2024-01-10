@@ -61,6 +61,7 @@ typedef enum {
 #endif
 
 #define SDL_INIT_TIMER          0x00000001u
+#define SDL_INIT_AUDIO          0x00000010u
 #define SDL_INIT_VIDEO          0x00000020u
 #define SDL_INIT_EVENTS         0x00004000u
 
@@ -215,6 +216,22 @@ typedef void SDL_BlitMap;
 typedef void SDL_Texture;
 
 typedef int32_t SDL_Keycode;
+
+typedef uint16_t SDL_AudioFormat;
+
+typedef void OMG_SDL2_STD_PREFIX (*SDL_AudioCallback)(void*, uint8_t*, int);
+
+typedef struct SDL_AudioSpec {
+    int freq;
+    SDL_AudioFormat format;
+    uint8_t channels;
+    uint8_t silence;
+    uint16_t samples;
+    uint16_t padding;
+    uint32_t size;
+    SDL_AudioCallback callback;
+    void* userdata;
+} SDL_AudioSpec;
 
 typedef struct SDL_Rect {
     int x;
@@ -1375,6 +1392,7 @@ typedef struct {
     void* OMG_SDL2_STD_PREFIX (*SDL_LoadFile)(const char*, size_t*);
     uint8_t OMG_SDL2_STD_PREFIX (*SDL_ReadU8)(SDL_RWops*);
     size_t OMG_SDL2_STD_PREFIX (*SDL_WriteU8)(SDL_RWops*, uint8_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetDefaultAudioInfo)(char**, SDL_AudioSpec*, int);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;

@@ -193,6 +193,24 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     }
     else if (res < mix_formats)
         _OMG_LOG_WARN(omg_base, "Failed to init some SDL2_mixer formats (", MIX_GETERROR(), ")");
+    if (OMG_ISNOTNULL(this->sdl2) && OMG_ISNOTNULL(this->sdl2->SDL_GetDefaultAudioInfo)) {
+        SDL_AudioSpec spec;
+        if (this->sdl2->SDL_GetDefaultAudioInfo(NULL, &spec, 0) < 0) {
+            _OMG_LOG_WARN(omg_base, "Failed to get default audio info (", MIX_GETERROR(), ")");
+        }
+        else {
+            if (base->freq < 0)
+                base->freq = spec.freq;
+            if (base->channels < 0)
+                base->channels = (int)spec.channels;
+        }
+    }
+    if (base->chunk_size < 0)
+        base->chunk_size = 2048;
+    if (base->freq < 0)
+        base->freq = MIX_DEFAULT_FREQUENCY;
+    if (base->channels < 0)
+        base->channels = MIX_DEFAULT_CHANNELS;
     if (OMG_ISNULL(this->mix.Mix_OpenAudioDevice))
         res = this->mix.Mix_OpenAudio(base->freq, base->use_float32 ? AUDIO_F32SYS : MIX_DEFAULT_FORMAT, base->channels, base->chunk_size);
     else
@@ -215,6 +233,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     }
     if (MIX_CHANNELS != OMG_MAX_PLAYING_SOUND)
         this->mix.Mix_AllocateChannels(OMG_MAX_PLAYING_SOUND);
+    this->mix.Mix_QuerySpec(&base->freq, NULL, &base->channels);
     omg_base->std->memset(this->play_cache, 0, sizeof(OMG_SoundSdl2*) * OMG_MAX_PLAYING_SOUND);
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
