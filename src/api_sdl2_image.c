@@ -44,6 +44,7 @@ bool omg_sdl2_image_dll_free(OMG_Sdl2Image* this) {
 #if OMG_SDL2_IMAGE_DYNAMIC
     return omg_static_lib_free(this->handle);
 #else
+    OMG_UNUSED(this);
     return false;
 #endif
 }

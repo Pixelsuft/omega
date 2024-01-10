@@ -2,9 +2,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <omega/platform.h>
-#if OMG_IS_UNIX
 #include <stddef.h>
-#endif
 #include <stdarg.h>
 
 #define OMG_ISNULL(ptr) ((ptr) == NULL)

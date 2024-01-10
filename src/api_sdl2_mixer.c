@@ -93,8 +93,6 @@ bool omg_sdl2_mixer_dll_load(OMG_Sdl2Mixer* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(Mix_RewindMusic);
     LOAD_REQUIRED(Mix_PausedMusic);
     LOAD_REQUIRED(Mix_SetMusicPosition);
-    LOAD_REQUIRED(Mix_GetMusicPosition);
-    LOAD_REQUIRED(Mix_MusicDuration);
     LOAD_REQUIRED(Mix_Playing);
     LOAD_REQUIRED(Mix_PlayingMusic);
     LOAD_REQUIRED(Mix_SetMusicCMD);
@@ -107,6 +105,8 @@ bool omg_sdl2_mixer_dll_load(OMG_Sdl2Mixer* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(Mix_GetMusicArtistTag); // 2.6.0
     LOAD_REQUIRED_COMPAT(Mix_GetMusicAlbumTag); // 2.6.0
     LOAD_REQUIRED_COMPAT(Mix_GetMusicCopyrightTag); // 2.6.0
+    LOAD_REQUIRED_COMPAT(Mix_GetMusicPosition); // 2.6.0
+    LOAD_REQUIRED_COMPAT(Mix_MusicDuration); // 2.6.0
     OMG_END_POINTER_CAST();
     return false;
 }
@@ -115,6 +115,7 @@ bool omg_sdl2_mixer_dll_free(OMG_Sdl2Mixer* this) {
 #if OMG_SDL2_MIXER_DYNAMIC
     return omg_static_lib_free(this->handle);
 #else
+    OMG_UNUSED(this);
     return false;
 #endif
 }

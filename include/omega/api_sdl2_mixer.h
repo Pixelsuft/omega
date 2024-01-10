@@ -5,9 +5,9 @@
 #include <omega/api_sdl2.h>
 #if !OMG_SDL2_MIXER_DYNAMIC
 #if OMG_IS_VC || OMG_IS_UNIX || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID
-#include <SDL_image.h>
+#include <SDL_mixer.h>
 #else
-#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #endif
 #endif
 
