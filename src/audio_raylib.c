@@ -24,14 +24,12 @@ bool omg_audio_raylib_update(OMG_AudioRaylib* this) {
 }
 
 bool omg_audio_raylib_mus_set_volume(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float volume) {
-    _OMG_NULL_MUS_CHECK();
     this->raylib->SetMusicVolume(mus->mus, volume);
     return false;
 }
 
 bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int loops, double pos, double fade_in) {
     OMG_UNUSED(fade_in);
-    _OMG_NULL_MUS_CHECK();
     mus->mus.looping = loops == -1;
     if (this->raylib->IsMusicStreamPlaying(mus->mus)) {
         this->raylib->SeekMusicStream(mus->mus, (float)pos);
@@ -64,7 +62,6 @@ bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
 }
 
 bool omg_audio_raylib_mus_stop(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
-    _OMG_NULL_MUS_CHECK();
     this->raylib->StopMusicStream(mus->mus);
     return false;
 }

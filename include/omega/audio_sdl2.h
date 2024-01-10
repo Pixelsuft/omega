@@ -13,7 +13,6 @@ typedef struct {
 typedef struct {
     OMG_Music base;
     Mix_Chunk* chunk;
-    int vol_cache;
     int channel;
 } OMG_SoundSdl2;
 

@@ -1,15 +1,6 @@
 #pragma once
 #include <omega/ostd.h>
 
-#if OMG_NULL_MUS_CHECK
-#define _OMG_NULL_MUS_CHECK() do { \
-    if (OMG_ISNULL(mus)) \
-        return true; \
-} while (0)
-#else
-#define _OMG_NULL_MUS_CHECK()
-#endif
-
 #define OMG_AUDIO_TYPE_NONE 0
 #define OMG_AUDIO_TYPE_AUTO 1
 #define OMG_AUDIO_TYPE_SDL2 2

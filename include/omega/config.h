@@ -114,9 +114,6 @@
 #ifndef OMG_NULL_TEX_CHECK
 #define OMG_NULL_TEX_CHECK 1
 #endif
-#ifndef OMG_NULL_MUS_CHECK
-#define OMG_NULL_MUS_CHECK 1
-#endif
 
 #ifndef OMG_ALLOW_DUMMY_AUDIO
 #define OMG_ALLOW_DUMMY_AUDIO 1
