@@ -224,6 +224,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    this->omg->audio_type = OMG_AUDIO_TYPE_FMOD;
     if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
         return;

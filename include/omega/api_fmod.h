@@ -240,6 +240,9 @@ typedef enum FMOD_RESULT {
     FMOD_RESULT_FORCEINT = 65536
 } FMOD_RESULT;
 
+#ifdef __GNUC__ 
+static const char* FMOD_ErrorString(FMOD_RESULT errcode) __attribute__((unused));
+#endif
 static const char* FMOD_ErrorString(FMOD_RESULT errcode) {
     switch (errcode) {
         case FMOD_OK:                            return "No errors.";
@@ -604,7 +607,7 @@ typedef struct FMOD_CREATESOUNDEXINFO {
 typedef struct {
     void* handle;
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Create)(FMOD_SYSTEM**, unsigned int);
-    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Release)(FMOD_SYSTEM**);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Release)(FMOD_SYSTEM*);
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_SetSoftwareChannels)(FMOD_SYSTEM*, int);
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_SetSoftwareFormat)(FMOD_SYSTEM*, int, FMOD_SPEAKERMODE, int);
     FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_GetSoftwareFormat)(FMOD_SYSTEM*, int*, FMOD_SPEAKERMODE*, int*);
