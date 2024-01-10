@@ -83,7 +83,7 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRa
         _OMG_LOG_ERROR(omg_base, "Failed to load Raylib music ", path->ptr);
         return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
-    mus_base->duration = -1.0;
+    mus_base->duration = (double)this->raylib->GetMusicTimeLength(mus->mus);
     return mus;
 }
 
