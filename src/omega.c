@@ -470,8 +470,7 @@ bool omg_dummy_audio_alloc(OMG_Omega* this) {
 }
 
 bool omg_audio_alloc(OMG_Omega* this) {
-    OMG_UNUSED(this);
-    return true;
+    return omg_dummy_audio_alloc(this);
 }
 
 bool omg_audio_free(OMG_Omega* this) {

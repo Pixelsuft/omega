@@ -72,7 +72,7 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRa
     if (OMG_ISNULL(mus)) {
         mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicRaylib));
         if (OMG_ISNULL(mus))
-            return NULL;
+            return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
         mus_base->was_allocated = true;
     }
     else
@@ -81,7 +81,7 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRa
     if (!this->raylib->IsMusicReady(mus->mus)) {
         omg_audio_mus_destroy(base, mus_base);
         _OMG_LOG_ERROR(omg_base, "Failed to load Raylib music ", path->ptr);
-        return NULL;
+        return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     return mus;
 }

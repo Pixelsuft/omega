@@ -28,9 +28,39 @@ bool omg_audio_update(OMG_Audio* this) {
     return false;
 }
 
-OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_String* path) {
-    OMG_UNUSED(this, mus, path);
+OMG_Music* omg_audio_dummy_mus_alloc(OMG_Audio* this, OMG_Music* mus) {
+#ifdef OMG_ALLOW_DUMMY_MUSIC
+    OMG_UNUSED(this);
+    if (OMG_ISNULL(mus)) {
+        static OMG_Music mus_buf;
+        mus = &mus_buf;
+    }
+    mus->was_allocated = false;
+    return mus;
+#else
+    OMG_UNUSED(this, mus);
     return NULL;
+#endif
+}
+
+OMG_Sound* omg_audio_dummy_snd_alloc(OMG_Audio* this, OMG_Sound* snd) {
+#ifdef OMG_ALLOW_DUMMY_MUSIC
+    OMG_UNUSED(this);
+    if (OMG_ISNULL(snd)) {
+        static OMG_Sound snd_buf;
+        snd = &snd_buf;
+    }
+    snd->was_allocated = false;
+    return snd;
+#else
+    OMG_UNUSED(this, snd);
+    return NULL;
+#endif
+}
+
+OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_String* path) {
+    OMG_UNUSED(path);
+    return omg_audio_dummy_mus_alloc(this, mus);
 }
 
 bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus) {
@@ -69,8 +99,8 @@ bool omg_audio_snd_destroy(OMG_Audio* this, OMG_Sound* snd) {
 }
 
 OMG_Sound* omg_audio_snd_from_fp(OMG_Audio* this, OMG_Sound* snd, const OMG_String* path) {
-    OMG_UNUSED(this, snd, path);
-    return NULL;
+    OMG_UNUSED(path);
+    return omg_audio_dummy_snd_alloc(this, snd);
 }
 
 bool omg_audio_snd_set_volume(OMG_Audio* this, OMG_Sound* snd, float volume) {

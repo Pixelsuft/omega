@@ -40,7 +40,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
     if (OMG_ISNULL(mus)) {
         mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicSdl2));
         if (OMG_ISNULL(mus))
-            return NULL;
+            return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
         mus_base->was_allocated = true;
     }
     else
@@ -49,7 +49,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
     if (OMG_ISNULL(mus->mus)) {
         omg_audio_mus_destroy(base, mus_base);
         _OMG_LOG_ERROR(omg_base, "Failed to open music ", path->ptr, " (", MIX_GETERROR(), ")");
-        return NULL;
+        return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     mus->vol_cache = MIX_MAX_VOLUME;
     return mus;
@@ -110,7 +110,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
     if (OMG_ISNULL(snd)) {
         snd = OMG_MALLOC(omg_base->mem, sizeof(OMG_SoundSdl2));
         if (OMG_ISNULL(snd))
-            return NULL;
+            return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
         snd_base->was_allocated = true;
     }
     else
@@ -124,7 +124,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
     if (OMG_ISNULL(snd->chunk)) {
         omg_audio_snd_destroy(base, snd_base);
         _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr, " (", MIX_GETERROR(), ")");
-        return NULL;
+        return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
     snd->channel = -2;
     return snd;

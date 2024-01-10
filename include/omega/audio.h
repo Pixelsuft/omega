@@ -61,6 +61,8 @@ OMG_API bool omg_audio_destroy(OMG_Audio* this);
 OMG_API bool omg_audio_update(OMG_Audio* this);
 OMG_API bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus);
 OMG_API bool omg_audio_snd_destroy(OMG_Audio* this, OMG_Sound* snd);
+OMG_API OMG_Music* omg_audio_dummy_mus_alloc(OMG_Audio* this, OMG_Music* mus);
+OMG_API OMG_Sound* omg_audio_dummy_snd_alloc(OMG_Audio* this, OMG_Sound* snd);
 #if OMG_EXPORT_SHIT
 OMG_API OMG_Sound* omg_audio_snd_from_fp(OMG_Audio* this, OMG_Sound* snd, const OMG_String* path);
 OMG_API bool omg_audio_mus_set_volume(OMG_Audio* this, OMG_Music* mus, float volume);
