@@ -524,7 +524,7 @@ bool omg_raylib_audio_alloc(OMG_OmegaRaylib* this) {
         if (OMG_ISNULL(base->audio)) {
             base->audio = OMG_MALLOC(base->mem, sizeof(OMG_AudioRaylib));
             if (OMG_ISNULL(base->audio))
-                return true;
+                return omg_dummy_audio_alloc(base);
             base->audio->was_allocated = true;
         }
         else
@@ -536,7 +536,7 @@ bool omg_raylib_audio_alloc(OMG_OmegaRaylib* this) {
         return false;
     }
     OMG_END_POINTER_CAST();
-    return true;
+    return omg_dummy_audio_alloc(base);
 }
 
 bool omg_raylib_destroy(OMG_OmegaRaylib* this) {

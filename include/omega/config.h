@@ -118,6 +118,10 @@
 #define OMG_NULL_MUS_CHECK 1
 #endif
 
+#ifndef OMG_ALLOW_DUMMY_AUDIO
+#define OMG_ALLOW_DUMMY_AUDIO 1
+#endif
+
 #ifndef OMG_MAX_PLAYING_MUSIC
 #define OMG_MAX_PLAYING_MUSIC 8
 #endif
