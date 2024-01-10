@@ -134,6 +134,7 @@ void app_on_update(OMG_EventUpdate* event) {
             this->bg_fow = true;
         }
     }
+    // OMG_INFO(this->omg, this->omg->mem->get_alloc_count(this->omg->mem));
     // OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
     // OMG_INFO(this->omg, "DT: ", this->clock->dt);
 }
@@ -183,11 +184,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
