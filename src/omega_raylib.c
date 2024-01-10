@@ -300,6 +300,10 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             event.win = win;
             event.id = 0;
             event.button = i + 1;
+            if (event.button == 2)
+                event.button = 3;
+            else if (event.button == 3)
+                event.button = 2;
             event.pos.x = mouse_pos.x;
             event.pos.y = mouse_pos.y;
             event.clicks = 1; // TODO
