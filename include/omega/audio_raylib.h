@@ -18,7 +18,6 @@ typedef struct {
     OMG_Audio parent;
     OMG_Raylib* raylib;
     OMG_MusicRaylib* mus_play_cache[OMG_MAX_PLAYING_MUSIC];
-    OMG_SoundRaylib* snd_play_cache[OMG_MAX_PLAYING_SOUND];
 } OMG_AudioRaylib;
 
 OMG_API bool omg_audio_raylib_init(OMG_AudioRaylib* this);
