@@ -25,6 +25,13 @@ bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path) {
     OMG_BEGIN_POINTER_CAST();
     LOAD_REQUIRED(FMOD_System_Create);
     LOAD_REQUIRED(FMOD_System_Release);
+    LOAD_REQUIRED(FMOD_System_SetSoftwareChannels);
+    LOAD_REQUIRED(FMOD_System_SetSoftwareFormat);
+    LOAD_REQUIRED(FMOD_System_GetSoftwareFormat);
+    LOAD_REQUIRED(FMOD_System_Init);
+    LOAD_REQUIRED(FMOD_System_Close);
+    LOAD_REQUIRED(FMOD_System_Update);
+    LOAD_REQUIRED(FMOD_System_GetVersion);
     OMG_END_POINTER_CAST();
     return false;
 }

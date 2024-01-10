@@ -455,8 +455,16 @@ typedef struct FMOD_REVERB_PROPERTIES {
 
 typedef struct {
     void* handle;
-    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Create)(FMOD_SYSTEM** system, unsigned int headerversion);
-    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Release)(FMOD_SYSTEM** system);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Create)(FMOD_SYSTEM**, unsigned int);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Release)(FMOD_SYSTEM**);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_SetSoftwareChannels)(FMOD_SYSTEM*, int);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_SetSoftwareFormat)(FMOD_SYSTEM*, int, FMOD_SPEAKERMODE, int);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_GetSoftwareFormat)(FMOD_SYSTEM*, int*, FMOD_SPEAKERMODE*, int*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Init)(FMOD_SYSTEM*, int, FMOD_INITFLAGS, void*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Close)(FMOD_SYSTEM*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Update)(FMOD_SYSTEM*);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_GetVersion)(FMOD_SYSTEM*, unsigned int*);
+    
 } OMG_Fmod;
 
 OMG_API bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path);
