@@ -10,6 +10,7 @@
 #else
 #define F_CALL
 #endif
+#define F_API F_CALL
 
 // What to do???
 #define FMOD_VERSION    0x00020214
@@ -454,6 +455,8 @@ typedef struct FMOD_REVERB_PROPERTIES {
 
 typedef struct {
     void* handle;
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Create)(FMOD_SYSTEM** system, unsigned int headerversion);
+    FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_System_Release)(FMOD_SYSTEM** system);
 } OMG_Fmod;
 
 OMG_API bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path);

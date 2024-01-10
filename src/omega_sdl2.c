@@ -607,6 +607,7 @@ bool omg_sdl2_audio_alloc(OMG_OmegaSdl2* this) {
             base->audio->was_allocated = false;
         omg_audio_fill_on_create(base->audio);
         base->audio->omg = this;
+        base->audio->chunk_size = 2048;
         base->audio->freq = MIX_DEFAULT_FREQUENCY;
         base->audio->channels = MIX_DEFAULT_CHANNELS;
         audio_sdl2->sdl2 = this->sdl2;

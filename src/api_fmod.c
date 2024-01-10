@@ -23,7 +23,8 @@ bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path) {
     OMG_UNUSED(dll_path);
 #endif
     OMG_BEGIN_POINTER_CAST();
-    OMG_UNUSED(this, dll_path);
+    LOAD_REQUIRED(FMOD_System_Create);
+    LOAD_REQUIRED(FMOD_System_Release);
     OMG_END_POINTER_CAST();
     return false;
 }

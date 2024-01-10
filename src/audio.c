@@ -12,9 +12,9 @@ void omg_audio_fill_on_create(OMG_Audio* this) {
     this->init_flags = OMG_AUDIO_FORMAT_MP3 | OMG_AUDIO_FORMAT_OGG | OMG_AUDIO_FORMAT_WAV;
     this->type = OMG_AUDIO_TYPE_NONE;
     this->init = omg_audio_init;
-    this->freq = 41000;
-    this->channels = 2;
-    this->chunk_size = 2048;
+    this->freq = -1;
+    this->channels = -1;
+    this->chunk_size = -1;
     this->dev_name = NULL;
     this->allow_freq_change = true;
     this->allow_format_change = true;
