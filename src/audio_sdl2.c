@@ -133,6 +133,8 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
         omg_sdl2_mixer_dll_free(&this->mix);
         return true;
     }
+    if (MIX_CHANNELS != OMG_MAX_PLAYING_MUSIC)
+        this->mix.Mix_AllocateChannels(OMG_MAX_PLAYING_MUSIC);
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;

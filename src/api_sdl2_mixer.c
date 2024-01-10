@@ -61,11 +61,6 @@ bool omg_sdl2_mixer_dll_load(OMG_Sdl2Mixer* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(Mix_GetMusicDecoder);
     LOAD_REQUIRED(Mix_HasMusicDecoder);
     LOAD_REQUIRED(Mix_GetMusicType);
-    LOAD_REQUIRED(Mix_GetMusicTitle);
-    LOAD_REQUIRED(Mix_GetMusicTitleTag);
-    LOAD_REQUIRED(Mix_GetMusicArtistTag);
-    LOAD_REQUIRED(Mix_GetMusicAlbumTag);
-    LOAD_REQUIRED(Mix_GetMusicCopyrightTag);
     LOAD_REQUIRED(Mix_HookMusic);
     LOAD_REQUIRED(Mix_HookMusicFinished);
     LOAD_REQUIRED(Mix_GetMusicHookData);
@@ -106,6 +101,11 @@ bool omg_sdl2_mixer_dll_load(OMG_Sdl2Mixer* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(Mix_GetChunk);
     LOAD_REQUIRED(Mix_CloseAudio);
     LOAD_REQUIRED_COMPAT(Mix_OpenAudioDevice); // 2.0.2
+    LOAD_REQUIRED_COMPAT(Mix_GetMusicTitle); // 2.6.0
+    LOAD_REQUIRED_COMPAT(Mix_GetMusicTitleTag); // 2.6.0
+    LOAD_REQUIRED_COMPAT(Mix_GetMusicArtistTag); // 2.6.0
+    LOAD_REQUIRED_COMPAT(Mix_GetMusicAlbumTag); // 2.6.0
+    LOAD_REQUIRED_COMPAT(Mix_GetMusicCopyrightTag); // 2.6.0
     OMG_END_POINTER_CAST();
     return false;
 }
