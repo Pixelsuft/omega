@@ -80,7 +80,7 @@ bool omg_audio_fmod_mus_stop(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
 }
 
 bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops, double pos, double fade_in) {
-    OMG_UNUSED(loops, pos, fade_in); // TODO
+    OMG_UNUSED(fade_in); // TODO
     if (OMG_ISNOTNULL(mus->channel))
         omg_audio_fmod_mus_stop(this, mus);
     int res;
@@ -88,6 +88,12 @@ bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops,
         mus->channel = NULL;
         _OMG_LOG_WARN(omg_base, "Failed to play audio (", FMOD_ErrorString(res), ")");
         return true;
+    }
+    if (HAS_ERROR(res = this->fmod.FMOD_Sound_SetLoopCount(mus->mus, loops))) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio loop count (", FMOD_ErrorString(res), ")");
+    }
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPosition(mus->channel, (int)(pos * 1000.0), FMOD_TIMEUNIT_MS))) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio start pos (", FMOD_ErrorString(res), ")");
     }
     if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetUserData(mus->channel, (void*)mus))) {
         _OMG_LOG_WARN(omg_base, "Failed to pass audio handle to channel data (", FMOD_ErrorString(res), ")");
