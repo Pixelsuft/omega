@@ -71,6 +71,8 @@ bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(FMOD_Channel_SetCallback);
     LOAD_REQUIRED(FMOD_Channel_IsPlaying);
     LOAD_REQUIRED(FMOD_Channel_SetPan);
+    LOAD_REQUIRED(FMOD_Channel_SetUserData);
+    LOAD_REQUIRED(FMOD_Channel_GetUserData);
     LOAD_REQUIRED(FMOD_Channel_SetFrequency);
     LOAD_REQUIRED(FMOD_Channel_GetFrequency);
     LOAD_REQUIRED(FMOD_Channel_SetPosition);

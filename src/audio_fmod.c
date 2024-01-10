@@ -9,6 +9,8 @@
 #define HAS_ERROR(res) ((res) != FMOD_OK)
 #define IS_PLAYING(data) (OMG_ISNOTNULL((data)->channel))
 
+static FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Channel_GetUserData_callback)(FMOD_CHANNEL*, void**) = NULL;
+
 bool omg_audio_fmod_update(OMG_AudioFmod* this) {
     int res = this->fmod.FMOD_System_Update(this->sys);
     if (HAS_ERROR(res)) {
@@ -37,22 +39,55 @@ bool omg_audio_fmod_destroy(OMG_AudioFmod* this) {
 
 bool omg_audio_fmod_mus_set_volume(OMG_AudioFmod* this, OMG_MusicFmod* mus, float volume) {
     mus->vol_cache = volume;
-    // TODO: error handling everywhere
     if (IS_PLAYING(mus)) {
-        this->fmod.FMOD_Channel_SetVolume(mus->channel, volume);
+        int res;
+        if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetVolume(mus->channel, volume))) {
+            _OMG_LOG_WARN(omg_base, "Failed to set audio volume (", FMOD_ErrorString(res), ")");
+            return true;
+        }
     }
     return false;
 }
 
+FMOD_RESULT omg_audio_fmod_mus_callback(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbacktype, void* commanddata1, void* commanddata2) {
+    OMG_UNUSED(commanddata1, commanddata2);
+    if ((callbacktype == FMOD_CHANNELCONTROL_CALLBACK_END) && (controltype == FMOD_CHANNELCONTROL_CHANNEL)) {
+        if (OMG_ISNULL(FMOD_Channel_GetUserData_callback)) {
+            return FMOD_ERR_INVALID_HANDLE;
+        }
+        int res;
+        OMG_MusicFmod* mus = NULL;
+        if (HAS_ERROR(res = FMOD_Channel_GetUserData_callback((FMOD_CHANNEL*)channelcontrol, (void**)&mus))) {
+            return res;
+        }
+        if (OMG_ISNULL(mus)) {
+            return FMOD_ERR_INVALID_HANDLE;
+        }
+        mus->channel = NULL;
+    }
+    return FMOD_OK;
+}
+
 bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops, double pos, double fade_in) {
+    OMG_UNUSED(loops, pos, fade_in); // TODO
     int res;
-    // TODO: pause, after everything resume
-    if (HAS_ERROR(res = this->fmod.FMOD_System_PlaySound(this->sys, mus->mus, NULL, 0, &mus->channel))) {
+    if (HAS_ERROR(res = this->fmod.FMOD_System_PlaySound(this->sys, mus->mus, NULL, 1, &mus->channel))) {
         mus->channel = NULL;
         _OMG_LOG_WARN(omg_base, "Failed to play audio (", FMOD_ErrorString(res), ")");
         return true;
     }
-    this->fmod.FMOD_Channel_SetVolume(mus->channel, mus->vol_cache);
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetUserData(mus->channel, (void*)mus))) {
+        _OMG_LOG_WARN(omg_base, "Failed to pass audio handle to channel data (", FMOD_ErrorString(res), ")");
+    }
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetVolume(mus->channel, mus->vol_cache))) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio volume (", FMOD_ErrorString(res), ")");
+    }
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPaused(mus->channel, 0))) {
+        _OMG_LOG_WARN(omg_base, "Failed to resume audio (", FMOD_ErrorString(res), ")");
+    }
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetCallback(mus->channel, omg_audio_fmod_mus_callback))) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio channel end callback (", FMOD_ErrorString(res), ")");
+    }
     return false;
 }
 
@@ -131,6 +166,7 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
         omg_fmod_dll_free(&this->fmod);
         return true;
     }
+    FMOD_Channel_GetUserData_callback = this->fmod.FMOD_Channel_GetUserData;
     OMG_BEGIN_POINTER_CAST();
     base->update = omg_audio_fmod_update;
     base->destroy = omg_audio_fmod_destroy;
