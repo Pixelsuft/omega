@@ -86,6 +86,50 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRa
     return mus;
 }
 
+bool omg_audio_raylib_snd_destroy(OMG_AudioRaylib* this, OMG_SoundRaylib* snd) {
+    if (OMG_ISNULL(snd))
+        return false;
+    this->raylib->UnloadSound(snd->snd);
+    omg_audio_snd_destroy(base, snd_base);
+    return false;
+}
+
+OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, const OMG_String* path) {
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    if (OMG_ISNULL(snd)) {
+        snd = OMG_MALLOC(omg_base->mem, sizeof(OMG_SoundRaylib));
+        if (OMG_ISNULL(snd))
+            return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
+        snd_base->was_allocated = true;
+    }
+    else
+        snd_base->was_allocated = false;
+    snd->snd = this->raylib->LoadSound(path->ptr);
+    if (!this->raylib->IsSoundReady(snd->snd)) {
+        omg_audio_snd_destroy(base, snd_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr);
+        return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
+    }
+    return snd;
+}
+
+bool omg_audio_raylib_snd_set_volume(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float volume) {
+    this->raylib->SetSoundVolume(snd->snd, volume);
+    return false;
+}
+
+bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double fade_in) {
+    OMG_UNUSED(loops, fade_in);
+    this->raylib->PlaySound(snd->snd);
+    return false;
+}
+
+bool omg_audio_raylib_snd_stop(OMG_AudioRaylib* this, OMG_SoundRaylib* snd) {
+    this->raylib->StopSound(snd->snd);
+    return false;
+}
+
 bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     omg_audio_init(base);
     this->raylib->InitAudioDevice();
@@ -102,6 +146,11 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->mus_play = omg_audio_raylib_mus_play;
     base->mus_stop = omg_audio_raylib_mus_stop;
     base->mus_set_volume = omg_audio_raylib_mus_set_volume;
+    base->snd_from_fp = omg_audio_raylib_snd_from_fp;
+    base->snd_destroy = omg_audio_raylib_snd_destroy;
+    base->snd_set_volume = omg_audio_raylib_snd_set_volume;
+    base->snd_play = omg_audio_raylib_snd_play;
+    base->snd_stop = omg_audio_raylib_snd_stop;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_RAYLIB;
     base->inited = true;

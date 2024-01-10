@@ -11,13 +11,14 @@ typedef struct {
 
 typedef struct {
     OMG_Sound parent;
-    Sound sound;
+    Sound snd;
 } OMG_SoundRaylib;
 
 typedef struct {
     OMG_Audio parent;
     OMG_Raylib* raylib;
     OMG_MusicRaylib* mus_play_cache[OMG_MAX_PLAYING_MUSIC];
+    OMG_SoundRaylib* snd_play_cache[OMG_MAX_PLAYING_SOUND];
 } OMG_AudioRaylib;
 
 OMG_API bool omg_audio_raylib_init(OMG_AudioRaylib* this);
@@ -29,5 +30,10 @@ OMG_API bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* m
 OMG_API bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus);
 OMG_API bool omg_audio_raylib_mus_stop(OMG_AudioRaylib* this, OMG_MusicRaylib* mus);
 OMG_API OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, const OMG_String* path);
+OMG_API bool omg_audio_raylib_snd_destroy(OMG_AudioRaylib* this, OMG_SoundRaylib* snd);
+OMG_API OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, const OMG_String* path);
+OMG_API bool omg_audio_raylib_snd_set_volume(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float volume);
+OMG_API bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double fade_in);
+OMG_API bool omg_audio_raylib_snd_stop(OMG_AudioRaylib* this, OMG_SoundRaylib* snd)
 #endif
 #endif
