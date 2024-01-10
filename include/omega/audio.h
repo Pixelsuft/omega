@@ -24,10 +24,14 @@
 #define OMG_AUDIO_FORMAT_OPUS (1 << 6)
 #define OMG_AUDIO_FORMAT_WAV (1 << 7)
 
-typedef struct OMG_Music {
+typedef struct {
     double duration;
     bool was_allocated;
 } OMG_Music;
+
+typedef struct {
+    bool was_allocated;
+} OMG_Sound;
 
 typedef struct OMG_Audio {
     void* omg;
@@ -40,6 +44,8 @@ typedef struct OMG_Audio {
     bool (*mus_play)(struct OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in);
     bool (*mus_stop)(struct OMG_Audio* this, OMG_Music* mus);
     bool (*mus_set_volume)(struct OMG_Audio* this, OMG_Music* mus, float volume);
+    OMG_Sound* (*sound_from_fp)(struct OMG_Audio* this, OMG_Sound* sound, const OMG_String* path);
+    bool (*sound_destroy)(struct OMG_Audio* this, OMG_Sound* sound);
     const OMG_String* dev_name;
     int init_flags;
     int freq;
@@ -60,7 +66,9 @@ OMG_API bool omg_audio_init(OMG_Audio* this);
 OMG_API bool omg_audio_destroy(OMG_Audio* this);
 OMG_API bool omg_audio_update(OMG_Audio* this);
 OMG_API bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus);
+OMG_API bool omg_audio_sound_destroy(OMG_Audio* this, OMG_Sound* sound);
 #if OMG_EXPORT_SHIT
+OMG_API OMG_Sound* omg_audio_sound_from_fp(OMG_Audio* this, OMG_Sound* sound, const OMG_String* path);
 OMG_API bool omg_audio_mus_set_volume(OMG_Audio* this, OMG_Music* mus, float volume);
 OMG_API bool omg_audio_mus_play(OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in);
 OMG_API bool omg_audio_mus_stop(OMG_Audio* this, OMG_Music* mus);

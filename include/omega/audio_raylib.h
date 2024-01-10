@@ -10,6 +10,11 @@ typedef struct {
 } OMG_MusicRaylib;
 
 typedef struct {
+    OMG_Sound parent;
+    Sound sound;
+} OMG_SoundRaylib;
+
+typedef struct {
     OMG_Audio parent;
     OMG_Raylib* raylib;
     OMG_MusicRaylib* mus_play_cache[OMG_MAX_PLAYING_MUSIC];

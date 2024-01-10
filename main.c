@@ -13,6 +13,7 @@ typedef struct {
     OMG_Texture* tex;
     OMG_Texture* tex2;
     OMG_Music* mus;
+    OMG_Sound* sound;
     OMG_File* file;
     OMG_Clock* clock;
     omg_color_t bg_col;
@@ -28,6 +29,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->ren->tex_destroy(this->ren, this->tex2);
     this->ren->tex_destroy(this->ren, this->tex);
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
+    this->audio->sound_destroy(this->audio, this->sound);
     this->audio->mus_destroy(this->audio, this->mus);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
@@ -226,6 +228,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->ren->aa = true;
     // I'm lazy for fail checks here, but you shouldn't :)
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
+    this->sound = this->audio->sound_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"));
     this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);

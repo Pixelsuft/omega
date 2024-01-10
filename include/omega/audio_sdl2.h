@@ -11,6 +11,12 @@ typedef struct {
 } OMG_MusicSdl2;
 
 typedef struct {
+    OMG_Music base;
+    Mix_Chunk* chunk;
+    int vol_cache;
+} OMG_SoundSdl2;
+
+typedef struct {
     OMG_Audio parent;
     OMG_Sdl2* sdl2;
     OMG_Sdl2Mixer mix;
