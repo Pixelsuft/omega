@@ -21,6 +21,7 @@ typedef struct {
 } OMG_Music;
 
 typedef struct {
+    double duration;
     bool was_allocated;
 } OMG_Sound;
 

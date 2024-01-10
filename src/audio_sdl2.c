@@ -51,6 +51,10 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
         _OMG_LOG_ERROR(omg_base, "Failed to open music ", path->ptr, " (", MIX_GETERROR(), ")");
         return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
+    if (OMG_ISNULL(this->mix.Mix_MusicDuration))
+        mus_base->duration = -1.0;
+    else
+        mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
     mus->vol_cache = MIX_MAX_VOLUME;
     return mus;
 }
@@ -126,6 +130,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
         _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr, " (", MIX_GETERROR(), ")");
         return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
+    snd_base->duration = -1.0;
     snd->channel = -2;
     return snd;
 }
