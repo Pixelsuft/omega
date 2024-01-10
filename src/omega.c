@@ -456,13 +456,10 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
 bool omg_dummy_audio_alloc(OMG_Omega* this) {
 #if OMG_ALLOW_DUMMY_AUDIO
     if (OMG_ISNULL(this->audio)) {
-        this->audio = OMG_MALLOC(this->mem, sizeof(OMG_Audio));
-        if (OMG_ISNULL(this->audio))
-            return true;
-        this->audio->was_allocated = true;
+        static OMG_Audio audio;
+        this->audio = &audio;
     }
-    else
-        this->audio->was_allocated = false;
+    this->audio->was_allocated = false;
     this->audio->omg = this;
     omg_audio_fill_on_create(this->audio);
     return false;
