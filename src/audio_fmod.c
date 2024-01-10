@@ -68,8 +68,21 @@ FMOD_RESULT omg_audio_fmod_mus_callback(FMOD_CHANNELCONTROL* channelcontrol, FMO
     return FMOD_OK;
 }
 
+bool omg_audio_fmod_mus_stop(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
+    if (IS_PLAYING(mus)) {
+        int res;
+        if (HAS_ERROR(res = this->fmod.FMOD_Channel_Stop(mus->channel))) {
+            _OMG_LOG_ERROR(omg_base, "Failed to stop audio (", FMOD_ErrorString(res), ")");
+            return true;
+        }
+    }
+    return false;
+}
+
 bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops, double pos, double fade_in) {
     OMG_UNUSED(loops, pos, fade_in); // TODO
+    if (OMG_ISNOTNULL(mus->channel))
+        omg_audio_fmod_mus_stop(this, mus);
     int res;
     if (HAS_ERROR(res = this->fmod.FMOD_System_PlaySound(this->sys, mus->mus, NULL, 1, &mus->channel))) {
         mus->channel = NULL;
@@ -105,17 +118,6 @@ bool omg_audio_fmod_mus_destroy(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
     return retval;
 }
 
-bool omg_audio_fmod_mus_stop(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
-    if (IS_PLAYING(mus)) {
-        int res;
-        if (HAS_ERROR(res = this->fmod.FMOD_Channel_Stop(mus->channel))) {
-            _OMG_LOG_ERROR(omg_base, "Failed to stop audio (", FMOD_ErrorString(res), ")");
-            return true;
-        }
-    }
-    return false;
-}
-
 OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path) {
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
@@ -131,11 +133,39 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     if (HAS_ERROR(res = this->fmod.FMOD_System_CreateStream(
         this->sys,
         path->ptr,
-        FMOD_LOOP_NORMAL | FMOD_2D,
+        FMOD_LOOP_OFF | FMOD_2D,
         NULL,
         &mus->mus
     ))) {
         _OMG_LOG_ERROR(omg_base, "Failed to load music ", path->ptr, " (", FMOD_ErrorString(res), ")");
+        omg_audio_mus_destroy(base, mus_base);
+        return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    mus->vol_cache = 1.0f;
+    mus->channel = NULL;
+    return mus;
+}
+
+OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path) {
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicFmod));
+        if (OMG_ISNULL(mus))
+            return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    int res;
+    if (HAS_ERROR(res = this->fmod.FMOD_System_CreateSound(
+        this->sys,
+        path->ptr,
+        FMOD_LOOP_OFF | FMOD_2D,
+        NULL,
+        &mus->mus
+    ))) {
+        _OMG_LOG_ERROR(omg_base, "Failed to load sound ", path->ptr, " (", FMOD_ErrorString(res), ")");
         omg_audio_mus_destroy(base, mus_base);
         return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
@@ -175,6 +205,12 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
     base->mus_set_volume = omg_audio_fmod_mus_set_volume;
     base->mus_play = omg_audio_fmod_mus_play;
     base->mus_stop = omg_audio_fmod_mus_stop;
+    // Hacky
+    base->snd_from_fp = omg_audio_fmod_snd_from_fp;
+    base->snd_destroy = omg_audio_fmod_mus_destroy;
+    base->snd_set_volume = omg_audio_fmod_mus_set_volume;
+    base->snd_play = omg_audio_fmod_mus_play;
+    base->snd_stop = omg_audio_fmod_mus_stop;
     OMG_END_POINTER_CAST();
     return false;
 }
