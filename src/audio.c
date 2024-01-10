@@ -73,6 +73,21 @@ OMG_Sound* omg_audio_snd_from_fp(OMG_Audio* this, OMG_Sound* snd, const OMG_Stri
     return NULL;
 }
 
+bool omg_audio_snd_set_volume(OMG_Audio* this, OMG_Sound* snd, float volume) {
+    OMG_UNUSED(this, snd, volume);
+    return false;
+}
+
+bool omg_audio_snd_play(OMG_Audio* this, OMG_Sound* snd, int loops, double fade_in) {
+    OMG_UNUSED(this, snd, loops, fade_in);
+    return false;
+}
+
+bool omg_audio_snd_stop(OMG_Audio* this, OMG_Sound* snd) {
+    OMG_UNUSED(this, snd);
+    return false;
+}
+
 bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
@@ -85,5 +100,8 @@ bool omg_audio_init(OMG_Audio* this) {
     this->mus_stop = omg_audio_mus_stop;
     this->snd_destroy = omg_audio_snd_destroy;
     this->snd_from_fp = omg_audio_snd_from_fp;
+    this->snd_set_volume = omg_audio_snd_set_volume;
+    this->snd_play = omg_audio_snd_play;
+    this->snd_stop = omg_audio_snd_stop;
     return false;
 }
