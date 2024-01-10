@@ -4,6 +4,7 @@
 #include <omega/omega.h>
 #define base ((OMG_Audio*)this)
 #define mus_base ((OMG_Music*)mus)
+#define snd_base ((OMG_Sound*)snd)
 #define omg_base ((OMG_Omega*)base->omg)
 #define MIX_GETERROR() (OMG_ISNULL(this->sdl2) ? "" : this->sdl2->SDL_GetError())
 #define MUS_IS_PLAYING() (cur_mus_cache == mus->mus)
@@ -86,6 +87,41 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
     return false;
 }
 
+bool omg_audio_sdl2_snd_destroy(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
+    if (OMG_ISNULL(snd) || OMG_ISNULL(snd->chunk))
+        return false;
+    this->mix.Mix_FreeChunk(snd->chunk);
+    snd->chunk = NULL;
+    omg_audio_snd_destroy(base, snd_base);
+    return false;
+}
+
+OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, const OMG_String* path) {
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    if (OMG_ISNULL(snd)) {
+        snd = OMG_MALLOC(omg_base->mem, sizeof(OMG_SoundSdl2));
+        if (OMG_ISNULL(snd))
+            return NULL;
+        snd_base->was_allocated = true;
+    }
+    else
+        snd_base->was_allocated = false;
+    if (OMG_ISNOTNULL(this->mix.Mix_LoadWAV))
+        snd->chunk = this->mix.Mix_LoadWAV(path->ptr);
+    else if (OMG_ISNOTNULL(this->sdl2))
+        snd->chunk = this->mix.Mix_LoadWAV_RW(this->sdl2->SDL_RWFromFile(path->ptr, "rb"), 1);
+    else
+        snd->chunk = NULL;
+    if (OMG_ISNULL(snd->chunk)) {
+        omg_audio_snd_destroy(base, snd_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr, " (", MIX_GETERROR(), ")");
+        return NULL;
+    }
+    snd->vol_cache = MIX_MAX_VOLUME;
+    return snd;
+}
+
 bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     omg_audio_init(base);
     if (omg_sdl2_mixer_dll_load(&this->mix, omg_base->sdl2_mixer_dll_path)) {
@@ -142,6 +178,8 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_play = omg_audio_sdl2_mus_play;
     base->mus_set_volume = omg_audio_sdl2_mus_set_volume;
     base->mus_stop = omg_audio_sdl2_mus_stop;
+    base->snd_from_fp = omg_audio_sdl2_snd_from_fp;
+    base->snd_destroy = omg_audio_sdl2_snd_destroy;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_SDL2;
     base->inited = true;

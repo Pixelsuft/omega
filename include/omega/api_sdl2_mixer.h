@@ -77,6 +77,7 @@ typedef struct {
     int OMG_SDL2_MIXER_STD_PREFIX (*Mix_OpenAudioDevice)(int, uint16_t, int, int, const char*, int);
     int OMG_SDL2_MIXER_STD_PREFIX (*Mix_QuerySpec)(int*, uint16_t*, int*);
     int OMG_SDL2_MIXER_STD_PREFIX (*Mix_AllocateChannels)(int);
+    Mix_Chunk* OMG_SDL2_MIXER_STD_PREFIX (*Mix_LoadWAV)(const char*);
     Mix_Chunk* OMG_SDL2_MIXER_STD_PREFIX (*Mix_LoadWAV_RW)(SDL_RWops*, int);
     Mix_Music* OMG_SDL2_MIXER_STD_PREFIX (*Mix_LoadMUS)(const char*);
     Mix_Music* OMG_SDL2_MIXER_STD_PREFIX (*Mix_LoadMUS_RW)(SDL_RWops*, int);

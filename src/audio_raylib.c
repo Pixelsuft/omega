@@ -4,6 +4,7 @@
 #include <omega/omega.h>
 #define base ((OMG_Audio*)this)
 #define mus_base ((OMG_Music*)mus)
+#define snd_base ((OMG_Sound*)snd)
 #define omg_base ((OMG_Omega*)base->omg)
 
 bool omg_audio_raylib_destroy(OMG_AudioRaylib* this) {

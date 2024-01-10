@@ -101,6 +101,7 @@ bool omg_sdl2_mixer_dll_load(OMG_Sdl2Mixer* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(Mix_GetChunk);
     LOAD_REQUIRED(Mix_CloseAudio);
     LOAD_REQUIRED_COMPAT(Mix_OpenAudioDevice); // 2.0.2
+    LOAD_REQUIRED_COMPAT(Mix_LoadWAV); // 2.6.0
     LOAD_REQUIRED_COMPAT(Mix_GetMusicTitle); // 2.6.0
     LOAD_REQUIRED_COMPAT(Mix_GetMusicTitleTag); // 2.6.0
     LOAD_REQUIRED_COMPAT(Mix_GetMusicArtistTag); // 2.6.0
