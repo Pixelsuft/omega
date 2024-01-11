@@ -149,6 +149,13 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     }
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
+    unsigned int len_buf;
+    if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
+        mus_base->duration = -1.0;
+        _OMG_LOG_ERROR(omg_base, "Failed to get music length ", path->ptr, " (", FMOD_ErrorString(res), ")");
+    }
+    else
+        mus_base->duration = (double)len_buf / 1000.0;
     return mus;
 }
 
@@ -177,6 +184,13 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     }
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
+    unsigned int len_buf;
+    if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
+        mus_base->duration = -1.0;
+        _OMG_LOG_ERROR(omg_base, "Failed to get sound length ", path->ptr, " (", FMOD_ErrorString(res), ")");
+    }
+    else
+        mus_base->duration = (double)len_buf / 1000.0;
     return mus;
 }
 
