@@ -28,8 +28,9 @@ typedef struct OMG_Winmgr {
 
 OMG_API bool omg_winmgr_init(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_destroy(OMG_Winmgr* this);
-#if OMG_EXPORT_SHIT
 OMG_API OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, const OMG_FPoint* size, bool has_alpha);
+OMG_API OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this);
+#if OMG_EXPORT_SHIT
 OMG_API bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf);
 OMG_API bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_image_loader_free(OMG_Winmgr* this);

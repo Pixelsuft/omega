@@ -158,19 +158,19 @@ OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, const OMG_FPo
     OMG_UNUSED(access);
     OMG_TextureWin* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureWin));
     if (OMG_ISNULL(tex))
-        return NULL;
+        return (OMG_TextureWin*)omg_renderer_tex_create(base, size, access, has_alpha);
     tex->dc = this->g32->CreateCompatibleDC(this->hwdc);
     if (OMG_ISNULL(tex->dc)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 HDC for texture");
-        return NULL;
+        return (OMG_TextureWin*)omg_renderer_tex_create(base, size, access, has_alpha);
     }
     tex->bm = this->g32->CreateCompatibleBitmap(this->hwdc, (int)size->w, (int)size->h);
     if (OMG_ISNULL(tex->bm)) {
         this->g32->DeleteDC(tex->dc);
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 bitmap for texture");
-        return NULL;
+        return (OMG_TextureWin*)omg_renderer_tex_create(base, size, access, has_alpha);
     }
     this->g32->SelectObject(tex->dc, tex->bm);
     tex_base->has_alpha = has_alpha;
@@ -198,7 +198,6 @@ bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
 }
 
 bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos) {
-    _OMG_NULL_TEX_CHECK();
     this->g32->SetStretchBltMode(this->cur_hpdc, HALFTONE);
     this->g32->StretchBlt(
         this->cur_hpdc,

@@ -303,16 +303,16 @@ bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
 
 OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Surface* surf, bool destroy_surf) {
     if (OMG_ISNULL(surf))
-        return NULL;
+        return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
     OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
     if (OMG_ISNULL(tex))
-        return NULL;
+        return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
     if (win_base->type == OMG_WIN_TYPE_SDL2) {
         tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, ((OMG_SurfaceSdl2*)surf)->surf);
         if (OMG_ISNULL(tex->tex)) {
             OMG_FREE(omg_base->mem, tex);
             _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture from surface (", this->sdl2->SDL_GetError(), ")");
-            return NULL;
+            return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
         }
         tex_base->has_alpha = surf->has_alpha;
         tex_base->size.w = surf->size.w;
@@ -323,14 +323,14 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
     }
     else {
         OMG_FREE(omg_base->mem, tex);
-        return NULL;
+        return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
     }
 }
 
 OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
     if (OMG_ISNULL(tex))
-        return NULL;
+        return (OMG_TextureSdl2*)omg_renderer_tex_create(base, size, access, has_alpha);
     tex->tex = this->sdl2->SDL_CreateTexture(
         this->ren,
         has_alpha ? SDL_PIXELFORMAT_RGBA8888 : SDL_PIXELFORMAT_RGB888,
@@ -340,7 +340,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_
     if (OMG_ISNULL(tex->tex)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture (", this->sdl2->SDL_GetError(), ")");
-        return NULL;
+        return (OMG_TextureSdl2*)omg_renderer_tex_create(base, size, access, has_alpha);
     }
     int qw, qh;
     if (this->sdl2->SDL_QueryTexture(tex->tex, NULL, NULL, &qw, &qh) < 0) {
@@ -373,7 +373,6 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
 }
 
 bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos) {
-    _OMG_NULL_TEX_CHECK();
     SDL_FRect dst_rect;
     dst_rect.x = base->offset.x;
     dst_rect.y = base->offset.y;

@@ -60,14 +60,14 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint
     if (OMG_ISNULL(surf->dc)) {
         OMG_FREE(omg_base->mem, surf);
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 HDC for surface");
-        return NULL;
+        return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
     }
     surf->bm = this->g32->CreateCompatibleBitmap(surf->dc, (int)size->w, (int)size->h);
     if (OMG_ISNULL(surf->bm)) {
         this->g32->DeleteDC(surf->dc);
         OMG_FREE(omg_base->mem, surf);
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 bitmap for surface");
-        return NULL;
+        return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
     }
     surf_base->size.w = size->w;
     surf_base->size.h = size->h;

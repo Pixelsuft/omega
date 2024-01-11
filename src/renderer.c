@@ -54,13 +54,25 @@ bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const 
 }
 
 OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf) {
-    OMG_UNUSED(this, surf, destroy_surf);
-    return NULL;
+    OMG_UNUSED(surf, destroy_surf);
+    return omg_renderer_dummy_tex_create(this);
 }
 
 OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha) {
-    OMG_UNUSED(this, size, access, has_alpha);
+    OMG_UNUSED(size, access, has_alpha);
+    return omg_renderer_dummy_tex_create(this);
+}
+
+OMG_Texture* omg_renderer_dummy_tex_create(OMG_Renderer* this) {
+#if OMG_ALLOW_DUMMY_TEX
+    static OMG_Texture tex;
+    tex.has_alpha = false;
+    tex.size.w = tex.size.h = 0.0f;
+    return &tex;
+#else
+    OMG_UNUSED(this);
     return NULL;
+#endif
 }
 
 bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex) {

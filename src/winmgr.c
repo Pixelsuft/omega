@@ -55,9 +55,22 @@ bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf) {
     return false;
 }
 
-OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path) {
-    OMG_UNUSED(this, path);
+OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this) {
+#if OMG_ALLOW_DUMMY_SURF
+    static OMG_Surface surf;
+    surf.data = NULL;
+    surf.has_alpha = false;
+    surf.size.w = surf.size.h = 0.0f;
+    return &surf;
+#else
+    OMG_UNUSED(this);
     return NULL;
+#endif
+}
+
+OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path) {
+    OMG_UNUSED(path);
+    return omg_winmgr_dummy_surf_create(this);
 }
 
 bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this) {

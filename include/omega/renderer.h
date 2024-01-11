@@ -67,6 +67,9 @@ OMG_API void omg_renderer_fill_on_create(OMG_Renderer* this);
 OMG_API bool omg_renderer_init(OMG_Renderer* this);
 OMG_API bool omg_renderer_destroy(OMG_Renderer* this);
 OMG_API bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
+OMG_API OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf);
+OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
+OMG_API OMG_Texture* omg_renderer_dummy_tex_create(OMG_Renderer* this);
 #if OMG_EXPORT_SHIT
 OMG_API int omg_renderer_get_supported_drivers(OMG_Renderer* this);
 OMG_API bool omg_renderer_clear(OMG_Renderer* this, const OMG_Color* col);
@@ -77,8 +80,6 @@ OMG_API bool omg_renderer_set_target(OMG_Renderer* this, OMG_Texture* tex);
 OMG_API bool omg_renderer_draw_point(OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
-OMG_API OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf);
-OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);
 OMG_API bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
 #endif

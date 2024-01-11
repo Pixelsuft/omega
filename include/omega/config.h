@@ -115,13 +115,6 @@
 #define OMG_WIN_PRECISE_ENCODING 1
 #endif
 
-#ifndef OMG_NULL_SURF_CHECK
-#define OMG_NULL_SURF_CHECK 1
-#endif
-#ifndef OMG_NULL_TEX_CHECK
-#define OMG_NULL_TEX_CHECK 1
-#endif
-
 #ifndef OMG_ALLOW_DUMMY_AUDIO
 #define OMG_ALLOW_DUMMY_AUDIO 1
 #endif
@@ -130,6 +123,12 @@
 #endif
 #ifndef OMG_ALLOW_DUMMY_SOUND
 #define OMG_ALLOW_DUMMY_SOUND 1
+#endif
+#ifndef OMG_ALLOW_DUMMY_SURF
+#define OMG_ALLOW_DUMMY_SURF 1
+#endif
+#ifndef OMG_ALLOW_DUMMY_TEX
+#define OMG_ALLOW_DUMMY_TEX 1
 #endif
 
 #ifndef OMG_MAX_PLAYING_MUSIC

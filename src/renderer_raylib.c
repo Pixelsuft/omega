@@ -183,16 +183,16 @@ bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint*
 
 OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, OMG_SurfaceRaylib* surf, bool destroy_surf) {
     if (OMG_ISNULL(surf) || !this->raylib->IsImageReady(surf->img))
-        return NULL;
+        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
     OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
     if (OMG_ISNULL(tex))
-        return NULL;
+        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
     tex->target.texture = this->raylib->LoadTextureFromImage(surf->img);
     tex->tex = &tex->target.texture;
     if (!this->raylib->IsTextureReady(*tex->tex)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create Raylib texture from surface");
-        return NULL;
+        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
     }
     tex->is_target = false;
     tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
@@ -208,13 +208,13 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, cons
     OMG_UNUSED(access, has_alpha);
     OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
     if (OMG_ISNULL(tex))
-        return NULL;
+        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, size, access, has_alpha);
     // TODO: Does compiler use memset here???
     tex->target = this->raylib->LoadRenderTexture((int)size->w, (int)size->h);
     if (!this->raylib->IsRenderTextureReady(tex->target)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create Raylib target texture");
-        return NULL;
+        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, size, access, has_alpha);
     }
     tex->tex = &tex->target.texture;
     tex->is_target = true;
@@ -244,7 +244,6 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
 }
 
 bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos) {
-    _OMG_NULL_TEX_CHECK();
     if (RAYLIB_HAS_SS() || tex->is_target) {
         RL_Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
         if (tex->is_target)

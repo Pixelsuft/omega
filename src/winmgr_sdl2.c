@@ -68,7 +68,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_create(OMG_WinmgrSdl2* this, const OMG_FPo
 }
 
 bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
-    if (OMG_ISNULL(surf)) {
+    if (OMG_ISNULL(surf) || OMG_ISNULL(surf_base->data)) {
         _OMG_NULL_SURFACE_WARN();
         return true;
     }
@@ -86,10 +86,10 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
 OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_path(OMG_WinmgrSdl2* this, const OMG_String* path) {
     OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
-        return NULL;
+        return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(this);
     if (base->img->image_from_fp_internal(base->img, path, (void*)&surf->surf)) {
         OMG_FREE(omg_base->mem, surf);
-        return NULL;
+        return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(this);
     }
     surf_base->has_alpha = surf->surf->format->Amask > 0;
     surf_base->size.w = (float)surf->surf->w;
