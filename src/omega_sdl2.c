@@ -613,24 +613,8 @@ bool omg_sdl2_audio_alloc(OMG_OmegaSdl2* this) {
         return false;
     }
 #endif
-#if OMG_SUPPORT_FMOD
-    if (base->audio_type == OMG_AUDIO_TYPE_FMOD) {
-        if (OMG_ISNULL(base->audio)) {
-            base->audio = OMG_MALLOC(base->mem, sizeof(OMG_AudioFmod));
-            if (OMG_ISNULL(base->audio))
-                return omg_dummy_audio_alloc(base);
-            base->audio->was_allocated = true;
-        }
-        else
-            base->audio->was_allocated = false;
-        omg_audio_fill_on_create(base->audio);
-        base->audio->omg = this;
-        base->audio->init = omg_audio_fmod_init;
-        return false;
-    }
-#endif
     OMG_END_POINTER_CAST();
-    return omg_dummy_audio_alloc(base);
+    return omg_audio_alloc(base);
 }
 
 bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
