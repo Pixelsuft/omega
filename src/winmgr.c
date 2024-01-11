@@ -56,6 +56,7 @@ bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf) {
 }
 
 OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this) {
+    OMG_UNUSED(this);
 #if OMG_ALLOW_DUMMY_SURF
     static OMG_Surface surf;
     surf.data = NULL;
@@ -63,7 +64,6 @@ OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this) {
     surf.size.w = surf.size.h = 0.0f;
     return &surf;
 #else
-    OMG_UNUSED(this);
     return NULL;
 #endif
 }

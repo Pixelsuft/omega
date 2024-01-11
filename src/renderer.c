@@ -64,13 +64,13 @@ OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size,
 }
 
 OMG_Texture* omg_renderer_dummy_tex_create(OMG_Renderer* this) {
+    OMG_UNUSED(this);
 #if OMG_ALLOW_DUMMY_TEX
     static OMG_Texture tex;
     tex.has_alpha = false;
     tex.size.w = tex.size.h = 0.0f;
     return &tex;
 #else
-    OMG_UNUSED(this);
     return NULL;
 #endif
 }
