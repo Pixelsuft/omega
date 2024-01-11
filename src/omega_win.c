@@ -46,7 +46,7 @@
     wchar_t* out_buf = OMG_MALLOC(base->mem, (size_t)count * 2 + 20); \
     if (OMG_ISNULL(out_buf)) \
         return true; \
-    if (this->k32->MultiByteToWideChar(CP_UTF8, 0, data->ptr, data->len, out_buf + type_len, (int)count) <= 0) { \
+    if (this->k32->MultiByteToWideChar(CP_UTF8, 0, data->ptr, (int)data->len, out_buf + type_len, (int)count) <= 0) { \
         OMG_FREE(base->mem, out_buf); \
         return true; \
     } \
@@ -375,7 +375,7 @@ size_t omg_win_file_read(OMG_FileWin* file, void* buf, size_t size, size_t maxnu
         return 0;
     }
     DWORD bytes_read;
-    if (!file_omg->k32->ReadFile(file->handle, buf, (size * maxnum), &bytes_read, NULL)) {
+    if (!file_omg->k32->ReadFile(file->handle, buf, (DWORD)(size * maxnum), &bytes_read, NULL)) {
         _OMG_LOG_WARN(file_omg_base, "Failed to read Win32 file ", file_base->fp.ptr);
         return 0;
     }
@@ -416,7 +416,7 @@ OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const
         omg_file_destroy((OMG_File*)file);
         return NULL;
     }
-    int out_len = this->k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, path->len, file->w_fp, (int)count);
+    int out_len = this->k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, file->w_fp, (int)count);
     if (out_len > 0)
         file->w_fp[out_len] = L'\0';
     DWORD need_access = 0;
