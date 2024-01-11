@@ -164,6 +164,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         _OMG_LOG_ERROR(omg_base, "Failed to get window id (", this->sdl2->SDL_GetError(), ")");
         this->id = 1;
     }
+    this->sdl2->SDL_SetWindowData(this->win, "a", this);
     OMG_BEGIN_POINTER_CAST();
     base->set_size = omg_window_sdl2_set_size;
     base->set_min_size = omg_window_sdl2_set_min_size;

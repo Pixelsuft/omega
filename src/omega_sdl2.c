@@ -27,12 +27,21 @@
     ((OMG_Event*)event)->data = base->event_arg; \
     ((OMG_Event*)event)->time = this->sdl2->SDL_GetTicks64(); \
 } while (0)
-#define FIND_SDL2_WIN(win, window_id) for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) { \
+/*#define FIND_SDL2_WIN(win, window_id) for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) { \
     if (OMG_ISNOTNULL(base->winmgr->cache[i]) && (((OMG_WindowSdl2*)base->winmgr->cache[i])->id == window_id)) { \
         win = base->winmgr->cache[i]; \
         break; \
     } \
-}
+}*/
+#define FIND_SDL2_WIN(win, window_id) do { \
+    SDL_Window* sdl_win = this->sdl2->SDL_GetWindowFromID(window_id); \
+    if (OMG_ISNULL(sdl_win)) { \
+        _OMG_LOG_ERROR(base, "Failed to get SDL2 window handle from id (", this->sdl2->SDL_GetError(), ")"); \
+    } \
+    else { \
+        win = this->sdl2->SDL_GetWindowData(sdl_win, "a"); \
+    } \
+} while (0)
 
 void omg_sdl2_fill_after_create(OMG_OmegaSdl2* this, OMG_EntryData* data) {
     this->sdl2 = NULL;

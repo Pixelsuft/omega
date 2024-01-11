@@ -184,11 +184,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -231,7 +231,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
-    this->ren->aa = true;
+    this->ren->aa = !OMG_IS_EMSCRIPTEN;
     // I'm lazy for fail checks here, but you shouldn't :)
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
     this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"));

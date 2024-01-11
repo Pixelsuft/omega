@@ -1306,6 +1306,9 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_GetWindowSize)(SDL_Window*, int*, int*);
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetWindowID)(SDL_Window*);
+    SDL_Window* OMG_SDL2_STD_PREFIX (*SDL_GetWindowFromID)(uint32_t);
+    void* OMG_SDL2_STD_PREFIX (*SDL_SetWindowData)(SDL_Window*, const char*, void*);
+    void* OMG_SDL2_STD_PREFIX (*SDL_GetWindowData)(SDL_Window*, const char*);
     void OMG_SDL2_STD_PREFIX (*SDL_ShowWindow)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_HideWindow)(SDL_Window*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetWindowFullscreen)(SDL_Window*, uint32_t);
