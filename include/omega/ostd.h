@@ -153,6 +153,8 @@
 #define OMG_END_POINTER_CAST() _Pragma("warning( default : 4113 )") \
     _Pragma("warning( default : 4133 )")
 
+#pragma warning( disable : 4114 )
+#pragma warning( disable : 4273 )
 #else
 
 #define OMG_BEGIN_POINTER_CAST() do { \

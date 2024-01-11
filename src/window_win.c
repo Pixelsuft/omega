@@ -338,7 +338,7 @@ static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_
         event.pos.x = (float)this->mouse_pos_cache.x;
         event.pos.y = (float)this->mouse_pos_cache.y;
         event.clicks = 1;
-        event.state = this->last_mouse_state;
+        event.state = (uint32_t)this->last_mouse_state;
         omg_base->on_mouse_down(&event);
     } else if (!mouse_pressed && (mouse_flags & OMG_MBUTTON(button))) {
         OMG_EventMouseButton event;
@@ -351,7 +351,7 @@ static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_
         event.pos.x = (float)this->mouse_pos_cache.x;
         event.pos.y = (float)this->mouse_pos_cache.y;
         event.clicks = 1;
-        event.state = this->last_mouse_state;
+        event.state = (uint32_t)this->last_mouse_state;
         omg_base->on_mouse_up(&event);
     }
 }
@@ -423,7 +423,7 @@ bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) 
     if (OMG_ISNULL(out_buf))
         return true;
     bool result = true;
-    int out_len = this->k32->MultiByteToWideChar(CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count);
+    int out_len = (int)this->k32->MultiByteToWideChar(CP_UTF8, 0, new_title->ptr, new_title->len, out_buf, (int)count);
     if (out_len > 0) {
         out_buf[out_len] = L'\0';
         result = !this->u32->SetWindowTextW(this->hwnd, out_buf);
@@ -1042,7 +1042,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             LPCREATESTRUCTW lps = (LPCREATESTRUCTW)lparam;
             this = (OMG_WindowWin*)lps->lpCreateParams;
             if (OMG_ISNULL(this->u32->SetWindowLongPtrW))
-                this->u32->SetWindowLongW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
+                this->u32->SetWindowLongW(hwnd, GWLP_USERDATA, (LONG)this);
             else
                 this->u32->SetWindowLongPtrW(hwnd, GWLP_USERDATA, (LONG_PTR)this);
             if (omg_base->support_highdpi && OMG_ISNOTNULL(this->u32->EnableNonClientDpiScaling))

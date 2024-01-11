@@ -646,6 +646,7 @@ OMG_Keycode omg_keyboard_key_from_scancode(OMG_Scancode scancode) {
 }
 
 const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key) {
+    static OMG_String result;
     static char name[8];
     char* end;
     if (key & OMGK_SCANCODE_MASK) {
@@ -670,7 +671,9 @@ const OMG_String* omg_keyboard_name_from_key(OMG_Keycode key) {
             }
             end = omg_keyboard_UCS4ToUTF8((uint32_t)key, name);
             *end = '\0';
-            return &OMG_STRING_MAKE_STATIC(name);
+            result = OMG_STRING_MAKE_STATIC(name);
+            return &result;
     }
-    return &OMG_STRING_MAKE_STATIC("");
+    result = OMG_STRING_MAKE_STATIC("");
+    return &result;
 }

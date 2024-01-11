@@ -121,14 +121,14 @@ void app_on_update(OMG_EventUpdate* event) {
     this->omg->enable_paint = true;
     this->audio->update(this->audio);
     if (this->bg_fow) {
-        this->bg_col += this->clock->dt * 100.0f;
+        this->bg_col += (float)this->clock->dt * 100.0f;
         if (this->bg_col >= OMG_MAX_COLOR) {
             this->bg_col = OMG_MAX_COLOR * 2.0f - this->bg_col;
             this->bg_fow = false;
         }
     }
     else {
-        this->bg_col -= this->clock->dt * 100.0f;
+        this->bg_col -= (float)this->clock->dt * 100.0f;
         if (this->bg_col < 0.0f) {
             this->bg_col = -this->bg_col;
             this->bg_fow = true;

@@ -39,6 +39,11 @@ Pixelsuft -- pixelsuft at github dot com
 #define SDL2_GFX_REALLOC(ptr, size) (sdl2_handle->SDL_realloc(ptr, size))
 #define SDL2_GFX_FREE(ptr) (sdl2_handle->SDL_free(ptr))
 
+#ifdef _MSC_VER
+// TODO: fix warnings
+#pragma warning( disable : 4244 )
+#endif
+
 static OMG_Sdl2* sdl2_handle = NULL;
 static OMG_Std* std_handle = NULL;
 
@@ -2383,7 +2388,7 @@ int aaFilledPieRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float 
 	start = std_handle->fmod(start, 360.0) * OMG_M_PI2 / 360.0;
 	end = std_handle->fmod(end, 360.0) * OMG_M_PI2 / 360.0;
 	while (start >= end)
-		end += OMG_M_PI2;
+		end += OMG_M_PIF2;
 	nverts = (end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI;
 	if (nverts < 2)
 		nverts = 2;
@@ -2414,7 +2419,7 @@ int aaArcRGBA(SDL_Renderer* renderer, float cx, float cy, float rx, float ry,
 	start = std_handle->fmod(start, 360.0) * OMG_M_PI2 / 360.0;
 	end = std_handle->fmod(end, 360.0) * OMG_M_PI2 / 360.0;
 	while (start >= end)
-		end += OMG_M_PI2;
+		end += OMG_M_PIF2;
 	nverts = 2 * std_handle->floor((end - start) * std_handle->sqrt(rx * ry) / OMG_M_PI);
 	if (nverts < 2)
 		nverts = 2;

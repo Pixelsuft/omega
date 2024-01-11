@@ -1,6 +1,6 @@
 #include <omega/entry.h>
 
-#if OMG_IS_WIN && defined(OMG_DLL_BUILD)
+#if OMG_IS_WIN && OMG_DLL_BUILD
 #include <omega/api_win.h>
 
 OMG_API BOOL WINAPI DllMain(HINSTANCE const instance, DWORD const reason, LPVOID const reserved) {

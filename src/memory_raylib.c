@@ -23,7 +23,7 @@ bool omg_memory_raylib_destroy(OMG_MemoryRaylib* this) {
 
 void* omg_memory_raylib_alloc(OMG_MemoryRaylib* this, OMG_MemoryExtra extra) {
 #if OMG_DEBUG
-    OMG_MemoryExtra* result = RL_ALLOC_MEM(extra.size + sizeof(OMG_MemoryExtra));
+    OMG_MemoryExtra* result = RL_ALLOC_MEM((unsigned int)(extra.size + sizeof(OMG_MemoryExtra)));
     if (OMG_ISNULL(result)) {
         if (OMG_ISNOTNULL(extra.func)) {
             _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra.size, " bytes of memory");
@@ -65,7 +65,7 @@ void* omg_memory_raylib_realloc(OMG_MemoryRaylib* this, void* ptr, size_t size) 
     if (!real_ptr->is_allocated)
         return NULL;
     size_t size_before = real_ptr->size;
-    OMG_MemoryExtra* new_ptr = RL_REALLOC_MEM(real_ptr, size + sizeof(OMG_MemoryExtra));
+    OMG_MemoryExtra* new_ptr = RL_REALLOC_MEM(real_ptr, (unsigned int)(size + (size_t)sizeof(OMG_MemoryExtra)));
     if (OMG_ISNULL(new_ptr)) {
         if (OMG_ISNOTNULL(real_ptr->func)) {
             _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory");

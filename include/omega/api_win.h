@@ -19,11 +19,11 @@
 
 #if OMG_WIN_PRECISE_ENCODING
 #define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { \
-    int _omg_temp_count = k32->MultiByteToWideChar(CP_UTF8, 0, str->ptr, str->len, NULL, 0); \
+    int _omg_temp_count = k32->MultiByteToWideChar(CP_UTF8, 0, str->ptr, (int)str->len, NULL, 0); \
     res = (_omg_temp_count > 0) ? (size_t)(_omg_temp_count) : 0; \
 } while (0)
 #define _OMG_WIN_GET_DECODE_SIZE(res, str, k32, n_len) do { \
-    int _omg_temp_count = k32->WideCharToMultiByte(CP_UTF8, 0, str, n_len, NULL, 0, NULL, NULL); \
+    int _omg_temp_count = k32->WideCharToMultiByte(CP_UTF8, 0, str, (int)n_len, NULL, 0, NULL, NULL); \
     res = (_omg_temp_count > 0) ? (size_t)(_omg_temp_count) : 0; \
 } while (0)
 #else

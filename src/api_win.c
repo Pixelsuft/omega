@@ -32,6 +32,11 @@
 #define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = NULL
 #endif
 
+#ifdef _MSC_VER
+// TODO: avoid hack
+#pragma warning( disable : 4047 )
+#endif
+
 static OMG_Kernel32* k32_cache = NULL;
 
 ULONGLONG omg_win_get_tick_count64_emu(void) {
