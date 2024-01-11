@@ -626,12 +626,18 @@ char* omg_keyboard_UCS4ToUTF8(uint32_t ch, char* dst) {
 }
 
 const OMG_String* omg_keyboard_name_from_scancode(OMG_Scancode scancode) {
-    if (((int)scancode) < OMG_SCANCODE_UNKNOWN || scancode >= OMG_NUM_SCANCODES)
-        return &OMG_STRING_MAKE_STATIC("");
+    static OMG_String result;
+    if (((int)scancode) < OMG_SCANCODE_UNKNOWN || scancode >= OMG_NUM_SCANCODES) {
+        result = OMG_STRING_MAKE_STATIC("");
+        return &result;
+    }
     const char* res = OMG_ScancodeNames[scancode];
-    if (OMG_ISNULL(res))
-        return &OMG_STRING_MAKE_STATIC("");
-    return &OMG_STRING_MAKE_STATIC((char*)res);
+    if (OMG_ISNULL(res)) {
+        result = OMG_STRING_MAKE_STATIC("");
+        return &result;
+    }
+    result = OMG_STRING_MAKE_STATIC((char*)res);
+    return &result;
 }
 
 OMG_Keycode omg_keyboard_key_from_scancode(OMG_Scancode scancode) {

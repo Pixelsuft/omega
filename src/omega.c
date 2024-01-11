@@ -8,7 +8,7 @@
 
 static OMG_Omega* omg_def_omega = NULL;
 
-OMG_API OMG_Omega* omg_get_default_omega(void) {
+OMG_Omega* omg_get_default_omega(void) {
     return omg_def_omega;
 }
 
@@ -437,8 +437,14 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
     file = omg_file_from_path(this, file, path, mode);
     if (OMG_ISNULL(file))
         return NULL;
+#if OMG_IS_VC // Fuck Visual Studio
+    // TODO: use UTF-8 mode. Example: "w+, ccs=UTF-8"
+    int res = fopen_s(&file->file, path->ptr, str_mode);
+#else
+    int res = 0;
     file->file = fopen(path->ptr, str_mode);
-    if (OMG_ISNULL(file->file)) {
+#endif
+    if ((res != 0) || OMG_ISNULL(file->file)) {
         _OMG_LOG_ERROR(this, "Failed to std open file ", path->ptr);
         omg_file_destroy(file);
         return NULL;

@@ -602,7 +602,11 @@ typedef struct FMOD_CREATESOUNDEXINFO {
 } FMOD_CREATESOUNDEXINFO;
 #endif
 
+#if OMG_IS_VC // Fuck Visual Studio
+#define OMG_FMOD_STD_PREFIX
+#else
 #define OMG_FMOD_STD_PREFIX F_CALL
+#endif
 
 typedef struct {
     void* handle;

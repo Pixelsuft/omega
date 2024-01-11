@@ -4,14 +4,18 @@
 #if OMG_IS_WIN
 #define WIN32_LEAN_AND_MEAN
 #if OMG_WINAPI_DYNAMIC
+#include <windows.h>
 #include <libloaderapi.h>
 #include <basetsd.h>
-#include <windows.h>
 #else
 #include <windows.h>
 #include <windowsx.h>
 #endif
+#if OMG_IS_VC // Fuck Visual Studio
+#define OMG_WIN_STD_PREFIX
+#else
 #define OMG_WIN_STD_PREFIX WINAPI
+#endif
 
 #if OMG_WIN_PRECISE_ENCODING
 #define _OMG_WIN_GET_ENCODE_SIZE(res, str, k32) do { \
@@ -573,8 +577,7 @@ typedef struct {
     UCHAR wReserved;
 } OMG_WIN_NTDLL_OSVERSIONINFOEXW;
 
-typedef enum
-{
+typedef enum {
     OMG_WIN_APPMODE_DEFAULT,
     OMG_WIN_APPMODE_ALLOW_DARK,
     OMG_WIN_APPMODE_FORCE_DARK,
