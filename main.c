@@ -16,6 +16,7 @@ typedef struct {
     OMG_Sound* sound;
     OMG_File* file;
     OMG_Clock* clock;
+    double rot_timer;
     omg_color_t bg_col;
     bool bg_fow;
     int exit_code;
@@ -134,6 +135,9 @@ void app_on_update(OMG_EventUpdate* event) {
             this->bg_fow = true;
         }
     }
+    this->rot_timer += this->clock->dt * 0.5;
+    if (this->rot_timer >= OMG_M_PI2)
+        this->rot_timer -= OMG_M_PI2;
     // OMG_INFO(this->omg, this->omg->mem->get_alloc_count(this->omg->mem));
     // OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
     // OMG_INFO(this->omg, "DT: ", this->clock->dt);
@@ -159,10 +163,14 @@ void app_on_paint(OMG_EventPaint* event) {
     // Drawing on a texture
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
     this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(50, 50, 100, 100), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 255));
-    this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(50, 50), 50.0f, &OMG_COLOR_MAKE_RGBA(255, 255, 0, 100));
+    // this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(50, 50), 50.0f, &OMG_COLOR_MAKE_RGBA(255, 255, 0, 100));
     this->ren->set_target(this->ren, NULL);
     this->ren->copy(this->ren, this->tex, &OMG_FPOINT_MAKE(400, 200));
-    this->ren->copy_ex(this->ren, this->tex2, NULL, &OMG_FRECT_MAKE(200, 400, 0, 0), NULL, 30.0);
+    this->ren->copy_ex(
+        this->ren, this->tex2,
+        NULL, &OMG_FRECT_MAKE(200, 400, 0, 0),
+        NULL, this->omg->std->sin(this->rot_timer) * 10.0
+    );
     this->ren->flip(this->ren);
     // printf("%i\n", this->clock->get_fps(this->clock));
     // this->omg->delay(this->omg, 1.0 / 60.0);
@@ -259,6 +267,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_mouse_move = app_on_mouse_move;
     this->omg->on_mouse_down = this->omg->on_mouse_up = app_on_mouse_button;
     this->omg->on_key_down = this->omg->on_key_up = app_on_keyboard;
+    this->rot_timer = 0.0;
     this->bg_col = 0.0f;
     this->bg_fow = true;
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
