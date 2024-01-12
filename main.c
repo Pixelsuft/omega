@@ -162,7 +162,7 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(50, 50), 50.0f, &OMG_COLOR_MAKE_RGBA(255, 255, 0, 100));
     this->ren->set_target(this->ren, NULL);
     this->ren->copy(this->ren, this->tex, &OMG_FPOINT_MAKE(400, 200));
-    this->ren->copy(this->ren, this->tex2, &OMG_FPOINT_MAKE(200, 400));
+    this->ren->copy_ex(this->ren, this->tex2, NULL, &OMG_FRECT_MAKE(200, 400, 0, 0), NULL, 30.0);
     this->ren->flip(this->ren);
     // printf("%i\n", this->clock->get_fps(this->clock));
     // this->omg->delay(this->omg, 1.0 / 60.0);

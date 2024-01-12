@@ -105,6 +105,11 @@ bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* p
     return false;
 }
 
+bool omg_renderer_copy_ex(OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, double rot) {
+    OMG_UNUSED(this, tex, src, dst, origin, rot);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -140,5 +145,6 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->tex_create = omg_renderer_tex_create;
     this->tex_destroy = omg_renderer_tex_destroy;
     this->copy = omg_renderer_copy;
+    this->copy_ex = omg_renderer_copy_ex;
     return false;
 }

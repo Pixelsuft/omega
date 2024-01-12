@@ -46,12 +46,12 @@ bool omg_winmgr_raylib_destroy(OMG_WinmgrRaylib* this) {
 OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, const OMG_FPoint* size, bool has_alpha) {
     OMG_SurfaceRaylib* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceRaylib));
     if (OMG_ISNULL(surf))
-        return (OMG_SurfaceRaylib*)omg_winmgr_dummy_surf_create(this);
+        return (OMG_SurfaceRaylib*)omg_winmgr_dummy_surf_create(base);
     surf->img = this->raylib->LoadImageFromScreen(); // Fuck
     if (!this->raylib->IsImageReady(surf->img)) {
         OMG_FREE(omg_base->mem, surf);
         _OMG_LOG_ERROR(omg_base, "Failed to create surface");
-        return (OMG_SurfaceRaylib*)omg_winmgr_dummy_surf_create(this);
+        return (OMG_SurfaceRaylib*)omg_winmgr_dummy_surf_create(base);
     }
     this->raylib->ImageResize(&surf->img, (int)size->w, (int)size->h);
     this->raylib->ImageFormat(&surf->img, has_alpha ? PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 : PIXELFORMAT_UNCOMPRESSED_R8G8B8);
