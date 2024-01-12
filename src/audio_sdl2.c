@@ -134,12 +134,16 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
         return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
     snd_base->duration = -1.0;
+    snd->vol_cache = MIX_MAX_VOLUME;
     snd->channel = -2;
     return snd;
 }
 
 bool omg_audio_sdl2_snd_set_volume(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, float volume) {
-    this->mix.Mix_VolumeChunk(snd->chunk, (int)(volume * (float)MIX_MAX_VOLUME));
+    snd->vol_cache = (int)(volume * (float)MIX_MAX_VOLUME);
+    if (SND_IS_PLAYING())
+        this->mix.Mix_Volume(snd->channel, snd->vol_cache);
+    // this->mix.Mix_VolumeChunk(snd->chunk, (int)(volume * (float)MIX_MAX_VOLUME));
     return false;
 }
 
@@ -164,6 +168,7 @@ bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops,
         _OMG_LOG_ERROR(omg_base, "Failed to play sound (", MIX_GETERROR(), ")");
         return true;
     }
+    this->mix.Mix_Volume(snd->channel, snd->vol_cache);
     this->play_cache[snd->channel] = snd;
     this->mix.Mix_ChannelFinished(omg_audio_sdl2_channel_finish_cb);
     return false;

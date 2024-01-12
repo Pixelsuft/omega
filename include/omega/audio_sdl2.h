@@ -14,6 +14,7 @@ typedef struct {
     OMG_Music base;
     Mix_Chunk* chunk;
     int channel;
+    int vol_cache;
 } OMG_SoundSdl2;
 
 typedef struct {
