@@ -480,6 +480,7 @@ bool omg_dummy_audio_alloc(OMG_Omega* this) {
 bool omg_audio_alloc(OMG_Omega* this) {
     OMG_BEGIN_POINTER_CAST();
 #if OMG_SUPPORT_FMOD
+    this->audio_type = OMG_AUDIO_TYPE_FMOD; // Hack
     if (this->audio_type == OMG_AUDIO_TYPE_FMOD) {
         if (OMG_ISNULL(this->audio)) {
             this->audio = OMG_MALLOC(this->mem, sizeof(OMG_AudioFmod));

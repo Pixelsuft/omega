@@ -277,6 +277,53 @@ bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, 
     return false;
 }
 
+bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot) {
+    RL_Rectangle src_rect;
+    RL_Rectangle dst_rect;
+    Vector2 origin_vec;
+    if (OMG_ISNULL(src)) {
+        src_rect.x = 0;
+        src_rect.y = 0;
+        src_rect.width = (int)tex_base->size.w;
+        src_rect.height = (int)tex_base->size.h;
+    }
+    else {
+        src_rect.x = (int)src->x;
+        src_rect.y = (int)src->y;
+        src_rect.width = (int)src->w;
+        src_rect.height = (int)src->h;
+        if (src_rect.width == 0)
+            src_rect.width = (int)tex_base->size.w;
+        if (src_rect.height == 0)
+            src_rect.height = (int)tex_base->size.h;
+    }
+    if (OMG_ISNULL(dst)) {
+        dst_rect.x = base->offset.x * this->ss.x;
+        dst_rect.y = base->offset.y * this->ss.y;
+        dst_rect.width = tex_base->size.w * this->ss.x;
+        dst_rect.height = tex_base->size.h * this->ss.y;
+    } {
+        dst_rect.x = (dst->x + base->offset.x) * this->ss.x;
+        dst_rect.y = (dst->y + base->offset.y) * this->ss.y;
+        dst_rect.width = dst->w * this->ss.x;
+        dst_rect.height = dst->h * this->ss.y;
+        if (dst_rect.width == 0.0f)
+            dst_rect.width = tex_base->size.w * this->ss.x;
+        if (dst_rect.height == 0.0f)
+            dst_rect.height = tex_base->size.h * this->ss.y;
+    }
+    if (OMG_ISNULL(origin)) {
+        origin_vec.x = dst_rect.width / 2.0f;
+        origin_vec.y = dst_rect.height / 2.0f;
+    }
+    else {
+        origin_vec.x = origin->x * this->ss.x;
+        origin_vec.y = origin->y * this->ss.y;
+    }
+    this->raylib->DrawTexturePro(*tex->tex, src_rect, dst_rect, origin_vec, (float)rot, tex->tint);
+    return false;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -297,6 +344,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->tex_create = omg_renderer_raylib_tex_create;
     base->tex_destroy = omg_renderer_raylib_tex_destroy;
     base->copy = omg_renderer_raylib_copy;
+    base->copy_ex = omg_renderer_raylib_copy_ex;
     OMG_END_POINTER_CAST();
     this->ss.x = this->ss.y = 1.0f;
     this->so.x = this->so.y = 0.0f;
