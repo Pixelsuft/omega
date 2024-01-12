@@ -35,7 +35,7 @@ OMG_API void omg_sdl2_poll_events(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_auto_loop_on_stop(OMG_OmegaSdl2* this);
 OMG_API void omg_sdl2_auto_loop_tick(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_file_destroy(OMG_FileSdl2* file);
-OMG_API OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode);
+OMG_API OMG_FileSdl2* omg_sdl2_file_from_fp(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode);
 OMG_API int64_t omg_sdl2_file_seek(OMG_FileSdl2* file, int64_t offset, int whence);
 OMG_API int64_t omg_sdl2_file_get_size(OMG_FileSdl2* file) 
 OMG_API size_t omg_sdl2_file_read(OMG_FileSdl2* file, void* buf, size_t size, size_t maxnum);

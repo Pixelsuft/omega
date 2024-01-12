@@ -39,7 +39,7 @@ OMG_API void omg_win_update_scale(OMG_OmegaWin* this);
 #include <omega/window_win.h>
 #include <omega/filesystem_win.h>
 
-OMG_API OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode);
+OMG_API OMG_FileWin* omg_win_file_from_fp(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode);
 OMG_API bool omg_win_file_destroy(OMG_FileWin* file);
 OMG_API int64_t omg_win_file_get_size(OMG_FileWin* file);
 OMG_API int64_t omg_win_file_seek(OMG_FileWin* file, int64_t offset, int whence);

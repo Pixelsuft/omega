@@ -571,7 +571,7 @@ size_t omg_sdl2_file_write(OMG_FileSdl2* file, const void* buf, size_t size, siz
     return res;
 }
 
-OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode) {
+OMG_FileSdl2* omg_sdl2_file_from_fp(OMG_OmegaSdl2* this, OMG_FileSdl2* file, const OMG_String* path, int mode) {
     const char* str_mode = NULL;
     _OMG_FILE_MODE_TO_STD(mode, str_mode);
     if (OMG_ISNULL(str_mode)) {
@@ -581,7 +581,7 @@ OMG_FileSdl2* omg_sdl2_file_from_path(OMG_OmegaSdl2* this, OMG_FileSdl2* file, c
     OMG_BEGIN_POINTER_CAST();
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
-    file = omg_file_from_path(this, file, path, mode);
+    file = omg_file_from_fp(this, file, path, mode);
     if (OMG_ISNULL(file))
         return NULL;
     file->rw = this->sdl2->SDL_RWFromFile(path->ptr, str_mode);
@@ -699,7 +699,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->winmgr_alloc = omg_sdl2_alloc_winmgr;
     base->audio_alloc = omg_sdl2_audio_alloc;
     base->destroy = omg_sdl2_destroy;
-    base->file_from_path = omg_sdl2_file_from_path;
+    base->file_from_fp = omg_sdl2_file_from_fp;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;

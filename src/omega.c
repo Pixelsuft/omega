@@ -260,7 +260,7 @@ size_t omg_file_write(OMG_File* file, const void* buf, size_t size, size_t num) 
     return 0;
 }
 
-OMG_File* omg_file_from_path(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode) {
+OMG_File* omg_file_from_fp(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode) {
     if (OMG_ISNULL(file)) {
         file = OMG_MALLOC(this->mem, this->sz_file);
         if (OMG_ISNULL(file))
@@ -434,7 +434,7 @@ OMG_FileStd* omg_file_std_from_path(OMG_Omega* this, OMG_FileStd* file, const OM
     OMG_BEGIN_POINTER_CAST();
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
-    file = omg_file_from_path(this, file, path, mode);
+    file = omg_file_from_fp(this, file, path, mode);
     if (OMG_ISNULL(file))
         return NULL;
 #if OMG_IS_VC // Fuck Visual Studio
@@ -555,10 +555,10 @@ bool omg_omg_init(OMG_Omega* this) {
     this->audio_free = omg_audio_free;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
-    this->file_from_path = omg_file_std_from_path;
+    this->file_from_fp = omg_file_std_from_path;
     this->sz_file = sizeof(OMG_FileStd);
 #else
-    this->file_from_path = omg_file_from_path;
+    this->file_from_fp = omg_file_from_fp;
     this->sz_file = sizeof(OMG_File);
 #endif
     this->file_from_mem = omg_file_from_mem;

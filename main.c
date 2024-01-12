@@ -244,7 +244,7 @@ void app_init(App* this, OMG_EntryData* data) {
     // I'm lazy for fail checks here, but you shouldn't :)
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
     this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"));
-    this->file = this->omg->file_from_path(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
+    this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);
     OMG_String file_buf;

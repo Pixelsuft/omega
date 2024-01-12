@@ -396,11 +396,11 @@ size_t omg_win_file_write(OMG_FileWin* file, const void* buf, size_t size, size_
 }
 
 // TODO: Append Mode
-OMG_FileWin* omg_win_file_from_path(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
+OMG_FileWin* omg_win_file_from_fp(OMG_OmegaWin* this, OMG_FileWin* file, const OMG_String* path, int mode) {
     OMG_BEGIN_POINTER_CAST();
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
-    file = omg_file_from_path(this, file, path, mode);
+    file = omg_file_from_fp(this, file, path, mode);
     if (OMG_ISNULL(file))
         return NULL;
     size_t count;
@@ -584,7 +584,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->auto_loop_run = omg_win_auto_loop_run;
     base->winmgr_alloc = omg_win_alloc_winmgr;
     base->destroy = omg_win_destroy;
-    base->file_from_path = omg_win_file_from_path;
+    base->file_from_fp = omg_win_file_from_fp;
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Win32 backend");
     // TODO: correct version by check build number
