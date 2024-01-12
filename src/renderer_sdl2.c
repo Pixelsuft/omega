@@ -389,6 +389,46 @@ bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const 
     return false;
 }
 
+bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot) {
+    SDL_FRect dst_rect;
+    SDL_Rect src_rect;
+    SDL_RendererFlip flip = 0;
+    if (OMG_ISNULL(dst)) {
+        dst_rect.x = base->offset.x;
+        dst_rect.y = base->offset.y;
+        dst_rect.w = tex_base->size.w;
+        dst_rect.h = tex_base->size.h;
+    } {
+        dst_rect.x = dst->x;
+        dst_rect.y = dst->y;
+        if (dst_rect.w == 0.0f)
+            dst_rect.w = tex_base->size.w;
+        else if (dst_rect.w < 0.0f) {
+            dst_rect.w = -dst_rect.w;
+            flip |= SDL_FLIP_HORIZONTAL;
+        }
+        if (dst_rect.h == 0.0f)
+            dst_rect.h = tex_base->size.h;
+        else if (dst_rect.h < 0.0f) {
+            dst_rect.h = -dst_rect.h;
+            flip |= SDL_FLIP_VERTICAL;
+        }
+    }
+    if (OMG_ISNOTNULL(src)) {
+        src_rect.x = (int)src->x;
+        src_rect.y = (int)src->y;
+        src_rect.w = (int)src->w;
+        src_rect.h = (int)src->h;
+    }
+    if (this->sdl2->SDL_RenderCopyExF(
+        this->ren, tex->tex, OMG_ISNULL(src) ? NULL : &src_rect, &dst_rect, rot, (const SDL_FPoint*)origin, flip
+    ) < 0) {
+        _OMG_SDL2_COPY_WARN();
+        return true;
+    }
+    return false;
+}
+
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -409,6 +449,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     base->copy = omg_renderer_sdl2_copy;
+    base->copy_ex = omg_renderer_sdl2_copy_ex;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_SDL2;
     int sdl2_driver;

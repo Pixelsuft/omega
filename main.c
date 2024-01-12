@@ -231,7 +231,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
-    this->ren->aa = !OMG_IS_EMSCRIPTEN;
+    this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
     this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"));

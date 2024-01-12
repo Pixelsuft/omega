@@ -40,5 +40,6 @@ OMG_API OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this,
 OMG_API OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex);
 OMG_API bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos);
+OMG_API bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
 #endif
 #endif
