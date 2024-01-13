@@ -18,7 +18,7 @@ typedef struct OMG_ImageLoader {
     int type;
     void* omg;
     bool (*init)(struct OMG_ImageLoader* this);
-    bool (*image_from_fp_internal)(struct OMG_ImageLoader* this, const OMG_String* path, void* buf);
+    bool (*image_from_fp_internal)(struct OMG_ImageLoader* this, const OMG_String* path, void* buf, int format);
     bool (*destroy)(struct OMG_ImageLoader* this);
     bool inited;
     bool was_allocated;
@@ -27,5 +27,5 @@ typedef struct OMG_ImageLoader {
 OMG_API bool omg_image_loader_init(OMG_ImageLoader* this);
 OMG_API bool omg_image_loader_destroy(OMG_ImageLoader* this);
 #if OMG_EXPORT_SHIT
-OMG_API bool omg_image_loader_image_from_fp(OMG_ImageLoader* this, const OMG_String* path, void* buf);
+OMG_API bool omg_image_loader_image_from_fp(OMG_ImageLoader* this, const OMG_String* path, void* buf, int format);
 #endif

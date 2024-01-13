@@ -68,8 +68,8 @@ OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this) {
 #endif
 }
 
-OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path) {
-    OMG_UNUSED(path);
+OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path, int format) {
+    OMG_UNUSED(path, format);
     return omg_winmgr_dummy_surf_create(this);
 }
 

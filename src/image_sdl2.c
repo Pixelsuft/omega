@@ -17,7 +17,8 @@ bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
     return res;
 }
 
-bool omg_image_loader_sdl2_image_from_fp(OMG_ImageLoaderSdl2* this, const OMG_String* path, void* buf) {
+bool omg_image_loader_sdl2_image_from_fp(OMG_ImageLoaderSdl2* this, const OMG_String* path, void* buf, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return true;
     SDL_Surface* res = this->img.IMG_Load(path->ptr);

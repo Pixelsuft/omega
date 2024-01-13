@@ -5,7 +5,8 @@
 #define base ((OMG_ImageLoader*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 
-bool omg_image_loader_raylib_image_from_fp(OMG_ImageLoaderRaylib* this, const OMG_String* path, void* buf) {
+bool omg_image_loader_raylib_image_from_fp(OMG_ImageLoaderRaylib* this, const OMG_String* path, void* buf, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return true;
     Image img = this->raylib->LoadImage(path->ptr);
