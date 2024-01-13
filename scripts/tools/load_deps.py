@@ -33,7 +33,9 @@ if not os.path.isdir(src) or not os.path.isdir(include):
     print('Error: not main dir')
     sys.exit(1)
 
-download('https://github.com/lvandeve/lodepng/raw/master/lodepng.h', os.path.join(include, 'lodepng.h'))
+write_bytes(download_bytes('https://github.com/lvandeve/lodepng/raw/master/lodepng.h').replace(
+    b'#define LODEPNG_COMPILE_DISK', b'// #define LODEPNG_COMPILE_DISK'
+), os.path.join(include, 'lodepng.h'))
 lodepng = download_bytes('https://github.com/lvandeve/lodepng/raw/master/lodepng.cpp').replace(
     b'#include "lodepng.h"', b'#include <libs/lodepng.h>'
 ).replace(b'return malloc(size);', b'return OMG_MALLOC(omg_get_default_omega()->mem, size);').replace(
