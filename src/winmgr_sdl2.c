@@ -83,7 +83,7 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
 }
 
 #if OMG_SUPPORT_SDL2_IMAGE
-OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_path(OMG_WinmgrSdl2* this, const OMG_String* path, int format) {
+OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_String* path, int format) {
     OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
@@ -115,7 +115,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);
-    base->surf_from_path = omg_winmgr_sdl2_surf_from_path;
+    base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
 #endif
     OMG_END_POINTER_CAST();
     return false;

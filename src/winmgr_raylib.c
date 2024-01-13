@@ -79,7 +79,7 @@ bool omg_winmgr_raylib_surf_destroy(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* s
     return false;
 }
 
-OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_path(OMG_WinmgrRaylib* this, const OMG_String* path, int format) {
+OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_fp(OMG_WinmgrRaylib* this, const OMG_String* path, int format) {
     OMG_SurfaceRaylib* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceRaylib));
     if (OMG_ISNULL(surf))
         return NULL;
@@ -104,7 +104,7 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->window_free = omg_winmgr_raylib_window_free;
     base->surf_create = omg_winmgr_raylib_surf_create;
     base->surf_destroy = omg_winmgr_raylib_surf_destroy;
-    base->surf_from_path = omg_winmgr_raylib_surf_from_path;
+    base->surf_from_fp = omg_winmgr_raylib_surf_from_fp;
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_raylib_init);
     OMG_END_POINTER_CAST();
     return false;

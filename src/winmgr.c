@@ -68,7 +68,7 @@ OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this) {
 #endif
 }
 
-OMG_Surface* omg_winmgr_surf_from_path(OMG_Winmgr* this, const OMG_String* path, int format) {
+OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, const OMG_String* path, int format) {
     OMG_UNUSED(path, format);
     return omg_winmgr_dummy_surf_create(this);
 }
@@ -106,7 +106,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->window_free = omg_winmgr_window_free;
     this->surf_create = omg_winmgr_surf_create;
     this->surf_destroy = omg_winmgr_surf_destroy;
-    this->surf_from_path = omg_winmgr_surf_from_path;
+    this->surf_from_fp = omg_winmgr_surf_from_fp;
     this->image_loader_alloc = omg_winmgr_image_loader_alloc;
     this->image_loader_free = omg_winmgr_image_loader_free;
     this->inited = true;
