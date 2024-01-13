@@ -131,6 +131,10 @@
 #define OMG_ALLOW_DUMMY_TEX 1
 #endif
 
+#ifndef OMG_SUPPORT_LODEPNG
+#define OMG_SUPPORT_LODEPNG 1
+#endif
+
 #ifndef OMG_MAX_PLAYING_MUSIC
 #define OMG_MAX_PLAYING_MUSIC 8
 #endif
