@@ -23,6 +23,7 @@ typedef struct {
 
 #define _OMG_ENTRY_DATA_TYPE 2
 
+#if defined(_UNICODE) || defined(UNICODE)
 #define OMG_MAIN_MAKE(main_func) int OMG_WIN_STD_PREFIX wWinMain(OMG_WIN_ENTRY_HINST* hInst, OMG_WIN_ENTRY_HINST* hInstPrev, wchar_t* cmdline, int cmdshow) { \
     OMG_UNUSED(hInstPrev); \
     OMG_EntryData entry_data; \
@@ -36,9 +37,9 @@ typedef struct {
     if (!OMG_HAS_STD) \
         ExitProcess((UINT)_omg_exit_code); /* Fuck Microsoft */ \
     return _omg_exit_code; \
-} \
-\
-int OMG_WIN_STD_PREFIX WinMain(OMG_WIN_ENTRY_HINST* hInst, OMG_WIN_ENTRY_HINST* hInstPrev, char* cmdline, int cmdshow) { \
+}
+#else
+#define OMG_MAIN_MAKE(main_func) int OMG_WIN_STD_PREFIX WinMain(OMG_WIN_ENTRY_HINST* hInst, OMG_WIN_ENTRY_HINST* hInstPrev, char* cmdline, int cmdshow) { \
     OMG_UNUSED(hInstPrev); \
     OMG_EntryData entry_data; \
     entry_data.hInst = hInst; \
@@ -52,6 +53,7 @@ int OMG_WIN_STD_PREFIX WinMain(OMG_WIN_ENTRY_HINST* hInst, OMG_WIN_ENTRY_HINST* 
         ExitProcess((UINT)_omg_exit_code); \
     return _omg_exit_code; \
 }
+#endif
 #else
 #if OMG_IS_WIN && OMG_SUPPORT_SDL2 && OMG_SUPPORT_SDL2_MAIN && !OMG_SDL2_DYNAMIC && !OMG_IS_VC && OMG_HAS_STD
 #define SDL_MAIN_HANDLED

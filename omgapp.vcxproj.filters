@@ -144,5 +144,8 @@
     <ClCompile Include="src\winmgr_win.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\lodepng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

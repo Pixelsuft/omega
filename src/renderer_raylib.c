@@ -284,18 +284,18 @@ bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* te
     if (OMG_ISNULL(src)) {
         src_rect.x = 0;
         src_rect.y = 0;
-        src_rect.width = (int)tex_base->size.w;
-        src_rect.height = (int)tex_base->size.h;
+        src_rect.width = tex_base->size.w;
+        src_rect.height = tex_base->size.h;
     }
     else {
-        src_rect.x = (int)src->x;
-        src_rect.y = (int)src->y;
-        src_rect.width = (int)src->w;
-        src_rect.height = (int)src->h;
-        if (src_rect.width == 0)
-            src_rect.width = (int)tex_base->size.w;
-        if (src_rect.height == 0)
-            src_rect.height = (int)tex_base->size.h;
+        src_rect.x = src->x;
+        src_rect.y = src->y;
+        src_rect.width = src->w;
+        src_rect.height = src->h;
+        if (src_rect.width == 0.0f)
+            src_rect.width = tex_base->size.w;
+        if (src_rect.height == 0.0f)
+            src_rect.height = tex_base->size.h;
     }
     if (OMG_ISNULL(dst)) {
         dst_rect.x = base->offset.x * this->ss.x;
