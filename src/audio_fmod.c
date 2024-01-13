@@ -104,7 +104,7 @@ bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops,
     if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPaused(mus->channel, 0))) {
         _OMG_LOG_WARN(omg_base, "Failed to resume audio (", FMOD_ErrorString(res), ")");
     }
-    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetCallback(mus->channel, omg_audio_fmod_mus_callback))) {
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetCallback(mus->channel, (FMOD_CHANNELCONTROL_CALLBACK)omg_audio_fmod_mus_callback))) {
         _OMG_LOG_WARN(omg_base, "Failed to set audio channel end callback (", FMOD_ErrorString(res), ")");
     }
     return false;

@@ -148,7 +148,7 @@
 #ifdef _MSC_VER
 
 #define OMG_BEGIN_POINTER_CAST() _Pragma("warning( disable : 4113 )") \
-    _Pragma("warning( disable : 4133 )") \
+    _Pragma("warning( disable : 4133 )")
 
 #define OMG_END_POINTER_CAST() _Pragma("warning( default : 4113 )") \
     _Pragma("warning( default : 4133 )")

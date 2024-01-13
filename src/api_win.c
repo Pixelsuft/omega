@@ -7,27 +7,34 @@
 #include <heapapi.h>
 #endif
 
+#ifdef _MSC_VER
+// I hate Visual Studio
+#define OMG_PROC_ADDRESS (void*)GetProcAddress
+#else
+#define OMG_PROC_ADDRESS GetProcAddress
+#endif
+
 #define LOAD_SYSTEM_LIBRARY(lib_path) LoadLibraryExW(lib_path, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL | LOAD_LIBRARY_SEARCH_SYSTEM32)
 #if OMG_WINAPI_DYNAMIC
 // TODO: fail check
-#define LOAD_REQUIRED(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
+#define LOAD_REQUIRED(func_name) this->func_name = OMG_PROC_ADDRESS(this->handle, #func_name)
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
-#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, #func_name))
+#define LOAD_REQUIRED_COMPAT(func_name) this->func_name = (OMG_ISNULL(this->handle) ? NULL : OMG_PROC_ADDRESS(this->handle, #func_name))
 #elif OMG_WINAPI_STATIC_COMPAT
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = NULL
 #else
 #define LOAD_REQUIRED_COMPAT(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_UGLY
-#define LOAD_REQUIRED_UGLY(func_name) this->func_name = GetProcAddress(this->handle, #func_name)
+#define LOAD_REQUIRED_UGLY(func_name) this->func_name = OMG_PROC_ADDRESS(this->handle, #func_name)
 #else
 #define LOAD_REQUIRED_UGLY(func_name) this->func_name = func_name
 #endif
 #if OMG_WINAPI_DYNAMIC_ORDINAL
-#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = (OMG_ISNULL(this->handle) ? NULL : GetProcAddress(this->handle, MAKEINTRESOURCEA(func_ord)))
+#define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = (OMG_ISNULL(this->handle) ? NULL : OMG_PROC_ADDRESS(this->handle, MAKEINTRESOURCEA(func_ord)))
 #else
 #define LOAD_REQUIRED_ORD(func_name, func_ord) this->func_name = NULL
 #endif
