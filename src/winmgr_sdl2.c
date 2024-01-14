@@ -98,8 +98,8 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
         }
         surf->extra1 = NULL;
     }
-    else
 #endif
+#if OMG_SUPPORT_OMG_IMAGE
     if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
         struct {
             void* data;
@@ -109,8 +109,8 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
         }
-        printf("%i %i\n\n\n\n", img_buf.w, img_buf.h);
     }
+#endif
     surf_base->has_alpha = surf->surf->format->Amask > 0;
     surf_base->size.w = (float)surf->surf->w;
     surf_base->size.h = (float)surf->surf->h;
