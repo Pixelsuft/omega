@@ -109,7 +109,18 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
         }
-        _OMG_LOG_INFO(omg_base, img_buf.w, " ", img_buf.h);
+        surf->surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom(
+            img_buf.data,
+            img_buf.w, img_buf.h,
+            32, img_buf.w * 4,
+            SDL_PIXELFORMAT_ABGR8888
+        );
+        if (OMG_ISNULL(surf->surf)) {
+            _OMG_LOG_WARN(omg_base, "Failed load surface from memory (", this->sdl2->SDL_GetError(), ")");
+            OMG_FREE(omg_base->mem, img_buf.data);
+            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
+        }
+        surf->extra1 = img_buf.data;
     }
 #endif
     surf_base->has_alpha = surf->surf->format->Amask > 0;

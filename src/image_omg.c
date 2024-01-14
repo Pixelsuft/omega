@@ -39,7 +39,13 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
         void* data;
         int w, h;
     } *img_buf = buf;
-    img_buf->data = (void*)image;
+    img_buf->data = OMG_MALLOC(omg_base->mem, (size_t)w * (size_t)h * 4);
+    if (OMG_ISNULL(img_buf->data)) {
+        free(image);
+        return true;
+    }
+    omg_base->std->memcpy(img_buf->data, image, (size_t)w * (size_t)h * 4);
+    free(image);
     img_buf->w = (int)w;
     img_buf->h = (int)h;
     return false;
