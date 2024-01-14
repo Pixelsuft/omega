@@ -40,7 +40,6 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
         int w, h;
     } *img_buf = buf;
     img_buf->data = OMG_MALLOC(omg_base->mem, (size_t)w * (size_t)h * 4);
-    printf("1337\n");
     if (OMG_ISNULL(img_buf->data)) {
         free(image);
         return true;

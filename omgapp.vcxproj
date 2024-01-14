@@ -158,6 +158,7 @@
     <ClCompile Include="src\clock_win.c" />
     <ClCompile Include="src\entry.c" />
     <ClCompile Include="src\image.c" />
+    <ClCompile Include="src\image_omg.c" />
     <ClCompile Include="src\image_raylib.c" />
     <ClCompile Include="src\image_sdl2.c" />
     <ClCompile Include="src\keyboard.c" />
