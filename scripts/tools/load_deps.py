@@ -29,9 +29,11 @@ src = os.path.join(cwd, 'src')
 include = os.path.join(cwd, 'include', 'libs')
 print('Pixelsuft Load Deps System :D')
 
-if not os.path.isdir(src) or not os.path.isdir(include):
+if not os.path.isdir(src):
     print('Error: not main dir')
     sys.exit(1)
+if not os.path.isdir(include):
+    os.mkdir(include)
 
 write_bytes(download_bytes('https://github.com/lvandeve/lodepng/raw/master/lodepng.h').replace(
     b'#define LODEPNG_COMPILE_DISK', b'// #define LODEPNG_COMPILE_DISK'
