@@ -2,7 +2,9 @@
 #include <omega/ostd.h>
 
 #define OMG_IMAGE_LOADER_TYPE_NONE 0
-#define OMG_IMAGE_LOADER_TYPE_SDL2 1
+#define OMG_IMAGE_LOADER_TYPE_OMG 1
+#define OMG_IMAGE_LOADER_TYPE_SDL2 2
+#define OMG_IMAGE_LOADER_TYPE_RAYLIB 3
 
 #define OMG_IMG_FORMAT_NONE (1 << 1)
 #define OMG_IMG_FORMAT_AUTO (1 << 1)
@@ -15,11 +17,11 @@
 #define OMG_IMG_FORMAT_AVIF (1 << 8)
 
 typedef struct OMG_ImageLoader {
-    int type;
     void* omg;
     bool (*init)(struct OMG_ImageLoader* this);
     bool (*image_from_fp_internal)(struct OMG_ImageLoader* this, const OMG_String* path, void* buf, int format);
     bool (*destroy)(struct OMG_ImageLoader* this);
+    int type;
     bool inited;
     bool was_allocated;
 } OMG_ImageLoader;

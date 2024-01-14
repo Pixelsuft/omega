@@ -32,6 +32,7 @@ bool omg_image_loader_sdl2_image_from_fp(OMG_ImageLoaderSdl2* this, const OMG_St
 
 bool omg_image_loader_sdl2_init(OMG_ImageLoaderSdl2* this) {
     omg_image_loader_init(base);
+    base->type = OMG_IMAGE_LOADER_TYPE_SDL2;
     if (omg_sdl2_image_dll_load(&this->img, omg_base->sdl2_image_dll_path)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_image dll");
         return true;

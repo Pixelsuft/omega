@@ -20,6 +20,7 @@ bool omg_image_loader_raylib_image_from_fp(OMG_ImageLoaderRaylib* this, const OM
 
 bool omg_image_loader_raylib_init(OMG_ImageLoaderRaylib* this) {
     omg_image_loader_init(base);
+    base->type = OMG_IMAGE_LOADER_TYPE_RAYLIB;
     OMG_BEGIN_POINTER_CAST();
     base->image_from_fp_internal = omg_image_loader_raylib_image_from_fp;
     OMG_END_POINTER_CAST();
