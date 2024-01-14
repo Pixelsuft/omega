@@ -56,18 +56,7 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, const OMG_Strin
     OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
-#if OMG_SUPPORT_OMG_IMAGE
-    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
-        struct {
-            void* data;
-            int w, h;
-        } img_buf;
-        if (base->img->image_from_fp_internal(base->img, path, &img_buf, format)) {
-            OMG_FREE(omg_base->mem, surf);
-            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
-        }
-    }
-#endif
+    // TODO
     return surf;
 }
 
