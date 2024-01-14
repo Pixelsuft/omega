@@ -27,9 +27,8 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
     }
     unsigned char* image;
     unsigned int w, h;
-    LodePNGState state;
-    lodepng_state_init(&state);
-    unsigned int error = lodepng_decode(&image, &w, &h, &state, file_buf, size);
+    unsigned int error = lodepng_decode_memory(&image, &w, &h, file_buf, size, LCT_RGBA, 8);
+    // unsigned int error = lodepng_decode32_file(&image, &w, &h, path->ptr);
     if (error != 0) {
         OMG_FREE(omg_base->mem, file_buf);
         _OMG_LOG_ERROR(omg_base, "Failed to load PNG (", lodepng_error_text(error), ")");
