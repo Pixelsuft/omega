@@ -5,6 +5,7 @@
 #include <omega/winmgr_sdl2.h>
 #include <omega/surface_sdl2.h>
 #include <omega/image_sdl2.h>
+#include <omega/image_omg.h>
 #define base ((OMG_Winmgr*)this)
 #define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)

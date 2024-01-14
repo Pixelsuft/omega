@@ -167,6 +167,7 @@
     <ClCompile Include="src\memory_raylib.c" />
     <ClCompile Include="src\memory_sdl2.c" />
     <ClCompile Include="src\memory_win.c" />
+    <ClCompile Include="src\miniz.c" />
     <ClCompile Include="src\omega.c" />
     <ClCompile Include="src\omega_raylib.c" />
     <ClCompile Include="src\omega_sdl2.c" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\renderer_raylib.c" />
     <ClCompile Include="src\renderer_sdl2.c" />
     <ClCompile Include="src\renderer_win.c" />
+    <ClCompile Include="src\spng.c" />
     <ClCompile Include="src\window.c" />
     <ClCompile Include="src\window_raylib.c" />
     <ClCompile Include="src\window_sdl2.c" />

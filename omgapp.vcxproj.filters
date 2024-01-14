@@ -150,5 +150,11 @@
     <ClCompile Include="src\image_omg.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\spng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\miniz.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

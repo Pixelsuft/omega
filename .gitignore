@@ -15,8 +15,10 @@ x64
 x32
 push.bat
 omgapp
+src/spng.c
+src/miniz.c
 src/lodepng.c
-include/omega_libs/lodepng.h
+include/omega_libs/*.h
 *.stackdump
 *.zip
 *.tar
