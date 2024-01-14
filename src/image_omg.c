@@ -79,10 +79,10 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
         void* data;
         int w, h;
     } *img_buf = buf;
-    printf("%i\n", (int)img_size);
     img_buf->data = OMG_MALLOC(omg_base->mem, img_size);
     spng_decode_image(ctx, img_buf->data, img_size, SPNG_FMT_RGBA8, 0);
     spng_ctx_free(ctx);
+    OMG_FREE(omg_base->mem, file_buf);
     img_buf->w = 100;
     img_buf->h = 100;
     return false;
