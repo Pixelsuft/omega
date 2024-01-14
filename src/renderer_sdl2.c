@@ -398,9 +398,12 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
         dst_rect.y = base->offset.y;
         dst_rect.w = tex_base->size.w;
         dst_rect.h = tex_base->size.h;
-    } {
+    }
+    else {
         dst_rect.x = dst->x + base->offset.x;
         dst_rect.y = dst->y + base->offset.y;
+        dst_rect.w = dst->w;
+        dst_rect.h = dst->h;
         if (dst_rect.w == 0.0f)
             dst_rect.w = tex_base->size.w;
         else if (dst_rect.w < 0.0f) {

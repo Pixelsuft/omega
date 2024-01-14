@@ -39,17 +39,6 @@
 #define OMG_COLOR_MAKE_RGB(c_r, c_g, c_b) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)255 })
 #define OMG_COLOR_MAKE_RGBA(c_r, c_g, c_b, c_a) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)(c_a) })
 
-#if OMG_IS_WIN
-#define _OMG_STRING_GET_ADD_FUNC_EXTRA const OMG_Point*: omg_string_add_point, \
-    const const OMG_FPoint*: omg_string_add_fpoint, \
-    const OMG_DPoint*: omg_string_add_dpoint, \
-    const OMG_Rect*: omg_string_add_rect, \
-    const OMG_FRect*: omg_string_add_frect, \
-    const OMG_DRect*: omg_string_add_drect, \
-    const OMG_String*: omg_string_add,
-#else
-#define _OMG_STRING_GET_ADD_FUNC_EXTRA
-#endif
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \
     char*: omg_string_add_char_p, \
@@ -61,14 +50,19 @@
     double: omg_string_add_double, \
     long: omg_string_add_long, \
     unsigned long: omg_string_add_ulong, \
-    OMG_Point*: omg_string_add_point, \
+    const OMG_Point*: omg_string_add_point, \
+    const OMG_FPoint*: omg_string_add_fpoint, \
+    const OMG_DPoint*: omg_string_add_dpoint, \
+    const OMG_Rect*: omg_string_add_rect, \
+    const OMG_FRect*: omg_string_add_frect, \
+    const OMG_DRect*: omg_string_add_drect, \
+    const OMG_String*: omg_string_add, \
+    OMG_String*: omg_string_add, \
     OMG_FPoint*: omg_string_add_fpoint, \
     OMG_DPoint*: omg_string_add_dpoint, \
     OMG_Rect*: omg_string_add_rect, \
     OMG_FRect*: omg_string_add_frect, \
     OMG_DRect*: omg_string_add_drect, \
-    OMG_String*: omg_string_add, \
-    _OMG_STRING_GET_ADD_FUNC_EXTRA \
     void*: omg_string_add_pointer, \
     const void*: omg_string_add_pointer \
 )
