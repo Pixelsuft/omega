@@ -29,7 +29,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->ren->tex_destroy(this->ren, this->tex2);
     this->ren->tex_destroy(this->ren, this->tex);
-    // this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
+    this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
     this->audio->snd_destroy(this->audio, this->sound);
     this->audio->mus_destroy(this->audio, this->mus);
     // everything other will be cleaned up automaticly

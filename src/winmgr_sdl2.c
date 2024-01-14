@@ -57,6 +57,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_create(OMG_WinmgrSdl2* this, const OMG_FPo
         _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 surface (", this->sdl2->SDL_GetError(), ")");
         return NULL;
     }
+    surf->extra1 = NULL;
     surf_base->has_alpha = has_alpha;
     surf_base->size.w = (float)surf->surf->w;
     surf_base->size.h = (float)surf->surf->h;
