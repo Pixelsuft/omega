@@ -52,6 +52,25 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
     return false;
 }
 
+OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, const OMG_String* path, int format) {
+    OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
+    if (OMG_ISNULL(surf))
+        return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+#if OMG_SUPPORT_OMG_IMAGE
+    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
+        struct {
+            void* data;
+            int w, h;
+        } img_buf;
+        if (base->img->image_from_fp_internal(base->img, path, &img_buf, format)) {
+            OMG_FREE(omg_base->mem, surf);
+            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+        }
+    }
+#endif
+    return surf;
+}
+
 OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint* size, bool has_alpha) {
     OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
     if (OMG_ISNULL(surf))
@@ -105,6 +124,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->window_free = omg_winmgr_win_window_free;
     base->surf_create = omg_winmgr_win_surf_create;
     base->surf_destroy = omg_winmgr_win_surf_destroy;
+    base->surf_from_fp = omg_winmgr_win_surf_from_fp;
     OMG_END_POINTER_CAST();
     return false;
 }

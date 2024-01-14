@@ -109,6 +109,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
         }
+        _OMG_LOG_INFO(omg_base, img_buf.w, " ", img_buf.h);
     }
 #endif
     surf_base->has_alpha = surf->surf->format->Amask > 0;

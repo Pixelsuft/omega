@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_OMG_IMAGE
 #include <omega/omega.h>
 #if OMG_SUPPORT_LODEPNG
+#include <stdlib.h>
 #include <omega_libs/lodepng.h>
 #endif
 #define base ((OMG_ImageLoader*)this)
@@ -11,6 +12,7 @@
 bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_String* path, void* buf, int format) {
     if ((format != OMG_IMG_FORMAT_AUTO) && (format != OMG_IMG_FORMAT_PNG)) // Currently only PNG
         return true;
+#if OMG_SUPPORT_LODEPNG
     OMG_File* file = omg_base->file_from_fp(omg_base, NULL, path, OMG_FILE_MODE_RB);
     if (OMG_ISNULL(file))
         return true;
@@ -28,7 +30,6 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
     unsigned char* image;
     unsigned int w, h;
     unsigned int error = lodepng_decode_memory(&image, &w, &h, file_buf, size, LCT_RGBA, 8);
-    // unsigned int error = lodepng_decode32_file(&image, &w, &h, path->ptr);
     if (error != 0) {
         OMG_FREE(omg_base->mem, file_buf);
         _OMG_LOG_ERROR(omg_base, "Failed to load PNG (", lodepng_error_text(error), ")");
@@ -41,6 +42,8 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
     img_buf->data = (void*)image;
     img_buf->w = (int)w;
     img_buf->h = (int)h;
+    return false;
+#endif
     return true;
 }
 

@@ -23,6 +23,7 @@ typedef struct OMG_ImageLoader {
     bool (*destroy)(struct OMG_ImageLoader* this);
     int type;
     bool inited;
+    bool prefer_alpha;
     bool was_allocated;
 } OMG_ImageLoader;
 
