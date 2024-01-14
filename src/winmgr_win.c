@@ -56,8 +56,22 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, const OMG_Strin
     OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
-    OMG_UNUSED(path, format);
-    // TODO
+#if OMG_SUPPORT_OMG_IMAGE
+    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
+        struct {
+            void* data;
+            int w, h, depth;
+        } img_buf;
+        if (base->img->image_from_fp_internal(base->img, path, &img_buf, format)) {
+            OMG_FREE(omg_base->mem, surf);
+            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+        }
+        surf_base->data = img_buf.data;
+        surf_base->size.w = (float)img_buf.w;
+        surf_base->size.h = (float)img_buf.h;
+        surf_base->has_alpha = true;
+    }
+#endif
     return surf;
 }
 
@@ -78,6 +92,7 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint
         _OMG_LOG_ERROR(omg_base, "Failed to create Win32 bitmap for surface");
         return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
     }
+    surf_base->data = NULL;
     surf_base->size.w = size->w;
     surf_base->size.h = size->h;
     surf_base->has_alpha = has_alpha;
@@ -90,13 +105,19 @@ bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
         return true;
     }
     bool res = false;
-    if (!this->g32->DeleteObject(surf->bm)) {
-        res = true;
-        _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
+    if (OMG_ISNULL(surf_base->data)) {
+        if (!this->g32->DeleteObject(surf->bm)) {
+            res = true;
+            _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
+        }
+        if (!this->g32->DeleteDC(surf->dc)) {
+            res = true;
+            _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
+        }
     }
-    if (!this->g32->DeleteDC(surf->dc)) {
-        res = true;
-        _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
+    else {
+        OMG_FREE(omg_base->mem, surf_base->data);
+        surf_base->data = NULL;
     }
     OMG_FREE(omg_base->mem, surf);
     return res;
