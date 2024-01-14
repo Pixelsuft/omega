@@ -9,6 +9,7 @@
 #endif
 
 OMG_API bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path) {
+    this->loaded = false;
 #if OMG_SPNG_DYNAMIC
     if (OMG_ISNULL(dll_path))
 #if OMG_IS_WIN
@@ -33,10 +34,12 @@ OMG_API bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(spng_get_ihdr);
     LOAD_REQUIRED(spng_strerror);
     OMG_END_POINTER_CAST();
+    this->loaded = true;
     return false;
 }
 
 OMG_API bool omg_spng_dll_free(OMG_Spng* this) {
+    this->loaded = false;
 #if OMG_SPNG_DYNAMIC
     return omg_static_lib_free(this->handle);
 #else

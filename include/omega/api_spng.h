@@ -145,6 +145,7 @@ typedef struct {
     int OMG_SPNG_STD_PREFIX (*spng_decode_image)(spng_ctx*, void*, size_t, int, int);
     int OMG_SPNG_STD_PREFIX (*spng_get_ihdr)(spng_ctx*, struct spng_ihdr*);
     const char* OMG_SPNG_STD_PREFIX (*spng_strerror)(int);
+    bool loaded;
 } OMG_Spng;
 
 OMG_API bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path);
