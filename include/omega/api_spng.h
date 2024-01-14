@@ -2,7 +2,7 @@
 #include <omega/config.h>
 #if OMG_SUPPORT_RAYLIB
 #include <omega/ostd.h>
-#if !OMG_SPNG_DYMANIC
+#if !OMG_SPNG_DYNAMIC
 #include <spng.h>
 #define OMG_SPNG_STD_PREFIX SPNG_API
 #else
@@ -132,7 +132,7 @@ struct spng_alloc {
     spng_free_fn *free_fn;
 };
 
-typedef struct spng_ctx;
+typedef struct spng_ctx spng_ctx;
 #endif
 
 typedef struct {
@@ -144,5 +144,9 @@ typedef struct {
     int OMG_SPNG_STD_PREFIX (*spng_decoded_image_size)(spng_ctx*, int, size_t*);
     int OMG_SPNG_STD_PREFIX (*spng_decode_image)(spng_ctx*, void*, size_t, int, int);
     int OMG_SPNG_STD_PREFIX (*spng_get_ihdr)(spng_ctx*, struct spng_ihdr*);
+    const char* OMG_SPNG_STD_PREFIX (*spng_strerror)(int);
 } OMG_Spng;
+
+OMG_API bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path);
+OMG_API bool omg_spng_dll_free(OMG_Spng* this);
 #endif

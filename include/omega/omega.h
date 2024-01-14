@@ -61,6 +61,7 @@ typedef struct OMG_Omega {
     OMG_String* sdl2_image_dll_path;
     OMG_String* sdl2_mixer_dll_path;
     OMG_String* fmod_dll_path;
+    OMG_String* spng_dll_path;
     bool* keyboard_state;
     const OMG_Keycode* keymap;
     void* extra1;

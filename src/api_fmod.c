@@ -8,7 +8,7 @@
 #endif
 
 bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path) {
-#if OMG_SDL2_MIXER_DYNAMIC
+#if OMG_FMOD_DYNAMIC
     if (OMG_ISNULL(dll_path))
 #if OMG_IS_WIN
         this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("fmod.dll"), L"fmod.dll");
@@ -85,7 +85,7 @@ bool omg_fmod_dll_load(OMG_Fmod* this, const OMG_String* dll_path) {
 }
 
 bool omg_fmod_dll_free(OMG_Fmod* this) {
-#if OMG_SDL2_MIXER_DYNAMIC
+#if OMG_FMOD_DYNAMIC
     return omg_static_lib_free(this->handle);
 #else
     OMG_UNUSED(this);

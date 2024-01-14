@@ -41,6 +41,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->sdl2_image_dll_path = NULL;
     this->sdl2_mixer_dll_path = NULL;
     this->fmod_dll_path = NULL;
+    this->spng_dll_path = NULL;
     this->log_info_str = NULL;
     this->log_warn_str = NULL;
     this->log_error_str = NULL;

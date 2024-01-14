@@ -56,6 +56,7 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, const OMG_Strin
     OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+    OMG_UNUSED(format);
     // TODO
     return surf;
 }
