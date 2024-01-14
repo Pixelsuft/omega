@@ -51,7 +51,8 @@
 #endif
 
 #ifndef OMG_SUPPORT_SDL2_IMAGE
-#define OMG_SUPPORT_SDL2_IMAGE OMG_SUPPORT_SDL2
+// TODO: teporary hack for omg_image testing
+#define OMG_SUPPORT_SDL2_IMAGE OMG_SUPPORT_SDL2 && 0
 #endif
 #ifndef OMG_SDL2_IMAGE_DYNAMIC
 #define OMG_SDL2_IMAGE_DYNAMIC 1

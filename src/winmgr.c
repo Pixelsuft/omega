@@ -1,5 +1,6 @@
 #include <omega/winmgr.h>
 #include <omega/omega.h>
+#include <omega/image_omg.h>
 #define omg_base ((OMG_Omega*)this->omg)
 
 OMG_Window* omg_winmgr_window_alloc(OMG_Winmgr* this) {
@@ -96,11 +97,16 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
         return true;
     omg_base->std->memset(this->cache, 0, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
     this->surf_depth = 32;
-    this->sz_image_loader = sizeof(OMG_ImageLoader);
     this->surf_rle = true;
     this->img = NULL;
     this->image_formats = OMG_IMG_FORMAT_BMP | OMG_IMG_FORMAT_JPG | OMG_IMG_FORMAT_PNG;
+#if OMG_SUPPORT_OMG_IMAGE
+    this->_img_init_ptr = (void*)((size_t)omg_image_loader_omg_init);
+    this->sz_image_loader = sizeof(OMG_ImageLoaderOmg);
+#else
     this->_img_init_ptr = (void*)((size_t)omg_image_loader_init);
+    this->sz_image_loader = sizeof(OMG_ImageLoader);
+#endif
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;
     this->window_free = omg_winmgr_window_free;
