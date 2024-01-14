@@ -307,6 +307,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
     OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
     if (OMG_ISNULL(tex))
         return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
+    tex->temp_surf = NULL;
     if (win_base->type == OMG_WIN_TYPE_SDL2) {
         tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, ((OMG_SurfaceSdl2*)surf)->surf);
         if (OMG_ISNULL(tex->tex)) {
@@ -323,26 +324,28 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
     }
 #if OMG_SUPPORT_WIN
     else if ((win_base->type == OMG_WIN_TYPE_WIN) && OMG_ISNOTNULL(surf->data)) {
-        SDL_Surface* temp_surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom(
+        tex->temp_surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom(
             surf->data,
             (int)surf->size.w, (int)surf->size.h,
             omg_base->winmgr->surf_depth, (int)surf->size.w * 4,
             SDL_PIXELFORMAT_ABGR8888
         );
-        if (OMG_ISNULL(temp_surf)) {
+        if (OMG_ISNULL(tex->temp_surf)) {
             OMG_FREE(omg_base->mem, tex);
             return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
         }
-        tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, temp_surf);
-        this->sdl2->SDL_FreeSurface(temp_surf);
+        tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, tex->temp_surf);
+        // WTF
+        // this->sdl2->SDL_FreeSurface(tex->temp_surf);
         if (OMG_ISNULL(tex->tex)) {
+            this->sdl2->SDL_FreeSurface(tex->temp_surf);
             OMG_FREE(omg_base->mem, tex);
             _OMG_LOG_ERROR(omg_base, "Failed to create SDL2 texture from Win32 surface (", this->sdl2->SDL_GetError(), ")");
             return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
         }
         tex_base->has_alpha = surf->has_alpha;
-        tex_base->size.w = (float)temp_surf->w;
-        tex_base->size.h = (float)temp_surf->h;
+        tex_base->size.w = (float)tex->temp_surf->w;
+        tex_base->size.h = (float)tex->temp_surf->h;
         if (destroy_surf)
             omg_base->winmgr->surf_destroy(omg_base->winmgr, surf);
         return tex;
@@ -358,6 +361,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_
     OMG_TextureSdl2* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
     if (OMG_ISNULL(tex))
         return (OMG_TextureSdl2*)omg_renderer_tex_create(base, size, access, has_alpha);
+    tex->temp_surf = NULL;
     tex->tex = this->sdl2->SDL_CreateTexture(
         this->ren,
         has_alpha ? SDL_PIXELFORMAT_RGBA8888 : SDL_PIXELFORMAT_RGB888,
@@ -395,6 +399,10 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
     }
     this->sdl2->SDL_DestroyTexture(tex->tex);
     tex->tex = NULL;
+    if (OMG_ISNOTNULL(tex->temp_surf)) {
+        OMG_FREE(omg_base->mem, tex->temp_surf);
+        tex->temp_surf = NULL;
+    }
     OMG_FREE(omg_base->mem, tex);
     return false;
 }

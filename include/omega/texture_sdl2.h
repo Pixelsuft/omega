@@ -7,5 +7,6 @@
 typedef struct {
     OMG_Texture parent;
     SDL_Texture* tex;
+    SDL_Surface* temp_surf;
 } OMG_TextureSdl2;
 #endif
