@@ -1,14 +1,15 @@
-#include <omega/api_spng.h>
+#include <omega/config.h>
 
 #if OMG_SUPPORT_SPNG
 #if OMG_SPNG_DYNAMIC
 #include <omega/api_static.h>
+#include <omega/api_spng.h>
 #define LOAD_REQUIRED(func_name) this->func_name = (omg_static_lib_func(this->handle, &OMG_STRING_MAKE_STATIC(#func_name)))
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
 
-OMG_API bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path) {
+bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path) {
     this->loaded = false;
 #if OMG_SPNG_DYNAMIC
     if (OMG_ISNULL(dll_path))
@@ -38,7 +39,7 @@ OMG_API bool omg_spng_dll_load(OMG_Spng* this, const OMG_String* dll_path) {
     return false;
 }
 
-OMG_API bool omg_spng_dll_free(OMG_Spng* this) {
+bool omg_spng_dll_free(OMG_Spng* this) {
     this->loaded = false;
 #if OMG_SPNG_DYNAMIC
     return omg_static_lib_free(this->handle);

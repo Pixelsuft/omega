@@ -1,6 +1,6 @@
 #pragma once
 #include <omega/config.h>
-#if OMG_SUPPORT_RAYLIB
+#if OMG_SUPPORT_SPNG
 #include <omega/ostd.h>
 #if !OMG_SPNG_DYNAMIC
 #include <spng.h>

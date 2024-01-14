@@ -147,10 +147,7 @@
     <ClCompile Include="src\image_omg.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\spng.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\miniz.c">
+    <ClCompile Include="src\api_spng.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
