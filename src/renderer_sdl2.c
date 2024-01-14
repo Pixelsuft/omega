@@ -400,7 +400,7 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
     this->sdl2->SDL_DestroyTexture(tex->tex);
     tex->tex = NULL;
     if (OMG_ISNOTNULL(tex->temp_surf)) {
-        OMG_FREE(omg_base->mem, tex->temp_surf);
+        this->sdl2->SDL_FreeSurface(tex->temp_surf);
         tex->temp_surf = NULL;
     }
     OMG_FREE(omg_base->mem, tex);
