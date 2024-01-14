@@ -138,6 +138,9 @@
 #ifndef OMG_SUPPORT_SPNG
 #define OMG_SUPPORT_SPNG 1
 #endif
+#ifndef OMG_SPNG_DYMANIC
+#define OMG_SPNG_DYMANIC 1
+#endif
 
 #ifndef OMG_MAX_PLAYING_MUSIC
 #define OMG_MAX_PLAYING_MUSIC 8
