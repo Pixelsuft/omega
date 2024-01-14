@@ -131,6 +131,9 @@
 #define OMG_ALLOW_DUMMY_TEX 1
 #endif
 
+#ifndef OMG_SUPPORT_OMG_IMAGE
+#define OMG_SUPPORT_OMG_IMAGE 1
+#endif
 #ifndef OMG_SUPPORT_LODEPNG
 #define OMG_SUPPORT_LODEPNG 1
 #endif

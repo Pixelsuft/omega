@@ -26,7 +26,7 @@ if cwd:
 else:
     cwd = os.getcwd()
 src = os.path.join(cwd, 'src')
-include = os.path.join(cwd, 'include', 'libs')
+include = os.path.join(cwd, 'include', 'omega_libs')
 print('Pixelsuft Load Deps System :D')
 
 if not os.path.isdir(src):
@@ -39,7 +39,7 @@ write_bytes(download_bytes('https://github.com/lvandeve/lodepng/raw/master/lodep
     b'#define LODEPNG_COMPILE_DISK', b'// #define LODEPNG_COMPILE_DISK'
 ), os.path.join(include, 'lodepng.h'))
 lodepng = download_bytes('https://github.com/lvandeve/lodepng/raw/master/lodepng.cpp').replace(
-    b'#include "lodepng.h"', b'#include <libs/lodepng.h>'
+    b'#include "lodepng.h"', b'#include <omega_libs/lodepng.h>'
 ).replace(b'return malloc(size);', b'return OMG_MALLOC(omg_get_default_omega()->mem, size);').replace(
     b'return realloc(ptr, new_size);', b'return OMG_REALLOC(omg_get_default_omega()->mem, ptr, new_size);'
 ).replace(b'free(ptr);', b'OMG_FREE(omg_get_default_omega()->mem, ptr);')
