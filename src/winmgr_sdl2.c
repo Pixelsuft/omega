@@ -77,6 +77,10 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
         return true;
     }
     this->sdl2->SDL_FreeSurface(surf->surf);
+    if (OMG_ISNOTNULL(surf->extra1)) {
+        OMG_FREE(omg_base->mem, surf->extra1);
+        surf->extra1 = NULL;
+    }
     surf->surf = NULL;
     OMG_FREE(omg_base->mem, surf);
     return false;
@@ -87,9 +91,15 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
     OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-    if (base->img->image_from_fp_internal(base->img, path, (void*)&surf->surf, format)) {
-        OMG_FREE(omg_base->mem, surf);
-        return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
+    if (base->img->type == OMG_IMAGE_LOADER_TYPE_SDL2) {
+        if (base->img->image_from_fp_internal(base->img, path, (void*)&surf->surf, format)) {
+            OMG_FREE(omg_base->mem, surf);
+            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
+        }
+        surf->extra1 = NULL;
+    }
+    else if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
+        // TODO
     }
     surf_base->has_alpha = surf->surf->format->Amask > 0;
     surf_base->size.w = (float)surf->surf->w;

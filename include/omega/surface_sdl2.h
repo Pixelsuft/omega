@@ -7,5 +7,6 @@
 typedef struct {
     OMG_Surface parent;
     SDL_Surface* surf;
+    void* extra1;
 } OMG_SurfaceSdl2;
 #endif
