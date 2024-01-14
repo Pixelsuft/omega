@@ -115,15 +115,18 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
 bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
 #if OMG_DEBUG
     if (OMG_ISNULL(ptr)) {
+        printf("1\n");
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
     }
     OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(real_ptr)) {
+        printf("2\n");
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
     }
     if (!real_ptr->is_allocated) {
+        printf("3\n");
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
     }
