@@ -86,11 +86,11 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
     return false;
 }
 
-#if OMG_SUPPORT_SDL2_IMAGE
 OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_String* path, int format) {
     OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
+#if OMG_SUPPORT_SDL2_IMAGE
     if (base->img->type == OMG_IMAGE_LOADER_TYPE_SDL2) {
         if (base->img->image_from_fp_internal(base->img, path, (void*)&surf->surf, format)) {
             OMG_FREE(omg_base->mem, surf);
@@ -98,8 +98,18 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
         }
         surf->extra1 = NULL;
     }
-    else if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
-        // TODO
+    else
+#endif
+    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
+        struct {
+            void* data;
+            int w, h;
+        } img_buf;
+        if (base->img->image_from_fp_internal(base->img, path, &img_buf, format)) {
+            OMG_FREE(omg_base->mem, surf);
+            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
+        }
+        printf("%i %i\n\n\n\n", img_buf.w, img_buf.h);
     }
     surf_base->has_alpha = surf->surf->format->Amask > 0;
     surf_base->size.w = (float)surf->surf->w;
@@ -111,7 +121,6 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
         _OMG_LOG_WARN(omg_base, "Failed to set surface RLE (", this->sdl2->SDL_GetError(), ")");
     return surf;
 }
-#endif
 
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
@@ -122,10 +131,10 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->window_free = omg_winmgr_sdl2_window_free;
     base->surf_create = omg_winmgr_sdl2_surf_create;
     base->surf_destroy = omg_winmgr_sdl2_surf_destroy;
+    base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);
-    base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
 #endif
     OMG_END_POINTER_CAST();
     return false;
