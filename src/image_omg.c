@@ -65,6 +65,10 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
         return true;
     }
     void* file_buf = OMG_MALLOC(omg_base->mem, size);
+    if (OMG_ISNULL(file_buf)) {
+        file->destroy(file);
+        return true;
+    }
     if ((int64_t)file->read(file, file_buf, 1, (size_t)size) < size) {
         OMG_FREE(omg_base->mem, file_buf);
         file->destroy(file);
@@ -72,19 +76,22 @@ bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_Stri
     }
     file->destroy(file);
     spng_ctx* ctx = spng_ctx_new(0);
-    spng_set_png_buffer(ctx, file_buf, size);
+    spng_set_png_buffer(ctx, file_buf, (size_t)size);
     size_t img_size = 0;
     spng_decoded_image_size(ctx, SPNG_FMT_RGBA8, &img_size);
     struct {
         void* data;
-        int w, h;
+        int w, h, depth;
     } *img_buf = buf;
     img_buf->data = OMG_MALLOC(omg_base->mem, img_size);
     spng_decode_image(ctx, img_buf->data, img_size, SPNG_FMT_RGBA8, 0);
+    struct spng_ihdr ihdr;
+    spng_get_ihdr(ctx, &ihdr);
     spng_ctx_free(ctx);
     OMG_FREE(omg_base->mem, file_buf);
-    img_buf->w = 100;
-    img_buf->h = 100;
+    img_buf->w = (int)ihdr.width;
+    img_buf->h = (int)ihdr.width;
+    img_buf->depth = (int)ihdr.bit_depth;
     return false;
 #endif
     return true;

@@ -105,7 +105,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
     if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
         struct {
             void* data;
-            int w, h;
+            int w, h, depth;
         } img_buf;
         if (base->img->image_from_fp_internal(base->img, path, &img_buf, format)) {
             OMG_FREE(omg_base->mem, surf);
@@ -114,7 +114,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
         surf->surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom(
             img_buf.data,
             img_buf.w, img_buf.h,
-            32, img_buf.w * 4,
+            img_buf.depth, img_buf.w * 4,
             SDL_PIXELFORMAT_ABGR8888
         );
         if (OMG_ISNULL(surf->surf)) {
