@@ -190,6 +190,13 @@ void app_on_paint(OMG_EventPaint* event) {
         NULL, &OMG_FRECT_MAKE(200, 400, 0, 0),
         NULL, this->omg->std->sin(this->rot_timer) * 10.0
     );
+    double mus_pos = this->audio->mus_get_pos(this->audio, this->mus);
+    if (mus_pos > 0.0) {
+        // We hardcode music len 130 sec because sometimes you can't get length with smth like this->mus->duration
+        float line_w = (float)(mus_pos * 500.0 / 130.820999);
+        this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 500, line_w, 20), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
+    }
+    this->ren->draw_rect(this->ren, &OMG_FRECT_MAKE(200, 500, 500, 20), &OMG_COLOR_MAKE_RGB(0, 0, 255));
     this->ren->flip(this->ren);
     // printf("%i\n", this->clock->get_fps(this->clock));
     // this->omg->delay(this->omg, 1.0 / 60.0);
