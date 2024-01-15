@@ -124,6 +124,18 @@ bool omg_audio_fmod_mus_destroy(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
     return retval;
 }
 
+double omg_audio_fmod_mus_get_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
+    if (!IS_PLAYING(mus))
+        return 0.0;
+    int res;
+    unsigned int pos;
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_GetPosition(mus->channel, &pos, FMOD_TIMEUNIT_MS))) {
+        _OMG_LOG_WARN(omg_base, "Failed to get audio position (", FMOD_ErrorString(res), ")");
+        return -1.0;
+    }
+    return (double)pos / 1000.0;
+}
+
 OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path) {
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
@@ -225,6 +237,7 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
     base->mus_set_volume = omg_audio_fmod_mus_set_volume;
     base->mus_play = omg_audio_fmod_mus_play;
     base->mus_stop = omg_audio_fmod_mus_stop;
+    base->mus_get_pos = omg_audio_fmod_mus_get_pos;
     // Hacky
     base->snd_from_fp = omg_audio_fmod_snd_from_fp;
     base->snd_destroy = omg_audio_fmod_mus_destroy;

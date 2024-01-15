@@ -95,6 +95,15 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
     return false;
 }
 
+double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
+    // if (!MUS_IS_PLAYING())
+    //     return 0.0;
+    // TODO: Emulate with SDL_GetTicks64 if doesn't support
+    if (OMG_ISNULL(this->mix.Mix_GetMusicPosition))
+        return -1.0;
+    return this->mix.Mix_GetMusicPosition(mus->mus);
+}
+
 bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
     if (SND_IS_PLAYING())
         this->mix.Mix_HaltChannel(snd->channel);
@@ -254,6 +263,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_play = omg_audio_sdl2_mus_play;
     base->mus_set_volume = omg_audio_sdl2_mus_set_volume;
     base->mus_stop = omg_audio_sdl2_mus_stop;
+    base->mus_get_pos = omg_audio_sdl2_mus_get_pos;
     base->snd_from_fp = omg_audio_sdl2_snd_from_fp;
     base->snd_destroy = omg_audio_sdl2_snd_destroy;
     base->snd_play = omg_audio_sdl2_snd_play;

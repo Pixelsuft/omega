@@ -66,6 +66,10 @@ bool omg_audio_raylib_mus_stop(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
     return false;
 }
 
+double omg_audio_raylib_mus_get_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
+    return (double)this->raylib->GetMusicTimePlayed(mus->mus);
+}
+
 OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, const OMG_String* path) {
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
@@ -148,6 +152,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->mus_play = omg_audio_raylib_mus_play;
     base->mus_stop = omg_audio_raylib_mus_stop;
     base->mus_set_volume = omg_audio_raylib_mus_set_volume;
+    base->mus_get_pos = omg_audio_raylib_mus_get_pos;
     base->snd_from_fp = omg_audio_raylib_snd_from_fp;
     base->snd_destroy = omg_audio_raylib_snd_destroy;
     base->snd_set_volume = omg_audio_raylib_snd_set_volume;
