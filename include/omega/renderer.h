@@ -9,6 +9,10 @@
 #define OMG_REN_TYPE_SDL2 3
 #define OMG_REN_TYPE_RAYLIB 4
 
+#define OMG_SCALE_MODE_AUTO 0
+#define OMG_SCALE_MODE_LINEAR 1
+#define OMG_SCALE_MODE_NEAREST 2
+
 #define OMG_REN_DRIVER_NONE 0
 #define OMG_REN_DRIVER_AUTO (1 << 1)
 #define OMG_REN_DRIVER_D3D9 (1 << 2)
@@ -54,6 +58,7 @@ typedef struct OMG_Renderer {
     float a_scale;
     int driver;
     int type;
+    int tex_default_scale_mode;
     bool aa;
     bool soft_scale;
     bool soft_offset;

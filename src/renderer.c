@@ -119,6 +119,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->soft_offset = false;
     this->auto_blend = true;
     this->target = NULL;
+    this->tex_default_scale_mode = OMG_SCALE_MODE_AUTO;
     this->offset.x = this->offset.y = 0.0f;
     this->scale.x = this->scale.y = this->a_scale = 1.0f;
     this->dpi_scale.x = this->dpi_scale.y = 1.0f;

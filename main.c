@@ -240,6 +240,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
+    this->ren->tex_default_scale_mode = OMG_SCALE_MODE_NEAREST;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
