@@ -476,6 +476,29 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
     return false;
 }
 
+bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int scale_mode) {
+    return false;
+}
+
+bool omg_renderer_sdl2_tex_set_color_mod(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_Color* col) {
+    bool res = false;
+    if (this->sdl2->SDL_SetTextureColorMod(
+        tex->tex,
+        (uint8_t)(col->r * (omg_color_t)255 / OMG_MAX_COLOR),
+        (uint8_t)(col->g * (omg_color_t)255 / OMG_MAX_COLOR),
+        (uint8_t)(col->b * (omg_color_t)255 / OMG_MAX_COLOR)
+    ) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set texture color mod (", this->sdl2->SDL_GetError(), ")");
+        res = true;
+    }
+    if (this->sdl2->SDL_SetTextureAlphaMod(tex->tex, (uint8_t)(col->a * (omg_color_t)255 / OMG_MAX_COLOR)) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set texture alpha mod (", this->sdl2->SDL_GetError(), ")");
+        res = true;
+    }
+    // I'm lazy to check blend mode here, so user must set it manually for non-alpha image
+    return res;
+}
+
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -497,6 +520,8 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
     base->copy = omg_renderer_sdl2_copy;
     base->copy_ex = omg_renderer_sdl2_copy_ex;
+    base->tex_set_scale_mode = omg_renderer_sdl2_tex_set_scale_mode;
+    base->tex_set_color_mod = omg_renderer_sdl2_tex_set_color_mod;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_SDL2;
     int sdl2_driver;

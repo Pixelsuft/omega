@@ -110,6 +110,16 @@ bool omg_renderer_copy_ex(OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect*
     return false;
 }
 
+bool omg_renderer_tex_set_scale_mode(OMG_Renderer* this, OMG_Texture* tex, int scale_mode) {
+    OMG_UNUSED(this, tex, scale_mode);
+    return false;
+}
+
+bool omg_renderer_tex_set_color_mod(OMG_Renderer* this, OMG_Texture* tex, const OMG_Color* col) {
+    OMG_UNUSED(this, tex, col);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -147,5 +157,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->tex_destroy = omg_renderer_tex_destroy;
     this->copy = omg_renderer_copy;
     this->copy_ex = omg_renderer_copy_ex;
+    this->tex_set_scale_mode = omg_renderer_tex_set_scale_mode;
+    this->tex_set_color_mod = omg_renderer_tex_set_color_mod;
     return false;
 }

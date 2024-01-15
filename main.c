@@ -99,6 +99,12 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else if (event->code == OMG_SCANCODE_S)
             this->audio->mus_stop(this->audio, this->mus);
     }
+    if (event->code == OMG_SCANCODE_F) {
+        if (event->is_pressed)
+            this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
+        else
+            this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(255, 255, 255, 255));
+    }
     // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
