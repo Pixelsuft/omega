@@ -14,10 +14,10 @@
 #define OMG_SCALE_MODE_NEAREST 2
 
 #define OMG_BLEND_MODE_NONE 0
-#define OMG_BLENDMODE_BLEND (1 << 0)
-#define OMG_BLENDMODE_ADD (1 << 1)
-#define OMG_BLENDMODE_MOD (1 << 2)
-#define OMG_BLENDMODE_MUL (1 << 3)
+#define OMG_BLEND_MODE_BLEND (1 << 0)
+#define OMG_BLEND_MODE_ADD (1 << 1)
+#define OMG_BLEND_MODE_MOD (1 << 2)
+#define OMG_BLEND_MODE_MUL (1 << 3)
 
 #define OMG_REN_DRIVER_NONE 0
 #define OMG_REN_DRIVER_AUTO (1 << 1)
@@ -56,6 +56,7 @@ typedef struct OMG_Renderer {
     bool (*tex_set_scale_mode)(struct OMG_Renderer* this, OMG_Texture* tex, int scale_mode);
     bool (*tex_set_blend_mode)(struct OMG_Renderer* this, OMG_Texture* tex, int blend_mode);
     bool (*tex_set_color_mod)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_Color* col);
+    bool (*set_blend_mode)(struct OMG_Renderer* this, int blend_mode);
     void* omg;
     void* win;
     OMG_Texture* target;
@@ -97,6 +98,7 @@ OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);
 OMG_API bool omg_renderer_tex_set_scale_mode(OMG_Renderer* this, OMG_Texture* tex, int scale_mode);
 OMG_API bool omg_renderer_tex_set_blend_mode(OMG_Renderer* this, OMG_Texture* tex, int blend_mode);
 OMG_API bool omg_renderer_tex_set_color_mod(OMG_Renderer* this, OMG_Texture* tex, const OMG_Color* col);
+OMG_API bool omg_renderer_set_blend_mode(OMG_Renderer* this, int blend_mode);
 OMG_API bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
 OMG_API bool omg_renderer_copy_ex(OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
 #endif

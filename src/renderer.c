@@ -125,6 +125,11 @@ bool omg_renderer_tex_set_blend_mode(OMG_Renderer* this, OMG_Texture* tex, int b
     return false;
 }
 
+bool omg_renderer_set_blend_mode(OMG_Renderer* this, int blend_mode) {
+    OMG_UNUSED(this, blend_mode);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -165,5 +170,6 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->tex_set_scale_mode = omg_renderer_tex_set_scale_mode;
     this->tex_set_color_mod = omg_renderer_tex_set_color_mod;
     this->tex_set_blend_mode = omg_renderer_tex_set_blend_mode;
+    this->set_blend_mode = omg_renderer_set_blend_mode;
     return false;
 }

@@ -108,6 +108,16 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
     if (event->code == OMG_SCANCODE_G) {
         this->ren->tex_set_scale_mode(this->ren, this->tex2, event->is_pressed ? OMG_SCALE_MODE_LINEAR : OMG_SCALE_MODE_NEAREST);
     }
+    if (event->code == OMG_SCANCODE_H) {
+        if (event->is_pressed) {
+            this->ren->auto_blend = false;
+            this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_MUL);
+        }
+        else {
+            this->ren->auto_blend = true;
+            this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_BLEND);
+        }
+    }
     // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
