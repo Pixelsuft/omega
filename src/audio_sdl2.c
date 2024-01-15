@@ -258,7 +258,6 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     this->mix.Mix_QuerySpec(&base->freq, NULL, &base->channels);
     omg_base->std->memset(this->play_cache, 0, sizeof(OMG_SoundSdl2*) * OMG_MAX_PLAYING_SOUND);
     this->supports_get_pos = OMG_ISNOTNULL(this->mix.Mix_GetMusicPosition);
-    this->supports_get_pos = false;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
