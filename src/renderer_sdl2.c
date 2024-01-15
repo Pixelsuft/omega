@@ -52,10 +52,10 @@
     } \
 } while (0)
 #define SDL2_TEX_APPLY_SCALE_MODE(tex, mode) do { \
-    if (this->sdl2->SDL_SetTextureScaleMode(tex, ( \
-        (mode == OMG_SCALE_MODE_LINEAR) ? SDL_ScaleModeLinear : (mode == OMG_SCALE_MODE_NEAREST ? SDL_ScaleModeNearest : SDL_ScaleModeBest) \
+    if ((mode != OMG_SCALE_MODE_AUTO) && this->sdl2->SDL_SetTextureScaleMode(tex, ( \
+        (mode == OMG_SCALE_MODE_LINEAR) ? SDL_ScaleModeLinear : SDL_ScaleModeNearest \
     )) < 0) \
-        _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")"); \
+        _OMG_LOG_WARN(omg_base, "Failed to set texture scale mode (", this->sdl2->SDL_GetError(), ")"); \
 } while (0)
 
 void omg_renderer_sdl2_update_scale(OMG_RendererSdl2* this) {
@@ -477,7 +477,12 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
 }
 
 bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int scale_mode) {
-    SDL2_TEX_APPLY_SCALE_MODE(tex->tex, scale_mode); // LOL Idk anyone will check scale mode
+    if (this->sdl2->SDL_SetTextureScaleMode(tex->tex, (
+        (scale_mode == OMG_SCALE_MODE_LINEAR) ? SDL_ScaleModeLinear : (scale_mode == OMG_SCALE_MODE_NEAREST ? SDL_ScaleModeNearest : SDL_ScaleModeBest)
+    )) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
     return false;
 }
 
