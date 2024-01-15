@@ -324,6 +324,12 @@ bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* te
     return false;
 }
 
+bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_Color* col) {
+    OMG_UNUSED(this);
+    tex->tint = _OMG_RAYLIB_OMG_COLOR(col);
+    return false;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -345,6 +351,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->tex_destroy = omg_renderer_raylib_tex_destroy;
     base->copy = omg_renderer_raylib_copy;
     base->copy_ex = omg_renderer_raylib_copy_ex;
+    base->tex_set_color_mod = omg_renderer_raylib_tex_set_color_mod;
     OMG_END_POINTER_CAST();
     this->ss.x = this->ss.y = 1.0f;
     this->so.x = this->so.y = 0.0f;
