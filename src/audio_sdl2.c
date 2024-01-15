@@ -102,6 +102,8 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
 double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
     if (this->supports_get_pos)
         return this->mix.Mix_GetMusicPosition(mus->mus);
+    if (!MUS_IS_PLAYING())
+        return 0.0;
     return (double)(this->sdl2->SDL_GetTicks64() - mus->time_cache1) / 1000.0;
 }
 
