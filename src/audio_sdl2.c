@@ -94,8 +94,10 @@ bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, floa
 }
 
 bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
-    if (MUS_IS_PLAYING())
+    if (MUS_IS_PLAYING()) {
         this->mix.Mix_HaltMusic();
+        cur_mus_cache = NULL;
+    }
     return false;
 }
 
