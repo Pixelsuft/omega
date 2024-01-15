@@ -51,7 +51,7 @@
         } \
     } \
 } while (0)
-#define TEX_APPLY_SCALE_MODE(tex, mode) do { \
+#define SDL2_TEX_APPLY_SCALE_MODE(tex, mode) do { \
     if (this->sdl2->SDL_SetTextureScaleMode(tex, ( \
         (mode == OMG_SCALE_MODE_LINEAR) ? SDL_ScaleModeLinear : (mode == OMG_SCALE_MODE_NEAREST ? SDL_ScaleModeNearest : SDL_ScaleModeBest) \
     )) < 0) \
@@ -326,7 +326,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
         tex_base->size.h = surf->size.h;
         if (destroy_surf)
             omg_base->winmgr->surf_destroy(omg_base->winmgr, surf);
-        TEX_APPLY_SCALE_MODE(tex->tex, base->tex_default_scale_mode);
+        SDL2_TEX_APPLY_SCALE_MODE(tex->tex, base->tex_default_scale_mode);
         return tex;
     }
 #if OMG_SUPPORT_WIN
@@ -355,7 +355,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Sur
         tex_base->size.h = (float)tex->temp_surf->h;
         if (destroy_surf)
             omg_base->winmgr->surf_destroy(omg_base->winmgr, surf);
-        TEX_APPLY_SCALE_MODE(tex->tex, base->tex_default_scale_mode);
+        SDL2_TEX_APPLY_SCALE_MODE(tex->tex, base->tex_default_scale_mode);
         return tex;
     }
 #endif
@@ -393,7 +393,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, const OMG_
     tex_base->has_alpha = true;
     if (this->sdl2->SDL_SetTextureBlendMode(tex->tex, has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0)
         _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
-    TEX_APPLY_SCALE_MODE(tex->tex, base->tex_default_scale_mode);
+    SDL2_TEX_APPLY_SCALE_MODE(tex->tex, base->tex_default_scale_mode);
     return tex;
 }
 
@@ -477,6 +477,7 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
 }
 
 bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int scale_mode) {
+    SDL2_TEX_APPLY_SCALE_MODE(tex->tex, scale_mode); // LOL Idk anyone will check scale mode
     return false;
 }
 

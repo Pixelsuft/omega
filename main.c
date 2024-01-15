@@ -105,6 +105,9 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else
             this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(255, 255, 255, 255));
     }
+    if (event->code == OMG_SCANCODE_G) {
+        this->ren->tex_set_scale_mode(this->ren, this->tex2, event->is_pressed ? OMG_SCALE_MODE_LINEAR : OMG_SCALE_MODE_NEAREST);
+    }
     // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
@@ -246,7 +249,6 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
-    this->ren->tex_default_scale_mode = OMG_SCALE_MODE_NEAREST;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
@@ -282,6 +284,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(200, 200), true);
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
+    this->ren->tex_set_scale_mode(this->ren, this->tex2, OMG_SCALE_MODE_NEAREST);
     this->clock->init(this->clock, true);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
