@@ -7,6 +7,8 @@
 typedef struct {
     OMG_Music base;
     Mix_Music* mus;
+    uint64_t time_cache1;
+    uint64_t time_cache2;
     int vol_cache;
 } OMG_MusicSdl2;
 
@@ -22,6 +24,7 @@ typedef struct {
     OMG_SoundSdl2* play_cache[OMG_MAX_PLAYING_SOUND];
     OMG_Sdl2* sdl2;
     OMG_Sdl2Mixer mix;
+    bool supports_get_pos;
 } OMG_AudioSdl2;
 
 OMG_API bool omg_audio_sdl2_init(OMG_AudioSdl2* this);

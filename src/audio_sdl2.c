@@ -59,6 +59,8 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
     else
         mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
     mus->vol_cache = MIX_MAX_VOLUME;
+    mus->time_cache1 = 0;
+    mus->time_cache2 = 0;
     return mus;
 }
 
@@ -79,6 +81,8 @@ bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops,
     }
     cur_mus_cache = mus->mus;
     this->mix.Mix_VolumeMusic(mus->vol_cache);
+    if (!this->supports_get_pos)
+        mus->time_cache1 = this->sdl2->SDL_GetTicks64();
     return false;
 }
 
@@ -96,12 +100,9 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
 }
 
 double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
-    // if (!MUS_IS_PLAYING())
-    //     return 0.0;
-    // TODO: Emulate with SDL_GetTicks64 if doesn't support
-    if (OMG_ISNULL(this->mix.Mix_GetMusicPosition))
-        return -1.0;
-    return this->mix.Mix_GetMusicPosition(mus->mus);
+    if (this->supports_get_pos)
+        return this->mix.Mix_GetMusicPosition(mus->mus);
+    return (double)(this->sdl2->SDL_GetTicks64() - mus->time_cache1) / 1000.0;
 }
 
 bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
@@ -256,6 +257,8 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
         this->mix.Mix_AllocateChannels(OMG_MAX_PLAYING_SOUND);
     this->mix.Mix_QuerySpec(&base->freq, NULL, &base->channels);
     omg_base->std->memset(this->play_cache, 0, sizeof(OMG_SoundSdl2*) * OMG_MAX_PLAYING_SOUND);
+    this->supports_get_pos = OMG_ISNOTNULL(this->mix.Mix_GetMusicPosition);
+    this->supports_get_pos = false;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
