@@ -43,5 +43,6 @@ OMG_API bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex
 OMG_API bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
 OMG_API bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int scale_mode);
 OMG_API bool omg_renderer_sdl2_tex_set_color_mod(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_Color* col);
+OMG_API bool omg_renderer_sdl2_tex_set_blend_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int blend_mode);
 #endif
 #endif

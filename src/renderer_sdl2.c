@@ -486,6 +486,14 @@ bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl
     return false;
 }
 
+bool omg_renderer_sdl2_tex_set_blend_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int blend_mode) {
+    if (this->sdl2->SDL_SetTextureBlendMode(tex->tex, (SDL_BlendMode)blend_mode) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_renderer_sdl2_tex_set_color_mod(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_Color* col) {
     bool res = false;
     if (this->sdl2->SDL_SetTextureColorMod(
@@ -528,6 +536,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->copy_ex = omg_renderer_sdl2_copy_ex;
     base->tex_set_scale_mode = omg_renderer_sdl2_tex_set_scale_mode;
     base->tex_set_color_mod = omg_renderer_sdl2_tex_set_color_mod;
+    base->tex_set_blend_mode = omg_renderer_sdl2_tex_set_blend_mode;
     OMG_END_POINTER_CAST();
     base->type = OMG_REN_TYPE_SDL2;
     int sdl2_driver;
