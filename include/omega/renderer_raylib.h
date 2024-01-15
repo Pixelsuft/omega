@@ -15,6 +15,7 @@ typedef struct {
     OMG_Raylib* raylib;
     OMG_FPoint ss;
     OMG_FPoint so;
+    int blend_cache;
 } OMG_RendererRaylib;
 
 OMG_API bool omg_renderer_raylib_init(OMG_RendererRaylib* this);
@@ -42,5 +43,6 @@ OMG_API bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_Textu
 OMG_API bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos);
 OMG_API bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
 OMG_API bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_set_blend_mode(OMG_RendererRaylib* this, int blend_mode);
 #endif
 #endif

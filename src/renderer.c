@@ -139,6 +139,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->soft_offset = false;
     this->auto_blend = true;
     this->target = NULL;
+    this->fix_auto_tex_blend = true;
     this->tex_default_scale_mode = OMG_SCALE_MODE_AUTO;
     this->offset.x = this->offset.y = 0.0f;
     this->scale.x = this->scale.y = this->a_scale = 1.0f;

@@ -330,6 +330,25 @@ bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_Texture
     return false;
 }
 
+bool omg_renderer_raylib_set_blend_mode(OMG_RendererRaylib* this, int blend_mode) {
+    if ((blend_mode == OMG_BLEND_MODE_NONE) || (blend_mode == OMG_BLEND_MODE_BLEND)) {
+        this->raylib->EndBlendMode();
+        return false;
+    }
+    int blend = BLEND_ALPHA;
+    if (blend_mode == OMG_BLEND_MODE_ADD)
+        blend = BLEND_ADD_COLORS;
+    else if (blend_mode == OMG_BLEND_MODE_ADDDITIVE)
+        blend = BLEND_ADDITIVE;
+    else if (blend_mode == OMG_BLEND_MODE_SUB)
+        blend = BLEND_SUBTRACT_COLORS;
+    else if (blend_mode == OMG_BLEND_MODE_MUL)
+        blend = BLEND_MULTIPLIED;
+    this->blend_cache = blend;
+    this->raylib->BeginBlendMode(blend);
+    return false;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -352,7 +371,9 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->copy = omg_renderer_raylib_copy;
     base->copy_ex = omg_renderer_raylib_copy_ex;
     base->tex_set_color_mod = omg_renderer_raylib_tex_set_color_mod;
+    base->set_blend_mode = omg_renderer_raylib_set_blend_mode;
     OMG_END_POINTER_CAST();
+    this->blend_cache = -1;
     this->ss.x = this->ss.y = 1.0f;
     this->so.x = this->so.y = 0.0f;
     base->soft_offset = true;

@@ -18,6 +18,8 @@
 #define OMG_BLEND_MODE_ADD (1 << 1)
 #define OMG_BLEND_MODE_MOD (1 << 2)
 #define OMG_BLEND_MODE_MUL (1 << 3)
+#define OMG_BLEND_MODE_SUB (1 << 3)
+#define OMG_BLEND_MODE_ADDDITIVE (1 << 3)
 
 #define OMG_REN_DRIVER_NONE 0
 #define OMG_REN_DRIVER_AUTO (1 << 1)
@@ -69,6 +71,7 @@ typedef struct OMG_Renderer {
     int driver;
     int type;
     int tex_default_scale_mode;
+    bool fix_auto_tex_blend;
     bool aa;
     bool soft_scale;
     bool soft_offset;
