@@ -231,6 +231,10 @@ void app_init(App* this, OMG_EntryData* data) {
         return;
     }
     this->win->resizable = true;
+#if OMG_IS_EMSCRIPTEN
+    this->win->size.w = 1152.0f;
+    this->win->size.h = 864.0f;
+#endif
     if (this->win->default_init(this->win)) {
         OMG_ERROR(this->omg, "OMG Window Init Fail");
         this->omg->destroy(this->omg);
