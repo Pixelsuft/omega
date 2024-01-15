@@ -416,6 +416,14 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
     return false;
 }
 
+bool omg_renderer_sdl2_tex_set_blend_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int blend_mode) {
+    if (this->sdl2->SDL_SetTextureBlendMode(tex->tex, (SDL_BlendMode)blend_mode) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos) {
     SDL_FRect dst_rect;
     dst_rect.x = base->offset.x;
@@ -426,6 +434,12 @@ bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const 
     }
     dst_rect.w = tex_base->size.w;
     dst_rect.h = tex_base->size.h;
+    if (base->fix_auto_tex_blend)
+        this->sdl2->SDL_SetTextureBlendMode(
+            tex->tex,
+            (SDL_BlendMode)(((this->blend_cache == OMG_BLEND_MODE_NONE) || (this->blend_cache == OMG_BLEND_MODE_BLEND)) ?
+            (tex_base->has_alpha ? OMG_BLEND_MODE_BLEND : OMG_BLEND_MODE_NONE) : this->blend_cache)
+        );
     if (this->sdl2->SDL_RenderCopyF(this->ren, tex->tex, NULL, &dst_rect) < 0) {
         _OMG_SDL2_COPY_WARN();
         return true;
@@ -467,6 +481,12 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
         src_rect.w = (int)src->w;
         src_rect.h = (int)src->h;
     }
+    if (base->fix_auto_tex_blend)
+        this->sdl2->SDL_SetTextureBlendMode(
+            tex->tex,
+            (SDL_BlendMode)(((this->blend_cache == OMG_BLEND_MODE_NONE) || (this->blend_cache == OMG_BLEND_MODE_BLEND)) ?
+            (tex_base->has_alpha ? OMG_BLEND_MODE_BLEND : OMG_BLEND_MODE_NONE) : this->blend_cache)
+        );
     if (this->sdl2->SDL_RenderCopyExF(
         this->ren, tex->tex, OMG_ISNULL(src) ? NULL : &src_rect, &dst_rect, rot, (const SDL_FPoint*)origin, flip
     ) < 0) {
@@ -480,14 +500,6 @@ bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl
     if (this->sdl2->SDL_SetTextureScaleMode(tex->tex, (
         (scale_mode == OMG_SCALE_MODE_LINEAR) ? SDL_ScaleModeLinear : (scale_mode == OMG_SCALE_MODE_NEAREST ? SDL_ScaleModeNearest : SDL_ScaleModeBest)
     )) < 0) {
-        _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
-        return true;
-    }
-    return false;
-}
-
-bool omg_renderer_sdl2_tex_set_blend_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int blend_mode) {
-    if (this->sdl2->SDL_SetTextureBlendMode(tex->tex, (SDL_BlendMode)blend_mode) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
@@ -514,6 +526,7 @@ bool omg_renderer_sdl2_tex_set_color_mod(OMG_RendererSdl2* this, OMG_TextureSdl2
 }
 
 bool omg_renderer_sdl2_set_blend_mode(OMG_RendererSdl2* this, int blend_mode) {
+    this->blend_cache = blend_mode;
     if (this->sdl2->SDL_SetRenderDrawBlendMode(this->ren, (SDL_BlendMode)blend_mode) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set renderer blend mode (", this->sdl2->SDL_GetError(), ")");
         return true;
@@ -547,6 +560,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->tex_set_blend_mode = omg_renderer_sdl2_tex_set_blend_mode;
     base->set_blend_mode = omg_renderer_sdl2_set_blend_mode;
     OMG_END_POINTER_CAST();
+    this->blend_cache = OMG_BLEND_MODE_NONE;
     base->type = OMG_REN_TYPE_SDL2;
     int sdl2_driver;
     if (base->driver == OMG_REN_DRIVER_AUTO) {

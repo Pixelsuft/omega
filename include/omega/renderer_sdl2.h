@@ -14,6 +14,7 @@ typedef struct {
     SDL_Window* win;
     SDL_Renderer* ren;
     int id_cache[10];
+    int blend_cache;
     int win_build_num;
 } OMG_RendererSdl2;
 
