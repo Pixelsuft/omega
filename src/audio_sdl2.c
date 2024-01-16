@@ -115,6 +115,19 @@ bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
     return false;
 }
 
+bool omg_audio_sdl2_mus_set_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, double pos) {
+    if (!MUS_IS_PLAYING())
+        return false;
+    if (this->mix.Mix_SetMusicPosition(pos) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set music position (not implemented)");
+        return true;
+    }
+    if (!this->supports_get_pos) {
+        mus->time_cache1 = this->sdl2->SDL_GetTicks64() - (uint64_t)(pos * 1000.0);
+    }
+    return false;
+}
+
 bool omg_audio_sdl2_snd_destroy(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
     if (OMG_ISNULL(snd) || OMG_ISNULL(snd->chunk))
         return false;
@@ -270,6 +283,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_set_volume = omg_audio_sdl2_mus_set_volume;
     base->mus_stop = omg_audio_sdl2_mus_stop;
     base->mus_get_pos = omg_audio_sdl2_mus_get_pos;
+    base->mus_set_pos = omg_audio_sdl2_mus_set_pos;
     base->snd_from_fp = omg_audio_sdl2_snd_from_fp;
     base->snd_destroy = omg_audio_sdl2_snd_destroy;
     base->snd_play = omg_audio_sdl2_snd_play;

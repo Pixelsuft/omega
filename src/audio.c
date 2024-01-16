@@ -123,6 +123,11 @@ double omg_audio_mus_get_pos(OMG_Audio* this, OMG_Music* mus) {
     return -1.0;
 }
 
+bool omg_audio_mus_set_pos(OMG_Audio* this, OMG_Music* mus, double pos) {
+    OMG_UNUSED(this, mus, pos);
+    return false;
+}
+
 bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
@@ -134,6 +139,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->mus_set_volume = omg_audio_mus_set_volume;
     this->mus_stop = omg_audio_mus_stop;
     this->mus_get_pos = omg_audio_mus_get_pos;
+    this->mus_set_pos = omg_audio_mus_set_pos;
     this->snd_destroy = omg_audio_snd_destroy;
     this->snd_from_fp = omg_audio_snd_from_fp;
     this->snd_set_volume = omg_audio_snd_set_volume;

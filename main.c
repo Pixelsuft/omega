@@ -98,6 +98,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->audio->mus_play(this->audio, this->mus, -1, 0.0, 0.0);
         else if (event->code == OMG_SCANCODE_S)
             this->audio->mus_stop(this->audio, this->mus);
+        else if (event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_X)
+            this->audio->mus_set_pos(this->audio, this->mus, this->audio->mus_get_pos(this->audio, this->mus) + (event->code == OMG_SCANCODE_Z ? 5.0 : -5.0));
     }
     if (event->code == OMG_SCANCODE_F) {
         if (event->is_pressed)
