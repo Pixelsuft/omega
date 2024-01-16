@@ -349,6 +349,15 @@ bool omg_renderer_raylib_set_blend_mode(OMG_RendererRaylib* this, int blend_mode
     return false;
 }
 
+bool omg_renderer_raylib_set_vsync(OMG_RendererRaylib* this, bool enabled) {
+    win_base->vsync = enabled;
+    if (enabled)
+        this->raylib->SetWindowState(FLAG_VSYNC_HINT);
+    else
+        this->raylib->ClearWindowState(FLAG_VSYNC_HINT);
+    return false;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
