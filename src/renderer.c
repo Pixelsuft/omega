@@ -40,6 +40,11 @@ void omg_renderer_fill_on_create(OMG_Renderer* this) {
     this->get_supported_drivers = omg_renderer_get_supported_drivers;
 }
 
+bool omg_renderer_set_vsync(OMG_Renderer* this, bool enabled) {
+    OMG_UNUSED(this, enabled);
+    return false;
+}
+
 bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
     if (OMG_ISNOTNULL(offset)) {
         this->offset.x = offset->x;
@@ -151,6 +156,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->size.w = win_base->size.w;
     this->size.h = win_base->size.h;
     this->_on_update_window_size = omg_on_update_window_size;
+    this->set_vsync = omg_renderer_set_vsync;
     this->destroy = omg_renderer_destroy;
     this->clear = omg_renderer_clear;
     this->begin = omg_renderer_begin;

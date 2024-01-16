@@ -7,7 +7,7 @@
 #define snd_base ((OMG_Sound*)snd)
 #define omg_base ((OMG_Omega*)base->omg)
 #define MIX_GETERROR() (OMG_ISNULL(this->sdl2) ? "" : this->sdl2->SDL_GetError())
-#define MUS_IS_PLAYING() (cur_mus_cache == mus->mus)
+#define MUS_IS_PLAYING() ((cur_mus_cache == mus->mus) && this->mix.Mix_PlayingMusic())
 #define SND_IS_PLAYING() (snd->channel >= 0)
 
 static OMG_AudioSdl2* cur_audio_cache = NULL;
@@ -102,10 +102,11 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
 }
 
 double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
-    if (this->supports_get_pos)
-        return this->mix.Mix_GetMusicPosition(mus->mus);
+    // Is this right???
     if (!MUS_IS_PLAYING())
         return 0.0;
+    if (this->supports_get_pos)
+        return this->mix.Mix_GetMusicPosition(mus->mus);
     return (double)(this->sdl2->SDL_GetTicks64() - mus->time_cache1) / 1000.0;
 }
 

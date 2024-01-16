@@ -137,7 +137,11 @@ double omg_audio_fmod_mus_get_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
 }
 
 bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double pos) {
-    if ((pos < 0.0) || !IS_PLAYING(mus))
+    if (pos < 0.0)
+        pos = 0.0;
+    else if (pos > mus_base->duration) // Should I use this hack???
+        pos = mus_base->duration - 0.001;
+    if (!IS_PLAYING(mus))
         return false;
     int res;
     if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPosition(mus->channel, (unsigned int)(pos * 1000.0), FMOD_TIMEUNIT_MS))) {
