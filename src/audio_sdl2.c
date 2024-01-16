@@ -116,6 +116,8 @@ bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
 }
 
 bool omg_audio_sdl2_mus_set_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, double pos) {
+    if (pos < 0.0)
+        pos = 0.0;
     if (!MUS_IS_PLAYING())
         return false;
     if (this->mix.Mix_SetMusicPosition(pos) < 0) {

@@ -125,6 +125,13 @@ bool omg_audio_raylib_snd_set_volume(OMG_AudioRaylib* this, OMG_SoundRaylib* snd
     return false;
 }
 
+bool omg_audio_raylib_mus_set_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double pos) {
+    if (pos < 0.0)
+        pos = 0.0;
+    this->raylib->SeekMusicStream(mus->mus, (float)pos);
+    return false;
+}
+
 bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double fade_in) {
     OMG_UNUSED(loops, fade_in);
     this->raylib->PlaySound(snd->snd);
@@ -153,6 +160,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->mus_stop = omg_audio_raylib_mus_stop;
     base->mus_set_volume = omg_audio_raylib_mus_set_volume;
     base->mus_get_pos = omg_audio_raylib_mus_get_pos;
+    base->mus_set_pos = omg_audio_raylib_mus_set_pos;
     base->snd_from_fp = omg_audio_raylib_snd_from_fp;
     base->snd_destroy = omg_audio_raylib_snd_destroy;
     base->snd_set_volume = omg_audio_raylib_snd_set_volume;

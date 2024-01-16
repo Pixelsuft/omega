@@ -35,5 +35,6 @@ OMG_API bool omg_audio_raylib_snd_set_volume(OMG_AudioRaylib* this, OMG_SoundRay
 OMG_API bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double fade_in);
 OMG_API bool omg_audio_raylib_snd_stop(OMG_AudioRaylib* this, OMG_SoundRaylib* snd);
 OMG_API double omg_audio_raylib_mus_get_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus);
+OMG_API bool omg_audio_raylib_mus_set_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double pos);
 #endif
 #endif

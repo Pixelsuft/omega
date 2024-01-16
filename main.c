@@ -99,7 +99,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else if (event->code == OMG_SCANCODE_S)
             this->audio->mus_stop(this->audio, this->mus);
         else if (event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_X)
-            this->audio->mus_set_pos(this->audio, this->mus, this->audio->mus_get_pos(this->audio, this->mus) + (event->code == OMG_SCANCODE_Z ? 5.0 : -5.0));
+            this->audio->mus_set_pos(this->audio, this->mus, this->audio->mus_get_pos(this->audio, this->mus) + (event->code == OMG_SCANCODE_X ? 5.0 : -5.0));
     }
     if (event->code == OMG_SCANCODE_F) {
         if (event->is_pressed)
@@ -217,14 +217,14 @@ void app_on_size_change(OMG_EventResize* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_WIN
-    this->omg = (OMG_Omega*)omg_win_create(data);
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
+#if OMG_SUPPORT_WIN
+    this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
