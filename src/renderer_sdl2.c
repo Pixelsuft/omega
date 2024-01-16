@@ -506,6 +506,17 @@ bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl
     return false;
 }
 
+bool omg_renderer_sdl2_set_vsync(OMG_RendererSdl2* this, bool enabled) {
+    if (OMG_ISNULL(this->sdl2->SDL_RenderSetVSync))
+        return true;
+    if (this->sdl2->SDL_RenderSetVSync(this->ren, (int)enabled) != 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set renderer vsync");
+        return true;
+    }
+    win_base->vsync = enabled;
+    return false;
+}
+
 bool omg_renderer_sdl2_tex_set_color_mod(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_Color* col) {
     bool res = false;
     if (this->sdl2->SDL_SetTextureColorMod(
@@ -559,6 +570,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->tex_set_color_mod = omg_renderer_sdl2_tex_set_color_mod;
     base->tex_set_blend_mode = omg_renderer_sdl2_tex_set_blend_mode;
     base->set_blend_mode = omg_renderer_sdl2_set_blend_mode;
+    base->set_vsync = omg_renderer_sdl2_set_vsync;
     OMG_END_POINTER_CAST();
     this->blend_cache = OMG_BLEND_MODE_NONE;
     base->type = OMG_REN_TYPE_SDL2;

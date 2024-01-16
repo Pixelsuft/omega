@@ -41,7 +41,7 @@ void omg_renderer_fill_on_create(OMG_Renderer* this) {
 }
 
 bool omg_renderer_set_vsync(OMG_Renderer* this, bool enabled) {
-    OMG_UNUSED(this, enabled);
+    win_base->vsync = enabled;
     return false;
 }
 
