@@ -116,6 +116,11 @@ bool omg_window_set_max_size(OMG_Window* this, const OMG_FPoint* new_max_size) {
     return false;
 }
 
+bool omg_window_set_icon(OMG_Window* this, OMG_Surface* icon) {
+    OMG_UNUSED(this, icon);
+    return false;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -143,6 +148,7 @@ bool omg_window_init(OMG_Window* this) {
     this->renderer_alloc = omg_window_renderer_alloc;
     this->renderer_free = omg_window_renderer_free;
     this->set_window_mode = omg_window_set_window_mode;
+    this->set_icon = omg_window_set_icon;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;

@@ -38,6 +38,7 @@ typedef struct OMG_Window {
     bool (*set_bordered)(struct OMG_Window* this, bool enabled);
     bool (*set_thick)(struct OMG_Window* this, bool enabled);
     bool (*set_always_on_top)(struct OMG_Window* this, bool enabled);
+    bool (*set_icon)(struct OMG_Window* this, OMG_Surface* icon);
     OMG_Renderer* ren;
     void* extra1;
     void* extra2;
@@ -86,5 +87,6 @@ OMG_API bool omg_window_set_bordered(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_thick(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_always_on_top(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_title(OMG_Window* this, const OMG_String* new_title);
+OMG_API bool omg_window_set_icon(OMG_Window* this, OMG_Surface* icon);
 OMG_API bool omg_window_show(OMG_Window* this, bool show);
 #endif

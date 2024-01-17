@@ -2,6 +2,7 @@
 
 #if OMG_SUPPORT_SDL2
 #include <omega/omega.h>
+#include <omega/surface_sdl2.h>
 #include <omega/renderer_sdl2.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -136,6 +137,11 @@ bool omg_window_sdl2_set_max_size(OMG_WindowSdl2* this, const OMG_FPoint* new_ma
     return false;
 }
 
+bool omg_window_sdl2_set_icon(OMG_WindowSdl2* this, OMG_SurfaceSdl2* icon) {
+    this->sdl2->SDL_SetWindowIcon(this->win, icon->surf);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -177,6 +183,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_window_mode = omg_window_sdl2_set_window_mode;
     base->renderer_alloc = omg_window_sdl2_renderer_alloc;
     base->show = omg_window_sdl2_show;
+    base->set_icon = omg_window_sdl2_set_icon;
     base->set_title = omg_window_sdl2_set_title;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
