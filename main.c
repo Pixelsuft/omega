@@ -109,10 +109,9 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else
             this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(255, 255, 255, 255));
     }
-    if (event->code == OMG_SCANCODE_G) {
+    else if (event->code == OMG_SCANCODE_G)
         this->ren->tex_set_scale_mode(this->ren, this->tex2, event->is_pressed ? OMG_SCALE_MODE_LINEAR : OMG_SCALE_MODE_NEAREST);
-    }
-    if (event->code == OMG_SCANCODE_H) {
+    else if (event->code == OMG_SCANCODE_H) {
         if (event->is_pressed) {
             this->ren->auto_blend = false;
             this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_MUL);
@@ -122,6 +121,10 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_BLEND);
         }
     }
+    else if (event->code == OMG_SCANCODE_J)
+        this->clock->speed = event->is_pressed ? 2.0 : 1.0;
+    else if (event->code == OMG_SCANCODE_K)
+        this->clock->speed = event->is_pressed ? 0.5 : 1.0;
     // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
@@ -158,7 +161,7 @@ void app_on_update(OMG_EventUpdate* event) {
             this->bg_fow = true;
         }
     }
-    this->rot_timer += this->clock->dt * 0.5;
+    this->rot_timer += this->clock->dt * 0.8;
     if (this->rot_timer >= OMG_M_PI2)
         this->rot_timer -= OMG_M_PI2;
     // OMG_INFO(this->omg, this->omg->mem->get_alloc_count(this->omg->mem));
@@ -219,14 +222,14 @@ void app_on_size_change(OMG_EventResize* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_WIN
-    this->omg = (OMG_Omega*)omg_win_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
+#endif
+#if OMG_SUPPORT_WIN
+    this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
