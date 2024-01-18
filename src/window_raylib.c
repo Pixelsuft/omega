@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_RAYLIB
 #include <omega/omega.h>
 #include <omega/window_raylib.h>
+#include <omega/surface_raylib.h>
 #include <omega/renderer_raylib.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -132,6 +133,11 @@ bool omg_window_raylib_renderer_alloc(OMG_WindowRaylib* this) {
     return false;
 }
 
+bool omg_window_raylib_set_icon(OMG_WindowRaylib* this, OMG_SurfaceRaylib* icon) {
+    this->raylib->SetWindowIcon(icon->img);
+    return false;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
@@ -139,6 +145,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_raylib_show;
     base->set_size = omg_window_set_size;
+    base->set_icon = omg_window_raylib_set_icon;
     base->set_title = omg_window_raylib_set_title;
     base->destroy = omg_window_raylib_destroy;
     base->renderer_alloc = omg_window_raylib_renderer_alloc;

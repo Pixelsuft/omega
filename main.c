@@ -219,11 +219,11 @@ void app_on_size_change(OMG_EventResize* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_RAYLIB
-    this->omg = (OMG_Omega*)omg_raylib_create(data);
-#endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
@@ -308,6 +308,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
     this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(256, 256), true);
     this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, true);
+    // I don't recommend to use surfaces because they may have different formats and you currently can't see it
     if (OMG_ISNOTNULL(this->surf->data))
         for (uint64_t* i = this->surf->data; (size_t)i - (size_t)this->surf->data < (size_t)this->surf->size.w * (size_t)this->surf->size.h * 4; i++) {
             *i = 0x000000FF | (uint64_t)((double)((size_t)i - (size_t)this->surf->data) * (double)0x4000);

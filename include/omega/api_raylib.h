@@ -377,6 +377,8 @@ typedef struct {
     Image OMG_RAYLIB_PREFIX (*LoadImageFromScreen)(void);
     bool OMG_RAYLIB_PREFIX (*IsImageReady)(Image);
     void OMG_RAYLIB_PREFIX (*UnloadImage)(Image);
+    void OMG_RAYLIB_PREFIX (*SetWindowIcon)(Image);
+    void OMG_RAYLIB_PREFIX (*SetWindowIcons)(Image*, int);
     void OMG_RAYLIB_PREFIX (*ImageFormat)(Image*, int);
     void OMG_RAYLIB_PREFIX (*ImageResize)(Image*, int, int);
     void OMG_RAYLIB_PREFIX (*ImageClearBackground)(Image*, Color);

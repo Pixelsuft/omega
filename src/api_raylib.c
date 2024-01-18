@@ -81,6 +81,8 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(LoadImageFromScreen);
     LOAD_REQUIRED(IsImageReady);
     LOAD_REQUIRED(UnloadImage);
+    LOAD_REQUIRED(SetWindowIcon);
+    LOAD_REQUIRED(SetWindowIcons);
     LOAD_REQUIRED(ImageFormat);
     LOAD_REQUIRED(ImageResize);
     LOAD_REQUIRED(ImageClearBackground);
