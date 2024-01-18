@@ -208,6 +208,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_CreateRGBSurfaceWithFormatFrom);
     LOAD_REQUIRED(SDL_CreateRGBSurfaceFrom);
     LOAD_REQUIRED(SDL_FreeSurface);
+    LOAD_REQUIRED(SDL_LockSurface);
+    LOAD_REQUIRED(SDL_UnlockSurface);
     LOAD_REQUIRED(SDL_SetSurfaceBlendMode);
     LOAD_REQUIRED(SDL_SetSurfaceRLE);
     LOAD_REQUIRED(SDL_CreateTexture);

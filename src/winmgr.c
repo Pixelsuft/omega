@@ -74,6 +74,11 @@ OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, const OMG_String* path, i
     return omg_winmgr_dummy_surf_create(this);
 }
 
+bool omg_winmgr_surf_set_locked(OMG_Winmgr* this, OMG_Surface* surf, bool locked) {
+    OMG_UNUSED(this, surf, locked);
+    return false;
+}
+
 bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this) {
     if (OMG_ISNULL(this->img)) {
         this->img = OMG_MALLOC(omg_base->mem, this->sz_image_loader);
@@ -115,6 +120,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_from_fp = omg_winmgr_surf_from_fp;
     this->image_loader_alloc = omg_winmgr_image_loader_alloc;
     this->image_loader_free = omg_winmgr_image_loader_free;
+    this->surf_set_locked = omg_winmgr_surf_set_locked;
     this->inited = true;
     return false;
 }

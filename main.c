@@ -306,12 +306,13 @@ void app_init(App* this, OMG_EntryData* data) {
     this->bg_col = 0.0f;
     this->bg_fow = true;
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
-    this->omg->winmgr->surf_rle = false; // Don't need to lock surface
     this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(256, 256), true);
+    this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, true);
     if (OMG_ISNOTNULL(this->surf->data))
         for (uint64_t* i = this->surf->data; (size_t)i - (size_t)this->surf->data < (size_t)this->surf->size.w * (size_t)this->surf->size.h * 4; i++) {
             *i = 0x000000FF | (uint64_t)((double)((size_t)i - (size_t)this->surf->data) * (double)0x4000);
         }
+    this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, false);
     this->win->set_icon(this->win, this->surf);
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));

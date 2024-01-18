@@ -136,6 +136,16 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_St
     return surf;
 }
 
+bool omg_winmgr_sdl2_surf_set_locked(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf, bool locked) {
+    if (SDL_MUSTLOCK(surf->surf)) {
+        if ((locked ? this->sdl2->SDL_LockSurface : this->sdl2->SDL_UnlockSurface)(surf->surf) < 0) {
+            _OMG_LOG_WARN(omg_base, "Failed to set surface locked (", this->sdl2->SDL_GetError(), ")");
+            return true;
+        }
+    }
+    return false;
+}
+
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -146,6 +156,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->surf_create = omg_winmgr_sdl2_surf_create;
     base->surf_destroy = omg_winmgr_sdl2_surf_destroy;
     base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
+    base->surf_set_locked = omg_winmgr_sdl2_surf_set_locked;
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);
