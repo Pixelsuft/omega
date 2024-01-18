@@ -111,8 +111,10 @@ bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* p
 }
 
 bool omg_renderer_copy_ex(OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, double rot) {
-    OMG_UNUSED(this, tex, src, dst, origin, rot);
-    return false;
+    OMG_UNUSED(src, origin, rot);
+    if (OMG_ISNULL(dst))
+        return this->copy(this, tex, NULL);
+    return this->copy(this, tex, (const OMG_FPoint*)dst);
 }
 
 bool omg_renderer_tex_set_scale_mode(OMG_Renderer* this, OMG_Texture* tex, int scale_mode) {
