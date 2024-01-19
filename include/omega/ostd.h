@@ -45,6 +45,7 @@
     const wchar_t*: omg_string_add_wchar_p, \
     wchar_t*: omg_string_add_wchar_p, \
     int: omg_string_add_int, \
+    bool: omg_string_add_bool, \
     unsigned int: omg_string_add_uint, \
     float: omg_string_add_float, \
     double: omg_string_add_double, \
@@ -339,6 +340,7 @@ OMG_API bool omg_string_add(OMG_String* this, const OMG_String* new_str);
 OMG_API bool omg_string_destroy(OMG_String* this);
 OMG_API bool omg_string_add_char(OMG_String* this, const char char_to_add);
 OMG_API bool omg_string_add_int(OMG_String* this, const int int_to_add);
+OMG_API bool omg_string_add_bool(OMG_String* this, const bool bool_to_add);
 OMG_API bool omg_string_add_uint(OMG_String* this, const unsigned int uint_to_add);
 OMG_API bool omg_string_add_long(OMG_String* this, const long long_to_add);
 OMG_API bool omg_string_add_ulong(OMG_String* this, const unsigned long ulong_to_add);

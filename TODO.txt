@@ -1,4 +1,3 @@
 [-] Set default events from seperate function to be able to reset them
 [-] Add function to set log callback
 [-] Track memory allocations
-[-] Allow radians

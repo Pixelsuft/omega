@@ -128,7 +128,6 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         this->clock->speed = event->is_pressed ? 0.5 : 1.0;
     else if (event->code == OMG_SCANCODE_C)
         this->sin_mul = event->is_pressed ? 8.0 : 0.4;
-    // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
             this->omg,
@@ -136,8 +135,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             omg_keyboard_name_from_scancode(event->code)->ptr,
             " (",
             omg_keyboard_name_from_key(event->sym)->ptr,
-            ") ",
-            event->is_pressed ? "Press" : "Release"
+            "). Is Press: ",
+            event->is_pressed
         );
 }
 

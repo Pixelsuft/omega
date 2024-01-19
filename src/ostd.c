@@ -694,6 +694,29 @@ bool omg_string_add_int(OMG_String* this, const int int_to_add) {
     return false;
 }
 
+bool omg_string_add_bool(OMG_String* this, const bool bool_to_add) {
+    if (this->type < OMG_STRING_BUFFER)
+        return true;
+    if (omg_string_ensure_free_len(this, 6))
+        return true;
+    if (bool_to_add) {
+        this->ptr[this->len] = 'T';
+        this->ptr[this->len + 1] = 'r';
+        this->ptr[this->len + 2] = 'u';
+        this->ptr[this->len + 3] = 'e';
+        this->len += 4;
+    }
+    else {
+        this->ptr[this->len] = 'F';
+        this->ptr[this->len + 1] = 'a';
+        this->ptr[this->len + 2] = 'l';
+        this->ptr[this->len + 3] = 's';
+        this->ptr[this->len + 4] = 'e';
+        this->len += 5;
+    }
+    return false;
+}
+
 bool omg_string_add_char(OMG_String* this, const char char_to_add) {
     if (this->type < OMG_STRING_BUFFER)
         return true;
