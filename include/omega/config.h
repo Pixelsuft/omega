@@ -148,6 +148,10 @@
 #define OMG_MAX_PLAYING_SOUND 8
 #endif
 
+#ifndef OMG_USE_RADIANS
+#define OMG_USE_RADIANS 1
+#endif
+
 #ifndef OMG_MAX_COLOR
 #define OMG_MAX_COLOR ((omg_color_t)255)
 #endif

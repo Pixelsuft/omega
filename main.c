@@ -16,6 +16,7 @@ typedef struct {
     OMG_Sound* sound;
     OMG_File* file;
     OMG_Clock* clock;
+    double sin_mul;
     double rot_timer;
     omg_color_t bg_col;
     bool bg_fow;
@@ -125,6 +126,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         this->clock->speed = event->is_pressed ? 2.0 : 1.0;
     else if (event->code == OMG_SCANCODE_K)
         this->clock->speed = event->is_pressed ? 0.5 : 1.0;
+    else if (event->code == OMG_SCANCODE_C)
+        this->sin_mul = event->is_pressed ? 8.0 : 0.4;
     // TODO: print bool
     if (!event->is_repeated)
         OMG_INFO(
@@ -161,7 +164,7 @@ void app_on_update(OMG_EventUpdate* event) {
             this->bg_fow = true;
         }
     }
-    this->rot_timer += this->clock->dt * 0.8;
+    this->rot_timer += this->clock->dt;
     if (this->rot_timer >= OMG_M_PI2)
         this->rot_timer -= OMG_M_PI2;
     // OMG_INFO(this->omg, this->omg->mem->get_alloc_count(this->omg->mem));
@@ -195,7 +198,7 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->copy_ex(
         this->ren, this->tex2,
         NULL, &OMG_FRECT_MAKE(200, 400, 0, 0),
-        NULL, this->omg->std->sin(this->rot_timer) * 10.0
+        NULL, this->omg->std->sin(this->rot_timer) * this->sin_mul
     );
     double mus_pos = this->audio->mus_get_pos(this->audio, this->mus);
     if (mus_pos > 0.0) {
@@ -319,6 +322,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, false);
     this->win->set_icon(this->win, this->surf);
     this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
+    this->sin_mul = 0.4;
     this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
     this->ren->tex_set_scale_mode(this->ren, this->tex2, OMG_SCALE_MODE_NEAREST);
     this->clock->init(this->clock, true);

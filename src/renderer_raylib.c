@@ -320,7 +320,15 @@ bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* te
         origin_vec.x = origin->x * this->ss.x;
         origin_vec.y = origin->y * this->ss.y;
     }
-    this->raylib->DrawTexturePro(*tex->tex, src_rect, dst_rect, origin_vec, (float)rot, tex->tint);
+    this->raylib->DrawTexturePro(
+        *tex->tex, src_rect, dst_rect, origin_vec,
+#if OMG_USE_RADIANS
+        (float)(rot * 180.0 / OMG_M_PI),
+#else
+        (float)rot,
+#endif
+        tex->tint
+    );
     return false;
 }
 

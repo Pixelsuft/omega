@@ -488,7 +488,13 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
             (tex_base->has_alpha ? OMG_BLEND_MODE_BLEND : OMG_BLEND_MODE_NONE) : this->blend_cache)
         );
     if (this->sdl2->SDL_RenderCopyExF(
-        this->ren, tex->tex, OMG_ISNULL(src) ? NULL : &src_rect, &dst_rect, rot, (const SDL_FPoint*)origin, flip
+        this->ren, tex->tex, OMG_ISNULL(src) ? NULL : &src_rect, &dst_rect,
+#if OMG_USE_RADIANS
+        rot * 180.0 / OMG_M_PI,
+#else
+        rot,
+#endif
+        (const SDL_FPoint*)origin, flip
     ) < 0) {
         _OMG_SDL2_COPY_WARN();
         return true;
