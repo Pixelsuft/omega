@@ -70,6 +70,11 @@ double omg_audio_raylib_mus_get_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus)
     return (double)this->raylib->GetMusicTimePlayed(mus->mus);
 }
 
+bool omg_audio_raylib_mus_set_speed(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double speed) {
+    this->raylib->SetMusicPitch(mus->mus, (float)speed);
+    return false;
+}
+
 OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, const OMG_String* path) {
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
@@ -161,6 +166,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->mus_set_volume = omg_audio_raylib_mus_set_volume;
     base->mus_get_pos = omg_audio_raylib_mus_get_pos;
     base->mus_set_pos = omg_audio_raylib_mus_set_pos;
+    base->mus_set_speed = omg_audio_raylib_mus_set_speed;
     base->snd_from_fp = omg_audio_raylib_snd_from_fp;
     base->snd_destroy = omg_audio_raylib_snd_destroy;
     base->snd_set_volume = omg_audio_raylib_snd_set_volume;

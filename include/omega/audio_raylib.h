@@ -24,6 +24,7 @@ OMG_API bool omg_audio_raylib_init(OMG_AudioRaylib* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_audio_raylib_update(OMG_AudioRaylib* this);
 OMG_API bool omg_audio_raylib_destroy(OMG_AudioRaylib* this);
+OMG_API bool omg_audio_raylib_mus_set_speed(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double speed);
 OMG_API bool omg_audio_raylib_mus_set_volume(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float volume);
 OMG_API bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int loops, double pos, double fade_in);
 OMG_API bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus);
