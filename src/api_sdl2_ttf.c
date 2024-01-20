@@ -48,20 +48,12 @@ bool omg_sdl2_ttf_dll_load(OMG_Sdl2Ttf* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(TTF_OpenFontIndex);
     LOAD_REQUIRED(TTF_OpenFontRW);
     LOAD_REQUIRED(TTF_OpenFontIndexRW);
-    LOAD_REQUIRED_COMPAT(TTF_OpenFontDPI); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_OpenFontIndexDPI); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_OpenFontDPIRW); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_OpenFontIndexDPIRW); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_SetFontSize); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_SetFontSizeDPI); // 2.0.18
     LOAD_REQUIRED(TTF_GetFontStyle);
     LOAD_REQUIRED(TTF_SetFontStyle);
     LOAD_REQUIRED(TTF_GetFontOutline);
     LOAD_REQUIRED(TTF_SetFontOutline);
     LOAD_REQUIRED(TTF_GetFontHinting);
     LOAD_REQUIRED(TTF_SetFontHinting);
-    LOAD_REQUIRED_COMPAT(TTF_GetFontWrappedAlign); // 2.0.20
-    LOAD_REQUIRED_COMPAT(TTF_SetFontWrappedAlign); // 2.0.20
     LOAD_REQUIRED(TTF_FontHeight);
     LOAD_REQUIRED(TTF_FontAscent);
     LOAD_REQUIRED(TTF_FontDescent);
@@ -73,39 +65,54 @@ bool omg_sdl2_ttf_dll_load(OMG_Sdl2Ttf* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(TTF_FontFaceFamilyName);
     LOAD_REQUIRED(TTF_FontFaceStyleName);
     LOAD_REQUIRED(TTF_GlyphIsProvided);
-    LOAD_REQUIRED_COMPAT(TTF_GlyphIsProvided32); // 2.0.18
     LOAD_REQUIRED(TTF_GlyphMetrics);
-    LOAD_REQUIRED_COMPAT(TTF_GlyphMetrics32); // 2.0.18
     LOAD_REQUIRED(TTF_SizeText);
     LOAD_REQUIRED(TTF_SizeUTF8);
     LOAD_REQUIRED(TTF_SizeUNICODE);
-    LOAD_REQUIRED_COMPAT(TTF_MeasureText); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_MeasureUTF8); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_MeasureUNICODE); // 2.0.18
     LOAD_REQUIRED(TTF_RenderText_Solid);
     LOAD_REQUIRED(TTF_RenderUTF8_Solid);
     LOAD_REQUIRED(TTF_RenderUNICODE_Solid);
-    LOAD_REQUIRED_COMPAT(TTF_RenderText_Solid_Wrapped); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_RenderUTF8_Solid_Wrapped); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_Solid_Wrapped); // 2.0.18
     LOAD_REQUIRED(TTF_RenderGlyph_Solid);
-    LOAD_REQUIRED_COMPAT(TTF_RenderGlyph32_Solid); // 2.0.18
     LOAD_REQUIRED(TTF_RenderText_Shaded);
     LOAD_REQUIRED(TTF_RenderUTF8_Shaded);
     LOAD_REQUIRED(TTF_RenderUNICODE_Shaded);
-    LOAD_REQUIRED_COMPAT(TTF_RenderText_Shaded_Wrapped); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_RenderUTF8_Shaded_Wrapped); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_Shaded_Wrapped); // 2.0.18
     LOAD_REQUIRED(TTF_RenderGlyph_Shaded);
-    LOAD_REQUIRED_COMPAT(TTF_RenderGlyph32_Shaded); // 2.0.18
     LOAD_REQUIRED(TTF_RenderText_Blended);
     LOAD_REQUIRED(TTF_RenderUTF8_Blended);
     LOAD_REQUIRED(TTF_RenderUNICODE_Blended);
+    LOAD_REQUIRED(TTF_RenderGlyph_Blended);
+    LOAD_REQUIRED(TTF_CloseFont);
+    LOAD_REQUIRED(TTF_Quit);
+    LOAD_REQUIRED(TTF_WasInit);
+    LOAD_REQUIRED_COMPAT(TTF_GetFontKerningSizeGlyphs); // 2.0.14
+    LOAD_REQUIRED_COMPAT(TTF_OpenFontDPI); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_OpenFontIndexDPI); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_OpenFontDPIRW); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_OpenFontIndexDPIRW); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_SetFontSize); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_SetFontSizeDPI); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_GlyphIsProvided32); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_GlyphMetrics32); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_MeasureText); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_MeasureUTF8); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_MeasureUNICODE); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderText_Solid_Wrapped); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderUTF8_Solid_Wrapped); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_Solid_Wrapped); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderGlyph32_Solid); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderText_Shaded_Wrapped); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderUTF8_Shaded_Wrapped); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_Shaded_Wrapped); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_RenderGlyph32_Shaded); // 2.0.18
     LOAD_REQUIRED_COMPAT(TTF_RenderText_Blended_Wrapped); // 2.0.18
     LOAD_REQUIRED_COMPAT(TTF_RenderUTF8_Blended_Wrapped); // 2.0.18
     LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_Blended_Wrapped); // 2.0.18
-    LOAD_REQUIRED(TTF_RenderGlyph_Blended);
+    LOAD_REQUIRED_COMPAT(TTF_GetFontKerningSizeGlyphs32); // 2.0.18
     LOAD_REQUIRED_COMPAT(TTF_RenderGlyph32_Blended); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_SetFontSDF); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_GetFontSDF); // 2.0.18
+    LOAD_REQUIRED_COMPAT(TTF_GetFontWrappedAlign); // 2.0.20
+    LOAD_REQUIRED_COMPAT(TTF_SetFontWrappedAlign); // 2.0.20
     LOAD_REQUIRED_COMPAT(TTF_RenderText_LCD); // 2.0.20
     LOAD_REQUIRED_COMPAT(TTF_RenderUTF8_LCD); // 2.0.20
     LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_LCD); // 2.0.20
@@ -114,13 +121,6 @@ bool omg_sdl2_ttf_dll_load(OMG_Sdl2Ttf* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(TTF_RenderUNICODE_LCD_Wrapped); // 2.0.20
     LOAD_REQUIRED_COMPAT(TTF_RenderGlyph_LCD); // 2.0.20
     LOAD_REQUIRED_COMPAT(TTF_RenderGlyph32_LCD); // 2.0.20
-    LOAD_REQUIRED(TTF_CloseFont);
-    LOAD_REQUIRED(TTF_Quit);
-    LOAD_REQUIRED(TTF_WasInit);
-    LOAD_REQUIRED_COMPAT(TTF_GetFontKerningSizeGlyphs); // 2.0.14
-    LOAD_REQUIRED_COMPAT(TTF_GetFontKerningSizeGlyphs32); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_SetFontSDF); // 2.0.18
-    LOAD_REQUIRED_COMPAT(TTF_GetFontSDF); // 2.0.18
     LOAD_REQUIRED_COMPAT(TTF_SetFontDirection); // 2.0.20
     LOAD_REQUIRED_COMPAT(TTF_SetFontScriptName); // 2.0.20
     OMG_END_POINTER_CAST();
