@@ -128,8 +128,8 @@ bool omg_audio_mus_set_pos(OMG_Audio* this, OMG_Music* mus, double pos) {
     return false;
 }
 
-bool omg_audio_mus_set_speed(OMG_Audio* this, OMG_Music* mus, double pos) {
-    OMG_UNUSED(this, mus, pos);
+bool omg_audio_mus_set_speed(OMG_Audio* this, OMG_Music* mus, float speed) {
+    OMG_UNUSED(this, mus, speed);
     return false;
 }
 

@@ -154,12 +154,12 @@ bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double 
     return false;
 }
 
-bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, double speed) {
-    mus->pitch_cache = (float)speed;
+bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, float speed) {
+    mus->pitch_cache = speed;
     if (!IS_PLAYING(mus))
         return false;
     int res;
-    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPitch(mus->channel, mus->pitch_cache))) {
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPitch(mus->channel, speed))) {
         _OMG_LOG_WARN(omg_base, "Failed to set audio pitch (", FMOD_ErrorString(res), ")");
         return true;
     }

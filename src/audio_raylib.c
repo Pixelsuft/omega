@@ -70,8 +70,8 @@ double omg_audio_raylib_mus_get_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus)
     return (double)this->raylib->GetMusicTimePlayed(mus->mus);
 }
 
-bool omg_audio_raylib_mus_set_speed(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double speed) {
-    this->raylib->SetMusicPitch(mus->mus, (float)speed);
+bool omg_audio_raylib_mus_set_speed(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float speed) {
+    this->raylib->SetMusicPitch(mus->mus, speed);
     return false;
 }
 
