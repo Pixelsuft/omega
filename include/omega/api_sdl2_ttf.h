@@ -32,6 +32,13 @@
 #define TTF_WRAPPED_ALIGN_CENTER 1
 #define TTF_WRAPPED_ALIGN_RIGHT 2
 
+typedef enum {
+    TTF_DIRECTION_LTR = 0,
+    TTF_DIRECTION_RTL,
+    TTF_DIRECTION_TTB,
+    TTF_DIRECTION_BTT
+} TTF_Direction;
+
 typedef void TTF_Font;
 #else
 #define OMG_SDL2_TTF_STD_PREFIX SDLCALL
@@ -73,6 +80,54 @@ typedef struct {
     int OMG_SDL2_TTF_STD_PREFIX (*TTF_GlyphIsProvided)(TTF_Font*, uint16_t ch);
     int OMG_SDL2_TTF_STD_PREFIX (*TTF_GlyphIsProvided32)(TTF_Font*, uint32_t);
     int OMG_SDL2_TTF_STD_PREFIX (*TTF_GlyphMetrics)(TTF_Font*, uint16_t, int*, int*, int*, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_GlyphMetrics32)(TTF_Font*, uint32_t, int*, int*, int*, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_SizeText)(TTF_Font*, const char*, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_SizeUTF8)(TTF_Font*, const char*, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_SizeUNICODE)(TTF_Font*, const uint16_t*, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureText)(TTF_Font*, const char*, int, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureUTF8)(TTF_Font*, const char*, int, int*, int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureUNICODE)(TTF_Font*, const uint16_t*, int, int* int*);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Solid)(TTF_Font*, const char*, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Solid)(TTF_Font*, const char*, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Solid)(TTF_Font*, const uint16_t*, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Solid_Wrapped)(TTF_Font*, const char*, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Solid_Wrapped)(TTF_Font*, const char*, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Solid_Wrapped)(TTF_Font*, const uint16_t*, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph_Solid)(TTF_Font*, uint16_t, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph32_Solid)(TTF_Font*, uint32_t, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Shaded)(TTF_Font*, const char*, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Shaded)(TTF_Font*, const char*, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Shaded)(TTF_Font*, const uint16_t*, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Shaded_Wrapped)(TTF_Font*, const char*, SDL_Color, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Shaded_Wrapped)(TTF_Font*, const char*, SDL_Color, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Shaded_Wrapped)(TTF_Font*, const uint16_t*, SDL_Color, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph_Shaded)(TTF_Font*, uint16_t, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph32_Shaded)(TTF_Font*, uint32_t, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Blended)(TTF_Font*, const char*, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Blended)(TTF_Font*, const char*, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Blended)(TTF_Font*, const uint16_t*, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Blended_Wrapped)(TTF_Font*, const char*, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Blended_Wrapped)(TTF_Font*, const char*, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Blended_Wrapped)(TTF_Font*, const uint16_t*, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph_Blended)(TTF_Font*, uint16_t, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph32_Blended)(TTF_Font*, uint32_t, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_LCD)(TTF_Font*, const char*, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_LCD)(TTF_Font*, const char*, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_LCD)(TTF_Font*, const uint16_t*, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_LCD_Wrapped)(TTF_Font*, const char*, SDL_Color, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_LCD_Wrapped)(TTF_Font*, const char*, SDL_Color, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_LCD_Wrapped)(TTF_Font*, const uint16_t*, SDL_Color, SDL_Color, uint32_t);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph_LCD)(TTF_Font*, uint16_t, SDL_Color, SDL_Color);
+    SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderGlyph32_LCD)(TTF_Font*, uint32_t, SDL_Color, SDL_Color);
+    void OMG_SDL2_TTF_STD_PREFIX (*TTF_CloseFont)(TTF_Font*);
+    void OMG_SDL2_TTF_STD_PREFIX (*TTF_Quit)(void);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_WasInit)(void);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_GetFontKerningSizeGlyphs)(TTF_Font*, uint16_t, uint16_t);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_GetFontKerningSizeGlyphs32)(TTF_Font*, uint32_t, uint32_t);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_SetFontSDF)(TTF_Font*, SDL_bool);
+    SDL_bool OMG_SDL2_TTF_STD_PREFIX (*TTF_GetFontSDF)(const TTF_Font*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_SetFontDirection)(TTF_Font*, TTF_Direction);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_SetFontScriptName)(TTF_Font*, const char*);
     SDL_version ver;
 } OMG_Sdl2Ttf;
 
