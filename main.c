@@ -122,10 +122,14 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_BLEND);
         }
     }
-    else if (event->code == OMG_SCANCODE_J)
+    else if (event->code == OMG_SCANCODE_J) {
         this->clock->speed = event->is_pressed ? 2.0 : 1.0;
-    else if (event->code == OMG_SCANCODE_K)
+        this->audio->mus_set_speed(this->audio, this->mus, this->clock->speed);
+    }
+    else if (event->code == OMG_SCANCODE_K) {
         this->clock->speed = event->is_pressed ? 0.5 : 1.0;
+        this->audio->mus_set_speed(this->audio, this->mus, this->clock->speed);
+    }
     else if (event->code == OMG_SCANCODE_C)
         this->sin_mul = event->is_pressed ? 8.0 : 0.4;
     if (!event->is_repeated)
