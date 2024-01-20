@@ -86,7 +86,7 @@ typedef struct {
     int OMG_SDL2_TTF_STD_PREFIX (*TTF_SizeUNICODE)(TTF_Font*, const uint16_t*, int*, int*);
     int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureText)(TTF_Font*, const char*, int, int*, int*);
     int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureUTF8)(TTF_Font*, const char*, int, int*, int*);
-    int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureUNICODE)(TTF_Font*, const uint16_t*, int, int* int*);
+    int OMG_SDL2_TTF_STD_PREFIX (*TTF_MeasureUNICODE)(TTF_Font*, const uint16_t*, int, int*, int*);
     SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderText_Solid)(TTF_Font*, const char*, SDL_Color);
     SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUTF8_Solid)(TTF_Font*, const char*, SDL_Color);
     SDL_Surface* OMG_SDL2_TTF_STD_PREFIX (*TTF_RenderUNICODE_Solid)(TTF_Font*, const uint16_t*, SDL_Color);
