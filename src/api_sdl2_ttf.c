@@ -32,10 +32,10 @@ bool omg_sdl2_ttf_dll_load(OMG_Sdl2Ttf* this, const OMG_String* dll_path) {
     OMG_BEGIN_POINTER_CAST();
     LOAD_REQUIRED(TTF_Linked_Version);
 #if OMG_SDL2_TTF_DYNAMIC
-    const SDL_version* mix_ver = this->TTF_Linked_Version();
-    this->ver.major = mix_ver->major;
-    this->ver.minor = mix_ver->minor;
-    this->ver.patch = mix_ver->patch;
+    const SDL_version* ttf_ver = this->TTF_Linked_Version();
+    this->ver.major = ttf_ver->major;
+    this->ver.minor = ttf_ver->minor;
+    this->ver.patch = ttf_ver->patch;
 #else
     this->ver.major = SDL_TTF_MAJOR_VERSION;
     this->ver.minor = SDL_TTF_MINOR_VERSION;
