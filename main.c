@@ -124,11 +124,11 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
     }
     else if (event->code == OMG_SCANCODE_J) {
         this->clock->speed = event->is_pressed ? 2.0 : 1.0;
-        this->audio->mus_set_speed(this->audio, this->mus, this->clock->speed);
+        this->audio->mus_set_speed(this->audio, this->mus, (float)this->clock->speed);
     }
     else if (event->code == OMG_SCANCODE_K) {
         this->clock->speed = event->is_pressed ? 0.5 : 1.0;
-        this->audio->mus_set_speed(this->audio, this->mus, this->clock->speed);
+        this->audio->mus_set_speed(this->audio, this->mus, (float)this->clock->speed);
     }
     else if (event->code == OMG_SCANCODE_C)
         this->sin_mul = event->is_pressed ? 8.0 : 0.4;
@@ -139,7 +139,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             omg_keyboard_name_from_scancode(event->code)->ptr,
             " (",
             omg_keyboard_name_from_key(event->sym)->ptr,
-            "). Is Press: ",
+            "). Press: ",
             event->is_pressed
         );
 }
