@@ -14,6 +14,7 @@ typedef struct {
     OMG_Music parent;
     FMOD_SOUND* mus;
     FMOD_CHANNEL* channel;
+    float pitch_cache;
     float vol_cache;
 } OMG_MusicFmod;
 
@@ -30,5 +31,6 @@ OMG_API OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_Music
 OMG_API FMOD_RESULT omg_audio_fmod_mus_callback(FMOD_CHANNELCONTROL* channelcontrol, FMOD_CHANNELCONTROL_TYPE controltype, FMOD_CHANNELCONTROL_CALLBACK_TYPE callbacktype, void* commanddata1, void* commanddata2);
 OMG_API double omg_audio_fmod_mus_get_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus);
 OMG_API bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double pos);
+OMG_API bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, double speed);
 #endif
 #endif
