@@ -13,4 +13,7 @@ typedef struct {
     void* extra1;
     OMG_FPoint size;
     bool has_alpha;
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    bool was_allocated;
+#endif
 } OMG_Texture;

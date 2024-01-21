@@ -53,10 +53,18 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
 }
 
 OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_String* path, int format) {
-    if (OMG_ISNULL(surf))
+    if (OMG_ISNULL(surf)) {
         surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
-    if (OMG_ISNULL(surf))
-        return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+        if (OMG_ISNULL(surf))
+            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+        surf_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    else
+        surf_base->was_allocated = false;
+#endif
 #if OMG_SUPPORT_OMG_IMAGE
     if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
         struct {
@@ -76,10 +84,19 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin*
     return surf;
 }
 
-OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, const OMG_FPoint* size, bool has_alpha) {
-    OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
-    if (OMG_ISNULL(surf))
-        return NULL;
+OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_FPoint* size, bool has_alpha) {
+    if (OMG_ISNULL(surf)) {
+        surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
+        if (OMG_ISNULL(surf))
+            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+        surf_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    else
+        surf_base->was_allocated = false;
+#endif
     surf->dc = this->g32->CreateCompatibleDC(NULL);
     if (OMG_ISNULL(surf->dc)) {
         OMG_FREE(omg_base->mem, surf);
@@ -120,6 +137,9 @@ bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
         OMG_FREE(omg_base->mem, surf_base->data);
         surf_base->data = NULL;
     }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    if (surf_base->was_allocated)
+#endif
     OMG_FREE(omg_base->mem, surf);
     return res;
 }

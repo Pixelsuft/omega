@@ -86,6 +86,9 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
         surf->extra1 = NULL;
     }
     surf->surf = NULL;
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    if (surf_base->was_allocated)
+#endif
     OMG_FREE(omg_base->mem, surf);
     return false;
 }

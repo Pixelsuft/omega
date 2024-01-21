@@ -44,10 +44,18 @@ bool omg_winmgr_raylib_destroy(OMG_WinmgrRaylib* this) {
 }
 
 OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf, const OMG_FPoint* size, bool has_alpha) {
-    if (OMG_ISNULL(surf))
+    if (OMG_ISNULL(surf)) {
         surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceRaylib));
-    if (OMG_ISNULL(surf))
-        return (OMG_SurfaceRaylib*)omg_winmgr_dummy_surf_create(base);
+        if (OMG_ISNULL(surf))
+            return (OMG_SurfaceRaylib*)omg_winmgr_dummy_surf_create(base);
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+        surf_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    else
+        surf_base->was_allocated = false;
+#endif
     surf->img = this->raylib->LoadImageFromScreen(); // Fuck
     if (!this->raylib->IsImageReady(surf->img)) {
         OMG_FREE(omg_base->mem, surf);
@@ -76,15 +84,26 @@ bool omg_winmgr_raylib_surf_destroy(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* s
     }
     this->raylib->UnloadImage(surf->img);
     surf->img.data = NULL;
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    if (surf_base->was_allocated)
+#endif
     OMG_FREE(omg_base->mem, surf);
     return false;
 }
 
 OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_fp(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf, const OMG_String* path, int format) {
-    if (OMG_ISNULL(surf))
+    if (OMG_ISNULL(surf)){
         surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceRaylib));
-    if (OMG_ISNULL(surf))
-        return NULL;
+        if (OMG_ISNULL(surf))
+            return NULL;
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+        surf_base->was_allocated = false;
+#endif
+    }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    else
+        surf_base->was_allocated = false;
+#endif
     if (base->img->image_from_fp_internal(base->img, path, &surf->img, format)) {
         OMG_FREE(omg_base->mem, surf);
         return NULL;
