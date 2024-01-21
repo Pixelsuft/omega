@@ -21,8 +21,8 @@ bool omg_fontmgr_font_destroy(OMG_FontMgr* this, OMG_Font* font) {
     return false;
 }
 
-OMG_Font* omg_fontmgr_font_from_fp(OMG_FontMgr* this, OMG_Font* font, const OMG_String* fp, float size) {
-    OMG_UNUSED(font, fp, size);
+OMG_Font* omg_fontmgr_font_from_fp(OMG_FontMgr* this, OMG_Font* font, const OMG_String* fp, long index, float size) {
+    OMG_UNUSED(font, fp, index, size);
     return omg_fontmgr_dummy_font_create(this);
 }
 

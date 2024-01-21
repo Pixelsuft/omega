@@ -6,6 +6,7 @@
 
 typedef struct {
     OMG_Font parent;
+    TTF_Font* font;
 } OMG_FontSdl2;
 
 typedef struct {
@@ -15,6 +16,8 @@ typedef struct {
 
 OMG_API bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_fontmgr_font_sdl2_destroy(OMG_FontMgrSdl2* this, OMG_FontSdl2* font);
+OMG_API OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_String* fp, long index, float size);
 OMG_API bool omg_fontmgr_sdl2_destroy(OMG_FontMgrSdl2* this);
 #endif
 #endif
