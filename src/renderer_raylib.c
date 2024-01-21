@@ -184,10 +184,18 @@ bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint*
 OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_SurfaceRaylib* surf, bool destroy_surf) {
     if (OMG_ISNULL(surf) || !this->raylib->IsImageReady(surf->img))
         return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
-    if (OMG_ISNULL(tex))
+    if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
-    if (OMG_ISNULL(tex))
-        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
+        if (OMG_ISNULL(tex))
+            return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
     tex->target.texture = this->raylib->LoadTextureFromImage(surf->img);
     tex->tex = &tex->target.texture;
     if (!this->raylib->IsTextureReady(*tex->tex)) {
@@ -207,10 +215,18 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, O
 
 OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(access, has_alpha);
-    if (OMG_ISNULL(tex))
+    if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
-    if (OMG_ISNULL(tex))
-        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
+        if (OMG_ISNULL(tex))
+            return (OMG_TextureRaylib*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
     // TODO: Does compiler use memset here???
     tex->target = this->raylib->LoadRenderTexture((int)size->w, (int)size->h);
     if (!this->raylib->IsRenderTextureReady(tex->target)) {
@@ -241,6 +257,9 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
     else
         this->raylib->UnloadTexture(*tex->tex);
     tex->tex = NULL;
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    if (tex_base->was_allocated)
+#endif
     OMG_FREE(omg_base->mem, tex);
     return false;
 }

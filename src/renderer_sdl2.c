@@ -310,10 +310,18 @@ bool omg_renderer_sdl2_flip(OMG_RendererSdl2* this) {
 OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Surface* surf, bool destroy_surf) {
     if (OMG_ISNULL(surf))
         return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
-    if (OMG_ISNULL(tex))
+    if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
-    if (OMG_ISNULL(tex))
-        return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
+        if (OMG_ISNULL(tex))
+            return (OMG_TextureSdl2*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
     tex->temp_surf = NULL;
     if (win_base->type == OMG_WIN_TYPE_SDL2) {
         tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, ((OMG_SurfaceSdl2*)surf)->surf);
@@ -367,10 +375,18 @@ OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_Tex
 }
 
 OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* size, int access, bool has_alpha) {
-    if (OMG_ISNULL(tex))
+    if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
-    if (OMG_ISNULL(tex))
-        return (OMG_TextureSdl2*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
+        if (OMG_ISNULL(tex))
+            return (OMG_TextureSdl2*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
     tex->temp_surf = NULL;
     tex->tex = this->sdl2->SDL_CreateTexture(
         this->ren,
@@ -414,6 +430,9 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
         this->sdl2->SDL_FreeSurface(tex->temp_surf);
         tex->temp_surf = NULL;
     }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    if (tex_base->was_allocated)
+#endif
     OMG_FREE(omg_base->mem, tex);
     return false;
 }

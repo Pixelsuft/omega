@@ -156,10 +156,18 @@ bool omg_renderer_win_set_target(OMG_RendererWin* this, OMG_TextureWin* tex) {
 
 OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(access);
-    if (OMG_ISNULL(tex))
+    if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureWin));
-    if (OMG_ISNULL(tex))
-        return (OMG_TextureWin*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
+        if (OMG_ISNULL(tex))
+            return (OMG_TextureWin*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
     tex->dc = this->g32->CreateCompatibleDC(this->hwdc);
     if (OMG_ISNULL(tex->dc)) {
         OMG_FREE(omg_base->mem, tex);
@@ -194,6 +202,9 @@ bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
     }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    if (tex_base->was_allocated)
+#endif
     OMG_FREE(omg_base->mem, tex);
     return  res;
 }
