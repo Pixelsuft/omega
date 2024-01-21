@@ -181,18 +181,19 @@ bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint*
     return false;
 }
 
-OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, OMG_SurfaceRaylib* surf, bool destroy_surf) {
+OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_SurfaceRaylib* surf, bool destroy_surf) {
     if (OMG_ISNULL(surf) || !this->raylib->IsImageReady(surf->img))
-        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
-    OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
+        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
     if (OMG_ISNULL(tex))
-        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
+        tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
+    if (OMG_ISNULL(tex))
+        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
     tex->target.texture = this->raylib->LoadTextureFromImage(surf->img);
     tex->tex = &tex->target.texture;
     if (!this->raylib->IsTextureReady(*tex->tex)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create Raylib texture from surface");
-        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, (OMG_Surface*)surf, destroy_surf);
+        return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
     }
     tex->is_target = false;
     tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
@@ -204,17 +205,18 @@ OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, O
     return tex;
 }
 
-OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, const OMG_FPoint* size, int access, bool has_alpha) {
+OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* size, int access, bool has_alpha) {
     OMG_UNUSED(access, has_alpha);
-    OMG_TextureRaylib* tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
     if (OMG_ISNULL(tex))
-        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, size, access, has_alpha);
+        tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
+    if (OMG_ISNULL(tex))
+        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
     // TODO: Does compiler use memset here???
     tex->target = this->raylib->LoadRenderTexture((int)size->w, (int)size->h);
     if (!this->raylib->IsRenderTextureReady(tex->target)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_ERROR(omg_base, "Failed to create Raylib target texture");
-        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, size, access, has_alpha);
+        return (OMG_TextureRaylib*)omg_renderer_tex_create(base, tex_base, size, access, has_alpha);
     }
     tex->tex = &tex->target.texture;
     tex->is_target = true;

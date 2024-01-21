@@ -32,7 +32,7 @@ OMG_API bool omg_renderer_win_fill_rect(OMG_RendererWin* this, const OMG_FRect* 
 OMG_API bool omg_renderer_win_draw_point(OMG_RendererWin* this, const OMG_FPoint* pos, const OMG_Color* col);
 OMG_API bool omg_renderer_win_draw_circle(OMG_RendererWin* this, const OMG_FPoint* pos, float rad, const OMG_Color* col)
 OMG_API bool omg_renderer_win_fill_circle(OMG_RendererWin* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
-OMG_API OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, const OMG_FPoint* size, int access, bool has_alpha);
+OMG_API OMG_TextureWin* omg_renderer_win_tex_create(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex);
 OMG_API bool omg_renderer_win_set_target(OMG_RendererWin* this, OMG_TextureWin* tex);
 OMG_API bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos);

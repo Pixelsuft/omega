@@ -51,8 +51,8 @@ typedef struct OMG_Renderer {
     bool (*fill_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     bool (*draw_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
     bool (*fill_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
-    OMG_Texture* (*tex_from_surf)(struct OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf);
-    OMG_Texture* (*tex_create)(struct OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
+    OMG_Texture* (*tex_from_surf)(struct OMG_Renderer* this, OMG_Texture* tex, OMG_Surface* surf, bool destroy_surf);
+    OMG_Texture* (*tex_create)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha);
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
     bool (*copy)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
     bool (*copy_ex)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
@@ -85,8 +85,8 @@ OMG_API void omg_renderer_fill_on_create(OMG_Renderer* this);
 OMG_API bool omg_renderer_init(OMG_Renderer* this);
 OMG_API bool omg_renderer_destroy(OMG_Renderer* this);
 OMG_API bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
-OMG_API OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf);
-OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha);
+OMG_API OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Texture* tex, OMG_Surface* surf, bool destroy_surf);
+OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API OMG_Texture* omg_renderer_dummy_tex_create(OMG_Renderer* this);
 #if OMG_EXPORT_SHIT
 OMG_API int omg_renderer_get_supported_drivers(OMG_Renderer* this);

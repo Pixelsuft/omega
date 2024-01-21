@@ -330,7 +330,7 @@ void app_init(App* this, OMG_EntryData* data) {
         }
     this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, false);
     this->win->set_icon(this->win, this->surf);
-    this->tex = this->ren->tex_create(this->ren, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
+    this->tex = this->ren->tex_create(this->ren, NULL, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->sin_mul = 0.4;
     this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
     this->ren->tex_set_scale_mode(this->ren, this->tex2, OMG_SCALE_MODE_NEAREST);

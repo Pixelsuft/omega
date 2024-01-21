@@ -58,13 +58,13 @@ bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset, const 
     return false;
 }
 
-OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Surface* surf, bool destroy_surf) {
-    OMG_UNUSED(surf, destroy_surf);
+OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Texture* tex, OMG_Surface* surf, bool destroy_surf) {
+    OMG_UNUSED(tex, surf, destroy_surf);
     return omg_renderer_dummy_tex_create(this);
 }
 
-OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, const OMG_FPoint* size, int access, bool has_alpha) {
-    OMG_UNUSED(size, access, has_alpha);
+OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha) {
+    OMG_UNUSED(tex, size, access, has_alpha);
     return omg_renderer_dummy_tex_create(this);
 }
 
