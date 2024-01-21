@@ -1,7 +1,7 @@
 #include <omega/font.h>
 
 bool omg_fontmgr_destroy(OMG_FontMgr* this) {
-    OMG_UNUSED(this);
+    this->inited = false;
     return false;
 }
 

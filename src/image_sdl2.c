@@ -5,6 +5,7 @@
 #include <omega/omega_sdl2.h>
 #define base ((OMG_ImageLoader*)this)
 #define omg_base ((OMG_Omega*)base->omg)
+// I think these forces OMG_SUPPORT_SDL2, but I don't care cuz it's a part of SDL2
 #define IMG_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)omg_base)->sdl2->SDL_GetError() : "")
 
 bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
