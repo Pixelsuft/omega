@@ -303,6 +303,23 @@ typedef struct Music {
     void* ctxData;
 } Music;
 
+typedef struct GlyphInfo {
+    int value;
+    int offsetX;
+    int offsetY;
+    int advanceX;
+    Image image;
+} GlyphInfo;
+
+typedef struct Font {
+    int baseSize;
+    int glyphCount;
+    int glyphPadding;
+    Texture2D texture;
+    RL_Rectangle* recs;
+    GlyphInfo* glyphs;
+} Font;
+
 typedef enum {
     LOG_ALL = 0,
     LOG_TRACE,
@@ -475,6 +492,36 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*SetMusicPan)(Music, float);
     float OMG_RAYLIB_PREFIX (*GetMusicTimeLength)(Music);
     float OMG_RAYLIB_PREFIX (*GetMusicTimePlayed)(Music);
+    Font OMG_RAYLIB_PREFIX (*GetFontDefault)(void);
+    Font OMG_RAYLIB_PREFIX (*LoadFont)(const char*);
+    Font OMG_RAYLIB_PREFIX (*LoadFontEx)(const char*, int, int*, int);
+    Font OMG_RAYLIB_PREFIX (*LoadFontFromImage)(Image, Color, int);
+    Font OMG_RAYLIB_PREFIX (*LoadFontFromMemory)(const char*, const unsigned char*, int, int, int*, int);
+    bool OMG_RAYLIB_PREFIX (*IsFontReady)(Font);
+    GlyphInfo* OMG_RAYLIB_PREFIX (*LoadFontData)(const unsigned char*, int, int, int*, int, int);
+    Image OMG_RAYLIB_PREFIX (*GenImageFontAtlas)(const GlyphInfo*, RL_Rectangle**, int, int, int, int);
+    void OMG_RAYLIB_PREFIX (*UnloadFontData)(GlyphInfo);
+    void OMG_RAYLIB_PREFIX (*UnloadFont)(Font);
+    void OMG_RAYLIB_PREFIX (*DrawText)(const char*, int, int, int, Color);
+    void OMG_RAYLIB_PREFIX (*DrawTextEx)(Font, const char*, Vector2, float, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawTextPro)(Font, const char*, Vector2, Vector2, float, float, float, Color); 
+    void OMG_RAYLIB_PREFIX (*DrawTextCodepoint)(Font, int, Vector2, float, Color);
+    void OMG_RAYLIB_PREFIX (*DrawTextCodepoints)(Font, const int*, int, Vector2, float, float, Color);
+    void OMG_RAYLIB_PREFIX (*SetTextLineSpacing)(int);
+    int OMG_RAYLIB_PREFIX (*MeasureText)(const char*, int);
+    Vector2 OMG_RAYLIB_PREFIX (*MeasureTextEx)(Font, const char*, float, float);
+    int OMG_RAYLIB_PREFIX (*GetGlyphIndex)(Font, int);
+    GlyphInfo OMG_RAYLIB_PREFIX (*GetGlyphInfo)(Font, int);
+    RL_Rectangle OMG_RAYLIB_PREFIX (*GetGlyphAtlasRec)(Font, int);
+    char* OMG_RAYLIB_PREFIX (*LoadUTF8)(const int*, int);
+    void OMG_RAYLIB_PREFIX (*UnloadUTF8)(char*);
+    int* OMG_RAYLIB_PREFIX (*LoadCodepoints)(const char*, int*);
+    void OMG_RAYLIB_PREFIX (*UnloadCodepoints)(int*);
+    int OMG_RAYLIB_PREFIX (*GetCodepointCount)(const char*);
+    int OMG_RAYLIB_PREFIX (*GetCodepoint)(const char*, int*);
+    int OMG_RAYLIB_PREFIX (*GetCodepointNext)(const char*, int*);
+    int OMG_RAYLIB_PREFIX (*GetCodepointPrevious)(const char*, int*);
+    const char* OMG_RAYLIB_PREFIX (*CodepointToUTF8)(int, int*);
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);
