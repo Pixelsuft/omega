@@ -321,7 +321,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->bg_col = 0.0f;
     this->bg_fow = true;
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
-    this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, &OMG_FPOINT_MAKE(256, 256), true);
+    this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, NULL, &OMG_FPOINT_MAKE(256, 256), true);
     this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, true);
     // I don't recommend to use surfaces because they may have different formats and you currently can't see it
     if (OMG_ISNOTNULL(this->surf->data))

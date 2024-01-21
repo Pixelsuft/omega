@@ -47,8 +47,8 @@ bool omg_winmgr_destroy(OMG_Winmgr* this) {
     return false;
 }
 
-OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, const OMG_FPoint* size, bool has_alpha) {
-    OMG_UNUSED(this, size, has_alpha);
+OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha) {
+    OMG_UNUSED(this, surf, size, has_alpha);
     return NULL;
 }
 
@@ -70,8 +70,8 @@ OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this) {
 #endif
 }
 
-OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, const OMG_String* path, int format) {
-    OMG_UNUSED(path, format);
+OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, OMG_Surface* surf, const OMG_String* path, int format) {
+    OMG_UNUSED(surf, path, format);
     return omg_winmgr_dummy_surf_create(this);
 }
 

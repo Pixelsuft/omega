@@ -43,8 +43,9 @@ bool omg_winmgr_sdl2_destroy(OMG_WinmgrSdl2* this) {
     return false;
 }
 
-OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_create(OMG_WinmgrSdl2* this, const OMG_FPoint* size, bool has_alpha) {
-    OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
+OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_create(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf, const OMG_FPoint* size, bool has_alpha) {
+    if (OMG_ISNULL(surf))
+        surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
         return NULL;
     surf->surf = this->sdl2->SDL_CreateRGBSurfaceWithFormat(
@@ -89,8 +90,9 @@ bool omg_winmgr_sdl2_surf_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf) {
     return false;
 }
 
-OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, const OMG_String* path, int format) {
-    OMG_SurfaceSdl2* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
+OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf, const OMG_String* path, int format) {
+    if (OMG_ISNULL(surf))
+        surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceSdl2));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
 #if OMG_SUPPORT_SDL2_IMAGE

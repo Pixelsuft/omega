@@ -19,3 +19,5 @@ typedef struct OMG_FontMgr {
 
 OMG_API bool omg_fontmgr_init(OMG_FontMgr* this);
 OMG_API bool omg_fontmgr_destroy(OMG_FontMgr* this);
+#if OMG_EXPORT_SHIT
+#endif

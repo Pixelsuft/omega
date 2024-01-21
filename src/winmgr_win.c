@@ -52,8 +52,9 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
     return false;
 }
 
-OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, const OMG_String* path, int format) {
-    OMG_SurfaceWin* surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
+OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_String* path, int format) {
+    if (OMG_ISNULL(surf))
+        surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
 #if OMG_SUPPORT_OMG_IMAGE
