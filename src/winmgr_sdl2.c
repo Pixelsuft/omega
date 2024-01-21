@@ -159,7 +159,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
     base->surf_set_locked = omg_winmgr_sdl2_surf_set_locked;
 #if OMG_SUPPORT_SDL2_TTF
-    base->sz_font_mgr = sizeof(OMG_FontSdl2);
+    base->sz_font_mgr = sizeof(OMG_FontMgrSdl2);
     base->_fnt_init_ptr = (void*)((size_t)omg_fontmgr_sdl2_init);
 #endif
 #if OMG_SUPPORT_SDL2_IMAGE

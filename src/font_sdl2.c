@@ -12,7 +12,7 @@ bool omg_fontmgr_sdl2_destroy(OMG_FontMgrSdl2* this) {
     if (!base->inited)
         return false;
     base->inited = false;
-    this->ttf.TTF_Quit(); // WTF this crashes
+    this->ttf.TTF_Quit();
     return omg_sdl2_ttf_dll_free(&this->ttf);
 }
 
