@@ -16,6 +16,8 @@ typedef struct {
     OMG_Sound* sound;
     OMG_File* file;
     OMG_Clock* clock;
+    OMG_FontMgr* fnt;
+    OMG_Font* fps_font;
     double sin_mul;
     double rot_timer;
     omg_color_t bg_col;
@@ -33,6 +35,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
     this->audio->snd_destroy(this->audio, this->sound);
     this->audio->mus_destroy(this->audio, this->mus);
+    this->fnt->font_destroy(this->fnt, this->fps_font);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -287,10 +290,12 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;        
     }
+    this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
+    this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), 32.0f);
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
     this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"));
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);

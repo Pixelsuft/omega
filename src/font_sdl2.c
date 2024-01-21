@@ -17,6 +17,7 @@ bool omg_fontmgr_sdl2_destroy(OMG_FontMgrSdl2* this) {
 }
 
 bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
+    omg_fontmgr_init(base);
     if (omg_sdl2_ttf_dll_load(&this->ttf, omg_base->sdl2_ttf_dll_path)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_ttf dll");
         return true;
