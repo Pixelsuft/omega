@@ -42,7 +42,7 @@ bool omg_winmgr_destroy(OMG_Winmgr* this) {
         OMG_FREE(omg_base->mem, this->cache);
         this->cache = NULL;
     }
-    this->font_mgr_free(this);
+    this->fontmgr_free(this);
     this->image_loader_free(this);
     return false;
 }
@@ -97,7 +97,7 @@ bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this) {
     return false;
 }
 
-bool omg_winmgr_font_mgr_free(OMG_Winmgr* this) {
+bool omg_winmgr_fontmgr_free(OMG_Winmgr* this) {
     if (OMG_ISNOTNULL(this->fnt)) {
         if (this->fnt->inited)
             this->fnt->destroy(this->fnt);
@@ -110,7 +110,7 @@ bool omg_winmgr_font_mgr_free(OMG_Winmgr* this) {
     return false;
 }
 
-bool omg_winmgr_font_mgr_alloc(OMG_Winmgr* this) {
+bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this) {
     if (OMG_ISNULL(this->fnt)) {
         this->fnt = OMG_MALLOC(omg_base->mem, this->sz_font_mgr);
         if (OMG_ISNULL(this->fnt))
@@ -154,8 +154,8 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_from_fp = omg_winmgr_surf_from_fp;
     this->image_loader_alloc = omg_winmgr_image_loader_alloc;
     this->image_loader_free = omg_winmgr_image_loader_free;
-    this->font_mgr_alloc = omg_winmgr_font_mgr_alloc;
-    this->font_mgr_free = omg_winmgr_font_mgr_free;
+    this->fontmgr_alloc = omg_winmgr_fontmgr_alloc;
+    this->fontmgr_free = omg_winmgr_fontmgr_free;
     this->surf_set_locked = omg_winmgr_surf_set_locked;
     this->inited = true;
     return false;

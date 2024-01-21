@@ -24,8 +24,8 @@ typedef struct OMG_Winmgr {
     bool (*surf_set_locked)(struct OMG_Winmgr* this, OMG_Surface* surf, bool locked);
     bool (*image_loader_alloc)(struct OMG_Winmgr* this);
     bool (*image_loader_free)(struct OMG_Winmgr* this);
-    bool (*font_mgr_alloc)(struct OMG_Winmgr* this);
-    bool (*font_mgr_free)(struct OMG_Winmgr* this);
+    bool (*fontmgr_alloc)(struct OMG_Winmgr* this);
+    bool (*fontmgr_free)(struct OMG_Winmgr* this);
     int surf_depth;
     int image_formats;
     bool surf_rle;
@@ -42,7 +42,7 @@ OMG_API bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf);
 OMG_API bool omg_winmgr_surf_set_locked(OMG_Winmgr* this, OMG_Surface* surf, bool locked);
 OMG_API bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_image_loader_free(OMG_Winmgr* this);
-OMG_API bool omg_winmgr_font_mgr_alloc(OMG_Winmgr* this);
-OMG_API bool omg_winmgr_font_mgr_free(OMG_Winmgr* this);
+OMG_API bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this);
+OMG_API bool omg_winmgr_fontmgr_free(OMG_Winmgr* this);
 OMG_API OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, const OMG_String* path, int format);
 #endif

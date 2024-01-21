@@ -279,7 +279,13 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->audio_type = OMG_AUDIO_TYPE_FMOD;
     if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
+        this->omg->destroy(this->omg);
         return;
+    }
+    if (this->omg->winmgr->fontmgr_alloc(this->omg->winmgr) || this->omg->winmgr->fnt->init(this->omg->winmgr->fnt)) {
+        OMG_ERROR(this->omg, "OMG Font Init Fail");
+        this->omg->destroy(this->omg);
+        return;        
     }
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
