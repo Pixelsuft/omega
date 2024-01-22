@@ -11,6 +11,7 @@ OMG_Font* omg_fontmgr_dummy_font_create(OMG_FontMgr* this) {
 #if OMG_ALLOW_DUMMY_FONT
     static OMG_Font font;
     font.size = 0.0f;
+    font.aa = false;
     font.text_type = OMG_FONT_TEXT_TYPE_TEXT;
     return &font;
 #else

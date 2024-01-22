@@ -11,6 +11,7 @@
 typedef struct {
     float size;
     int text_type;
+    bool aa;
     bool was_allocated;
 } OMG_Font;
 

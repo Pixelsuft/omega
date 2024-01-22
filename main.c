@@ -115,8 +115,10 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else
             this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(255, 255, 255, 255));
     }
-    else if (event->code == OMG_SCANCODE_G)
+    else if (event->code == OMG_SCANCODE_G) {
+        this->fps_font->aa = !event->is_pressed;
         this->ren->tex_set_scale_mode(this->ren, this->tex2, event->is_pressed ? OMG_SCALE_MODE_LINEAR : OMG_SCALE_MODE_NEAREST);
+    }
     else if (event->code == OMG_SCANCODE_H) {
         if (event->is_pressed) {
             this->ren->auto_blend = false;
