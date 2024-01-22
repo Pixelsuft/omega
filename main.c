@@ -18,6 +18,8 @@ typedef struct {
     OMG_Clock* clock;
     OMG_FontMgr* fnt;
     OMG_Font* fps_font;
+    OMG_String fps_str;
+    char fps_buf[20];
     double sin_mul;
     double rot_timer;
     omg_color_t bg_col;
@@ -173,6 +175,10 @@ void app_on_update(OMG_EventUpdate* event) {
     this->rot_timer += this->clock->dt;
     if (this->rot_timer >= OMG_M_PI2)
         this->rot_timer -= OMG_M_PI2;
+    // Hack
+    this->fps_str.len = 5;
+    omg_string_add_int(&this->fps_str, this->clock->get_fps(this->clock));
+    // OMG_INFO(this->omg, &this->fps_str);
     // OMG_INFO(this->omg, this->omg->mem->get_alloc_count(this->omg->mem));
     // OMG_INFO(this->omg, "FPS: ", this->clock->get_fps(this->clock));
     // OMG_INFO(this->omg, "DT: ", this->clock->dt);
@@ -310,6 +316,8 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, "File pos: ", (int)this->file->tell(this->file));
     omg_string_destroy(&file_buf);
     this->file->destroy(this->file);
+    this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
+    this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;
     this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT; // We don't need UTF-8 support for drawing FPS
     this->win->allow_alt = false;
