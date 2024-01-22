@@ -19,5 +19,6 @@ OMG_API bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this);
 OMG_API bool omg_fontmgr_font_sdl2_destroy(OMG_FontMgrSdl2* this, OMG_FontSdl2* font);
 OMG_API OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_String* fp, long index, float size);
 OMG_API bool omg_fontmgr_sdl2_destroy(OMG_FontMgrSdl2* this);
+OMG_API bool omg_fontmgr_sdl2_font_set_scale(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_FPoint* scale);
 #endif
 #endif

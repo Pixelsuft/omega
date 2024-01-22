@@ -146,6 +146,7 @@
     <ClCompile Include="src\api_sdl2_gfx.c" />
     <ClCompile Include="src\api_sdl2_image.c" />
     <ClCompile Include="src\api_sdl2_mixer.c" />
+    <ClCompile Include="src\api_sdl2_ttf.c" />
     <ClCompile Include="src\api_spng.c" />
     <ClCompile Include="src\api_static.c" />
     <ClCompile Include="src\api_win.c" />
@@ -158,6 +159,8 @@
     <ClCompile Include="src\clock_sdl2.c" />
     <ClCompile Include="src\clock_win.c" />
     <ClCompile Include="src\entry.c" />
+    <ClCompile Include="src\font.c" />
+    <ClCompile Include="src\font_sdl2.c" />
     <ClCompile Include="src\image.c" />
     <ClCompile Include="src\image_omg.c" />
     <ClCompile Include="src\image_raylib.c" />

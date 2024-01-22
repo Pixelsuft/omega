@@ -50,7 +50,22 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
         omg_fontmgr_font_sdl2_destroy(this, font);
         return (OMG_FontSdl2*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
     }
+    font_base->size = size; // TODO: get size from SDL2_ttf
     return font;
+}
+
+bool omg_fontmgr_sdl2_font_set_scale(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_FPoint* scale) {
+    if (OMG_ISNULL(this->ttf.TTF_SetFontSizeDPI)) {
+        // Should I try to re-open font???
+        _OMG_LOG_WARN(omg_base, "Failed to set font size (Setting size is not supported for this SDL2_ttf version)");
+        return true;
+    }
+    if (this->ttf.TTF_SetFontSizeDPI(font->font, (int)font_base->size, (unsigned int)(scale->x * 72.0f), (unsigned int)(scale->y * 72.0f)) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set font size (", TTF_GETERROR(), ")");
+        return true;
+    }
+    // TODO: work here
+    return false;
 }
 
 bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
@@ -68,6 +83,7 @@ bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
     base->destroy = omg_fontmgr_sdl2_destroy;
     base->font_from_fp = omg_fontmgr_sdl2_font_from_fp;
     base->font_destroy = omg_fontmgr_font_sdl2_destroy;
+    base->font_set_scale = omg_fontmgr_sdl2_font_set_scale;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;

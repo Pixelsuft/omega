@@ -10,6 +10,7 @@ OMG_Font* omg_fontmgr_dummy_font_create(OMG_FontMgr* this) {
     OMG_UNUSED(this);
 #if OMG_ALLOW_DUMMY_FONT
     static OMG_Font font;
+    font.size = 0.0f;
     return &font;
 #else
     return NULL;
@@ -26,10 +27,16 @@ OMG_Font* omg_fontmgr_font_from_fp(OMG_FontMgr* this, OMG_Font* font, const OMG_
     return omg_fontmgr_dummy_font_create(this);
 }
 
+bool omg_fontmgr_font_set_scale(OMG_FontMgr* this, OMG_Font* font, const OMG_FPoint* scale) {
+    OMG_UNUSED(this, font, scale);
+    return false;
+}
+
 bool omg_fontmgr_init(OMG_FontMgr* this) {
     this->inited = false;
     this->destroy = omg_fontmgr_destroy;
     this->font_from_fp = omg_fontmgr_font_from_fp;
     this->font_destroy = omg_fontmgr_font_destroy;
+    this->font_set_scale = omg_fontmgr_font_set_scale;
     return false;
 }
