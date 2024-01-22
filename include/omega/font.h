@@ -20,6 +20,7 @@ typedef struct OMG_FontMgr {
     bool (*font_destroy)(struct OMG_FontMgr* this, OMG_Font* font);
     OMG_Font* (*font_from_fp)(struct OMG_FontMgr* this, OMG_Font* font, const OMG_String* fp, long index, float size);
     bool (*font_set_scale)(struct OMG_FontMgr* this, OMG_Font* font, const OMG_FPoint* scale);
+    bool (*font_query_text_size)(struct OMG_FontMgr* this, OMG_Font* font, const OMG_String* text, OMG_FRect* size_buf);
     void* omg;
     bool was_allocated;
     bool inited;
@@ -31,5 +32,6 @@ OMG_API OMG_Font* omg_fontmgr_dummy_font_create(OMG_FontMgr* this);
 OMG_API OMG_Font* omg_fontmgr_font_from_fp(OMG_FontMgr* this, OMG_Font* font, const OMG_String* fp, long index, float size);
 OMG_API bool omg_fontmgr_destroy(OMG_FontMgr* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_fontmgr_font_query_text_size(OMG_FontMgr* this, OMG_Font* font, const OMG_String* text, OMG_FRect* size_buf);
 OMG_API bool omg_fontmgr_font_set_scale(OMG_FontMgr* this, OMG_Font* font, const OMG_FPoint* scale);
 #endif

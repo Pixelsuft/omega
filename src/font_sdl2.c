@@ -69,6 +69,21 @@ bool omg_fontmgr_sdl2_font_set_scale(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, 
     return false;
 }
 
+bool omg_fontmgr_sdl2_font_query_text_size(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_String* text, OMG_FRect* size_buf) {
+    if (omg_string_ensure_null((OMG_String*)text))
+        return true;
+    int w_buf, h_buf;
+    size_buf->x = size_buf->y = 0.0f;
+    if ((font_base->text_type == OMG_FONT_TEXT_TYPE_UTF8 ? this->ttf.TTF_SizeUTF8 : this->ttf.TTF_SizeText)(font->font, text->ptr, &w_buf, &h_buf) < 0) {
+        _OMG_LOG_ERROR(omg_base, "Failed to query font size (", TTF_GETERROR(), ")");
+        size_buf->w = size_buf->h = 0.0f;
+        return true;
+    }
+    size_buf->w = (float)w_buf;
+    size_buf->h = (float)h_buf;
+    return false;
+}
+
 bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
     omg_fontmgr_init(base);
     if (omg_sdl2_ttf_dll_load(&this->ttf, omg_base->sdl2_ttf_dll_path)) {
@@ -85,6 +100,7 @@ bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
     base->font_from_fp = omg_fontmgr_sdl2_font_from_fp;
     base->font_destroy = omg_fontmgr_font_sdl2_destroy;
     base->font_set_scale = omg_fontmgr_sdl2_font_set_scale;
+    base->font_query_text_size = omg_fontmgr_sdl2_font_query_text_size;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;
