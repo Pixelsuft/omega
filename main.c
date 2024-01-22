@@ -311,6 +311,7 @@ void app_init(App* this, OMG_EntryData* data) {
     omg_string_destroy(&file_buf);
     this->file->destroy(this->file);
     this->clock = this->omg->clock;
+    this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT; // We don't need UTF-8 support for drawing FPS
     this->win->allow_alt = false;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;

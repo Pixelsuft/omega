@@ -5,8 +5,12 @@
 #define OMG_FONT_MGR_SDL2 0
 #define OMG_FONT_MGR_RAYLIB 0
 
+#define OMG_FONT_TEXT_TYPE_TEXT 0
+#define OMG_FONT_TEXT_TYPE_UTF8 1
+
 typedef struct {
     float size;
+    int text_type;
     bool was_allocated;
 } OMG_Font;
 
