@@ -12,7 +12,7 @@ bool omg_memory_sdl2_destroy(OMG_MemorySdl2* this) {
 }
 
 void* omg_memory_sdl2_alloc(OMG_MemorySdl2* this, OMG_MemoryExtra extra) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     OMG_MemoryExtra* result = this->sdl2->SDL_malloc(extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
         if (OMG_ISNOTNULL(extra.func)) {
@@ -45,7 +45,7 @@ void* omg_memory_sdl2_alloc(OMG_MemorySdl2* this, OMG_MemoryExtra extra) {
 }
 
 void* omg_memory_sdl2_realloc(OMG_MemorySdl2* this, void* ptr, size_t size) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     if (OMG_ISNULL(ptr))
         return NULL;
     OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
@@ -76,7 +76,7 @@ void* omg_memory_sdl2_realloc(OMG_MemorySdl2* this, void* ptr, size_t size) {
 }
 
 bool omg_memory_sdl2_free(OMG_MemorySdl2* this, void* ptr) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     if (OMG_ISNULL(ptr)) {
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;

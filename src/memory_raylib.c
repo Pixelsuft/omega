@@ -22,7 +22,7 @@ bool omg_memory_raylib_destroy(OMG_MemoryRaylib* this) {
 }
 
 void* omg_memory_raylib_alloc(OMG_MemoryRaylib* this, OMG_MemoryExtra extra) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     OMG_MemoryExtra* result = RL_ALLOC_MEM((unsigned int)(extra.size + sizeof(OMG_MemoryExtra)));
     if (OMG_ISNULL(result)) {
         if (OMG_ISNOTNULL(extra.func)) {
@@ -56,7 +56,7 @@ void* omg_memory_raylib_alloc(OMG_MemoryRaylib* this, OMG_MemoryExtra extra) {
 }
 
 void* omg_memory_raylib_realloc(OMG_MemoryRaylib* this, void* ptr, size_t size) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     if (OMG_ISNULL(ptr))
         return NULL;
     OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
@@ -87,7 +87,7 @@ void* omg_memory_raylib_realloc(OMG_MemoryRaylib* this, void* ptr, size_t size) 
 }
 
 bool omg_memory_raylib_free(OMG_MemoryRaylib* this, void* ptr) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     if (OMG_ISNULL(ptr)) {
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;

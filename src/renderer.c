@@ -138,7 +138,7 @@ bool omg_renderer_set_blend_mode(OMG_Renderer* this, int blend_mode) {
 }
 
 OMG_Texture* omg_renderer_font_render(OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
-    OMG_UNUSED(tex, font, bg, fg);
+    OMG_UNUSED(tex, font, text, bg, fg);
     if (OMG_ISNOTNULL(rect)) {
         rect->x = rect->y = rect->w = rect->h = 0.0f;
     }

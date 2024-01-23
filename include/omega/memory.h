@@ -5,7 +5,7 @@
 #define _OMG_MEMORY_ALLOC_INFO(extra) "Allocation info: at file ", (extra)->filename, ", in line ", (uint32_t)((extra)->line), ", at function ", (extra)->func
 #define _OMG_MEMORY_NULL_FREE_WARN "Attempted to free null ptr"
 
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
 typedef struct {
     size_t size;
     const char* filename;

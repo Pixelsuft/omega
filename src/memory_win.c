@@ -3,7 +3,7 @@
 #include <omega/api_win.h>
 #include <omega/memory_win.h>
 #include <omega/omega.h>
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
 #include <omega/omega.h>
 #include <omega/omega_win.h>
 #endif
@@ -24,7 +24,7 @@ bool omg_memory_win_destroy(OMG_MemoryWin* this) {
 }
 
 void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     OMG_MemoryExtra* result = omg_win->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
         if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(extra.func)) {
@@ -70,7 +70,7 @@ void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 }
 
 void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     if (OMG_ISNULL(ptr))
         return NULL;
     OMG_MemoryExtra* real_ptr = (OMG_MemoryExtra*)((size_t)ptr - sizeof(OMG_MemoryExtra));
@@ -113,7 +113,7 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
 }
 
 bool omg_memory_win_free(OMG_MemoryWin* this, void* ptr) {
-#if OMG_DEBUG
+#if OMG_DEBUG_MEM
     if (OMG_ISNULL(ptr)) {
         _OMG_LOG_WARN(omg_base, _OMG_MEMORY_NULL_FREE_WARN);
         return true;
