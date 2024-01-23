@@ -96,6 +96,7 @@ bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
         omg_sdl2_ttf_dll_free(&this->ttf);
         return true;
     }
+    base->type = OMG_FONT_MGR_SDL2;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_fontmgr_sdl2_destroy;
     base->font_from_fp = omg_fontmgr_sdl2_font_from_fp;

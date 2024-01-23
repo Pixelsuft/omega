@@ -23,6 +23,7 @@ typedef struct OMG_FontMgr {
     bool (*font_set_scale)(struct OMG_FontMgr* this, OMG_Font* font, const OMG_FPoint* scale);
     bool (*font_query_text_size)(struct OMG_FontMgr* this, OMG_Font* font, const OMG_String* text, OMG_FRect* size_buf);
     void* omg;
+    int type;
     bool was_allocated;
     bool inited;
 } OMG_FontMgr;

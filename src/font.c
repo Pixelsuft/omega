@@ -43,6 +43,7 @@ bool omg_fontmgr_font_query_text_size(OMG_FontMgr* this, OMG_Font* font, const O
 
 bool omg_fontmgr_init(OMG_FontMgr* this) {
     this->inited = false;
+    this->type = OMG_FONT_MGR_NONE;
     this->destroy = omg_fontmgr_destroy;
     this->font_from_fp = omg_fontmgr_font_from_fp;
     this->font_destroy = omg_fontmgr_font_destroy;

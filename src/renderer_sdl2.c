@@ -578,12 +578,12 @@ bool omg_renderer_sdl2_set_blend_mode(OMG_RendererSdl2* this, int blend_mode) {
 
 OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
 #if OMG_SUPPORT_SDL2_TTF
-    if ((omg_base->winmgr->fnt != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
-        return omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+    if ((omg_base->winmgr->fnt->type != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
+        return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
     if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
         if (OMG_ISNULL(tex))
-            return omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+            return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
 #if OMG_ALLOW_TEX_WAS_ALLOCATED
         tex_base->was_allocated = true;
 #endif
@@ -624,7 +624,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
     if (OMG_ISNULL(sdl_surf)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_WARN(omg_base, "Failed to render text (", this->sdl2->SDL_GetError(), ")");
-        return omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+        return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
     }
     tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, sdl_surf);
     tex->temp_surf = NULL;
@@ -635,7 +635,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
     if (OMG_ISNULL(tex->tex)) {
         OMG_FREE(omg_base->mem, tex);
         _OMG_LOG_WARN(omg_base, "Failed to create font tex from surf (", this->sdl2->SDL_GetError(), ")");
-        return omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+        return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
     }
     if (OMG_ISNOTNULL(rect)) {
         rect->x = rect->y = 0.0f;
@@ -644,7 +644,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
     }
     return tex;
 #else
-    omg_renderer_font_render(base, tex_base, font, bg, fg, rect);
+    return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, bg, fg, rect);
 #endif
 }
 
