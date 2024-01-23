@@ -5,6 +5,7 @@
 #include <omega/window_raylib.h>
 #include <omega/surface_raylib.h>
 #include <omega/image_raylib.h>
+#include <omega/font_raylib.h>
 #define base ((OMG_Winmgr*)this)
 #define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -127,6 +128,8 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->surf_destroy = omg_winmgr_raylib_surf_destroy;
     base->surf_from_fp = omg_winmgr_raylib_surf_from_fp;
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_raylib_init);
+    base->sz_font_mgr = sizeof(OMG_FontMgrRaylib);
+    base->_fnt_init_ptr = (void*)((size_t)omg_fontmgr_raylib_init);
     OMG_END_POINTER_CAST();
     return false;
 }
