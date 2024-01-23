@@ -5,10 +5,15 @@
 #include <omega/omega_raylib.h>
 #define base ((OMG_FontMgr*)this)
 #define omg_base ((OMG_Omega*)base->omg)
+#define omg_raylib ((OMG_OmegaRaylib*)base->omg)
+#define rl (omg_raylib->raylib)
 #define font_base ((OMG_Font*)font)
 
 bool omg_fontmgr_font_raylib_destroy(OMG_FontMgrRaylib* this, OMG_FontRaylib* font) {
     if (OMG_ISNOTNULL(font)) {
+        if (rl->IsFontReady(font->font)) {
+            rl->UnloadFont(font->font);
+        }
         if (font_base->was_allocated) {
             font_base->was_allocated = false;
             OMG_FREE(omg_base->mem, font);
@@ -28,6 +33,12 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     }
     else
         font_base->was_allocated = false;
+    font->font = rl->LoadFont(fp->ptr);
+    if (!rl->IsFontReady(font->font)) {
+        omg_fontmgr_font_destroy(base, font_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to load font ", fp->ptr);
+        return (OMG_FontRaylib*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
+    }
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;
