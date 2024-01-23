@@ -137,6 +137,14 @@ bool omg_renderer_set_blend_mode(OMG_Renderer* this, int blend_mode) {
     return false;
 }
 
+OMG_Texture* omg_rednerer_font_render(OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect) {
+    OMG_UNUSED(tex, font, bg, fg);
+    if (OMG_ISNOTNULL(rect)) {
+        rect->x = rect->y = rect->w = rect->h = 0.0f;
+    }
+    return omg_renderer_dummy_tex_create(this);
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;

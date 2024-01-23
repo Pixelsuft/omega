@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/window.h>
 #include <omega/omega.h>
+#include <omega/font_sdl2.h>
 #include <omega/surface_sdl2.h>
 #include <omega/texture_sdl2.h>
 #include <omega/api_sdl2_gfx.h>
@@ -10,6 +11,9 @@
 #define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
+#define fnt_sdl2 ((OMG_FontMgrSdl2*)(omg_base->winmgr->fnt))
+#define font_sdl2 ((OMG_FontSdl2*)font)
+#define font_sdl2_is_utf8 (font->text_type == OMG_FONT_TEXT_TYPE_UTF8)
 #define OMG_TEX_ACCESS_TO_SDL2(access) ((access) == OMG_TEXTURE_ACCESS_STREAMING) ? SDL_TEXTUREACCESS_STREAMING : (((access) == OMG_TEXTURE_ACCESS_TARGET) ? SDL_TEXTUREACCESS_TARGET : SDL_TEXTUREACCESS_STATIC)
 #define SDL2_TEX_ACCESS_TO_OMG(access) ((access) == SDL_TEXTUREACCESS_STREAMING) ? OMG_TEXTURE_ACCESS_STREAMING : (((access) == SDL_TEXTUREACCESS_TARGET) ? OMG_TEXTURE_ACCESS_TARGET : OMG_TEXTURE_ACCESS_STATIC)
 #define MAKE_SDL2_RECT(rect) { rect->x + base->offset.x, rect->y + base->offset.y, rect->w, rect->h }
@@ -572,6 +576,73 @@ bool omg_renderer_sdl2_set_blend_mode(OMG_RendererSdl2* this, int blend_mode) {
     return false;
 }
 
+OMG_TextureSdl2* omg_rednerer_sdl2_font_render(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect) {
+#if OMG_SUPPORT_SDL2_TTF
+    if ((omg_base->winmgr->fnt != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
+        return omg_rednerer_font_render(base, tex_base, font, text, bg, fg, rect);
+    if (OMG_ISNULL(tex)) {
+        tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));
+        if (OMG_ISNULL(tex))
+            return omg_rednerer_font_render(base, tex_base, font, text, bg, fg, rect);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
+    // TODO: compability with SDL2_ttf < 2.0.18 (LCD rendering)
+    // TODO: macro for converting colors to sdl2 colors
+    SDL_Surface* sdl_surf;
+    SDL_Color fg_col;
+    SDL_Color bg_col;
+    fg_col.r = (uint8_t)(fg->r * (omg_color_t)255 / OMG_MAX_COLOR);
+    fg_col.g = (uint8_t)(fg->g * (omg_color_t)255 / OMG_MAX_COLOR);
+    fg_col.b = (uint8_t)(fg->b * (omg_color_t)255 / OMG_MAX_COLOR);
+    fg_col.a = (uint8_t)(fg->a * (omg_color_t)255 / OMG_MAX_COLOR);
+    if (OMG_ISNULL(bg)) {
+        if (font->aa) {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Blended : fnt_sdl2->ttf.TTF_RenderText_Blended)(font_sdl2->font, text->ptr, fg_col);
+        }
+        else {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Solid : fnt_sdl2->ttf.TTF_RenderText_Solid)(font_sdl2->font, text->ptr, fg_col);
+        }
+    }
+    else {
+        bg_col.r = (uint8_t)(bg->r * (omg_color_t)255 / OMG_MAX_COLOR);
+        bg_col.g = (uint8_t)(bg->g * (omg_color_t)255 / OMG_MAX_COLOR);
+        bg_col.b = (uint8_t)(bg->b * (omg_color_t)255 / OMG_MAX_COLOR);
+        bg_col.a = (uint8_t)(bg->a * (omg_color_t)255 / OMG_MAX_COLOR);
+        if (font->aa) {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded : fnt_sdl2->ttf.TTF_RenderText_Solid)(font_sdl2->font, text->ptr, fg_col, bg_col);
+        }
+        else {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_LCD : fnt_sdl2->ttf.TTF_RenderText_LCD)(font_sdl2->font, text->ptr, fg_col, bg_col);
+        }
+    }
+    if (OMG_ISNULL(sdl_surf)) {
+        OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_WARN(omg_base, "Failed to render text (", this->sdl2->SDL_GetError(), ")");
+        return omg_rednerer_font_render(base, tex_base, font, text, bg, fg, rect);
+    }
+    tex->tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, sdl_surf);
+    tex->temp_surf = NULL;
+    tex_base->has_alpha = OMG_ISNULL(bg) || (bg_col.a < 255);
+    tex_base->size.w = (float)sdl_surf->w;
+    tex_base->size.h = (float)sdl_surf->h;
+    this->sdl2->SDL_FreeSurface(sdl_surf);
+    if (OMG_ISNULL(tex->tex)) {
+        OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_WARN(omg_base, "Failed to create font tex from surf (", this->sdl2->SDL_GetError(), ")");
+        return omg_rednerer_font_render(base, tex_base, font, text, bg, fg, rect);
+    }
+    return tex;
+#else
+    omg_rednerer_font_render(base, tex_base, font, bg, fg, rect);
+#endif
+}
+
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -598,6 +669,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->tex_set_blend_mode = omg_renderer_sdl2_tex_set_blend_mode;
     base->set_blend_mode = omg_renderer_sdl2_set_blend_mode;
     base->set_vsync = omg_renderer_sdl2_set_vsync;
+    base->font_render = omg_rednerer_sdl2_font_render;
     OMG_END_POINTER_CAST();
     this->blend_cache = OMG_BLEND_MODE_NONE;
     base->type = OMG_REN_TYPE_SDL2;

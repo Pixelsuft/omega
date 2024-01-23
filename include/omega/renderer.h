@@ -1,6 +1,7 @@
 #pragma once
 #include <omega/ostd.h>
 #include <omega/surface.h>
+#include <omega/font.h>
 #include <omega/texture.h>
 
 #define OMG_REN_TYPE_NONE 0
@@ -60,6 +61,7 @@ typedef struct OMG_Renderer {
     bool (*tex_set_blend_mode)(struct OMG_Renderer* this, OMG_Texture* tex, int blend_mode);
     bool (*tex_set_color_mod)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_Color* col);
     bool (*set_blend_mode)(struct OMG_Renderer* this, int blend_mode);
+    OMG_Texture* (*font_render)(struct OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect);
     void* omg;
     void* win;
     OMG_Texture* target;
@@ -88,6 +90,7 @@ OMG_API bool omg_renderer_set_scale(OMG_Renderer* this, const OMG_FPoint* offset
 OMG_API OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Texture* tex, OMG_Surface* surf, bool destroy_surf);
 OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API OMG_Texture* omg_renderer_dummy_tex_create(OMG_Renderer* this);
+OMG_API OMG_Texture* omg_rednerer_font_render(OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect);
 #if OMG_EXPORT_SHIT
 OMG_API int omg_renderer_get_supported_drivers(OMG_Renderer* this);
 OMG_API bool omg_renderer_set_vsync(OMG_Renderer* this, bool enabled);
