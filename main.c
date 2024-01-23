@@ -240,9 +240,9 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->draw_rect(this->ren, &OMG_FRECT_MAKE(200, 500, 500, 20), &OMG_COLOR_MAKE_RGB(0, 0, 255));
     // Scale font manually to avoid pixelating
     this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0, 0), &OMG_FPOINT_MAKE(1, 1));
-    /*OMG_Texture* fps_tex = this->ren->font_render(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
-    this->ren->copy(this->ren, fps_tex, &OMG_FPOINT_MAKE(this->offset_cache.x * this->scale_cache.x, this->offset_cache.y * this->scale_cache.y));
-    this->ren->tex_destroy(this->ren, fps_tex);*/
+    OMG_Texture* fps_tex = this->ren->font_render(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
+    // this->ren->copy(this->ren, fps_tex, &OMG_FPOINT_MAKE(this->offset_cache.x * this->scale_cache.x, this->offset_cache.y * this->scale_cache.y));
+    this->ren->tex_destroy(this->ren, fps_tex);
     this->ren->flip(this->ren);
     // printf("%i\n", this->clock->get_fps(this->clock));
     // this->omg->delay(this->omg, 1.0 / 60.0);

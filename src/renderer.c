@@ -188,5 +188,8 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->tex_set_color_mod = omg_renderer_tex_set_color_mod;
     this->tex_set_blend_mode = omg_renderer_tex_set_blend_mode;
     this->set_blend_mode = omg_renderer_set_blend_mode;
+    OMG_BEGIN_POINTER_CAST();
+    this->font_render = omg_renderer_font_render;
+    OMG_END_POINTER_CAST();
     return false;
 }
