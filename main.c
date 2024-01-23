@@ -19,6 +19,7 @@ typedef struct {
     OMG_FontMgr* fnt;
     OMG_Font* fps_font;
     OMG_FPoint scale_cache;
+    OMG_FPoint offset_cache;
     OMG_String fps_str;
     char fps_buf[20];
     double sin_mul;
@@ -63,10 +64,9 @@ void app_on_state_changing(OMG_EventStateChanging* event) {
 void app_on_mouse_move(OMG_EventMouseMove* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     if (event->state & OMG_MBUTTON_LMASK) {
-        this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(
-            this->ren->offset.x + event->rel.x / this->ren->scale.x,
-            this->ren->offset.y + event->rel.y / this->ren->scale.y
-        ), NULL);        
+        this->offset_cache.x = this->offset_cache.x + event->rel.x / this->ren->scale.x;
+        this->offset_cache.y = this->offset_cache.y + event->rel.y / this->ren->scale.y;
+        this->ren->set_scale(this->ren, &this->offset_cache, NULL);        
     }
 }
 
@@ -93,16 +93,25 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         }
         else if (event->code == OMG_SCANCODE_R) {
             this->scale_cache.x = this->scale_cache.y = 1.0f;
-            this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0.0f, 0.0f), &OMG_FPOINT_MAKE(1.0f, 1.0f));
+            this->fnt->font_set_scale(this->fnt, this->fps_font, &OMG_FPOINT_MAKE(1, 1));
+            this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0, 0), &OMG_FPOINT_MAKE(1, 1));
         }
-        else if (event->code == OMG_SCANCODE_UP)
+        else if (event->code == OMG_SCANCODE_UP) {
             this->scale_cache.y += 0.25f;
-        else if (event->code == OMG_SCANCODE_DOWN)
+            this->fnt->font_set_scale(this->fnt, this->fps_font, &this->scale_cache);
+        }
+        else if (event->code == OMG_SCANCODE_DOWN) {
             this->scale_cache.y -= 0.25f;
-        else if (event->code == OMG_SCANCODE_RIGHT)
+            this->fnt->font_set_scale(this->fnt, this->fps_font, &this->scale_cache);
+        }
+        else if (event->code == OMG_SCANCODE_RIGHT) {
             this->scale_cache.x += 0.25f;
-        else if (event->code == OMG_SCANCODE_LEFT)
+            this->fnt->font_set_scale(this->fnt, this->fps_font, &this->scale_cache);
+        }
+        else if (event->code == OMG_SCANCODE_LEFT) {
             this->scale_cache.x -= 0.25f;
+            this->fnt->font_set_scale(this->fnt, this->fps_font, &this->scale_cache);
+        }
         else if (event->code == OMG_SCANCODE_A)
             this->audio->mus_play(this->audio, this->mus, -1, 0.0, 0.0);
         else if (event->code == OMG_SCANCODE_S)
@@ -200,7 +209,7 @@ void app_on_paint(OMG_EventPaint* event) {
     //     return;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
-    this->ren->set_scale(this->ren, NULL, &this->scale_cache);
+    this->ren->set_scale(this->ren, &this->offset_cache, &this->scale_cache);
     OMG_FPoint pos;
     for (pos.x = 100.0f; pos.x < 150.0f; pos.x += 2.0f) {
         for (pos.y = 100.0f; pos.y < 150.0f; pos.y += 2.0f) {
@@ -229,9 +238,10 @@ void app_on_paint(OMG_EventPaint* event) {
         this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 500, line_w, 20), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
     }
     this->ren->draw_rect(this->ren, &OMG_FRECT_MAKE(200, 500, 500, 20), &OMG_COLOR_MAKE_RGB(0, 0, 255));
-    this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(1, 1));
+    // Scale font manually to avoid pixelating
+    this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0, 0), &OMG_FPOINT_MAKE(1, 1));
     OMG_Texture* fps_tex = this->ren->font_render(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
-    this->ren->copy(this->ren, fps_tex, NULL);
+    this->ren->copy(this->ren, fps_tex, &OMG_FPOINT_MAKE(this->offset_cache.x * this->scale_cache.x, this->offset_cache.y * this->scale_cache.y));
     this->ren->tex_destroy(this->ren, fps_tex);
     this->ren->flip(this->ren);
     // printf("%i\n", this->clock->get_fps(this->clock));
@@ -313,6 +323,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
+    this->offset_cache.x = this->offset_cache.y = 0.0f;
     this->scale_cache.x = this->scale_cache.y = 1.0f;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
