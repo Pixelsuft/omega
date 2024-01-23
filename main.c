@@ -18,6 +18,7 @@ typedef struct {
     OMG_Clock* clock;
     OMG_FontMgr* fnt;
     OMG_Font* fps_font;
+    OMG_FPoint scale_cache;
     OMG_String fps_str;
     char fps_buf[20];
     double sin_mul;
@@ -90,16 +91,18 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->omg->auto_loop_stop(this->omg);
             return;
         }
-        else if (event->code == OMG_SCANCODE_R)
+        else if (event->code == OMG_SCANCODE_R) {
+            this->scale_cache.x = this->scale_cache.y = 1.0f;
             this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0.0f, 0.0f), &OMG_FPOINT_MAKE(1.0f, 1.0f));
+        }
         else if (event->code == OMG_SCANCODE_UP)
-            this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x, this->ren->scale.y + 0.25f));
+            this->scale_cache.y += 0.25f;
         else if (event->code == OMG_SCANCODE_DOWN)
-            this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x, this->ren->scale.y - 0.25f));
+            this->scale_cache.y -= 0.25f;
         else if (event->code == OMG_SCANCODE_RIGHT)
-            this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x + 0.25f, this->ren->scale.y));
+            this->scale_cache.x += 0.25f;
         else if (event->code == OMG_SCANCODE_LEFT)
-            this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(this->ren->scale.x - 0.25f, this->ren->scale.y));
+            this->scale_cache.x -= 0.25f;
         else if (event->code == OMG_SCANCODE_A)
             this->audio->mus_play(this->audio, this->mus, -1, 0.0, 0.0);
         else if (event->code == OMG_SCANCODE_S)
@@ -197,6 +200,7 @@ void app_on_paint(OMG_EventPaint* event) {
     //     return;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
+    this->ren->set_scale(this->ren, NULL, &this->scale_cache);
     OMG_FPoint pos;
     for (pos.x = 100.0f; pos.x < 150.0f; pos.x += 2.0f) {
         for (pos.y = 100.0f; pos.y < 150.0f; pos.y += 2.0f) {
@@ -225,6 +229,7 @@ void app_on_paint(OMG_EventPaint* event) {
         this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 500, line_w, 20), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
     }
     this->ren->draw_rect(this->ren, &OMG_FRECT_MAKE(200, 500, 500, 20), &OMG_COLOR_MAKE_RGB(0, 0, 255));
+    this->ren->set_scale(this->ren, NULL, &OMG_FPOINT_MAKE(1, 1));
     OMG_Texture* fps_tex = this->ren->font_render(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
     this->ren->copy(this->ren, fps_tex, NULL);
     this->ren->tex_destroy(this->ren, fps_tex);
@@ -308,6 +313,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
+    this->scale_cache.x = this->scale_cache.y = 1.0f;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
     this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
