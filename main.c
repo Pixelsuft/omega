@@ -108,6 +108,10 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->audio->mus_set_pos(this->audio, this->mus, this->audio->mus_get_pos(this->audio, this->mus) + (event->code == OMG_SCANCODE_X ? 5.0 : -5.0));
         else if (event->code == OMG_SCANCODE_V)
             this->ren->set_vsync(this->ren, !this->win->vsync);
+        else if (event->code == OMG_SCANCODE_E)
+            this->ren->aa = !this->ren->aa;
+        else if (event->code == OMG_SCANCODE_T)
+            this->fps_font->aa = !this->fps_font->aa;
     }
     if (event->code == OMG_SCANCODE_F) {
         if (event->is_pressed)
