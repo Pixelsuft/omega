@@ -298,6 +298,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;        
     }
+    // test
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
