@@ -92,9 +92,10 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             return;
         }
         else if (event->code == OMG_SCANCODE_R) {
+            this->offset_cache.x = this->offset_cache.y = 0.0f;
             this->scale_cache.x = this->scale_cache.y = 1.0f;
-            this->fnt->font_set_scale(this->fnt, this->fps_font, &OMG_FPOINT_MAKE(1, 1));
-            this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(0, 0), &OMG_FPOINT_MAKE(1, 1));
+            this->fnt->font_set_scale(this->fnt, this->fps_font, &this->scale_cache);
+            this->ren->set_scale(this->ren, &this->offset_cache, &this->scale_cache);
         }
         else if (event->code == OMG_SCANCODE_UP) {
             this->scale_cache.y += 0.25f;
