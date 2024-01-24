@@ -3,6 +3,7 @@
 
 #if OMG_SUPPORT_RAYLIB
 #include <omega/font.h>
+#define _RAYLIB_FONT_SIZE_MUL 1.3529f
 
 typedef struct {
     OMG_Font parent;

@@ -33,7 +33,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     }
     else
         font_base->was_allocated = false;
-    font->font = rl->LoadFont(fp->ptr);
+    font->font = rl->LoadFontEx(fp->ptr, (int)(size * _RAYLIB_FONT_SIZE_MUL), NULL, 0);
     if (!rl->IsFontReady(font->font)) {
         omg_fontmgr_font_destroy(base, font_base);
         _OMG_LOG_ERROR(omg_base, "Failed to load font ", fp->ptr);
@@ -55,7 +55,7 @@ bool omg_fontmgr_raylib_font_set_scale(OMG_FontMgrRaylib* this, OMG_FontRaylib* 
 bool omg_fontmgr_raylib_font_query_text_size(OMG_FontMgrRaylib* this, OMG_FontRaylib* font, const OMG_String* text, OMG_FRect* size_buf) {
     if (omg_string_ensure_null((OMG_String*)text))
         return true;
-    Vector2 tex_size = rl->MeasureTextEx(font->font, text->ptr, font_base->size * font_base->a_scale, font_base->spacing);
+    Vector2 tex_size = rl->MeasureTextEx(font->font, text->ptr, font_base->size * _RAYLIB_FONT_SIZE_MUL * font_base->a_scale, font_base->spacing);
     size_buf->x = size_buf->y = 0.0f;
     size_buf->w = tex_size.x;
     size_buf->h = tex_size.y;
