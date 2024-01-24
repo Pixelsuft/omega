@@ -159,5 +159,8 @@
     <ClCompile Include="src\api_sdl2_ttf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\font_raylib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

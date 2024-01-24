@@ -46,7 +46,7 @@ void* omg_memory_raylib_alloc(OMG_MemoryRaylib* this, OMG_MemoryExtra extra) {
     //     printf("Alloc: %s:%i\n", extra.func, (int)extra.line);
     return (void*)((size_t)result + sizeof(OMG_MemoryExtra));
 #else
-    void* result = RL_ALLOC_MEM((size_t)extra);
+    void* result = RL_ALLOC_MEM((unsigned int)extra);
     if (OMG_ISNULL(result)) {
         _OMG_LOG_ERROR(omg_base, "Failed to allocate ", (uint32_t)extra, " bytes of memory");
         return NULL;
@@ -77,7 +77,7 @@ void* omg_memory_raylib_realloc(OMG_MemoryRaylib* this, void* ptr, size_t size) 
     new_ptr->size = size;
     return (void*)((size_t)new_ptr + sizeof(OMG_MemoryExtra));
 #else
-    void* result = RL_REALLOC_MEM(ptr, size);
+    void* result = RL_REALLOC_MEM(ptr, (unsigned int)(size));
     if (OMG_ISNULL(result)) {
         _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)size, " bytes of memory");
         return NULL;

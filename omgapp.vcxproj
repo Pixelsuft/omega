@@ -160,6 +160,7 @@
     <ClCompile Include="src\clock_win.c" />
     <ClCompile Include="src\entry.c" />
     <ClCompile Include="src\font.c" />
+    <ClCompile Include="src\font_raylib.c" />
     <ClCompile Include="src\font_sdl2.c" />
     <ClCompile Include="src\image.c" />
     <ClCompile Include="src\image_omg.c" />
