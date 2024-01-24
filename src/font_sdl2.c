@@ -50,6 +50,7 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
         omg_fontmgr_font_sdl2_destroy(this, font);
         return (OMG_FontSdl2*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
     }
+    font_base->spacing = 0.0f;
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;

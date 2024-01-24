@@ -10,6 +10,7 @@
 
 typedef struct {
     float size;
+    float spacing;
     int text_type;
     bool aa;
     bool was_allocated;

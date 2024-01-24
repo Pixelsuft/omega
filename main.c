@@ -241,9 +241,9 @@ void app_on_paint(OMG_EventPaint* event) {
     // Scale font manually to avoid pixelating
     this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(this->offset_cache.x * this->scale_cache.x, this->offset_cache.y * this->scale_cache.y), &OMG_FPOINT_MAKE(1, 1));
     OMG_Texture* fps_tex = this->ren->font_render(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
-    // this->ren->copy(this->ren, fps_tex, NULL);
-    this->ren->tex_destroy(this->ren, fps_tex);
+    this->ren->copy(this->ren, fps_tex, NULL);
     this->ren->flip(this->ren);
+    this->ren->tex_destroy(this->ren, fps_tex);
     // printf("%i\n", this->clock->get_fps(this->clock));
     // this->omg->delay(this->omg, 1.0 / 60.0);
 }

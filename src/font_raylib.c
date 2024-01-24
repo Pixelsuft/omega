@@ -39,6 +39,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
         _OMG_LOG_ERROR(omg_base, "Failed to load font ", fp->ptr);
         return (OMG_FontRaylib*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
     }
+    font_base->spacing = 0.0f;
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;

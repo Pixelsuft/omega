@@ -10,6 +10,7 @@
 #define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
+#define font_raylib ((OMG_FontRaylib*)font)
 #define IS_DEFAULT_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f) && (base->offset.x == 0.0f) && (base->offset.y == 0.0f))
 #define RAYLIB_HAS_SS() ((this->ss.x != 1.0f) || (this->ss.y != 1.0f))
 
@@ -403,14 +404,25 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
     else
         tex_base->was_allocated = false;
 #endif
-    /*tex_base->has_alpha = OMG_ISNULL(bg) || (bg_col.a < 255);
-    tex_base->size.w = (float)sdl_surf->w;
-    tex_base->size.h = (float)sdl_surf->h;*/
-    if (1) {
+    Vector2 tex_size = this->raylib->MeasureTextEx(font_raylib->font, text->ptr, font->size, 0.0f);
+    tex->target = this->raylib->LoadRenderTexture((int)tex_size.x, (int)tex_size.y);
+    if (!this->raylib->IsRenderTextureReady(tex->target)) {
         OMG_FREE(omg_base->mem, tex);
-        _OMG_LOG_WARN(omg_base, "Failed to create font tex from surf");
+        _OMG_LOG_ERROR(omg_base, "Failed to create Raylib font texture from surf");
         return (OMG_TextureRaylib*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
     }
+    tex->tex = &tex->target.texture;
+    tex->is_target = true;
+    tex->tint.r = tex->tint.g = tex->tint.b = tex->tint.a = 255;
+    tex_base->has_alpha = true;
+    tex_base->size.w = tex_size.x;
+    tex_base->size.h = tex_size.y;
+    OMG_TextureRaylib* target_cache = (OMG_TextureRaylib*)base->target;
+    this->raylib->BeginTextureMode(tex->target);
+    Vector2 text_pos = { 0.0f, 0.0f };
+    // this->raylib->ClearBackground((Color){ 0, 0, 0, 0 });
+    this->raylib->DrawTextEx(font_raylib->font, text->ptr, text_pos, font->size, 0.0f, _OMG_RAYLIB_OMG_COLOR(fg));
+    omg_renderer_raylib_set_target(this, target_cache);
     if (OMG_ISNOTNULL(rect)) {
         rect->x = rect->y = 0.0f;
         rect->w = tex_base->size.w;
