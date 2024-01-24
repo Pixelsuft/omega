@@ -64,8 +64,8 @@ void app_on_state_changing(OMG_EventStateChanging* event) {
 void app_on_mouse_move(OMG_EventMouseMove* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     if (event->state & OMG_MBUTTON_LMASK) {
-        this->offset_cache.x = this->offset_cache.x + event->rel.x / this->ren->scale.x;
-        this->offset_cache.y = this->offset_cache.y + event->rel.y / this->ren->scale.y;
+        this->offset_cache.x = this->offset_cache.x + event->rel.x / this->scale_cache.x;
+        this->offset_cache.y = this->offset_cache.y + event->rel.y / this->scale_cache.y;
         this->ren->set_scale(this->ren, &this->offset_cache, NULL);        
     }
 }
