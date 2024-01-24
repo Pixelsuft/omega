@@ -9,6 +9,8 @@
 #define OMG_FONT_TEXT_TYPE_UTF8 1
 
 typedef struct {
+    OMG_FPoint scale;
+    float a_scale;
     float size;
     float spacing;
     int text_type;

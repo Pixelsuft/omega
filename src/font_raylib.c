@@ -40,6 +40,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
         return (OMG_FontRaylib*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
     }
     font_base->spacing = 0.0f;
+    font_base->scale.x = font_base->scale.y = font_base->a_scale = 1.0f;
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;
@@ -65,7 +66,7 @@ bool omg_fontmgr_raylib_init(OMG_FontMgrRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     base->font_from_fp = omg_fontmgr_raylib_font_from_fp;
     base->font_destroy = omg_fontmgr_font_raylib_destroy;
-    base->font_set_scale = omg_fontmgr_raylib_font_set_scale;
+    // base->font_set_scale = omg_fontmgr_raylib_font_set_scale;
     base->font_query_text_size = omg_fontmgr_raylib_font_query_text_size;
     OMG_END_POINTER_CAST();
     base->inited = true;

@@ -31,7 +31,10 @@ OMG_Font* omg_fontmgr_font_from_fp(OMG_FontMgr* this, OMG_Font* font, const OMG_
 }
 
 bool omg_fontmgr_font_set_scale(OMG_FontMgr* this, OMG_Font* font, const OMG_FPoint* scale) {
-    OMG_UNUSED(this, font, scale);
+    OMG_UNUSED(this);
+    font->scale.x = scale->x;
+    font->scale.y = scale->y;
+    font->a_scale = (scale->x + scale->y) / 2.0f;
     return false;
 }
 

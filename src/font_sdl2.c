@@ -30,6 +30,23 @@ bool omg_fontmgr_font_sdl2_destroy(OMG_FontMgrSdl2* this, OMG_FontSdl2* font) {
     return false;
 }
 
+bool omg_fontmgr_sdl2_font_set_scale(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_FPoint* scale) {
+    if (OMG_ISNULL(this->ttf.TTF_SetFontSizeDPI)) {
+        // Should I try to re-open font???
+        _OMG_LOG_WARN(omg_base, "Failed to set font size (Setting size is not supported for this SDL2_ttf version)");
+        return true;
+    }
+    if (this->ttf.TTF_SetFontSizeDPI(font->font, (int)font_base->size, (unsigned int)(scale->x * 72.0f), (unsigned int)(scale->y * 72.0f)) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set font size (", TTF_GETERROR(), ")");
+        return true;
+    }
+    font_base->scale.x = scale->x;
+    font_base->scale.y = scale->y;
+    font_base->a_scale = (scale->x + scale->y) / 2.0f;
+    // TODO: work here
+    return false;
+}
+
 OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_String* fp, long index, float size) {
     if (omg_string_ensure_null((OMG_String*)fp))
         return (OMG_FontSdl2*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
@@ -50,25 +67,12 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
         omg_fontmgr_font_sdl2_destroy(this, font);
         return (OMG_FontSdl2*)omg_fontmgr_font_from_fp(base, font_base, fp, index, size);
     }
+    font_base->scale.x = font_base->scale.y = font_base->a_scale = 1.0f;
     font_base->spacing = 0.0f;
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;
     return font;
-}
-
-bool omg_fontmgr_sdl2_font_set_scale(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_FPoint* scale) {
-    if (OMG_ISNULL(this->ttf.TTF_SetFontSizeDPI)) {
-        // Should I try to re-open font???
-        _OMG_LOG_WARN(omg_base, "Failed to set font size (Setting size is not supported for this SDL2_ttf version)");
-        return true;
-    }
-    if (this->ttf.TTF_SetFontSizeDPI(font->font, (int)font_base->size, (unsigned int)(scale->x * 72.0f), (unsigned int)(scale->y * 72.0f)) < 0) {
-        _OMG_LOG_WARN(omg_base, "Failed to set font size (", TTF_GETERROR(), ")");
-        return true;
-    }
-    // TODO: work here
-    return false;
 }
 
 bool omg_fontmgr_sdl2_font_query_text_size(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_String* text, OMG_FRect* size_buf) {

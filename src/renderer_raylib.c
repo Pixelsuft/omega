@@ -411,7 +411,7 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
     else
         tex_base->was_allocated = false;
 #endif
-    Vector2 tex_size = this->raylib->MeasureTextEx(font_raylib->font, text->ptr, font->size, 0.0f);
+    Vector2 tex_size = this->raylib->MeasureTextEx(font_raylib->font, text->ptr, font->size * font->a_scale, font->spacing);
     tex->target = this->raylib->LoadRenderTexture((int)tex_size.x, (int)tex_size.y);
     if (!this->raylib->IsRenderTextureReady(tex->target)) {
         OMG_FREE(omg_base->mem, tex);
@@ -429,7 +429,7 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
     Vector2 text_pos = { 0.0f, 0.0f };
     if (OMG_ISNOTNULL(bg))
         this->raylib->ClearBackground(_OMG_RAYLIB_OMG_COLOR(bg));
-    this->raylib->DrawTextEx(font_raylib->font, text->ptr, text_pos, font->size, 0.0f, _OMG_RAYLIB_OMG_COLOR(fg));
+    this->raylib->DrawTextEx(font_raylib->font, text->ptr, text_pos, font->size * font->a_scale, font->spacing, _OMG_RAYLIB_OMG_COLOR(fg));
     omg_renderer_raylib_set_target(this, target_cache);
     if (OMG_ISNOTNULL(rect)) {
         rect->x = rect->y = 0.0f;
