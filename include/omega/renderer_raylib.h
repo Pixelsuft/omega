@@ -44,5 +44,6 @@ OMG_API bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRayli
 OMG_API bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
 OMG_API bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_Color* col);
 OMG_API bool omg_renderer_raylib_set_blend_mode(OMG_RendererRaylib* this, int blend_mode);
+OMG_API OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
 #endif
 #endif

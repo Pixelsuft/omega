@@ -5,6 +5,7 @@
 #include <omega/omega.h>
 #include <omega/surface_raylib.h>
 #include <omega/texture_raylib.h>
+#include <omega/font_raylib.h>
 #define base ((OMG_Renderer*)this)
 #define tex_base ((OMG_Texture*)tex)
 #define win_base ((OMG_Window*)base->win)
@@ -387,6 +388,37 @@ bool omg_renderer_raylib_set_vsync(OMG_RendererRaylib* this, bool enabled) {
     return false;
 }
 
+OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
+    if (omg_string_ensure_null((OMG_String*)text))
+        return (OMG_TextureRaylib*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+    if (OMG_ISNULL(tex)) {
+        tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureRaylib));
+        if (OMG_ISNULL(tex))
+            return (OMG_TextureRaylib*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+        tex_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_TEX_WAS_ALLOCATED
+    else
+        tex_base->was_allocated = false;
+#endif
+    /*tex_base->has_alpha = OMG_ISNULL(bg) || (bg_col.a < 255);
+    tex_base->size.w = (float)sdl_surf->w;
+    tex_base->size.h = (float)sdl_surf->h;*/
+    if (1) {
+        OMG_FREE(omg_base->mem, tex);
+        _OMG_LOG_WARN(omg_base, "Failed to create font tex from surf");
+        return (OMG_TextureRaylib*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
+    }
+    if (OMG_ISNOTNULL(rect)) {
+        rect->x = rect->y = 0.0f;
+        rect->w = tex_base->size.w;
+        rect->h = tex_base->size.h;
+    }
+    return tex;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -410,6 +442,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->copy_ex = omg_renderer_raylib_copy_ex;
     base->tex_set_color_mod = omg_renderer_raylib_tex_set_color_mod;
     base->set_blend_mode = omg_renderer_raylib_set_blend_mode;
+    base->font_render = omg_renderer_raylib_font_render;
     OMG_END_POINTER_CAST();
     this->blend_cache = -1;
     this->ss.x = this->ss.y = 1.0f;
