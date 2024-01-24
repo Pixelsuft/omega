@@ -55,8 +55,10 @@ bool omg_fontmgr_raylib_font_set_scale(OMG_FontMgrRaylib* this, OMG_FontRaylib* 
 bool omg_fontmgr_raylib_font_query_text_size(OMG_FontMgrRaylib* this, OMG_FontRaylib* font, const OMG_String* text, OMG_FRect* size_buf) {
     if (omg_string_ensure_null((OMG_String*)text))
         return true;
+    Vector2 tex_size = rl->MeasureTextEx(font->font, text->ptr, font_base->size * font_base->a_scale, font_base->spacing);
     size_buf->x = size_buf->y = 0.0f;
-    // TODO
+    size_buf->w = tex_size.x;
+    size_buf->h = tex_size.y;
     return false;
 }
 
