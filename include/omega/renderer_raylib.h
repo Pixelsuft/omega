@@ -41,6 +41,7 @@ OMG_API OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib*
 OMG_API OMG_TextureRaylib* omg_renderer_raylib_tex_create(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex);
 OMG_API bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos);
+OMG_API bool omg_renderer_raylib_tex_set_scale_mode(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, int scale_mode);
 OMG_API bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
 OMG_API bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_Color* col);
 OMG_API bool omg_renderer_raylib_set_blend_mode(OMG_RendererRaylib* this, int blend_mode);

@@ -183,6 +183,13 @@ bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint*
     return false;
 }
 
+bool omg_renderer_raylib_tex_set_scale_mode(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, int scale_mode) {
+    this->raylib->SetTextureFilter(*tex->tex, (
+        (scale_mode == OMG_SCALE_MODE_LINEAR) ? TEXTURE_FILTER_BILINEAR : (scale_mode == OMG_SCALE_MODE_NEAREST ? TEXTURE_FILTER_POINT : TEXTURE_FILTER_BILINEAR)
+    ));
+    return false;
+}
+
 OMG_TextureRaylib* omg_renderer_raylib_tex_from_surf(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_SurfaceRaylib* surf, bool destroy_surf) {
     if (OMG_ISNULL(surf) || !this->raylib->IsImageReady(surf->img))
         return (OMG_TextureRaylib*)omg_renderer_tex_from_surf(base, tex_base, (OMG_Surface*)surf, destroy_surf);
@@ -420,7 +427,8 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
     OMG_TextureRaylib* target_cache = (OMG_TextureRaylib*)base->target;
     this->raylib->BeginTextureMode(tex->target);
     Vector2 text_pos = { 0.0f, 0.0f };
-    // this->raylib->ClearBackground((Color){ 0, 0, 0, 0 });
+    if (OMG_ISNOTNULL(bg))
+        this->raylib->ClearBackground(_OMG_RAYLIB_OMG_COLOR(bg));
     this->raylib->DrawTextEx(font_raylib->font, text->ptr, text_pos, font->size, 0.0f, _OMG_RAYLIB_OMG_COLOR(fg));
     omg_renderer_raylib_set_target(this, target_cache);
     if (OMG_ISNOTNULL(rect)) {
@@ -447,6 +455,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->fill_rect = omg_renderer_raylib_fill_rect;
     base->draw_circle = omg_renderer_raylib_draw_circle;
     base->fill_circle = omg_renderer_raylib_fill_circle;
+    base->tex_set_scale_mode = omg_renderer_raylib_tex_set_scale_mode;
     base->tex_from_surf = omg_renderer_raylib_tex_from_surf;
     base->tex_create = omg_renderer_raylib_tex_create;
     base->tex_destroy = omg_renderer_raylib_tex_destroy;

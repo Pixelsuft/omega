@@ -234,6 +234,15 @@ typedef struct Shader {
 } Shader;
 
 typedef enum {
+    TEXTURE_FILTER_POINT = 0,
+    TEXTURE_FILTER_BILINEAR,
+    TEXTURE_FILTER_TRILINEAR,
+    TEXTURE_FILTER_ANISOTROPIC_4X,
+    TEXTURE_FILTER_ANISOTROPIC_8X,
+    TEXTURE_FILTER_ANISOTROPIC_16X
+} TextureFilter;
+
+typedef enum {
     PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,
     PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA,
     PIXELFORMAT_UNCOMPRESSED_R5G6B5,
@@ -431,6 +440,7 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*SetShaderValueMatrix)(Shader, int, Matrix);
     void OMG_RAYLIB_PREFIX (*SetShaderValueTexture)(Shader, int, Texture2D);
     void OMG_RAYLIB_PREFIX (*UnloadShader)(Shader);
+    void OMG_RAYLIB_PREFIX (*SetTextureFilter)(Texture2D, int);
     void OMG_RAYLIB_PREFIX (*ClearBackground)(Color);
     void OMG_RAYLIB_PREFIX (*DrawTextureV)(Texture2D, Vector2, Color);
     void OMG_RAYLIB_PREFIX (*DrawTexturePro)(Texture2D, RL_Rectangle, RL_Rectangle, Vector2, float, Color);
