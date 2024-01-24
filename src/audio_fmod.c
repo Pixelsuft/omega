@@ -190,6 +190,7 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
         return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     mus->vol_cache = 1.0f;
+    mus->pitch_cache = 1.0f;
     mus->channel = NULL;
     unsigned int len_buf;
     if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
