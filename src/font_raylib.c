@@ -33,7 +33,8 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     }
     else
         font_base->was_allocated = false;
-    font->font = rl->LoadFontEx(fp->ptr, (int)(size * _RAYLIB_FONT_SIZE_MUL), NULL, 0);
+    int int_sz = (int)(size * _RAYLIB_FONT_SIZE_MUL);
+    font->font = rl->LoadFontEx(fp->ptr, int_sz, NULL, 0);
     if (!rl->IsFontReady(font->font)) {
         omg_fontmgr_font_destroy(base, font_base);
         _OMG_LOG_ERROR(omg_base, "Failed to load font ", fp->ptr);
@@ -43,7 +44,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     font_base->scale.x = font_base->scale.y = font_base->a_scale = 1.0f;
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
-    font_base->size = size;
+    font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
     return font;
 }
 
