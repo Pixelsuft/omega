@@ -28,6 +28,7 @@ typedef struct OMG_Winmgr {
     bool (*fontmgr_free)(struct OMG_Winmgr* this);
     int surf_depth;
     int image_formats;
+    int fnt_type;
     bool surf_rle;
     bool inited;
     bool was_allocated;

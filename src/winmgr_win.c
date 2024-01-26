@@ -6,7 +6,6 @@
 #define base ((OMG_Winmgr*)this)
 #define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)
-#include <omega/font_sdl2.h>
 #include <omega/surface_win.h>
 
 OMG_WindowWin* omg_winmgr_win_window_alloc(OMG_WinmgrWin* this) {
@@ -148,6 +147,7 @@ bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
+    base->fnt_type = OMG_FONT_MGR_SDL2;
 #if OMG_SUPPORT_SDL2
     this->sdl2 = NULL;
 #endif
@@ -158,10 +158,6 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->surf_create = omg_winmgr_win_surf_create;
     base->surf_destroy = omg_winmgr_win_surf_destroy;
     base->surf_from_fp = omg_winmgr_win_surf_from_fp;
-#if OMG_SUPPORT_SDL2_TTF
-    base->sz_font_mgr = sizeof(OMG_FontMgrSdl2);
-    base->_fnt_init_ptr = (void*)((size_t)omg_fontmgr_sdl2_init);
-#endif
     OMG_END_POINTER_CAST();
     return false;
 }

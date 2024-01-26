@@ -6,7 +6,6 @@
 #include <omega/surface_sdl2.h>
 #include <omega/image_sdl2.h>
 #include <omega/image_omg.h>
-#include <omega/font_sdl2.h>
 #define base ((OMG_Winmgr*)this)
 #define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)
@@ -155,6 +154,7 @@ bool omg_winmgr_sdl2_surf_set_locked(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
+    base->fnt_type = OMG_FONT_MGR_SDL2;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_winmgr_sdl2_destroy;
     base->window_alloc = omg_winmgr_sdl2_window_alloc;
@@ -163,10 +163,6 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->surf_destroy = omg_winmgr_sdl2_surf_destroy;
     base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
     base->surf_set_locked = omg_winmgr_sdl2_surf_set_locked;
-#if OMG_SUPPORT_SDL2_TTF
-    base->sz_font_mgr = sizeof(OMG_FontMgrSdl2);
-    base->_fnt_init_ptr = (void*)((size_t)omg_fontmgr_sdl2_init);
-#endif
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);

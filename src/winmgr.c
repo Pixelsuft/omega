@@ -1,6 +1,8 @@
 #include <omega/winmgr.h>
 #include <omega/omega.h>
 #include <omega/image_omg.h>
+#include <omega/font_raylib.h>
+#include <omega/font_sdl2.h>
 #define omg_base ((OMG_Omega*)this->omg)
 
 OMG_Window* omg_winmgr_window_alloc(OMG_Winmgr* this) {
@@ -111,8 +113,17 @@ bool omg_winmgr_fontmgr_free(OMG_Winmgr* this) {
 }
 
 bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this) {
+    size_t sz_font_mgr = sizeof(OMG_FontMgr);
+#if OMG_SUPPORT_SDL2_TTF
+    if (this->fnt_type == OMG_FONT_MGR_SDL2)
+        sz_font_mgr = sizeof(OMG_FontMgrSdl2);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    if (this->fnt_type == OMG_FONT_MGR_RAYLIB)
+        sz_font_mgr = sizeof(OMG_FontMgrRaylib);
+#endif
     if (OMG_ISNULL(this->fnt)) {
-        this->fnt = OMG_MALLOC(omg_base->mem, this->sz_font_mgr);
+        this->fnt = OMG_MALLOC(omg_base->mem, sz_font_mgr);
         if (OMG_ISNULL(this->fnt))
             return true;
         this->fnt->was_allocated = true;
@@ -120,8 +131,16 @@ bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this) {
     else
         this->fnt->was_allocated = false;
     this->fnt->inited = false;
+    this->fnt->init = omg_fontmgr_init;
     OMG_BEGIN_POINTER_CAST();
-    this->fnt->init = this->_fnt_init_ptr;
+#if OMG_SUPPORT_SDL2_TTF
+    if (this->fnt_type == OMG_FONT_MGR_SDL2)
+        this->fnt->init = omg_fontmgr_sdl2_init;
+#endif
+#if OMG_SUPPORT_RAYLIB
+    if (this->fnt_type == OMG_FONT_MGR_RAYLIB)
+        this->fnt->init = omg_fontmgr_raylib_init;
+#endif
     OMG_END_POINTER_CAST();
     this->fnt->omg = omg_base;
     return false;
@@ -137,6 +156,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->img = NULL;
     this->fnt = NULL;
     this->image_formats = OMG_IMG_FORMAT_BMP | OMG_IMG_FORMAT_JPG | OMG_IMG_FORMAT_PNG;
+    this->fnt_type = OMG_FONT_MGR_NONE;
 #if OMG_SUPPORT_OMG_IMAGE
     this->_img_init_ptr = (void*)((size_t)omg_image_loader_omg_init);
     this->sz_image_loader = sizeof(OMG_ImageLoaderOmg);
@@ -144,8 +164,6 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->_img_init_ptr = (void*)((size_t)omg_image_loader_init);
     this->sz_image_loader = sizeof(OMG_ImageLoader);
 #endif
-    this->sz_font_mgr = sizeof(OMG_FontMgr);
-    this->_fnt_init_ptr = (void*)((size_t)omg_fontmgr_init);
     this->destroy = omg_winmgr_destroy;
     this->window_alloc = omg_winmgr_window_alloc;
     this->window_free = omg_winmgr_window_free;

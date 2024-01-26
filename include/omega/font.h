@@ -2,8 +2,8 @@
 #include <omega/ostd.h>
 
 #define OMG_FONT_MGR_NONE 0
-#define OMG_FONT_MGR_SDL2 0
-#define OMG_FONT_MGR_RAYLIB 0
+#define OMG_FONT_MGR_SDL2 1
+#define OMG_FONT_MGR_RAYLIB 2
 
 #define OMG_FONT_TEXT_TYPE_TEXT 0
 #define OMG_FONT_TEXT_TYPE_UTF8 1
