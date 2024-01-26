@@ -23,39 +23,54 @@ bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, int type, const v
 #if OMG_SUPPORT_SPNG
     if (!this->spng.loaded)
         return true;
-    OMG_File* file = omg_base->file_from_fp(omg_base, NULL, buf, OMG_FILE_MODE_RB);
-    if (OMG_ISNULL(file))
-        return true;
-    int64_t size = file->get_size(file);
-    if (size < 0) {
+    void* file_buf;
+    bool should_free_buf = false;
+    size_t f_size;
+    if (type == 0) {
+        should_free_buf = true;
+        OMG_File* file = omg_base->file_from_fp(omg_base, NULL, data, OMG_FILE_MODE_RB);
+        if (OMG_ISNULL(file))
+            return true;
+        int64_t size = file->get_size(file);
+        if (size < 0) {
+            file->destroy(file);
+            return true;
+        }
+        file_buf = OMG_MALLOC(omg_base->mem, size);
+        if (OMG_ISNULL(file_buf)) {
+            file->destroy(file);
+            return true;
+        }
+        if ((int64_t)file->read(file, file_buf, 1, (size_t)size) < size) {
+            OMG_FREE(omg_base->mem, file_buf);
+            file->destroy(file);
+            return true;
+        }
         file->destroy(file);
-        return true;
+        f_size = (size_t)size;
     }
-    void* file_buf = OMG_MALLOC(omg_base->mem, size);
-    if (OMG_ISNULL(file_buf)) {
-        file->destroy(file);
-        return true;
+    else if (type == 1) {
+        OMG_DataWithSize* mem_data = (OMG_DataWithSize*)data;
+        file_buf = (void*)mem_data->data;
+        f_size = mem_data->size;
     }
-    if ((int64_t)file->read(file, file_buf, 1, (size_t)size) < size) {
-        OMG_FREE(omg_base->mem, file_buf);
-        file->destroy(file);
-        return true;
-    }
-    file->destroy(file);
     spng_ctx* ctx = this->spng.spng_ctx_new(0);
     if (OMG_ISNULL(ctx)) {
-        OMG_FREE(omg_base->mem, file_buf);
+        if (should_free_buf)
+            OMG_FREE(omg_base->mem, file_buf);
         return true;
     }
-    int res = this->spng.spng_set_png_buffer(ctx, file_buf, (size_t)size);
+    int res = this->spng.spng_set_png_buffer(ctx, file_buf, f_size);
     if (res != SPNG_OK) {
-        OMG_FREE(omg_base->mem, file_buf);
+        if (should_free_buf)
+            OMG_FREE(omg_base->mem, file_buf);
         return true;
     }
     size_t img_size = 0;
     res = this->spng.spng_decoded_image_size(ctx, SPNG_FMT_RGBA8, &img_size);
     if (res != SPNG_OK) {
-        OMG_FREE(omg_base->mem, file_buf);
+        if (should_free_buf)
+            OMG_FREE(omg_base->mem, file_buf);
         return true;
     }
     struct {
@@ -64,7 +79,8 @@ bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, int type, const v
     } *img_buf = buf;
     img_buf->data = OMG_MALLOC(omg_base->mem, img_size);
     res = this->spng.spng_decode_image(ctx, img_buf->data, img_size, SPNG_FMT_RGBA8, 0);
-    OMG_FREE(omg_base->mem, file_buf);
+    if (should_free_buf)
+        OMG_FREE(omg_base->mem, file_buf);
     if (res != SPNG_OK) {
         OMG_FREE(omg_base->mem, img_buf->data);
         return true;
