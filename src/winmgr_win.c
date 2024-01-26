@@ -71,7 +71,7 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin*
             void* data;
             int w, h, depth;
         } img_buf;
-        if (base->img->image_from_internal(base->img, path, &img_buf, format)) {
+        if (base->img->image_from_internal(base->img, 0, path, &img_buf, format)) {
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
         }

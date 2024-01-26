@@ -17,13 +17,13 @@ bool omg_image_loader_omg_destroy(OMG_ImageLoaderOmg* this) {
     return false;
 }
 
-bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, const OMG_String* path, void* buf, int format) {
+bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, int type, const void* data, void* buf, int format) {
     if ((format != OMG_IMG_FORMAT_AUTO) && (format != OMG_IMG_FORMAT_PNG)) // Currently only PNG
         return true;
 #if OMG_SUPPORT_SPNG
     if (!this->spng.loaded)
         return true;
-    OMG_File* file = omg_base->file_from_fp(omg_base, NULL, path, OMG_FILE_MODE_RB);
+    OMG_File* file = omg_base->file_from_fp(omg_base, NULL, buf, OMG_FILE_MODE_RB);
     if (OMG_ISNULL(file))
         return true;
     int64_t size = file->get_size(file);

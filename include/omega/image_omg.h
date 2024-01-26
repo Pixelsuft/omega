@@ -14,6 +14,6 @@ typedef struct {
 OMG_API bool omg_image_loader_omg_init(OMG_ImageLoaderOmg* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_image_loader_omg_destroy(OMG_ImageLoaderOmg* this);
-OMG_API bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, const OMG_String* path, void* buf, int format);
+OMG_API bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, int type, const void* data, void* buf, int format);
 #endif
 #endif
