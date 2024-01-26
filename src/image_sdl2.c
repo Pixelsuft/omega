@@ -18,7 +18,7 @@ bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
     return res;
 }
 
-bool omg_image_loader_sdl2_image_from_fp(OMG_ImageLoaderSdl2* this, const OMG_String* path, void* buf, int format) {
+bool omg_image_loader_sdl2_image_from(OMG_ImageLoaderSdl2* this, const OMG_String* path, void* buf, int format) {
     OMG_UNUSED(format); // TODO: load typed
     if (omg_string_ensure_null((OMG_String*)path))
         return true;
@@ -63,7 +63,7 @@ bool omg_image_loader_sdl2_init(OMG_ImageLoaderSdl2* this) {
     }
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_image_loader_sdl2_destroy;
-    base->image_from_fp_internal = omg_image_loader_sdl2_image_from_fp;
+    base->image_from_internal = omg_image_loader_sdl2_image_from;
     OMG_END_POINTER_CAST();
     base->inited = true;
     return false;

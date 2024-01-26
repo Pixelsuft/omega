@@ -17,7 +17,7 @@ bool omg_image_loader_omg_destroy(OMG_ImageLoaderOmg* this) {
     return false;
 }
 
-bool omg_image_loader_omg_image_from_fp(OMG_ImageLoaderOmg* this, const OMG_String* path, void* buf, int format) {
+bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, const OMG_String* path, void* buf, int format) {
     if ((format != OMG_IMG_FORMAT_AUTO) && (format != OMG_IMG_FORMAT_PNG)) // Currently only PNG
         return true;
 #if OMG_SUPPORT_SPNG
@@ -89,7 +89,7 @@ bool omg_image_loader_omg_init(OMG_ImageLoaderOmg* this) {
     base->type = OMG_IMAGE_LOADER_TYPE_OMG;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_image_loader_omg_destroy;
-    base->image_from_fp_internal = omg_image_loader_omg_image_from_fp;
+    base->image_from_internal = omg_image_loader_omg_image_from;
     OMG_END_POINTER_CAST();
     return false;
 }

@@ -99,7 +99,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, OMG_SurfaceS
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
 #if OMG_SUPPORT_SDL2_IMAGE
     if (base->img->type == OMG_IMAGE_LOADER_TYPE_SDL2) {
-        if (base->img->image_from_fp_internal(base->img, path, (void*)&surf->surf, format)) {
+        if (base->img->image_from_internal(base->img, path, (void*)&surf->surf, format)) {
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
         }
@@ -112,7 +112,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, OMG_SurfaceS
             void* data;
             int w, h, depth;
         } img_buf;
-        if (base->img->image_from_fp_internal(base->img, path, &img_buf, format)) {
+        if (base->img->image_from_internal(base->img, path, &img_buf, format)) {
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
         }
