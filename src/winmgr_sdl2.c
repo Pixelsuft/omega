@@ -9,6 +9,44 @@
 #define base ((OMG_Winmgr*)this)
 #define surf_base ((OMG_Surface*)surf)
 #define omg_base ((OMG_Omega*)base->omg)
+#define _IMG_LOAD_MACRO1(load_type, ptr) if (base->img->type == OMG_IMAGE_LOADER_TYPE_SDL2) { \
+    if (base->img->image_from_internal(base->img, load_type, ptr, (void*)&surf->surf, format)) { \
+        OMG_FREE(omg_base->mem, surf); \
+        return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base); \
+    } \
+    surf->extra1 = NULL; \
+}
+#define _IMG_LOAD_MACRO2(load_type, ptr) if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) { \
+    struct { \
+        void* data; \
+        int w, h, depth; \
+    } img_buf; \
+    if (base->img->image_from_internal(base->img, load_type, ptr, &img_buf, format)) { \
+        OMG_FREE(omg_base->mem, surf); \
+        return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base); \
+    } \
+    surf->surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom( \
+        img_buf.data, \
+        img_buf.w, img_buf.h, \
+        img_buf.depth, img_buf.w * 4, \
+        SDL_PIXELFORMAT_ABGR8888 \
+    ); \
+    if (OMG_ISNULL(surf->surf)) { \
+        _OMG_LOG_WARN(omg_base, "Failed load surface from memory (", this->sdl2->SDL_GetError(), ")"); \
+        OMG_FREE(omg_base->mem, img_buf.data); \
+        return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base); \
+    } \
+    surf->extra1 = img_buf.data; \
+}
+#define _IMG_LOAD_MACRO3() surf_base->has_alpha = surf->surf->format->Amask > 0; \
+    surf_base->has_alpha = surf->surf->format->Amask > 0; \
+    surf_base->size.w = (float)surf->surf->w; \
+    surf_base->size.h = (float)surf->surf->h; \
+    surf_base->data = (void*)surf->surf->pixels; \
+    if (this->sdl2->SDL_SetSurfaceBlendMode(surf->surf, surf_base->has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0) \
+        _OMG_SURF_BLEND_WARN(); \
+    if (this->sdl2->SDL_SetSurfaceRLE(surf->surf, base->surf_rle ? 1 : 0) < 0) \
+        _OMG_LOG_WARN(omg_base, "Failed to set surface RLE (", this->sdl2->SDL_GetError(), ")"); \
 
 #define _OMG_SURF_BLEND_WARN() _OMG_LOG_WARN(omg_base, "Failed to set surface blend mode (", this->sdl2->SDL_GetError(), ")")
 
@@ -98,46 +136,12 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, OMG_SurfaceS
     if (OMG_ISNULL(surf))
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
 #if OMG_SUPPORT_SDL2_IMAGE
-    if (base->img->type == OMG_IMAGE_LOADER_TYPE_SDL2) {
-        if (base->img->image_from_internal(base->img, 0, path, (void*)&surf->surf, format)) {
-            OMG_FREE(omg_base->mem, surf);
-            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-        }
-        surf->extra1 = NULL;
-    }
+    _IMG_LOAD_MACRO1(0, path);
 #endif
 #if OMG_SUPPORT_OMG_IMAGE
-    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
-        struct {
-            void* data;
-            int w, h, depth;
-        } img_buf;
-        if (base->img->image_from_internal(base->img, 0, path, &img_buf, format)) {
-            OMG_FREE(omg_base->mem, surf);
-            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-        }
-        surf->surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom(
-            img_buf.data,
-            img_buf.w, img_buf.h,
-            img_buf.depth, img_buf.w * 4,
-            SDL_PIXELFORMAT_ABGR8888
-        );
-        if (OMG_ISNULL(surf->surf)) {
-            _OMG_LOG_WARN(omg_base, "Failed load surface from memory (", this->sdl2->SDL_GetError(), ")");
-            OMG_FREE(omg_base->mem, img_buf.data);
-            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-        }
-        surf->extra1 = img_buf.data;
-    }
+    _IMG_LOAD_MACRO2(0, path);
 #endif
-    surf_base->has_alpha = surf->surf->format->Amask > 0;
-    surf_base->size.w = (float)surf->surf->w;
-    surf_base->size.h = (float)surf->surf->h;
-    surf_base->data = (void*)surf->surf->pixels;
-    if (this->sdl2->SDL_SetSurfaceBlendMode(surf->surf, surf_base->has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0)
-        _OMG_SURF_BLEND_WARN();
-    if (this->sdl2->SDL_SetSurfaceRLE(surf->surf, base->surf_rle ? 1 : 0) < 0)
-        _OMG_LOG_WARN(omg_base, "Failed to set surface RLE (", this->sdl2->SDL_GetError(), ")");
+    _IMG_LOAD_MACRO3();
     return surf;
 }
 
@@ -148,46 +152,12 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_mem(OMG_WinmgrSdl2* this, OMG_Surface
         return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
     OMG_DataWithSize data = { .data = mem, .size = size };
 #if OMG_SUPPORT_SDL2_IMAGE
-    if (base->img->type == OMG_IMAGE_LOADER_TYPE_SDL2) {
-        if (base->img->image_from_internal(base->img, 1, &data, (void*)&surf->surf, format)) {
-            OMG_FREE(omg_base->mem, surf);
-            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-        }
-        surf->extra1 = NULL;
-    }
+    _IMG_LOAD_MACRO1(1, &data);
 #endif
 #if OMG_SUPPORT_OMG_IMAGE
-    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
-        struct {
-            void* data;
-            int w, h, depth;
-        } img_buf;
-        if (base->img->image_from_internal(base->img, 1, &data, &img_buf, format)) {
-            OMG_FREE(omg_base->mem, surf);
-            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-        }
-        surf->surf = this->sdl2->SDL_CreateRGBSurfaceWithFormatFrom(
-            img_buf.data,
-            img_buf.w, img_buf.h,
-            img_buf.depth, img_buf.w * 4,
-            SDL_PIXELFORMAT_ABGR8888
-        );
-        if (OMG_ISNULL(surf->surf)) {
-            _OMG_LOG_WARN(omg_base, "Failed load surface from memory (", this->sdl2->SDL_GetError(), ")");
-            OMG_FREE(omg_base->mem, img_buf.data);
-            return (OMG_SurfaceSdl2*)omg_winmgr_dummy_surf_create(base);
-        }
-        surf->extra1 = img_buf.data;
-    }
+    _IMG_LOAD_MACRO2(1, &data);
 #endif
-    surf_base->has_alpha = surf->surf->format->Amask > 0;
-    surf_base->size.w = (float)surf->surf->w;
-    surf_base->size.h = (float)surf->surf->h;
-    surf_base->data = (void*)surf->surf->pixels;
-    if (this->sdl2->SDL_SetSurfaceBlendMode(surf->surf, surf_base->has_alpha ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE) < 0)
-        _OMG_SURF_BLEND_WARN();
-    if (this->sdl2->SDL_SetSurfaceRLE(surf->surf, base->surf_rle ? 1 : 0) < 0)
-        _OMG_LOG_WARN(omg_base, "Failed to set surface RLE (", this->sdl2->SDL_GetError(), ")");
+    _IMG_LOAD_MACRO3();
     return surf;
 }
 
