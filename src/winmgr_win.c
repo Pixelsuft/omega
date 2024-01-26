@@ -99,7 +99,7 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin*
             int w, h, depth;
         } img_buf;
         if (base->img->image_from_internal(base->img, 0, path, &img_buf, format)) {
-            OMG_FREE(omg_base->mem, surf);
+            omg_winmgr_win_surf_destroy(this, surf);
             return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
         }
         surf_base->data = img_buf.data;
@@ -132,7 +132,7 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_mem(OMG_WinmgrWin* this, OMG_SurfaceWin
         } img_buf;
         OMG_DataWithSize data = { .data = mem, .size = size };
         if (base->img->image_from_internal(base->img, 1, &data, &img_buf, format)) {
-            OMG_FREE(omg_base->mem, surf);
+            omg_winmgr_win_surf_destroy(this, surf);
             return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
         }
         surf_base->data = img_buf.data;
