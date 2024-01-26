@@ -105,6 +105,9 @@ OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_fp(OMG_WinmgrRaylib* this, OMG_Su
         surf_base->was_allocated = false;
 #endif
     if (base->img->image_from_internal(base->img, 0, path, &surf->img, format)) {
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+        if (surf_base->was_allocated)
+#endif
         OMG_FREE(omg_base->mem, surf);
         return NULL;
     }
