@@ -16,6 +16,7 @@ OMG_API bool omg_winmgr_raylib_window_free(OMG_WinmgrRaylib* this, OMG_WindowRay
 #if OMG_EXPORT_SHIT
 #include <omega/surface_raylib.h>
 
+OMG_API OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_mem(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf, const void* mem, size_t size, int format);
 OMG_API OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_fp(OMG_WinmgrRaylib* this, OMG_Surface* surf, const OMG_String* path, int format);
 OMG_API OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha);
 OMG_API bool omg_winmgr_raylib_surf_destroy(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf);

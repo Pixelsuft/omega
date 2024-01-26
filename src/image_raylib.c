@@ -16,7 +16,7 @@ bool omg_image_loader_raylib_image_from(OMG_ImageLoaderRaylib* this, int type, c
     }
     else if (type == 1) {
         OMG_DataWithSize* mem_data = (OMG_DataWithSize*)data;
-        this->raylib->LoadImageFromMemory(".png", (unsigned char*)mem_data->data, (int)mem_data->size);
+        img = this->raylib->LoadImageFromMemory(".png", (unsigned char*)mem_data->data, (int)mem_data->size);
     }
     if (!this->raylib->IsImageReady(img)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load raylib image");
