@@ -11,9 +11,7 @@ typedef struct OMG_Winmgr {
     OMG_ImageLoader* img;
     OMG_FontMgr* fnt;
     void* _img_init_ptr;
-    void* _fnt_init_ptr;
     size_t sz_image_loader;
-    size_t sz_font_mgr;
     bool (*init)(struct OMG_Winmgr* this);
     bool (*destroy)(struct OMG_Winmgr* this);
     OMG_Window* (*window_alloc)(struct OMG_Winmgr* this);
