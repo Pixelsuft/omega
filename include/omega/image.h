@@ -1,5 +1,6 @@
 #pragma once
 #include <omega/ostd.h>
+#include <omega/filesystem.h>
 
 #define OMG_IMAGE_LOADER_TYPE_NONE 0
 #define OMG_IMAGE_LOADER_TYPE_OMG 1

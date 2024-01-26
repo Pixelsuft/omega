@@ -6,7 +6,7 @@
 #define base ((OMG_ImageLoader*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 // I think these forces OMG_SUPPORT_SDL2, but I don't care cuz it's a part of SDL2
-#define IMG_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)omg_base)->sdl2->SDL_GetError() : "")
+#define IMG_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? this->sdl2->SDL_GetError() : "")
 
 bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
     if (!base->inited)
@@ -19,7 +19,7 @@ bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
 }
 
 bool omg_image_loader_sdl2_image_from_fp(OMG_ImageLoaderSdl2* this, const OMG_String* path, void* buf, int format) {
-    OMG_UNUSED(format);
+    OMG_UNUSED(format); // TODO: load typed
     if (omg_string_ensure_null((OMG_String*)path))
         return true;
     SDL_Surface* res = this->img.IMG_Load(path->ptr);
@@ -38,6 +38,7 @@ bool omg_image_loader_sdl2_init(OMG_ImageLoaderSdl2* this) {
         _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_image dll");
         return true;
     }
+    this->sdl2 = (omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)base->omg)->sdl2 : NULL;
     int sdl2_formats = 0;
     if (omg_base->winmgr->image_formats & OMG_IMG_FORMAT_JPG)
         sdl2_formats |= IMG_INIT_JPG;

@@ -3,6 +3,9 @@
 #include <omega/omega_win.h>
 #include <omega/omega_sdl2.h>
 #include <omega/omega_raylib.h>
+#if OMG_DEBUG && OMG_HAS_STD
+#include <stdio.h>
+#endif
 
 typedef struct {
     OMG_Omega* omg;
@@ -262,14 +265,14 @@ void app_on_size_change(OMG_EventResize* event) {
 
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -373,6 +376,12 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_icon(this->win, this->surf);
     this->tex = this->ren->tex_create(this->ren, NULL, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->sin_mul = 0.4;
+    OMG_File* sprite_file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sprite.png"), OMG_FILE_MODE_RB);
+    file_size = sprite_file->get_size(sprite_file);
+    void* buf = OMG_MALLOC(this->omg->mem, file_size);
+    sprite_file->read(sprite_file, buf, 1, (size_t)file_size);
+    OMG_FREE(this->omg->mem, buf);
+    sprite_file->destroy(sprite_file);
     this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
     this->ren->tex_set_scale_mode(this->ren, this->tex2, OMG_SCALE_MODE_NEAREST);
     this->clock->init(this->clock, true);
