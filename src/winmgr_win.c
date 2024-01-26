@@ -52,6 +52,33 @@ bool omg_winmgr_win_destroy(OMG_WinmgrWin* this) {
     return false;
 }
 
+bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
+    if (OMG_ISNULL(surf)) {
+        _OMG_NULL_SURFACE_WARN();
+        return true;
+    }
+    bool res = false;
+    if (OMG_ISNULL(surf_base->data)) {
+        if (OMG_ISNOTNULL(surf->bm) && !this->g32->DeleteObject(surf->bm)) {
+            res = true;
+            _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
+        }
+        if (OMG_ISNOTNULL(surf->dc) && !this->g32->DeleteDC(surf->dc)) {
+            res = true;
+            _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
+        }
+    }
+    else {
+        OMG_FREE(omg_base->mem, surf_base->data);
+        surf_base->data = NULL;
+    }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    if (surf_base->was_allocated)
+#endif
+    OMG_FREE(omg_base->mem, surf);
+    return res;
+}
+
 OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_String* path, int format) {
     if (OMG_ISNULL(surf)) {
         surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
@@ -72,6 +99,39 @@ OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin*
             int w, h, depth;
         } img_buf;
         if (base->img->image_from_internal(base->img, 0, path, &img_buf, format)) {
+            OMG_FREE(omg_base->mem, surf);
+            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+        }
+        surf_base->data = img_buf.data;
+        surf_base->size.w = (float)img_buf.w;
+        surf_base->size.h = (float)img_buf.h;
+        surf_base->has_alpha = true;
+    }
+#endif
+    return surf;
+}
+
+OMG_SurfaceWin* omg_winmgr_win_surf_from_mem(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const void* mem, size_t size, int format) {
+    if (OMG_ISNULL(surf)) {
+        surf = OMG_MALLOC(omg_base->mem, sizeof(OMG_SurfaceWin));
+        if (OMG_ISNULL(surf))
+            return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+        surf_base->was_allocated = true;
+#endif
+    }
+#if OMG_ALLOW_SURF_WAS_ALLOCATED
+    else
+        surf_base->was_allocated = false;
+#endif
+#if OMG_SUPPORT_OMG_IMAGE
+    if (base->img->type == OMG_IMAGE_LOADER_TYPE_OMG) {
+        struct {
+            void* data;
+            int w, h, depth;
+        } img_buf;
+        OMG_DataWithSize data = { .data = mem, .size = size };
+        if (base->img->image_from_internal(base->img, 1, &data, &img_buf, format)) {
             OMG_FREE(omg_base->mem, surf);
             return (OMG_SurfaceWin*)omg_winmgr_dummy_surf_create(base);
         }
@@ -117,33 +177,6 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_SurfaceWin* 
     return surf;
 }
 
-bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
-    if (OMG_ISNULL(surf)) {
-        _OMG_NULL_SURFACE_WARN();
-        return true;
-    }
-    bool res = false;
-    if (OMG_ISNULL(surf_base->data)) {
-        if (OMG_ISNOTNULL(surf->bm) && !this->g32->DeleteObject(surf->bm)) {
-            res = true;
-            _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
-        }
-        if (OMG_ISNOTNULL(surf->dc) && !this->g32->DeleteDC(surf->dc)) {
-            res = true;
-            _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
-        }
-    }
-    else {
-        OMG_FREE(omg_base->mem, surf_base->data);
-        surf_base->data = NULL;
-    }
-#if OMG_ALLOW_SURF_WAS_ALLOCATED
-    if (surf_base->was_allocated)
-#endif
-    OMG_FREE(omg_base->mem, surf);
-    return res;
-}
-
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -158,6 +191,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->surf_create = omg_winmgr_win_surf_create;
     base->surf_destroy = omg_winmgr_win_surf_destroy;
     base->surf_from_fp = omg_winmgr_win_surf_from_fp;
+    base->surf_from_mem = omg_winmgr_win_surf_from_mem;
     OMG_END_POINTER_CAST();
     return false;
 }
