@@ -6,12 +6,20 @@
 #define omg_base ((OMG_Omega*)base->omg)
 
 bool omg_image_loader_raylib_image_from(OMG_ImageLoaderRaylib* this, int type, const void* data, void* buf, int format) {
-    OMG_UNUSED(format);
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    Image img = this->raylib->LoadImage(((OMG_String*)data)->ptr);
+    OMG_UNUSED(format); // TODO
+    Image img;
+    if (type == 0) {
+        OMG_String* str_data = (OMG_String*)data;
+        if (omg_string_ensure_null(str_data))
+            return true;
+        img = this->raylib->LoadImage(str_data->ptr);
+    }
+    else if (type == 1) {
+        OMG_DataWithSize* mem_data = (OMG_DataWithSize*)data;
+        this->raylib->LoadImageFromMemory(".png", (unsigned char*)mem_data->data, (int)mem_data->size);
+    }
     if (!this->raylib->IsImageReady(img)) {
-        _OMG_LOG_ERROR(omg_base, "Failed to load raylib image ", ((OMG_String*)data)->ptr);
+        _OMG_LOG_ERROR(omg_base, "Failed to load raylib image");
         return true;
     }
     omg_base->std->memcpy(buf, &img, sizeof(Image));

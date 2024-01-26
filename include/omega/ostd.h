@@ -273,6 +273,11 @@ typedef union {
 } OMG_DRect;
 
 typedef struct {
+    const void* data;
+    size_t size;
+} OMG_DataWithSize;
+
+typedef struct {
     void* (*memset)(void* dst, register int val, register size_t len);
     void* (*memcpy)(void* dst, const void* src, size_t len);
     void* (*memmove)(void* dst, const void* src, size_t len);

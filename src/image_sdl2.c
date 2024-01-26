@@ -20,11 +20,25 @@ bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
 
 bool omg_image_loader_sdl2_image_from(OMG_ImageLoaderSdl2* this, int type, const void* data, void* buf, int format) {
     OMG_UNUSED(format); // TODO: load typed
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    SDL_Surface* res = this->img.IMG_Load(((OMG_String*)data)->ptr);
+    SDL_Surface* res;
+    if (type == 0) {
+        if (omg_string_ensure_null((OMG_String*)data))
+            return true;
+        res = this->img.IMG_Load(((OMG_String*)data)->ptr);
+    }
+    else if (type == 1) {
+        if (OMG_ISNULL(this->sdl2))
+            return true;
+        OMG_DataWithSize* mem_data = (OMG_DataWithSize*)data;
+        SDL_RWops* rw = this->sdl2->SDL_RWFromConstMem(mem_data->data, (int)mem_data->size);
+        if (OMG_ISNULL(rw)) {
+            _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_image image (", IMG_GETERROR(), ")");
+            return true;
+        }
+        res = this->img.IMG_Load_RW(rw, 1);
+    }
     if (OMG_ISNULL(res)) {
-        _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_image image ", ((OMG_String*)data)->ptr, " (", IMG_GETERROR(), ")");
+        _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_image image (", IMG_GETERROR(), ")");
         return true;
     }
     *((SDL_Surface**)buf) = res;
