@@ -54,6 +54,9 @@ bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, int type, const v
         file_buf = (void*)mem_data->data;
         f_size = mem_data->size;
     }
+    else {
+        return true;
+    }
     spng_ctx* ctx = this->spng.spng_ctx_new(0);
     if (OMG_ISNULL(ctx)) {
         if (should_free_buf)

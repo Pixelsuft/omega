@@ -37,6 +37,8 @@ bool omg_image_loader_sdl2_image_from(OMG_ImageLoaderSdl2* this, int type, const
         }
         res = this->img.IMG_Load_RW(rw, 1);
     }
+    else
+        return true;
     if (OMG_ISNULL(res)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load SDL2_image image (", IMG_GETERROR(), ")");
         return true;

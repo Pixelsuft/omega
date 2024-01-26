@@ -118,17 +118,17 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_SurfaceWin* 
 }
 
 bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf) {
-    if (OMG_ISNULL(surf) || OMG_ISNULL(surf->dc) || OMG_ISNULL(surf->bm)) {
+    if (OMG_ISNULL(surf)) {
         _OMG_NULL_SURFACE_WARN();
         return true;
     }
     bool res = false;
     if (OMG_ISNULL(surf_base->data)) {
-        if (!this->g32->DeleteObject(surf->bm)) {
+        if (OMG_ISNOTNULL(surf->bm) && !this->g32->DeleteObject(surf->bm)) {
             res = true;
             _OMG_LOG_WARN(omg_base, "Failed to delete win32 bitmap");
         }
-        if (!this->g32->DeleteDC(surf->dc)) {
+        if (OMG_ISNOTNULL(surf->dc) && !this->g32->DeleteDC(surf->dc)) {
             res = true;
             _OMG_LOG_WARN(omg_base, "Failed to delete Win32 DC");
         }
