@@ -19,6 +19,7 @@ typedef struct OMG_Winmgr {
     OMG_Surface* (*surf_create)(struct OMG_Winmgr* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha);
     OMG_Surface* (*surf_from_fp)(struct OMG_Winmgr* this, OMG_Surface* surf, const OMG_String* path, int format);
     OMG_Surface* (*surf_from_mem)(struct OMG_Winmgr* this, OMG_Surface* surf, const void* mem, size_t size, int format);
+    OMG_Surface* (*surf_from_file)(struct OMG_Winmgr* this, OMG_Surface* surf, const OMG_File* file, bool destroy_file, int format);
     bool (*surf_destroy)(struct OMG_Winmgr* this, OMG_Surface* surf);
     bool (*surf_set_locked)(struct OMG_Winmgr* this, OMG_Surface* surf, bool locked);
     bool (*image_loader_alloc)(struct OMG_Winmgr* this);
@@ -46,4 +47,5 @@ OMG_API bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_fontmgr_free(OMG_Winmgr* this);
 OMG_API OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, OMG_Surface* surf, const OMG_String* path, int format);
 OMG_API OMG_Surface* omg_winmgr_surf_from_mem(OMG_Winmgr* this, OMG_Surface* surf, const void* mem, size_t size, int format);
+OMG_API OMG_Surface* omg_winmgr_surf_from_file(OMG_Winmgr* this, OMG_Surface* surf, const OMG_File* file, bool destroy_file, int format);
 #endif
