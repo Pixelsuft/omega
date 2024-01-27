@@ -7,6 +7,23 @@
 #define snd_base ((OMG_Sound*)snd)
 #define omg_base ((OMG_Omega*)base->omg)
 
+#define _AUDIO_TYPE_RAYLIB(audio_type, format) do { \
+    if ((format & OMG_AUDIO_FORMAT_AUTO) || (format & OMG_AUDIO_FORMAT_NONE) || (format & OMG_AUDIO_FORMAT_OGG)) \
+        audio_type = ".ogg"; \
+    else if (format & OMG_AUDIO_FORMAT_FLAC) \
+        audio_type = ".flac"; \
+    else if (format & OMG_AUDIO_FORMAT_MOD) \
+        audio_type = ".mod"; \
+    else if (format & OMG_AUDIO_FORMAT_MP3) \
+        audio_type = ".mp3"; \
+    else if (format & OMG_AUDIO_FORMAT_MID) \
+        audio_type = ".midi"; \
+    else if (format & OMG_AUDIO_FORMAT_OPUS) \
+        audio_type = ".opus"; \
+    else \
+        audio_type = ".wav"; \
+} while (0)
+
 bool omg_audio_raylib_destroy(OMG_AudioRaylib* this) {
     if (!base->inited)
         return false;
@@ -127,6 +144,35 @@ OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRa
     return snd;
 }
 
+OMG_SoundRaylib* omg_audio_raylib_snd_from_mem(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, const void* data, size_t size, int format) {
+    OMG_UNUSED(format);
+    if (OMG_ISNULL(snd)) {
+        snd = OMG_MALLOC(omg_base->mem, sizeof(OMG_SoundRaylib));
+        if (OMG_ISNULL(snd))
+            return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
+        snd_base->was_allocated = true;
+    }
+    else
+        snd_base->was_allocated = false;
+    char* audio_type;
+    _AUDIO_TYPE_RAYLIB(audio_type, format);
+    Wave snd_wave = this->raylib->LoadWaveFromMemory(audio_type, (const unsigned char*)data, (int)size);
+    if (!this->raylib->IsWaveReady(snd_wave)) {
+        omg_audio_snd_destroy(base, snd_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open sound wave from mem");
+        return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
+    }
+    snd->snd = this->raylib->LoadSoundFromWave(snd_wave);
+    this->raylib->UnloadWave(snd_wave);
+    if (!this->raylib->IsSoundReady(snd->snd)) {
+        omg_audio_snd_destroy(base, snd_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open sound from mem");
+        return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
+    }
+    snd_base->duration = -1.0;
+    return snd;
+}
+
 bool omg_audio_raylib_snd_set_volume(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float volume) {
     this->raylib->SetSoundVolume(snd->snd, volume);
     return false;
@@ -170,6 +216,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->mus_set_pos = omg_audio_raylib_mus_set_pos;
     base->mus_set_speed = omg_audio_raylib_mus_set_speed;
     base->snd_from_fp = omg_audio_raylib_snd_from_fp;
+    base->snd_from_mem = omg_audio_raylib_snd_from_mem;
     base->snd_destroy = omg_audio_raylib_snd_destroy;
     base->snd_set_volume = omg_audio_raylib_snd_set_volume;
     base->snd_play = omg_audio_raylib_snd_play;

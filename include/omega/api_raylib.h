@@ -472,6 +472,11 @@ typedef struct {
     bool OMG_RAYLIB_PREFIX (*IsAudioDeviceReady)(void);
     void OMG_RAYLIB_PREFIX (*SetMasterVolume)(float);
     float OMG_RAYLIB_PREFIX (*GetMasterVolume)(void);
+    Wave OMG_RAYLIB_PREFIX (*LoadWave)(const char*);
+    Wave OMG_RAYLIB_PREFIX (*LoadWaveFromMemory)(const char*, const unsigned char*, int);
+    bool OMG_RAYLIB_PREFIX (*IsWaveReady)(Wave);
+    Sound OMG_RAYLIB_PREFIX (*LoadSoundFromWave)(Wave);
+    void OMG_RAYLIB_PREFIX (*UnloadWave)(Wave);
     Sound OMG_RAYLIB_PREFIX (*LoadSound)(const char*);
     Sound OMG_RAYLIB_PREFIX (*LoadSoundAlias)(Sound);
     bool OMG_RAYLIB_PREFIX (*IsSoundReady)(Sound);

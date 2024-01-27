@@ -150,6 +150,11 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(IsAudioDeviceReady);
     LOAD_REQUIRED(SetMasterVolume);
     LOAD_REQUIRED(GetMasterVolume);
+    LOAD_REQUIRED(LoadWave);
+    LOAD_REQUIRED(LoadWaveFromMemory);
+    LOAD_REQUIRED(IsWaveReady);
+    LOAD_REQUIRED(LoadSoundFromWave);
+    LOAD_REQUIRED(UnloadWave);
     LOAD_REQUIRED(LoadSound);
     LOAD_REQUIRED(LoadSoundAlias);
     LOAD_REQUIRED(IsSoundReady);
