@@ -9,6 +9,24 @@
 #define MIX_GETERROR() (OMG_ISNULL(this->sdl2) ? "" : this->sdl2->SDL_GetError())
 #define MUS_IS_PLAYING() ((cur_mus_cache == mus->mus) && this->mix.Mix_PlayingMusic())
 #define SND_IS_PLAYING() (snd->channel >= 0)
+#define _MUS_TYPE_FORMAT(mus_type, format) do { \
+    if (format & OMG_AUDIO_FORMAT_WAV) \
+        mus_type = MUS_WAV; \
+    else if (format & OMG_AUDIO_FORMAT_FLAC) \
+        mus_type = MUS_FLAC; \
+    else if (format & OMG_AUDIO_FORMAT_MOD) \
+        mus_type = MUS_MOD; \
+    else if (format & OMG_AUDIO_FORMAT_MP3) \
+        mus_type = MUS_MP3; \
+    else if (format & OMG_AUDIO_FORMAT_OGG) \
+        mus_type = MUS_OGG; \
+    else if (format & OMG_AUDIO_FORMAT_MID) \
+        mus_type = MUS_MID; \
+    else if (format & OMG_AUDIO_FORMAT_OPUS) \
+        mus_type = MUS_OPUS; \
+    else \
+        mus_type = MUS_NONE; \
+} while (0)
 
 static OMG_AudioSdl2* cur_audio_cache = NULL;
 static Mix_Music* cur_mus_cache = NULL;
@@ -156,10 +174,8 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
         snd_base->was_allocated = false;
     if (OMG_ISNOTNULL(this->mix.Mix_LoadWAV))
         snd->chunk = this->mix.Mix_LoadWAV(path->ptr);
-    else if (OMG_ISNOTNULL(this->sdl2)) {
-        // TODO: we can use type here
+    else if (OMG_ISNOTNULL(this->sdl2))
         snd->chunk = this->mix.Mix_LoadWAV_RW(this->sdl2->SDL_RWFromFile(path->ptr, "rb"), 1);
-    }
     else
         snd->chunk = NULL;
     if (OMG_ISNULL(snd->chunk)) {
@@ -174,6 +190,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
 }
 
 OMG_SoundSdl2* omg_audio_sdl2_snd_from_mem(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, const void* data, size_t size, int format) {
+    OMG_UNUSED(format);
     if (OMG_ISNULL(this->sdl2))
         return NULL;
     if (OMG_ISNULL(snd)) {
@@ -189,7 +206,6 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_mem(OMG_AudioSdl2* this, OMG_SoundSdl2* s
         _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_mixer sound (", MIX_GETERROR(), ")");
         return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
-    // TODO: type
     snd->chunk = this->mix.Mix_LoadWAV_RW(rw, 1);
     if (OMG_ISNULL(snd->chunk)) {
         omg_audio_snd_destroy(base, snd_base);
