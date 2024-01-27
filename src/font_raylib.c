@@ -50,6 +50,31 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     return font;
 }
 
+OMG_FontRaylib* omg_fontmgr_raylib_font_from_mem(OMG_FontMgrRaylib* this, OMG_FontRaylib* font, const void* data, size_t data_size, long index, float size) {
+    if (OMG_ISNULL(font)) {
+        font = OMG_MALLOC(omg_base->mem, sizeof(OMG_FontRaylib));
+        if (OMG_ISNULL(font))
+            return (OMG_FontRaylib*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+        font_base->was_allocated = true;
+    }
+    else
+        font_base->was_allocated = false;
+    int int_sz = (int)(size * _RAYLIB_FONT_SIZE_MUL);
+    font->font = rl->LoadFontFromMemory(".ttf", data, (int)data_size, int_sz, NULL, 0);
+    if (!rl->IsFontReady(font->font)) {
+        omg_fontmgr_font_destroy(base, font_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to load font from mem");
+        return (OMG_FontRaylib*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+    }
+    font_base->spacing = 0.0f;
+    font_base->scale.x = font_base->scale.y = font_base->a_scale = 1.0f;
+    font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
+    font_base->aa = true;
+    font_base->extra1 = NULL;
+    font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
+    return font;
+}
+
 bool omg_fontmgr_raylib_font_set_scale(OMG_FontMgrRaylib* this, OMG_FontRaylib* font, const OMG_FPoint* scale) {
     OMG_UNUSED(this, font, scale); // TODO
     return false;
@@ -70,6 +95,7 @@ bool omg_fontmgr_raylib_init(OMG_FontMgrRaylib* this) {
     base->type = OMG_FONT_MGR_RAYLIB;
     OMG_BEGIN_POINTER_CAST();
     base->font_from_fp = omg_fontmgr_raylib_font_from_fp;
+    base->font_from_mem = omg_fontmgr_raylib_font_from_mem;
     base->font_destroy = omg_fontmgr_font_raylib_destroy;
     // base->font_set_scale = omg_fontmgr_raylib_font_set_scale;
     base->font_query_text_size = omg_fontmgr_raylib_font_query_text_size;
