@@ -8,6 +8,23 @@
 // I think these forces OMG_SUPPORT_SDL2, but I don't care cuz it's a part of SDL2
 #define IMG_GETERROR() ((omg_base->type == OMG_OMEGA_TYPE_SDL2) ? this->sdl2->SDL_GetError() : "")
 
+#define _FORMAT_TO_EXT(format, ext) do { \
+    if ((format & OMG_IMG_FORMAT_NONE) || (format & OMG_IMG_FORMAT_AUTO) || (format & OMG_IMG_FORMAT_PNG)) \
+        ext = "PNG"; \
+    else if (format & OMG_IMG_FORMAT_JPG) \
+        ext = "JPG"; \
+    else if (format & OMG_IMG_FORMAT_TIF) \
+        ext = "TIF"; \
+    else if (format & OMG_IMG_FORMAT_WEBP) \
+        ext = "WEBP"; \
+    else if (format & OMG_IMG_FORMAT_JXL) \
+        ext = "JXL"; \
+    else if (format & OMG_IMG_FORMAT_AVIF) \
+        ext = "AVIF"; \
+    else \
+        ext = "BMP"; \
+} while (0)
+
 bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
     if (!base->inited)
         return false;
@@ -35,7 +52,13 @@ bool omg_image_loader_sdl2_image_from(OMG_ImageLoaderSdl2* this, int type, const
             _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_image image (", IMG_GETERROR(), ")");
             return true;
         }
-        res = this->img.IMG_Load_RW(rw, 1);
+        if ((format & OMG_IMG_FORMAT_NONE) || (format & OMG_IMG_FORMAT_AUTO))
+            res = this->img.IMG_Load_RW(rw, 1);
+        else {
+            char* ext;
+            _FORMAT_TO_EXT(format, ext);
+            res = this->img.IMG_LoadTyped_RW(rw, 1, ext);
+        }
     }
     else
         return true;
