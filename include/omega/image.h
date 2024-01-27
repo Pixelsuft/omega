@@ -7,7 +7,7 @@
 #define OMG_IMAGE_LOADER_TYPE_SDL2 2
 #define OMG_IMAGE_LOADER_TYPE_RAYLIB 3
 
-#define OMG_IMG_FORMAT_NONE (1 << 1)
+#define OMG_IMG_FORMAT_NONE (1 << 0)
 #define OMG_IMG_FORMAT_AUTO (1 << 1)
 #define OMG_IMG_FORMAT_BMP (1 << 2)
 #define OMG_IMG_FORMAT_JPG (1 << 3)

@@ -5,6 +5,23 @@
 #define base ((OMG_ImageLoader*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 
+#define _FORMAT_TO_EXT(format, ext) do { \
+    if ((format & OMG_IMG_FORMAT_NONE) || (format & OMG_IMG_FORMAT_AUTO) || (format & OMG_IMG_FORMAT_PNG)) \
+        ext = ".png"; \
+    else if (format & OMG_IMG_FORMAT_JPG) \
+        ext = ".jpg"; \
+    else if (format & OMG_IMG_FORMAT_TIF) \
+        ext = ".tif"; \
+    else if (format & OMG_IMG_FORMAT_WEBP) \
+        ext = ".webp"; \
+    else if (format & OMG_IMG_FORMAT_JXL) \
+        ext = ".jxl"; \
+    else if (format & OMG_IMG_FORMAT_AVIF) \
+        ext = ".avif"; \
+    else \
+        ext = ".bmp"; \
+} while (0)
+
 bool omg_image_loader_raylib_image_from(OMG_ImageLoaderRaylib* this, int type, const void* data, void* buf, int format) {
     OMG_UNUSED(format); // TODO
     Image img;
@@ -16,7 +33,9 @@ bool omg_image_loader_raylib_image_from(OMG_ImageLoaderRaylib* this, int type, c
     }
     else if (type == 1) {
         OMG_DataWithSize* mem_data = (OMG_DataWithSize*)data;
-        img = this->raylib->LoadImageFromMemory(".png", (unsigned char*)mem_data->data, (int)mem_data->size);
+        char* ext;
+        _FORMAT_TO_EXT(format, ext);
+        img = this->raylib->LoadImageFromMemory(ext, (unsigned char*)mem_data->data, (int)mem_data->size);
     }
     if (!this->raylib->IsImageReady(img)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load raylib image");
