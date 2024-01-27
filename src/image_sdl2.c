@@ -21,8 +21,10 @@
         ext = "JXL"; \
     else if (format & OMG_IMG_FORMAT_AVIF) \
         ext = "AVIF"; \
-    else \
+    else if (format & OMG_IMG_FORMAT_BMP) \
         ext = "BMP"; \
+    else \
+        ext = NULL; \
 } while (0)
 
 bool omg_image_loader_sdl2_destroy(OMG_ImageLoaderSdl2* this) {
@@ -52,13 +54,12 @@ bool omg_image_loader_sdl2_image_from(OMG_ImageLoaderSdl2* this, int type, const
             _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_image image (", IMG_GETERROR(), ")");
             return true;
         }
-        if ((format & OMG_IMG_FORMAT_NONE) || (format & OMG_IMG_FORMAT_AUTO))
+        char* ext;
+        _FORMAT_TO_EXT(format, ext);
+        if (OMG_ISNULL(ext))
             res = this->img.IMG_Load_RW(rw, 1);
-        else {
-            char* ext;
-            _FORMAT_TO_EXT(format, ext);
+        else
             res = this->img.IMG_LoadTyped_RW(rw, 1, ext);
-        }
     }
     else
         return true;
