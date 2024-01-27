@@ -1,5 +1,6 @@
 #pragma once
 #include <omega/ostd.h>
+#include <omega/filesystem.h>
 
 #define OMG_AUDIO_TYPE_NONE 0
 #define OMG_AUDIO_TYPE_AUTO 1
@@ -42,6 +43,8 @@ typedef struct OMG_Audio {
     bool (*mus_set_pos)(struct OMG_Audio* this, OMG_Music* mus, double pos);
     bool (*mus_set_speed)(struct OMG_Audio* this, OMG_Music* mus, float speed);
     OMG_Sound* (*snd_from_fp)(struct OMG_Audio* this, OMG_Sound* snd, const OMG_String* path, int format);
+    OMG_Sound* (*snd_from_mem)(struct OMG_Audio* this, OMG_Sound* snd, const void* data, size_t size, int format);
+    OMG_Sound* (*snd_from_file)(struct OMG_Audio* this, OMG_Sound* snd, const OMG_File* file, bool destroy_file, int format);
     bool (*snd_destroy)(struct OMG_Audio* this, OMG_Sound* snd);
     bool (*snd_play)(struct OMG_Audio* this, OMG_Sound* snd, int loops, double fade_in);
     bool (*snd_stop)(struct OMG_Audio* this, OMG_Sound* snd);
@@ -71,6 +74,8 @@ OMG_API OMG_Music* omg_audio_dummy_mus_alloc(OMG_Audio* this, OMG_Music* mus);
 OMG_API OMG_Sound* omg_audio_dummy_snd_alloc(OMG_Audio* this, OMG_Sound* snd);
 #if OMG_EXPORT_SHIT
 OMG_API OMG_Sound* omg_audio_snd_from_fp(OMG_Audio* this, OMG_Sound* snd, const OMG_String* path, int format);
+OMG_API OMG_Sound* omg_audio_snd_from_mem(OMG_Audio* this, OMG_Sound* snd, const void* data, size_t size, int format);
+OMG_API OMG_Sound* omg_audio_snd_from_file(OMG_Audio* this, OMG_Sound* snd, OMG_File* file, bool destroy_file, int format);
 OMG_API bool omg_audio_mus_set_volume(OMG_Audio* this, OMG_Music* mus, float volume);
 OMG_API bool omg_audio_mus_play(OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in);
 OMG_API bool omg_audio_mus_stop(OMG_Audio* this, OMG_Music* mus);

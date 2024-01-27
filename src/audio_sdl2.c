@@ -156,13 +156,44 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
         snd_base->was_allocated = false;
     if (OMG_ISNOTNULL(this->mix.Mix_LoadWAV))
         snd->chunk = this->mix.Mix_LoadWAV(path->ptr);
-    else if (OMG_ISNOTNULL(this->sdl2))
+    else if (OMG_ISNOTNULL(this->sdl2)) {
+        // TODO: we can use type here
         snd->chunk = this->mix.Mix_LoadWAV_RW(this->sdl2->SDL_RWFromFile(path->ptr, "rb"), 1);
+    }
     else
         snd->chunk = NULL;
     if (OMG_ISNULL(snd->chunk)) {
         omg_audio_snd_destroy(base, snd_base);
         _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr, " (", MIX_GETERROR(), ")");
+        return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
+    }
+    snd_base->duration = -1.0;
+    snd->vol_cache = MIX_MAX_VOLUME;
+    snd->channel = -2;
+    return snd;
+}
+
+OMG_SoundSdl2* omg_audio_sdl2_snd_from_mem(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, const void* data, size_t size, int format) {
+    if (OMG_ISNULL(this->sdl2))
+        return NULL;
+    if (OMG_ISNULL(snd)) {
+        snd = OMG_MALLOC(omg_base->mem, sizeof(OMG_SoundSdl2));
+        if (OMG_ISNULL(snd))
+            return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
+        snd_base->was_allocated = true;
+    }
+    else
+        snd_base->was_allocated = false;
+    SDL_RWops* rw = this->sdl2->SDL_RWFromConstMem(data, (int)size);
+    if (OMG_ISNULL(rw)) {
+        _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_mixer sound (", MIX_GETERROR(), ")");
+        return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
+    }
+    // TODO: type
+    snd->chunk = this->mix.Mix_LoadWAV_RW(rw, 1);
+    if (OMG_ISNULL(snd->chunk)) {
+        omg_audio_snd_destroy(base, snd_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open sound from mem (", MIX_GETERROR(), ")");
         return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
     snd_base->duration = -1.0;
@@ -290,6 +321,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_get_pos = omg_audio_sdl2_mus_get_pos;
     base->mus_set_pos = omg_audio_sdl2_mus_set_pos;
     base->snd_from_fp = omg_audio_sdl2_snd_from_fp;
+    base->snd_from_mem = omg_audio_sdl2_snd_from_mem;
     base->snd_destroy = omg_audio_sdl2_snd_destroy;
     base->snd_play = omg_audio_sdl2_snd_play;
     base->snd_stop = omg_audio_sdl2_snd_stop;

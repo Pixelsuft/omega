@@ -294,8 +294,8 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     this->win->resizable = true;
 #if OMG_IS_EMSCRIPTEN
-    this->win->size.w = 1152.0f;
-    this->win->size.h = 864.0f;
+    this->win->size.w = 1024.0f;
+    this->win->size.h = 768.0f;
 #endif
     if (this->win->default_init(this->win)) {
         OMG_ERROR(this->omg, "OMG Window Init Fail");
@@ -317,7 +317,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    if ((!OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID/* && 0*/) || this->omg->type == OMG_OMEGA_TYPE_WIN)
+    if ((!OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID && 0) || this->omg->type == OMG_OMEGA_TYPE_WIN)
         this->omg->audio_type = OMG_AUDIO_TYPE_FMOD;
     if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
@@ -344,7 +344,10 @@ void app_init(App* this, OMG_EntryData* data) {
             this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), OMG_FILE_MODE_RB
         ), true, -1, 32.0f);
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"), OMG_AUDIO_FORMAT_AUTO);
-    this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"), OMG_AUDIO_FORMAT_AUTO);
+    // this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"), OMG_AUDIO_FORMAT_AUTO);
+    this->sound = this->audio->snd_from_file(this->audio, NULL, this->omg->file_from_fp(
+        this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"), OMG_FILE_MODE_RB
+    ), true, OMG_AUDIO_FORMAT_OGG);
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);

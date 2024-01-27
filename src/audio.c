@@ -103,6 +103,40 @@ OMG_Sound* omg_audio_snd_from_fp(OMG_Audio* this, OMG_Sound* snd, const OMG_Stri
     return omg_audio_dummy_snd_alloc(this, snd);
 }
 
+OMG_Sound* omg_audio_snd_from_mem(OMG_Audio* this, OMG_Sound* snd, const void* data, size_t size, int format) {
+    OMG_UNUSED(data, size, format);
+    return omg_audio_dummy_snd_alloc(this, snd);
+}
+
+OMG_Sound* omg_audio_snd_from_file(OMG_Audio* this, OMG_Sound* snd, OMG_File* file, bool destroy_file, int format) {
+    if (OMG_ISNULL(file)) {
+        _OMG_LOG_WARN(omg_base, "Null pointer passed for creating sound from file");
+        return omg_audio_dummy_snd_alloc(this, snd);
+    }
+    int64_t file_size = file->get_size(file);
+    if (file_size <= 0) {
+        if (destroy_file)
+            file->destroy(file);
+        return omg_audio_dummy_snd_alloc(this, snd);
+    }
+    void* buf = OMG_MALLOC(omg_base->mem, file_size);
+    if (OMG_ISNULL(buf)) {
+        if (destroy_file)
+            file->destroy(file);
+        return omg_audio_dummy_snd_alloc(this, snd);
+    }
+    size_t size_read = file->read(file, buf, 1, (size_t)file_size);
+    if (destroy_file)
+        file->destroy(file);
+    if (size_read == 0) {
+        OMG_FREE(omg_base->mem, buf);
+        return omg_audio_dummy_snd_alloc(this, snd);
+    }
+    OMG_Sound* res = this->snd_from_mem(this, snd, buf, size_read, format);
+    OMG_FREE(omg_base->mem, buf);
+    return res;
+}
+
 bool omg_audio_snd_set_volume(OMG_Audio* this, OMG_Sound* snd, float volume) {
     OMG_UNUSED(this, snd, volume);
     return false;
@@ -148,8 +182,12 @@ bool omg_audio_init(OMG_Audio* this) {
     this->mus_set_speed = omg_audio_mus_set_speed;
     this->snd_destroy = omg_audio_snd_destroy;
     this->snd_from_fp = omg_audio_snd_from_fp;
+    this->snd_from_mem = omg_audio_snd_from_mem;
     this->snd_set_volume = omg_audio_snd_set_volume;
     this->snd_play = omg_audio_snd_play;
     this->snd_stop = omg_audio_snd_stop;
+    OMG_BEGIN_POINTER_CAST();
+    this->snd_from_file = omg_audio_snd_from_file;
+    OMG_END_POINTER_CAST();
     return false;
 }
