@@ -82,7 +82,7 @@ OMG_Surface* omg_winmgr_surf_from_mem(OMG_Winmgr* this, OMG_Surface* surf, const
     return omg_winmgr_dummy_surf_create(this);
 }
 
-OMG_Surface* omg_winmgr_surf_from_file(OMG_Winmgr* this, OMG_Surface* surf, const OMG_File* file, bool destroy_file, int format) {
+OMG_Surface* omg_winmgr_surf_from_file(OMG_Winmgr* this, OMG_Surface* surf, OMG_File* file, bool destroy_file, int format) {
     if (OMG_ISNULL(file)) {
         _OMG_LOG_WARN(omg_base, "Null pointer passed for creating surf from file");
         return omg_winmgr_dummy_surf_create(this);
@@ -205,7 +205,9 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_destroy = omg_winmgr_surf_destroy;
     this->surf_from_fp = omg_winmgr_surf_from_fp;
     this->surf_from_mem = omg_winmgr_surf_from_mem;
+    OMG_BEGIN_POINTER_CAST();
     this->surf_from_file = omg_winmgr_surf_from_file;
+    OMG_END_POINTER_CAST();
     this->image_loader_alloc = omg_winmgr_image_loader_alloc;
     this->image_loader_free = omg_winmgr_image_loader_free;
     this->fontmgr_alloc = omg_winmgr_fontmgr_alloc;
