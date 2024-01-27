@@ -322,7 +322,7 @@ void app_init(App* this, OMG_EntryData* data) {
     if (this->omg->winmgr->fontmgr_alloc(this->omg->winmgr) || this->omg->winmgr->fnt->init(this->omg->winmgr->fnt)) {
         OMG_ERROR(this->omg, "OMG Font Init Fail");
         this->omg->destroy(this->omg);
-        return;        
+        return;
     }
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
@@ -330,7 +330,8 @@ void app_init(App* this, OMG_EntryData* data) {
     this->offset_cache.x = this->offset_cache.y = 0.0f;
     this->scale_cache.x = this->scale_cache.y = 1.0f;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
-    // I'm lazy for fail checks here, but you shouldn't :)
+    // I'm lazy for doing fail checks here, but you shouldn't :)
+    // Example of loading from file/mem
     if (this->omg->type == OMG_OMEGA_TYPE_WIN)
         this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
     else
@@ -372,7 +373,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
     this->surf = this->omg->winmgr->surf_create(this->omg->winmgr, NULL, &OMG_FPOINT_MAKE(256, 256), true);
     this->omg->winmgr->surf_set_locked(this->omg->winmgr, this->surf, true);
-    // I don't recommend to use surfaces because they may have different formats and you currently can't see it
+    // I don't recommend to use surfaces because they may have different formats and you currently can't see them
     if (OMG_ISNOTNULL(this->surf->data))
         for (uint64_t* i = this->surf->data; (size_t)i - (size_t)this->surf->data < (size_t)this->surf->size.w * (size_t)this->surf->size.h * 4; i++) {
             *i = 0x000000FF | (uint64_t)((double)((size_t)i - (size_t)this->surf->data) * (double)0x4000);
