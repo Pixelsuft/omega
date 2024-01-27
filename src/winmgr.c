@@ -94,8 +94,21 @@ OMG_Surface* omg_winmgr_surf_from_file(OMG_Winmgr* this, OMG_Surface* surf, cons
         return omg_winmgr_dummy_surf_create(this);
     }
     void* buf = OMG_MALLOC(omg_base->mem, file_size);
-    
+    if (OMG_ISNULL(buf)) {
+        if (destroy_file)
+            file->destroy(file);
+        return omg_winmgr_dummy_surf_create(this);
+    }
+    size_t size_read = file->read(file, buf, 1, (size_t)file_size);
+    if (destroy_file)
+        file->destroy(file);
+    if (size_read == 0) {
+        OMG_FREE(omg_base->mem, buf);
+        return omg_winmgr_dummy_surf_create(this);
+    }
+    OMG_Surface* res = this->surf_from_mem(this, surf, buf, size_read, format);
     OMG_FREE(omg_base->mem, buf);
+    return res;
 }
 
 bool omg_winmgr_surf_set_locked(OMG_Winmgr* this, OMG_Surface* surf, bool locked) {

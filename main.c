@@ -377,14 +377,9 @@ void app_init(App* this, OMG_EntryData* data) {
     this->tex = this->ren->tex_create(this->ren, NULL, &OMG_FPOINT_MAKE(200, 200), OMG_TEXTURE_ACCESS_TARGET, true);
     this->sin_mul = 0.4;
     OMG_File* sprite_file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sprite.png"), OMG_FILE_MODE_RB);
-    file_size = sprite_file->get_size(sprite_file);
-    void* buf = OMG_MALLOC(this->omg->mem, file_size);
-    sprite_file->read(sprite_file, buf, 1, (size_t)file_size);
-    this->tex2 = this->ren->tex_from_surf(this->ren, NULL, this->omg->winmgr->surf_from_mem(
-        this->omg->winmgr, NULL, buf, file_size, OMG_IMG_FORMAT_PNG
+    this->tex2 = this->ren->tex_from_surf(this->ren, NULL, this->omg->winmgr->surf_from_file(
+        this->omg->winmgr, NULL, sprite_file, true, OMG_IMG_FORMAT_PNG
     ), true);
-    OMG_FREE(this->omg->mem, buf);
-    sprite_file->destroy(sprite_file);
     // this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
     this->ren->tex_set_scale_mode(this->ren, this->tex2, OMG_SCALE_MODE_NEAREST);
     this->clock->init(this->clock, true);
