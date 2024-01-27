@@ -14,6 +14,7 @@ bool omg_fontmgr_font_raylib_destroy(OMG_FontMgrRaylib* this, OMG_FontRaylib* fo
         if (rl->IsFontReady(font->font)) {
             rl->UnloadFont(font->font);
         }
+        omg_fontmgr_font_destroy(base, font_base);
         if (font_base->was_allocated) {
             font_base->was_allocated = false;
             OMG_FREE(omg_base->mem, font);
@@ -44,6 +45,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     font_base->scale.x = font_base->scale.y = font_base->a_scale = 1.0f;
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
+    font_base->extra1 = NULL;
     font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
     return font;
 }

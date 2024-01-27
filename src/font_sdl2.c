@@ -22,6 +22,7 @@ bool omg_fontmgr_font_sdl2_destroy(OMG_FontMgrSdl2* this, OMG_FontSdl2* font) {
             this->ttf.TTF_CloseFont(font->font);
             font->font = NULL;
         }
+        omg_fontmgr_font_destroy(base, font_base);
         if (font_base->was_allocated) {
             font_base->was_allocated = false;
             OMG_FREE(omg_base->mem, font);
@@ -72,6 +73,40 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;
+    font_base->extra1 = NULL;
+    return font;
+}
+
+OMG_FontSdl2* omg_fontmgr_sdl2_font_from_mem(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const void* data, size_t data_size, long index, float size) {
+    if (OMG_ISNULL(this->sdl2))
+        (OMG_FontSdl2*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+    if (OMG_ISNULL(font)) {
+        font = OMG_MALLOC(omg_base->mem, sizeof(OMG_FontSdl2));
+        if (OMG_ISNULL(font))
+            return (OMG_FontSdl2*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+        font_base->was_allocated = true;
+    }
+    else
+        font_base->was_allocated = false;
+    SDL_RWops* rw = this->sdl2->SDL_RWFromConstMem(data, (int)data_size);
+    if (OMG_ISNULL(rw)) {
+        _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_ttf font (", TTF_GETERROR(), ")");
+        return (OMG_FontSdl2*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+    }
+    if (index > 0)
+        font->font = this->ttf.TTF_OpenFontIndexRW(rw, 1, (int)size, index);
+    else
+        font->font = this->ttf.TTF_OpenFontRW(rw, 1, (int)size);
+    if (OMG_ISNULL(font->font)) {
+        _OMG_LOG_ERROR(omg_base, "Failed to open font from mem (", TTF_GETERROR(), ")");
+        omg_fontmgr_font_sdl2_destroy(this, font);
+        return (OMG_FontSdl2*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+    }
+    font_base->scale.x = font_base->scale.y = font_base->a_scale = 1.0f;
+    font_base->spacing = 0.0f;
+    font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
+    font_base->aa = true;
+    font_base->size = size;
     return font;
 }
 
@@ -101,10 +136,12 @@ bool omg_fontmgr_sdl2_init(OMG_FontMgrSdl2* this) {
         omg_sdl2_ttf_dll_free(&this->ttf);
         return true;
     }
+    this->sdl2 = (omg_base->type == OMG_OMEGA_TYPE_SDL2) ? ((OMG_OmegaSdl2*)omg_base)->sdl2 : NULL;
     base->type = OMG_FONT_MGR_SDL2;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_fontmgr_sdl2_destroy;
     base->font_from_fp = omg_fontmgr_sdl2_font_from_fp;
+    base->font_from_mem = omg_fontmgr_sdl2_font_from_mem;
     base->font_destroy = omg_fontmgr_font_sdl2_destroy;
     base->font_set_scale = omg_fontmgr_sdl2_font_set_scale;
     base->font_query_text_size = omg_fontmgr_sdl2_font_query_text_size;

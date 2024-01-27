@@ -24,7 +24,10 @@ OMG_Font* omg_fontmgr_dummy_font_create(OMG_FontMgr* this) {
 }
 
 bool omg_fontmgr_font_destroy(OMG_FontMgr* this, OMG_Font* font) {
-    OMG_UNUSED(this, font);
+    if (OMG_ISNOTNULL(font->extra1)) {
+        OMG_FREE(omg_base->mem, font->extra1);
+        font->extra1 = NULL;
+    }
     return false;
 }
 
@@ -63,7 +66,10 @@ OMG_Font* omg_fontmgr_font_from_file(OMG_FontMgr* this, OMG_Font* font, OMG_File
         return omg_fontmgr_dummy_font_create(this);
     }
     OMG_Font* res = this->font_from_mem(this, font, buf, size_read, index, size);
-    OMG_FREE(omg_base->mem, buf);
+    if (OMG_ISNULL(res))
+        OMG_FREE(omg_base->mem, buf);
+    else
+        res->extra1 = buf;
     return res;
 }
 

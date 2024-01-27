@@ -331,7 +331,10 @@ void app_init(App* this, OMG_EntryData* data) {
     this->scale_cache.x = this->scale_cache.y = 1.0f;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for fail checks here, but you shouldn't :)
-    this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
+    //this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
+    this->fps_font = this->fnt->font_from_file(this->fnt, NULL, this->omg->file_from_fp(
+        this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), OMG_FILE_MODE_RB
+    ), true, -1, 32.0f);
     this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"));
     this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"));
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
