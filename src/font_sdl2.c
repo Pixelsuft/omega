@@ -79,7 +79,7 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
 
 OMG_FontSdl2* omg_fontmgr_sdl2_font_from_mem(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const void* data, size_t data_size, long index, float size) {
     if (OMG_ISNULL(this->sdl2))
-        (OMG_FontSdl2*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
+        return (OMG_FontSdl2*)omg_fontmgr_font_from_mem(base, font_base, data, data_size, index, size);
     if (OMG_ISNULL(font)) {
         font = OMG_MALLOC(omg_base->mem, sizeof(OMG_FontSdl2));
         if (OMG_ISNULL(font))
