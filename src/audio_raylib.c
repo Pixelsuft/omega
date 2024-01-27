@@ -75,7 +75,8 @@ bool omg_audio_raylib_mus_set_speed(OMG_AudioRaylib* this, OMG_MusicRaylib* mus,
     return false;
 }
 
-OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, const OMG_String* path) {
+OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, const OMG_String* path, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     if (OMG_ISNULL(mus)) {
@@ -104,7 +105,8 @@ bool omg_audio_raylib_snd_destroy(OMG_AudioRaylib* this, OMG_SoundRaylib* snd) {
     return false;
 }
 
-OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, const OMG_String* path) {
+OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, const OMG_String* path, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     if (OMG_ISNULL(snd)) {

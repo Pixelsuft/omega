@@ -37,7 +37,8 @@ bool omg_audio_sdl2_mus_destroy(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
     return false;
 }
 
-OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const OMG_String* path) {
+OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const OMG_String* path, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     if (OMG_ISNULL(mus)) {
@@ -141,7 +142,8 @@ bool omg_audio_sdl2_snd_destroy(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
     return false;
 }
 
-OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, const OMG_String* path) {
+OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, const OMG_String* path, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     if (OMG_ISNULL(snd)) {

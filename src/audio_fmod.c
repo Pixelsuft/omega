@@ -166,7 +166,8 @@ bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, float
     return false;
 }
 
-OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path) {
+OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     if (OMG_ISNULL(mus)) {
@@ -202,7 +203,8 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     return mus;
 }
 
-OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path) {
+OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path, int format) {
+    OMG_UNUSED(format);
     if (omg_string_ensure_null((OMG_String*)path))
         return NULL;
     if (OMG_ISNULL(mus)) {
