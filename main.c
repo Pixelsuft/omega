@@ -319,6 +319,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->win->ren_type = OMG_REN_TYPE_WIN;
     if (
         this->win->renderer_alloc(this->win) ||
+        // !(this->win->ren->driver = OMG_REN_DRIVER_SOFTWARE) ||
         // !(this->win->ren->driver = OMG_REN_DRIVER_OPENGL) ||
         this->win->ren->init(this->win->ren)
     ) {

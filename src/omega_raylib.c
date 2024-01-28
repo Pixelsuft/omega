@@ -273,6 +273,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         event.win = win;
         event.id = 0;
         MOUSE_FILL_STATE(event.state);
+        base->mouse_state = event.state;
         event.pos.x = mouse_pos.x;
         event.pos.y = mouse_pos.y;
         event.rel.x = mouse_delta.x;
@@ -287,6 +288,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
         event.win = win;
         event.id = 0;
         MOUSE_FILL_STATE(event.state);
+        base->mouse_state = event.state;
         event.rel.x = wheel_delta.x;
         event.rel.y = -wheel_delta.y;
         event.mouse_pos.x = mouse_pos.x;
@@ -310,6 +312,7 @@ void omg_raylib_poll_events(OMG_OmegaRaylib* this) {
             event.pos.y = mouse_pos.y;
             event.clicks = 1; // TODO
             MOUSE_FILL_STATE(event.state);
+            base->mouse_state = event.state;
             event.is_pressed = pressed;
             (pressed ? base->on_mouse_down : base->on_mouse_up)(&event);
         }

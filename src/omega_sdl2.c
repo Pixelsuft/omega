@@ -157,7 +157,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 if (!event.is_emulated || base->emulate_mouse) {
                     event.win = win;
                     event.id = this->ev.motion.which;
-                    event.state = this->ev.motion.state;
+                    event.state = base->mouse_state = this->ev.motion.state;
                     event.pos.x = (float)this->ev.motion.x;
                     event.pos.y = (float)this->ev.motion.y;
                     event.rel.x = (float)this->ev.motion.xrel;
@@ -200,7 +200,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                     event.pos.x = (float)this->ev.button.x;
                     event.pos.y = (float)this->ev.button.y;
                     event.clicks = this->ev.button.clicks;
-                    event.state = this->sdl2->SDL_GetMouseState(NULL, NULL);
+                    event.state = base->mouse_state = this->sdl2->SDL_GetMouseState(NULL, NULL);
                     event.is_pressed = this->ev.button.state == SDL_PRESSED;
                     (this->ev.type == SDL_MOUSEBUTTONDOWN ? base->on_mouse_down : base->on_mouse_up)(&event);
                 }
@@ -239,7 +239,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                         int x, y;
                         MAKE_EVENT(&event);
                         event.win = win;
-                        event.state = this->sdl2->SDL_GetMouseState(&x, &y);
+                        event.state = base->mouse_state = this->sdl2->SDL_GetMouseState(&x, &y);
                         event.pos.x = (float)x;
                         event.pos.y = (float)y;
                         event.is_focused = this->ev.window.event == SDL_WINDOWEVENT_ENTER;
@@ -383,7 +383,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                     event.win = win;
                     event.id = this->ev.wheel.which;
                     int x, y;
-                    event.state = this->sdl2->SDL_GetMouseState(&x, &y);
+                    event.state = base->mouse_state = this->sdl2->SDL_GetMouseState(&x, &y);
                     event.rel.x = (float)this->ev.wheel.x;
                     event.rel.y = (float)(-this->ev.wheel.y);
 #if SDL_VERSION_ATLEAST(2, 0, 18)

@@ -113,6 +113,7 @@ typedef struct OMG_Omega {
     void (*on_key_up)(OMG_EventKeyboard* event);
     void (*on_text_input)(OMG_EventTextInput* event);
     OMG_FPoint scale;
+    uint32_t mouse_state;
     int log_level_lib;
     int log_level_omg;
     int log_level;

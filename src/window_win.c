@@ -322,11 +322,11 @@ static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_
     if (swap_buttons) {
         if (button == OMG_MBUTTON_LEFT) {
             button = OMG_MBUTTON_RIGHT;
-        } else if (button == OMG_MBUTTON_RIGHT) {
+        }
+        else if (button == OMG_MBUTTON_RIGHT) {
             button = OMG_MBUTTON_LEFT;
         }
     }
-
     if (mouse_pressed && !(mouse_flags & OMG_MBUTTON(button))) {
         OMG_EventMouseButton event;
         MAKE_EVENT(&event);
@@ -338,7 +338,7 @@ static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_
         event.pos.x = (float)this->mouse_pos_cache.x;
         event.pos.y = (float)this->mouse_pos_cache.y;
         event.clicks = 1;
-        event.state = (uint32_t)this->last_mouse_state;
+        event.state = omg_base->mouse_state = (uint32_t)this->last_mouse_state;
         omg_base->on_mouse_down(&event);
     } else if (!mouse_pressed && (mouse_flags & OMG_MBUTTON(button))) {
         OMG_EventMouseButton event;
@@ -351,7 +351,7 @@ static void omg_win_windows_check_button_wparam(OMG_WindowWin* this, bool mouse_
         event.pos.x = (float)this->mouse_pos_cache.x;
         event.pos.y = (float)this->mouse_pos_cache.y;
         event.clicks = 1;
-        event.state = (uint32_t)this->last_mouse_state;
+        event.state = omg_base->mouse_state = (uint32_t)this->last_mouse_state;
         omg_base->on_mouse_up(&event);
     }
 }
@@ -634,7 +634,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.rel.y = (float)(y_pos - this->mouse_pos_cache.y);
             MOUSE_FILL_STATE(event.state, wparam);
             omg_win_windows_check_mouse_buttons(this, wparam, 0);
-            this->mouse_state_cache = event.state;
+            this->mouse_state_cache = omg_base->mouse_state = event.state;
             this->last_mouse_state = wparam;
             if (this->is_mouse_left) {
                 this->is_mouse_left = false;
@@ -642,7 +642,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 OMG_EventMouseFocus c_event;
                 MAKE_EVENT(&c_event);
                 c_event.win = this;
-                c_event.state = event.state;
+                c_event.state = omg_base->mouse_state = event.state;
                 c_event.pos.x = (float)event.pos.x;
                 c_event.pos.y = (float)event.pos.y;
                 c_event.is_focused = true;
@@ -753,12 +753,12 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             if ((msg == WM_XBUTTONDOWN) || (msg == WM_XBUTTONUP)) {
                 WORD need_wparam = GET_KEYSTATE_WPARAM(wparam);
                 MOUSE_FILL_STATE(event.state, need_wparam);
-                this->mouse_state_cache = event.state;
+                this->mouse_state_cache = omg_base->mouse_state = event.state;
                 this->last_mouse_state = wparam;
             }
             else {
                 MOUSE_FILL_STATE(event.state, wparam);
-                this->mouse_state_cache = event.state;
+                this->mouse_state_cache = omg_base->mouse_state = event.state;
                 this->last_mouse_state = wparam;
             }
             (event.is_pressed ? omg_base->on_mouse_down : omg_base->on_mouse_up)(&event);
@@ -781,7 +781,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             OMG_EventMouseFocus event;
             MAKE_EVENT(&event);
             event.win = this;
-            event.state = this->mouse_state_cache;
+            event.state = omg_base->mouse_state = this->mouse_state_cache;
             event.pos.x = (float)this->mouse_pos_cache.x;
             event.pos.y = (float)this->mouse_pos_cache.y;
             event.is_focused = false;
@@ -975,7 +975,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.is_emulated = false;
             MOUSE_FILL_STATE(event.state, param_state);
             omg_win_windows_check_mouse_buttons(this, (WPARAM)param_state, 0);
-            this->mouse_state_cache = event.state;
+            this->mouse_state_cache = omg_base->mouse_state = event.state;
             this->last_mouse_state = wparam;
             if (msg == WM_MOUSEWHEEL) {
                 event.rel.x = 0.0f;

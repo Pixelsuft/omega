@@ -530,6 +530,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->audio_type = OMG_AUDIO_TYPE_AUTO;
     this->theme = OMG_THEME_NONE;
     this->scale.x = this->scale.y = 1.0f;
+    this->mouse_state = 0;
     if (this->log_level == -1)
         this->log_level = OMG_LOG_MIN_LEVEL;
     if (this->log_level_omg == -1)
