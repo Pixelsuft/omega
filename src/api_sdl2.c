@@ -259,8 +259,19 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_FreeCursor);
     LOAD_REQUIRED(SDL_ShowCursor);
     LOAD_REQUIRED(SDL_SetWindowGrab);
+    LOAD_REQUIRED(SDL_GetWindowGrab);
+    LOAD_REQUIRED(SDL_SetWindowBrightness);
+    LOAD_REQUIRED(SDL_GetWindowBrightness);
+    LOAD_REQUIRED(SDL_SetWindowGammaRamp);
+    LOAD_REQUIRED(SDL_GetWindowGammaRamp);
+    LOAD_REQUIRED(SDL_IsScreenSaverEnabled);
+    LOAD_REQUIRED(SDL_EnableScreenSaver);
+    LOAD_REQUIRED(SDL_DisableScreenSaver);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowOpacity); // 2.0.5
+    LOAD_REQUIRED_COMPAT(SDL_GetWindowOpacity); // 2.0.5
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowModalFor); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.6
     LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyF); // 2.0.10
@@ -278,7 +289,13 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RWclose); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_LoadFile); // 2.0.10
+    LOAD_REQUIRED_COMPAT(SDL_FlashWindow); // 2.0.16
     LOAD_REQUIRED_COMPAT(SDL_SetWindowAlwaysOnTop); // 2.0.16
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowMouseGrab); // 2.0.16
+    LOAD_REQUIRED_COMPAT(SDL_GetWindowMouseGrab); // 2.0.16
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowKeyboardGrab); // 2.0.16
+    LOAD_REQUIRED_COMPAT(SDL_GetWindowKeyboardGrab); // 2.0.16
+    LOAD_REQUIRED_COMPAT(SDL_SetWindowMouseRect); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometryRaw); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometry); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18

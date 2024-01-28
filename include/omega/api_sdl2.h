@@ -275,6 +275,12 @@ typedef enum {
 } SDL_SystemCursor;
 
 typedef enum {
+    SDL_FLASH_CANCEL,
+    SDL_FLASH_BRIEFLY,
+    SDL_FLASH_UNTIL_FOCUSED
+} SDL_FlashOperation;
+
+typedef enum {
     SDL_BLENDMODE_NONE = 0x00000000,
     SDL_BLENDMODE_BLEND = 0x00000001,
     SDL_BLENDMODE_ADD = 0x00000002,
@@ -1430,6 +1436,23 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_FreeCursor)(SDL_Cursor*);
     int OMG_SDL2_STD_PREFIX (*SDL_ShowCursor)(int);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowGrab)(SDL_Window*, SDL_bool);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowKeyboardGrab)(SDL_Window*, SDL_bool);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowMouseGrab)(SDL_Window*, SDL_bool);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowGrab)(SDL_Window*);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowKeyboardGrab)(SDL_Window*);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowMouseGrab)(SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowMouseRect)(SDL_Window*, const SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowBrightness)(SDL_Window*, float);
+    float OMG_SDL2_STD_PREFIX (*SDL_GetWindowBrightness)(SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowOpacity)(SDL_Window*, float);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetWindowOpacity)(SDL_Window*, float*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowModalFor)(SDL_Window*, SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowGammaRamp)(SDL_Window*, const uint16_t*, const uint16_t*, const uint16_t*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetWindowGammaRamp)(SDL_Window*, uint16_t*, uint16_t*, uint16_t*);
+    int OMG_SDL2_STD_PREFIX (*SDL_FlashWindow)(SDL_Window*, SDL_FlashOperation);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_IsScreenSaverEnabled)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_EnableScreenSaver)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_DisableScreenSaver)(void);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;
