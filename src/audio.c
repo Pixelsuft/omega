@@ -92,8 +92,8 @@ OMG_Music* omg_audio_mus_from_file(OMG_Audio* this, OMG_Music* mus, OMG_File* fi
         OMG_FREE(omg_base->mem, buf);
         return omg_audio_dummy_mus_alloc(this, mus);
     }
-    OMG_Music* res = this->mus_from_mem(this, mus, buf, size_read, format);
-    OMG_FREE(omg_base->mem, buf);
+    OMG_Music* res = this->mus_from_mem(this, mus, buf, size_read, format | OMG_AUDIO_FORMAT_INTERNAL);
+    // OMG_FREE(omg_base->mem, buf);
     return res;
 }
 

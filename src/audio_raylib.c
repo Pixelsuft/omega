@@ -74,6 +74,10 @@ bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
         }
     }
     this->raylib->UnloadMusicStream(mus->mus);
+    if (OMG_ISNOTNULL(mus->temp_buf)) {
+        OMG_FREE(omg_base->mem, mus->temp_buf);
+        mus->temp_buf = NULL;
+    }
     omg_audio_mus_destroy(base, mus_base);
     return false;
 }
@@ -108,6 +112,32 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRa
     if (!this->raylib->IsMusicReady(mus->mus)) {
         omg_audio_mus_destroy(base, mus_base);
         _OMG_LOG_ERROR(omg_base, "Failed to load Raylib music ", path->ptr);
+        return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    mus->temp_buf = NULL;
+    mus_base->duration = (double)this->raylib->GetMusicTimeLength(mus->mus);
+    return mus;
+}
+
+OMG_MusicRaylib* omg_audio_raylib_mus_from_mem(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, const void* data, size_t size, int format) {
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicRaylib));
+        if (OMG_ISNULL(mus))
+            return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    if (format & OMG_AUDIO_FORMAT_INTERNAL)
+        mus->temp_buf = (void*)data;
+    else
+        mus->temp_buf = NULL;
+    char* mus_type;
+    _AUDIO_TYPE_RAYLIB(mus_type, format);
+    mus->mus = this->raylib->LoadMusicStreamFromMemory(mus_type, (const unsigned char*)data, (int)size);
+    if (!this->raylib->IsMusicReady(mus->mus)) {
+        omg_audio_mus_destroy(base, mus_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to load Raylib music from memory");
         return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     mus_base->duration = (double)this->raylib->GetMusicTimeLength(mus->mus);
@@ -207,6 +237,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->update = omg_audio_raylib_update;
     base->destroy = omg_audio_raylib_destroy;
     base->mus_from_fp = omg_audio_raylib_mus_from_fp;
+    base->mus_from_mem = omg_audio_raylib_mus_from_mem;
     base->mus_destroy = omg_audio_raylib_mus_destroy;
     base->mus_play = omg_audio_raylib_mus_play;
     base->mus_stop = omg_audio_raylib_mus_stop;

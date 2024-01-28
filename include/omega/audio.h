@@ -17,6 +17,7 @@
 #define OMG_AUDIO_FORMAT_OGG (1 << 6)
 #define OMG_AUDIO_FORMAT_MID (1 << 7)
 #define OMG_AUDIO_FORMAT_OPUS (1 << 8)
+#define OMG_AUDIO_FORMAT_INTERNAL (1 << 30)
 
 typedef struct {
     double duration;

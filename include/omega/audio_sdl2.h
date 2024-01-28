@@ -37,6 +37,8 @@ OMG_API bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus);
 OMG_API double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus);
 OMG_API bool omg_audio_sdl2_mus_set_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, double pos);
 OMG_API OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const OMG_String* path, int format);
+OMG_API OMG_MusicSdl2* omg_audio_sdl2_mus_from_mem(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const void* data, size_t size, int format);
+OMG_API OMG_MusicSdl2* omg_audio_sdl2_mus_from_file(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, OMG_File* file, bool destroy_file, int format);
 OMG_API bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this);
 OMG_API bool omg_audio_sdl2_snd_destroy(OMG_AudioSdl2* this, OMG_SoundSdl2* snd);
 OMG_API OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, const OMG_String* path, int format);
