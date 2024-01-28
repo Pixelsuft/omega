@@ -83,6 +83,41 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
     return mus;
 }
 
+OMG_MusicSdl2* omg_audio_sdl2_mus_from_mem(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const void* data, size_t size, int format) {
+    OMG_UNUSED(format);
+    if (OMG_ISNULL(this->sdl2))
+        return NULL;
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicSdl2));
+        if (OMG_ISNULL(mus))
+            return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    Mix_MusicType mus_type;
+    _MUS_TYPE_FORMAT(mus_type, format);
+    SDL_RWops* rw = this->sdl2->SDL_RWFromConstMem(data, (int)size);
+    if (OMG_ISNULL(rw)) {
+        _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_mixer music (", MIX_GETERROR(), ")");
+        return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    mus->mus = this->mix.Mix_LoadMUSType_RW(rw, mus_type, 1);
+    if (OMG_ISNULL(mus->mus)) {
+        omg_audio_mus_destroy(base, mus_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open music from mem (", MIX_GETERROR(), ")");
+        return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    if (OMG_ISNULL(this->mix.Mix_MusicDuration))
+        mus_base->duration = -1.0;
+    else
+        mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
+    mus->vol_cache = MIX_MAX_VOLUME;
+    mus->time_cache1 = 0;
+    mus->time_cache2 = 0;
+    return mus;
+}
+
 bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops, double pos, double fade_in) {
     int res;
     if ((pos == 0.0) && (fade_in == 0.0)) {
@@ -330,6 +365,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
+    base->mus_from_mem = omg_audio_sdl2_mus_from_mem;
     base->mus_destroy = omg_audio_sdl2_mus_destroy;
     base->mus_play = omg_audio_sdl2_mus_play;
     base->mus_set_volume = omg_audio_sdl2_mus_set_volume;

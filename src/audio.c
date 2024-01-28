@@ -63,6 +63,40 @@ OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_Stri
     return omg_audio_dummy_mus_alloc(this, mus);
 }
 
+OMG_Music* omg_audio_mus_from_mem(OMG_Audio* this, OMG_Music* mus, const void* data, size_t size, int format) {
+    OMG_UNUSED(data, size, format);
+    return omg_audio_dummy_mus_alloc(this, mus);
+}
+
+OMG_Music* omg_audio_mus_from_file(OMG_Audio* this, OMG_Music* mus, OMG_File* file, bool destroy_file, int format) {
+    if (OMG_ISNULL(file)) {
+        _OMG_LOG_WARN(omg_base, "Null pointer passed for creating music from file");
+        return omg_audio_dummy_mus_alloc(this, mus);
+    }
+    int64_t file_size = file->get_size(file);
+    if (file_size <= 0) {
+        if (destroy_file)
+            file->destroy(file);
+        return omg_audio_dummy_mus_alloc(this, mus);
+    }
+    void* buf = OMG_MALLOC(omg_base->mem, file_size);
+    if (OMG_ISNULL(buf)) {
+        if (destroy_file)
+            file->destroy(file);
+        return omg_audio_dummy_mus_alloc(this, mus);
+    }
+    size_t size_read = file->read(file, buf, 1, (size_t)file_size);
+    if (destroy_file)
+        file->destroy(file);
+    if (size_read == 0) {
+        OMG_FREE(omg_base->mem, buf);
+        return omg_audio_dummy_mus_alloc(this, mus);
+    }
+    OMG_Music* res = this->mus_from_mem(this, mus, buf, size_read, format);
+    OMG_FREE(omg_base->mem, buf);
+    return res;
+}
+
 bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus) {
     if (OMG_ISNULL(mus))
         return false;
@@ -173,6 +207,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->destroy = omg_audio_destroy;
     this->update = omg_audio_update;
     this->mus_from_fp = omg_audio_mus_from_fp;
+    this->mus_from_mem = omg_audio_mus_from_mem;
     this->mus_destroy = omg_audio_mus_destroy;
     this->mus_play = omg_audio_mus_play;
     this->mus_set_volume = omg_audio_mus_set_volume;
@@ -187,6 +222,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->snd_play = omg_audio_snd_play;
     this->snd_stop = omg_audio_snd_stop;
     OMG_BEGIN_POINTER_CAST();
+    this->mus_from_file = omg_audio_mus_from_file;
     this->snd_from_file = omg_audio_snd_from_file;
     OMG_END_POINTER_CAST();
     return false;

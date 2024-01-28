@@ -42,6 +42,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->omg->winmgr->surf_destroy(this->omg->winmgr, this->surf);
     this->audio->snd_destroy(this->audio, this->sound);
     this->audio->mus_destroy(this->audio, this->mus);
+    this->file->destroy(this->file);
     this->fnt->font_destroy(this->fnt, this->fps_font);
     // everything other will be cleaned up automaticly
     this->omg->app_quit(this->omg);
@@ -343,7 +344,6 @@ void app_init(App* this, OMG_EntryData* data) {
         this->fps_font = this->fnt->font_from_file(this->fnt, NULL, this->omg->file_from_fp(
             this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), OMG_FILE_MODE_RB
         ), true, -1, 32.0f);
-    this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"), OMG_AUDIO_FORMAT_AUTO);
     // this->sound = this->audio->snd_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"), OMG_AUDIO_FORMAT_AUTO);
     this->sound = this->audio->snd_from_file(this->audio, NULL, this->omg->file_from_fp(
         this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"), OMG_FILE_MODE_RB
@@ -360,6 +360,11 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, "File pos: ", (int)this->file->tell(this->file));
     omg_string_destroy(&file_buf);
     this->file->destroy(this->file);
+    // this->mus = this->audio->mus_from_fp(this->audio, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"), OMG_AUDIO_FORMAT_AUTO);
+    this->file = this->omg->file_from_fp(
+        this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"), OMG_FILE_MODE_RB
+    );
+    this->mus = this->audio->mus_from_file(this->audio, NULL, this->file, true, OMG_AUDIO_FORMAT_MP3);
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;
