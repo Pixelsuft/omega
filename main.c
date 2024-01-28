@@ -129,7 +129,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->ren->aa = !this->ren->aa;
         else if (event->code == OMG_SCANCODE_T)
             this->fps_font->aa = !this->fps_font->aa;
-        else if (event->code == OMG_SCANCODE_J)
+        else if (event->code == OMG_SCANCODE_L)
             this->win->set_window_mode(
                 this->win,
                 (this->win->window_mode != OMG_WIN_MODE_WINDOW) ? OMG_WIN_MODE_WINDOW : OMG_WIN_MODE_DESKTOP_FULLSCREEN
