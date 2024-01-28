@@ -228,7 +228,7 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
 
 FMOD_RESULT omg_audio_fmod_open_callback(const char* name, unsigned int* file_size, void** handle, void* userdata) {
     OMG_UNUSED(userdata);
-    *handle = name;
+    *handle = (void*)name;
     OMG_File* file = (OMG_File*)name;
     int64_t file_size_tmp = file->get_size(file);
     if (file_size_tmp <= 0)
