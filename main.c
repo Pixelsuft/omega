@@ -355,7 +355,7 @@ void app_init(App* this, OMG_EntryData* data) {
     omg_string_init_dynamic(&file_buf, NULL);
     if (file_size > 0)
         omg_string_resize(&file_buf, (size_t)file_size);
-    this->file->read(this->file, file_buf.ptr, 1, file_size);
+    this->file->read(this->file, file_buf.ptr, 1, (size_t)file_size);
     OMG_INFO(this->omg, "File content: ", &file_buf);
     OMG_INFO(this->omg, "File pos: ", (int)this->file->tell(this->file));
     omg_string_destroy(&file_buf);
