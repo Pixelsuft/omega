@@ -5,15 +5,16 @@
 #include <omega/audio.h>
 
 typedef struct {
-    OMG_Music base;
+    OMG_Music parent;
     Mix_Music* mus;
     uint64_t time_cache1;
     uint64_t time_cache2;
     int vol_cache;
+    int loops_cache;
 } OMG_MusicSdl2;
 
 typedef struct {
-    OMG_Music base;
+    OMG_Music parent;
     Mix_Chunk* chunk;
     int channel;
     int vol_cache;

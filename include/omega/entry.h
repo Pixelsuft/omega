@@ -23,8 +23,12 @@ typedef struct {
 
 #define _OMG_ENTRY_DATA_TYPE 2
 
-#if (defined(_UNICODE) || defined(UNICODE)) && (!OMG_IS_CMAKE)
+#ifdef _MSC_VER
 #define OMG_WIN_STD_ENTRY_PREFIX __stdcall OMG_WIN_STD_PREFIX
+#else
+#define OMG_WIN_STD_ENTRY_PREFIX OMG_WIN_STD_PREFIX
+#endif
+#if (defined(_UNICODE) || defined(UNICODE)) && (!OMG_IS_CMAKE)
 #define OMG_MAIN_MAKE(main_func) int OMG_WIN_STD_ENTRY_PREFIX wWinMain(OMG_WIN_ENTRY_HINST* hInst, OMG_WIN_ENTRY_HINST* hInstPrev, wchar_t* cmdline, int cmdshow) { \
     OMG_UNUSED(hInstPrev); \
     OMG_EntryData entry_data; \
