@@ -247,6 +247,17 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_FreeRW);
     LOAD_REQUIRED(SDL_ReadU8);
     LOAD_REQUIRED(SDL_WriteU8);
+    LOAD_REQUIRED(SDL_WarpMouseInWindow);
+    LOAD_REQUIRED(SDL_SetRelativeMouseMode);
+    LOAD_REQUIRED(SDL_CaptureMouse);
+    LOAD_REQUIRED(SDL_CreateCursor);
+    LOAD_REQUIRED(SDL_CreateColorCursor);
+    LOAD_REQUIRED(SDL_CreateSystemCursor);
+    LOAD_REQUIRED(SDL_SetCursor);
+    LOAD_REQUIRED(SDL_GetCursor);
+    LOAD_REQUIRED(SDL_GetDefaultCursor);
+    LOAD_REQUIRED(SDL_FreeCursor);
+    LOAD_REQUIRED(SDL_ShowCursor);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.6

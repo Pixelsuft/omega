@@ -214,6 +214,7 @@ typedef void SDL_Window;
 typedef void SDL_Renderer;
 typedef void SDL_BlitMap;
 typedef void SDL_Texture;
+typedef void SDL_Cursor;
 
 typedef int32_t SDL_Keycode;
 
@@ -256,6 +257,22 @@ typedef struct SDL_FPoint {
     float x;
     float y;
 } SDL_FPoint;
+
+typedef enum {
+    SDL_SYSTEM_CURSOR_ARROW,
+    SDL_SYSTEM_CURSOR_IBEAM,
+    SDL_SYSTEM_CURSOR_WAIT,
+    SDL_SYSTEM_CURSOR_CROSSHAIR,
+    SDL_SYSTEM_CURSOR_WAITARROW,
+    SDL_SYSTEM_CURSOR_SIZENWSE,
+    SDL_SYSTEM_CURSOR_SIZENESW,
+    SDL_SYSTEM_CURSOR_SIZEWE,
+    SDL_SYSTEM_CURSOR_SIZENS,
+    SDL_SYSTEM_CURSOR_SIZEALL,
+    SDL_SYSTEM_CURSOR_NO,
+    SDL_SYSTEM_CURSOR_HAND,
+    SDL_NUM_SYSTEM_CURSORS
+} SDL_SystemCursor;
 
 typedef enum {
     SDL_BLENDMODE_NONE = 0x00000000,
@@ -1401,6 +1418,17 @@ typedef struct {
     uint8_t OMG_SDL2_STD_PREFIX (*SDL_ReadU8)(SDL_RWops*);
     size_t OMG_SDL2_STD_PREFIX (*SDL_WriteU8)(SDL_RWops*, uint8_t);
     int OMG_SDL2_STD_PREFIX (*SDL_GetDefaultAudioInfo)(char**, SDL_AudioSpec*, int);
+    void OMG_SDL2_STD_PREFIX (*SDL_WarpMouseInWindow)(SDL_Window*, int, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetRelativeMouseMode)(SDL_bool);
+    int OMG_SDL2_STD_PREFIX (*SDL_CaptureMouse)(SDL_bool);
+    SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_CreateCursor)(const uint8_t*, const uint8_t*, int, int, int, int);
+    SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_CreateColorCursor)(SDL_Surface*, int, int);
+    SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_CreateSystemCursor)(SDL_SystemCursor);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetCursor)(SDL_Cursor*);
+    SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_GetCursor)(void);
+    SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_GetDefaultCursor)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_FreeCursor)(SDL_Cursor*);
+    int OMG_SDL2_STD_PREFIX (*SDL_ShowCursor)(int);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;
