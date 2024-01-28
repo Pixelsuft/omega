@@ -267,7 +267,21 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_IsScreenSaverEnabled);
     LOAD_REQUIRED(SDL_EnableScreenSaver);
     LOAD_REQUIRED(SDL_DisableScreenSaver);
+    LOAD_REQUIRED(SDL_GetNumVideoDisplays);
+    LOAD_REQUIRED(SDL_GetDisplayName);
+    LOAD_REQUIRED(SDL_GetDisplayBounds);
+    LOAD_REQUIRED(SDL_GetDisplayUsableBounds);
+    LOAD_REQUIRED(SDL_GetDisplayOrientation);
+    LOAD_REQUIRED(SDL_GetNumDisplayModes);
+    LOAD_REQUIRED(SDL_GetDisplayMode);
+    LOAD_REQUIRED(SDL_GetDesktopDisplayMode);
+    LOAD_REQUIRED(SDL_GetCurrentDisplayMode);
+    LOAD_REQUIRED(SDL_GetClosestDisplayMode);
+    LOAD_REQUIRED(SDL_SetWindowDisplayMode);
+    LOAD_REQUIRED(SDL_GetWindowDisplayMode);
+    LOAD_REQUIRED(SDL_GetWindowPixelFormat);
     // TODO: check using SDL2 versions
+    LOAD_REQUIRED_COMPAT(SDL_GetDisplayDPI); // 2.0.4
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_SetWindowOpacity); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_GetWindowOpacity); // 2.0.5
@@ -300,6 +314,9 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometry); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_GetDefaultAudioInfo); // 2.24.0
+    LOAD_REQUIRED_COMPAT(SDL_GetPointDisplayIndex); // 2.24.0
+    LOAD_REQUIRED_COMPAT(SDL_GetRectDisplayIndex); // 2.24.0
+    LOAD_REQUIRED_COMPAT(SDL_GetWindowDisplayIndex); // 2.24.0
     if (OMG_ISNULL(this->SDL_RenderCopyF))
         this->SDL_RenderCopyF = omg_sdl2_render_copyf_emu;
     if (OMG_ISNULL(this->SDL_RenderCopyExF))

@@ -281,6 +281,14 @@ typedef enum {
 } SDL_FlashOperation;
 
 typedef enum {
+    SDL_ORIENTATION_UNKNOWN,
+    SDL_ORIENTATION_LANDSCAPE,
+    SDL_ORIENTATION_LANDSCAPE_FLIPPED,
+    SDL_ORIENTATION_PORTRAIT,
+    SDL_ORIENTATION_PORTRAIT_FLIPPED
+} SDL_DisplayOrientation;
+
+typedef enum {
     SDL_BLENDMODE_NONE = 0x00000000,
     SDL_BLENDMODE_BLEND = 0x00000001,
     SDL_BLENDMODE_ADD = 0x00000002,
@@ -1257,6 +1265,14 @@ typedef struct SDL_Surface {
     SDL_BlitMap* map;
     int refcount;
 } SDL_Surface;
+
+typedef struct {
+    uint32_t format;
+    int w;
+    int h;
+    int refresh_rate;
+    void* driverdata;
+} SDL_DisplayMode;
 #else
 #define OMG_SDL2_STD_PREFIX SDLCALL
 #endif
@@ -1453,6 +1469,23 @@ typedef struct {
     SDL_bool OMG_SDL2_STD_PREFIX (*SDL_IsScreenSaverEnabled)(void);
     void OMG_SDL2_STD_PREFIX (*SDL_EnableScreenSaver)(void);
     void OMG_SDL2_STD_PREFIX (*SDL_DisableScreenSaver)(void);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetNumVideoDisplays)(void);
+    const char* OMG_SDL2_STD_PREFIX (*SDL_GetDisplayName)(int);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetDisplayBounds)(int, SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetDisplayUsableBounds)(int, SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetDisplayDPI)(int, float*, float*, float*);
+    SDL_DisplayOrientation OMG_SDL2_STD_PREFIX (*SDL_GetDisplayOrientation)(int);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetNumDisplayModes)(int);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetDisplayMode)(int, int, SDL_DisplayMode*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetDesktopDisplayMode)(int, SDL_DisplayMode*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetCurrentDisplayMode)(int, SDL_DisplayMode*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetClosestDisplayMode)(int, SDL_DisplayMode*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetPointDisplayIndex)(const SDL_Point*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetRectDisplayIndex)(const SDL_Rect*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetWindowDisplayIndex)(SDL_Window*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetWindowDisplayMode)(SDL_Window*, const SDL_DisplayMode*);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetWindowDisplayMode)(SDL_Window*, SDL_DisplayMode*);
+    uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetWindowPixelFormat)(SDL_Window*);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;
