@@ -12,13 +12,11 @@ typedef struct {
 
 typedef struct {
     OMG_Music parent;
-    OMG_AudioFmod* audio_parent;
     void* temp_buf;
     FMOD_SOUND* mus;
     FMOD_CHANNEL* channel;
     float pitch_cache;
     float vol_cache;
-    int loops_cache;
 } OMG_MusicFmod;
 
 OMG_API bool omg_audio_fmod_init(OMG_AudioFmod* this);
