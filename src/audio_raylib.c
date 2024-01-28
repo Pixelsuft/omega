@@ -145,7 +145,6 @@ OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRa
 }
 
 OMG_SoundRaylib* omg_audio_raylib_snd_from_mem(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, const void* data, size_t size, int format) {
-    OMG_UNUSED(format);
     if (OMG_ISNULL(snd)) {
         snd = OMG_MALLOC(omg_base->mem, sizeof(OMG_SoundRaylib));
         if (OMG_ISNULL(snd))

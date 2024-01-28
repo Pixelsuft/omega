@@ -227,6 +227,7 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
         omg_audio_mus_destroy(base, mus_base);
         return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
+    mus->pitch_cache = 1.0f;
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
     unsigned int len_buf;
@@ -236,6 +237,46 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     }
     else
         mus_base->duration = (double)len_buf / 1000.0;
+    return mus;
+}
+
+OMG_MusicFmod* omg_audio_fmod_snd_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* mus, const void* data, size_t size, int format) {
+    OMG_UNUSED(format);
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicFmod));
+        if (OMG_ISNULL(mus))
+            return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    FMOD_CREATESOUNDEXINFO info;
+    omg_base->std->memset(&info, 0, sizeof(FMOD_CREATESOUNDEXINFO));
+    info.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
+    info.length = (unsigned int)size;
+    int res;
+    if (HAS_ERROR(res = this->fmod.FMOD_System_CreateSound(
+        this->sys,
+        (const char*)data,
+        FMOD_LOOP_OFF | FMOD_2D | FMOD_OPENMEMORY,
+        &info,
+        &mus->mus
+    ))) {
+        _OMG_LOG_ERROR(omg_base, "Failed to load sound from memory (", FMOD_ErrorString(res), ")");
+        omg_audio_mus_destroy(base, mus_base);
+        return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    mus->pitch_cache = 1.0f;
+    mus->vol_cache = 1.0f;
+    mus->channel = NULL;
+    unsigned int len_buf;
+    if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
+        mus_base->duration = -1.0;
+        _OMG_LOG_ERROR(omg_base, "Failed to get sound length (", FMOD_ErrorString(res), ")");
+    }
+    else
+        mus_base->duration = (double)len_buf / 1000.0;
+    _OMG_LOG_INFO(omg_base, mus_base->duration);
     return mus;
 }
 
@@ -273,8 +314,9 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
     base->mus_get_pos = omg_audio_fmod_mus_get_pos;
     base->mus_set_pos = omg_audio_fmod_mus_set_pos;
     base->mus_set_speed = omg_audio_fmod_mus_set_speed;
-    // Hacky
     base->snd_from_fp = omg_audio_fmod_snd_from_fp;
+    base->snd_from_mem = omg_audio_fmod_snd_from_mem;
+    // Hacky
     base->snd_destroy = omg_audio_fmod_mus_destroy;
     base->snd_set_volume = omg_audio_fmod_mus_set_volume;
     base->snd_play = omg_audio_fmod_mus_play;
