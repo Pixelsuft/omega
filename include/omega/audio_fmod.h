@@ -20,11 +20,11 @@ typedef struct {
 } OMG_MusicFmod;
 
 OMG_API bool omg_audio_fmod_init(OMG_AudioFmod* this);
-OMG_API bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops, double pos, double fade_in);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_audio_fmod_mus_set_volume(OMG_AudioFmod* this, OMG_MusicFmod* mus, float volume);
 OMG_API bool omg_audio_fmod_mus_destroy(OMG_AudioFmod* this, OMG_MusicFmod* mus);
 OMG_API bool omg_audio_fmod_mus_stop(OMG_AudioFmod* this, OMG_MusicFmod* mus);
+OMG_API bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops, double pos, double fade_in);
 OMG_API OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mus, const OMG_String* path, int format);
 OMG_API OMG_MusicFmod* omg_audio_fmod_mus_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* mus, const void* data, size_t size, int format);
 OMG_API OMG_MusicFmod* omg_audio_fmod_mus_from_file(OMG_AudioFmod* this, OMG_MusicFmod* mus, OMG_File* file, bool destroy_file, int format);

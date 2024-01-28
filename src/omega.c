@@ -23,7 +23,7 @@ void omg_delay(OMG_Omega* this, double seconds) {
 
 OMG_Omega* omg_alloc_omega_internal(OMG_EntryData* data, size_t size) {
     OMG_UNUSED(data, size);
-    static uint8_t buf[1024 * 4];
+    static uint8_t buf[1024 * 8];
     return (OMG_Omega*)buf;
 }
 

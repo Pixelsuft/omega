@@ -46,6 +46,13 @@ bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
     return res;
 }
 
+bool omg_audio_sdl2_update(OMG_AudioSdl2* this) {
+    if (this->supports_get_pos)
+        return false;
+    // TODO: fix old SDL2_mixer versions here
+    return false;
+}
+
 bool omg_audio_sdl2_mus_destroy(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
     if (OMG_ISNULL(mus) || OMG_ISNULL(mus->mus))
         return false;
@@ -427,6 +434,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     this->supports_get_pos = OMG_ISNOTNULL(this->mix.Mix_GetMusicPosition);
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_audio_sdl2_destroy;
+    base->update = omg_audio_sdl2_update;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
     base->mus_from_mem = omg_audio_sdl2_mus_from_mem;
     base->mus_from_file = omg_audio_sdl2_mus_from_file;
