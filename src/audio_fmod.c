@@ -9,6 +9,23 @@
 #define HAS_ERROR(res) ((res) != FMOD_OK)
 #define IS_PLAYING(data) (OMG_ISNOTNULL((data)->channel))
 
+#define _FMOD_AUDIO_TYPE(audio_type, format) do { \
+    if (format & OMG_AUDIO_FORMAT_WAV) \
+        audio_type = FMOD_SOUND_TYPE_WAV; \
+    else if (format & OMG_AUDIO_FORMAT_FLAC) \
+        audio_type = FMOD_SOUND_TYPE_FLAC; \
+    else if (format & OMG_AUDIO_FORMAT_MOD) \
+        audio_type = FMOD_SOUND_TYPE_MOD; \
+    else if (format & OMG_AUDIO_FORMAT_MP3) \
+        audio_type = FMOD_SOUND_TYPE_MPEG; \
+    else if (format & OMG_AUDIO_FORMAT_OGG) \
+        audio_type = FMOD_SOUND_TYPE_OGGVORBIS; \
+    else if (format & OMG_AUDIO_FORMAT_MID) \
+        audio_type = FMOD_SOUND_TYPE_MIDI; \
+    else if (format & OMG_AUDIO_FORMAT_OPUS) \
+        audio_type = FMOD_SOUND_TYPE_OPUS; \
+} while (0)
+
 static FMOD_RESULT OMG_FMOD_STD_PREFIX (*FMOD_Channel_GetUserData_callback)(FMOD_CHANNEL*, void**) = NULL;
 
 bool omg_audio_fmod_update(OMG_AudioFmod* this) {
@@ -223,6 +240,7 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* m
     omg_base->std->memset(&info, 0, sizeof(FMOD_CREATESOUNDEXINFO));
     info.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
     info.length = (unsigned int)size;
+    _FMOD_AUDIO_TYPE(info.suggestedsoundtype, format);
     if (format & OMG_AUDIO_FORMAT_INTERNAL)
         mus->temp_buf = (void*)data;
     else
@@ -305,6 +323,7 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* m
     omg_base->std->memset(&info, 0, sizeof(FMOD_CREATESOUNDEXINFO));
     info.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
     info.length = (unsigned int)size;
+    _FMOD_AUDIO_TYPE(info.suggestedsoundtype, format);    
     int res;
     if (HAS_ERROR(res = this->fmod.FMOD_System_CreateSound(
         this->sys,

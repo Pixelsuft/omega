@@ -318,7 +318,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    if ((!OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID && 0) || this->omg->type == OMG_OMEGA_TYPE_WIN)
+    if ((!OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID && 1) || this->omg->type == OMG_OMEGA_TYPE_WIN)
         this->omg->audio_type = OMG_AUDIO_TYPE_FMOD;
     if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
