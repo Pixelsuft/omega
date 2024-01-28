@@ -1,4 +1,4 @@
 @echo off
-set EXTRA=-lkernel32 -lgcc -lntdll -lgdi32 -luser32 -lm -lmingw32 -DOMG_SUPPORT_RAYLIB=0
-rem set EXTRA=%EXTRA% -luser32 -DOMG_SUPPORT_SDL2=0 -DOMG_SUPPORT_RAYLIB=0 -DOMG_WINAPI_DYNAMIC=0
-gcc -m32 src/*.c -Iinclude -nostdlib -municode -DOMG_DLL_BUILD -DNOSTDLIB -Wpedantic -Wall -Wextra %EXTRA% -shared -fPIC -o omega.dll -mwindows && gcc -m32 main.c -Wall -Wextra -Wpedantic -DNOSTDLIB -Iinclude -nostdlib -lomega -mwindows -municode -L. -o omgapp.exe %EXTRA%
+set EXTRA=-lkernel32 -lgcc -lntdll -lgdi32 -luser32 -lm -lmingw32 -DOMG_SUPPORT_RAYLIB=1 -nostdlib -municode -DNOSTDLIB -nostdlib
+set EXTRA=%EXTRA% -DOMG_WINAPI_DYNAMIC=0 -DOMG_WINAPI_DYNAMIC_UGLY=1 -DOMG_WINAPI_STATIC_COMPAT=1 -DOMG_SDL2_DYNAMIC=1
+gcc -m32 src/*.c -Iinclude -DOMG_DLL_BUILD -Wpedantic -Wall -Wextra %EXTRA% -shared -fPIC -o omega.dll && gcc -m32 main.c -Wall -Wextra -Wpedantic -Iinclude -lomega -L. -o omgapp.exe %EXTRA%
