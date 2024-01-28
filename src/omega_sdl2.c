@@ -534,7 +534,7 @@ bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
     bool res = false;
     if (OMG_ISNOTNULL(file->rw)) {
         if (file->rw->close(file->rw) < 0) {
-            _OMG_LOG_WARN(file_omg_base, "Failed to close SDL2 RWops for file ", file_base->fp.ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+            _OMG_LOG_WARN(file_omg_base, "Failed to close SDL2 RWops for file ", &file_base->fp, " (", file_omg->sdl2->SDL_GetError(), ")");
             res = true;
         }
         file->rw = NULL;
@@ -546,28 +546,28 @@ bool omg_sdl2_file_destroy(OMG_FileSdl2* file) {
 int64_t omg_sdl2_file_get_size(OMG_FileSdl2* file) {
     int64_t res = file->rw->size(file->rw);
     if (res < -1)
-        _OMG_LOG_WARN(file_omg_base, "Failed to get size for file ", file_base->fp.ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_WARN(file_omg_base, "Failed to get size for file ", &file_base->fp, " (", file_omg->sdl2->SDL_GetError(), ")");
     return res;
 }
 
 int64_t omg_sdl2_file_seek(OMG_FileSdl2* file, int64_t offset, int whence) {
     int64_t res = file->rw->seek(file->rw, offset, whence);
     if (res < 0)
-        _OMG_LOG_WARN(file_omg_base, "Failed to seek file ", file_base->fp.ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_WARN(file_omg_base, "Failed to seek file ", &file_base->fp, " (", file_omg->sdl2->SDL_GetError(), ")");
     return res;
 }
 
 size_t omg_sdl2_file_read(OMG_FileSdl2* file, void* buf, size_t size, size_t maxnum) {
     size_t res = file->rw->read(file->rw, buf, size, maxnum);
     if (res == 0)
-        _OMG_LOG_WARN(file_omg_base, "Failed to read (or EOF) file ", file_base->fp.ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_WARN(file_omg_base, "Failed to read (or EOF) file ", &file_base->fp, " (", file_omg->sdl2->SDL_GetError(), ")");
     return res;
 }
 
 size_t omg_sdl2_file_write(OMG_FileSdl2* file, const void* buf, size_t size, size_t num) {
     size_t res = file->rw->write(file->rw, buf, size, num);
     if (res < (num * size))
-        _OMG_LOG_WARN(file_omg_base, "Failed to write file ", file_base->fp.ptr, " (", file_omg->sdl2->SDL_GetError(), ")");
+        _OMG_LOG_WARN(file_omg_base, "Failed to write file ", &file_base->fp, " (", file_omg->sdl2->SDL_GetError(), ")");
     return res;
 }
 

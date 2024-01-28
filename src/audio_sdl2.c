@@ -84,7 +84,6 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
 }
 
 OMG_MusicSdl2* omg_audio_sdl2_mus_from_mem(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, const void* data, size_t size, int format) {
-    OMG_UNUSED(format);
     if (OMG_ISNULL(this->sdl2))
         return NULL;
     if (OMG_ISNULL(mus)) {
@@ -103,6 +102,70 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_mem(OMG_AudioSdl2* this, OMG_MusicSdl2* m
         return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     mus->mus = this->mix.Mix_LoadMUSType_RW(rw, mus_type, 1);
+    if (OMG_ISNULL(mus->mus)) {
+        omg_audio_mus_destroy(base, mus_base);
+        _OMG_LOG_ERROR(omg_base, "Failed to open music from mem (", MIX_GETERROR(), ")");
+        return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    if (OMG_ISNULL(this->mix.Mix_MusicDuration))
+        mus_base->duration = -1.0;
+    else
+        mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
+    mus->vol_cache = MIX_MAX_VOLUME;
+    mus->time_cache1 = 0;
+    mus->time_cache2 = 0;
+    return mus;
+}
+
+int omg_sdl_rw_emu_close(SDL_RWops* rw) {
+    OMG_File* file = (OMG_File*)((size_t)rw->write);
+    return (int)file->destroy(file);
+}
+
+int64_t omg_sdl_rw_emu_size(SDL_RWops* rw) {
+    OMG_File* file = (OMG_File*)((size_t)rw->write);
+    return file->get_size(file);
+}
+
+int64_t omg_sdl_rw_emu_seek(SDL_RWops* rw, int64_t offset, int whence) {
+    OMG_File* file = (OMG_File*)((size_t)rw->write);
+    return file->seek(file, offset, whence);
+}
+
+size_t omg_sdl_rw_emu_read(SDL_RWops* rw, void* buf, size_t size, size_t maxnum) {
+    OMG_File* file = (OMG_File*)((size_t)rw->write);
+    if (file->tell(file) == file->get_size(file))
+        return 0;
+    return file->read(file, buf, size, maxnum);
+}
+
+OMG_MusicSdl2* omg_audio_sdl2_mus_from_file(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, OMG_File* file, bool destroy_file, int format) {
+    if (OMG_ISNULL(this->sdl2))
+        return NULL;
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicSdl2) + sizeof(SDL_RWops));
+        if (OMG_ISNULL(mus))
+            return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    Mix_MusicType mus_type;
+    _MUS_TYPE_FORMAT(mus_type, format);
+    OMG_BEGIN_POINTER_CAST();
+    SDL_RWops* rw = (SDL_RWops*)((size_t)mus + sizeof(OMG_MusicSdl2));
+    rw->write = file;
+    rw->type = SDL_RWOPS_MEMORY_RO;
+    rw->close = omg_sdl_rw_emu_close;
+    rw->size = omg_sdl_rw_emu_size;
+    rw->seek = omg_sdl_rw_emu_seek;
+    rw->read = omg_sdl_rw_emu_read;
+    OMG_END_POINTER_CAST();
+    if (OMG_ISNULL(rw)) {
+        _OMG_LOG_ERROR(omg_base, "Failed create RWops for SDL2_mixer music (", MIX_GETERROR(), ")");
+        return (OMG_MusicSdl2*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    mus->mus = this->mix.Mix_LoadMUSType_RW(rw, mus_type, destroy_file ? 1 : 0);
     if (OMG_ISNULL(mus->mus)) {
         omg_audio_mus_destroy(base, mus_base);
         _OMG_LOG_ERROR(omg_base, "Failed to open music from mem (", MIX_GETERROR(), ")");
@@ -366,6 +429,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->destroy = omg_audio_sdl2_destroy;
     base->mus_from_fp = omg_audio_sdl2_mus_from_fp;
     base->mus_from_mem = omg_audio_sdl2_mus_from_mem;
+    base->mus_from_file = omg_audio_sdl2_mus_from_file;
     base->mus_destroy = omg_audio_sdl2_mus_destroy;
     base->mus_play = omg_audio_sdl2_mus_play;
     base->mus_set_volume = omg_audio_sdl2_mus_set_volume;
