@@ -256,7 +256,7 @@ bool omg_audio_sdl2_mus_set_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, double 
         pos = 0.0;
     if (!MUS_IS_PLAYING())
         return false;
-    if (this->mix.Mix_SetMusicPosition(pos) < 0) {
+    if (this->mix.Mix_SetMusicPosition((OMG_IS_EMSCRIPTEN && !this->supports_get_pos) ? (pos/* / 2.0*/) : pos) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set music position (not implemented)");
         return true;
     }
