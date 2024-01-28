@@ -282,10 +282,10 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_file(OMG_AudioFmod* this, OMG_MusicFmod* 
     omg_base->std->memset(&info, 0, sizeof(FMOD_CREATESOUNDEXINFO));
     info.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
     info.fileuserdata = this;
-    info.fileuseropen = omg_audio_fmod_open_callback;
-    info.fileuserclose = omg_audio_fmod_close_callback;
-    info.fileuserread = omg_audio_fmod_read_callback;
-    info.fileuserseek = omg_audio_fmod_seek_callback;
+    info.fileuseropen = (FMOD_FILE_OPEN_CALLBACK)omg_audio_fmod_open_callback;
+    info.fileuserclose = (FMOD_FILE_CLOSE_CALLBACK)omg_audio_fmod_close_callback;
+    info.fileuserread = (FMOD_FILE_READ_CALLBACK)omg_audio_fmod_read_callback;
+    info.fileuserseek = (FMOD_FILE_SEEK_CALLBACK)omg_audio_fmod_seek_callback;
     _FMOD_AUDIO_TYPE(info.suggestedsoundtype, format);
     mus->temp_buf = NULL;
     int res;
@@ -433,7 +433,6 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* m
     }
     else
         mus_base->duration = (double)len_buf / 1000.0;
-    _OMG_LOG_INFO(omg_base, mus_base->duration);
     return mus;
 }
 
