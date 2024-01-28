@@ -226,8 +226,95 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     return mus;
 }
 
+FMOD_RESULT omg_audio_fmod_open_callback(const char* name, unsigned int* file_size, void** handle, void* userdata) {
+    OMG_UNUSED(userdata);
+    *handle = name;
+    OMG_File* file = (OMG_File*)name;
+    int64_t file_size_tmp = file->get_size(file);
+    if (file_size_tmp <= 0)
+        return FMOD_ERR_FILE_BAD;
+    *file_size = (unsigned int)file_size_tmp;
+    return FMOD_OK;
+}
+
+FMOD_RESULT omg_audio_fmod_close_callback(void* handle, void* userdata) {
+    OMG_UNUSED(userdata);
+    ((OMG_File*)handle)->destroy((OMG_File*)handle);
+    return FMOD_OK;
+}
+
+FMOD_RESULT omg_audio_fmod_seek_callback(void* handle, unsigned int pos, void* userdata) {
+    OMG_UNUSED(userdata);
+    OMG_File* file = (OMG_File*)handle;
+    if (file->seek(file, (int64_t)pos, OMG_FILE_SEEK_SET) < 0)
+        return FMOD_ERR_FILE_COULDNOTSEEK;
+    return FMOD_OK;
+}
+
+FMOD_RESULT omg_audio_fmod_read_callback(void* handle, void* buffer, unsigned int sizebytes, unsigned int* bytesread, void* userdata) {
+    OMG_UNUSED(userdata);
+    OMG_File* file = (OMG_File*)handle;
+    if (file->get_size(file) == file->tell(file)) {
+        *bytesread = 0;
+        return FMOD_ERR_FILE_EOF;
+    }
+    size_t res = file->read(file, buffer, 1, (size_t)sizebytes);
+    if (res == 0) {
+        *bytesread = 0;
+        return FMOD_ERR_FILE_BAD;
+    }
+    *bytesread = (unsigned int)res;
+    return FMOD_OK;
+}
+
+OMG_MusicFmod* omg_audio_fmod_mus_from_file(OMG_AudioFmod* this, OMG_MusicFmod* mus, OMG_File* file, bool destroy_file, int format) {
+    // TODO: auto close file
+    OMG_UNUSED(destroy_file);
+    if (OMG_ISNULL(mus)) {
+        mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicFmod));
+        if (OMG_ISNULL(mus))
+            return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
+        mus_base->was_allocated = true;
+    }
+    else
+        mus_base->was_allocated = false;
+    FMOD_CREATESOUNDEXINFO info;
+    omg_base->std->memset(&info, 0, sizeof(FMOD_CREATESOUNDEXINFO));
+    info.cbsize = sizeof(FMOD_CREATESOUNDEXINFO);
+    info.fileuserdata = this;
+    info.fileuseropen = omg_audio_fmod_open_callback;
+    info.fileuserclose = omg_audio_fmod_close_callback;
+    info.fileuserread = omg_audio_fmod_read_callback;
+    info.fileuserseek = omg_audio_fmod_seek_callback;
+    _FMOD_AUDIO_TYPE(info.suggestedsoundtype, format);
+    mus->temp_buf = NULL;
+    int res;
+    if (HAS_ERROR(res = this->fmod.FMOD_System_CreateStream(
+        this->sys,
+        (const char*)file,
+        FMOD_LOOP_NORMAL | FMOD_2D,
+        &info,
+        &mus->mus
+    ))) {
+        _OMG_LOG_ERROR(omg_base, "Failed to load music from file handle (", FMOD_ErrorString(res), ")");
+        omg_audio_mus_destroy(base, mus_base);
+        return (OMG_MusicFmod*)omg_audio_dummy_mus_alloc(base, mus_base);
+    }
+    mus->pitch_cache = 1.0f;
+    mus->vol_cache = 1.0f;
+    mus->channel = NULL;
+    unsigned int len_buf;
+    if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
+        mus_base->duration = -1.0;
+        _OMG_LOG_ERROR(omg_base, "Failed to get music length (", FMOD_ErrorString(res), ")");
+    }
+    else
+        mus_base->duration = (double)len_buf / 1000.0;
+    _OMG_LOG_INFO(omg_base, mus_base->duration);
+    return mus;
+}
+
 OMG_MusicFmod* omg_audio_fmod_mus_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* mus, const void* data, size_t size, int format) {
-    OMG_UNUSED(format);
     if (OMG_ISNULL(mus)) {
         mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicFmod));
         if (OMG_ISNULL(mus))
@@ -310,7 +397,6 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
 }
 
 OMG_MusicFmod* omg_audio_fmod_snd_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* mus, const void* data, size_t size, int format) {
-    OMG_UNUSED(format);
     if (OMG_ISNULL(mus)) {
         mus = OMG_MALLOC(omg_base->mem, sizeof(OMG_MusicFmod));
         if (OMG_ISNULL(mus))
@@ -379,6 +465,7 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
     base->destroy = omg_audio_fmod_destroy;
     base->mus_from_fp = omg_audio_fmod_mus_from_fp;
     base->mus_from_mem = omg_audio_fmod_mus_from_mem;
+    base->mus_from_file = omg_audio_fmod_mus_from_file;
     base->mus_destroy = omg_audio_fmod_mus_destroy;
     base->mus_set_volume = omg_audio_fmod_mus_set_volume;
     base->mus_play = omg_audio_fmod_mus_play;
