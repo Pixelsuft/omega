@@ -1429,6 +1429,7 @@ typedef struct {
     SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_GetDefaultCursor)(void);
     void OMG_SDL2_STD_PREFIX (*SDL_FreeCursor)(SDL_Cursor*);
     int OMG_SDL2_STD_PREFIX (*SDL_ShowCursor)(int);
+    void OMG_SDL2_STD_PREFIX (*SDL_SetWindowGrab)(SDL_Window*, SDL_bool);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;
