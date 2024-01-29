@@ -241,6 +241,12 @@ typedef union {
         int x2;
         int y2;
     };
+    struct {
+        int px;
+        int py;
+        int pz;
+        int pw;
+    };
     int val[4];
 } OMG_Rect;
 
@@ -257,6 +263,12 @@ typedef union {
         float x2;
         float y2;
     };
+    struct {
+        float px;
+        float py;
+        float pz;
+        float pw;
+    };
     float val[4];
 } OMG_FRect;
 
@@ -272,6 +284,12 @@ typedef union {
         double y1;
         double x2;
         double y2;
+    };
+    struct {
+        double px;
+        double py;
+        double pz;
+        double pw;
     };
     double val[4];
 } OMG_DRect;
