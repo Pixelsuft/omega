@@ -126,6 +126,11 @@ bool omg_window_mouse_warp(OMG_Window* this, const OMG_FPoint* pos) {
     return true;
 }
 
+bool omg_window_mouse_set_rel(OMG_Window* this, int rel_mode) {
+    OMG_UNUSED(this, rel_mode);
+    return false;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -155,6 +160,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_window_mode = omg_window_set_window_mode;
     this->set_icon = omg_window_set_icon;
     this->mouse_warp = omg_window_mouse_warp;
+    this->mouse_set_rel = omg_window_mouse_set_rel;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;

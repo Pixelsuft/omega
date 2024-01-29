@@ -1442,6 +1442,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_GetDefaultAudioInfo)(char**, SDL_AudioSpec*, int);
     void OMG_SDL2_STD_PREFIX (*SDL_WarpMouseInWindow)(SDL_Window*, int, int);
     int OMG_SDL2_STD_PREFIX (*SDL_SetRelativeMouseMode)(SDL_bool);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetRelativeMouseMode)(void);
     int OMG_SDL2_STD_PREFIX (*SDL_CaptureMouse)(SDL_bool);
     SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_CreateCursor)(const uint8_t*, const uint8_t*, int, int, int, int);
     SDL_Cursor* OMG_SDL2_STD_PREFIX (*SDL_CreateColorCursor)(SDL_Surface*, int, int);

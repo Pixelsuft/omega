@@ -154,7 +154,6 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->set_resizable = omg_window_raylib_set_resizable;
     base->set_bordered = omg_window_raylib_set_bordered;
     base->set_always_on_top = omg_window_raylib_set_always_on_top;
-    base->set_bordered = omg_window_raylib_set_bordered;
     base->set_window_mode = omg_window_raylib_set_window_mode;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(

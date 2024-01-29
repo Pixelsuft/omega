@@ -134,9 +134,10 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
                 this->win,
                 (this->win->window_mode != OMG_WIN_MODE_WINDOW) ? OMG_WIN_MODE_WINDOW : OMG_WIN_MODE_DESKTOP_FULLSCREEN
             );
-        else if (event->code == OMG_SCANCODE_Y) {
+        else if (event->code == OMG_SCANCODE_Y)
             this->win->mouse_warp(this->win, &OMG_FPOINT_MAKE(100.0f, 100.0f));
-        }
+        else if (event->code == OMG_SCANCODE_U)
+            this->win->mouse_set_rel(this->win, 2); // 0 - Off, 1 - On, 2 - Toggle, Other - Query
     }
     if (event->code == OMG_SCANCODE_F) {
         if (event->is_pressed)
@@ -281,11 +282,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
-#if OMG_SUPPORT_SDL2
-    this->omg = (OMG_Omega*)omg_sdl2_create(data);
-#endif
 #if OMG_SUPPORT_RAYLIB
     this->omg = (OMG_Omega*)omg_raylib_create(data);
+#endif
+#if OMG_SUPPORT_SDL2
+    this->omg = (OMG_Omega*)omg_sdl2_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;

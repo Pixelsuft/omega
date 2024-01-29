@@ -249,6 +249,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_WriteU8);
     LOAD_REQUIRED(SDL_WarpMouseInWindow);
     LOAD_REQUIRED(SDL_SetRelativeMouseMode);
+    LOAD_REQUIRED(SDL_GetRelativeMouseMode);
     LOAD_REQUIRED(SDL_CaptureMouse);
     LOAD_REQUIRED(SDL_CreateCursor);
     LOAD_REQUIRED(SDL_CreateColorCursor);
