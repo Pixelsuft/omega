@@ -31,5 +31,6 @@ OMG_API bool omg_window_sdl2_set_title(OMG_WindowSdl2* this, const OMG_String* n
 OMG_API bool omg_window_sdl2_renderer_alloc(OMG_WindowSdl2* this);
 OMG_API bool omg_window_sdl2_set_icon(OMG_WindowSdl2* this, OMG_SurfaceSdl2* icon);;
 OMG_API bool omg_window_sdl2_mouse_warp(OMG_WindowSdl2* this, const OMG_FPoint* pos);
+OMG_API bool omg_window_sdl2_mouse_set_rel(OMG_WindowSdl2* this, int rel_mode);
 #endif
 #endif

@@ -147,6 +147,24 @@ bool omg_window_sdl2_mouse_warp(OMG_WindowSdl2* this, const OMG_FPoint* pos) {
     return false;
 }
 
+bool omg_window_sdl2_mouse_set_rel(OMG_WindowSdl2* this, int rel_mode) {
+    int res;
+    if (rel_mode == 0)
+        res = this->sdl2->SDL_SetRelativeMouseMode(SDL_FALSE);
+    else if (rel_mode == 1)
+        res = this->sdl2->SDL_SetRelativeMouseMode(SDL_TRUE);
+    else if (rel_mode == 2)
+        res = this->sdl2->SDL_SetRelativeMouseMode(this->sdl2->SDL_GetRelativeMouseMode() ? SDL_FALSE : SDL_TRUE);
+    else {
+        return this->sdl2->SDL_GetRelativeMouseMode() ? true : false;
+    }
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set relative mouse mode for window (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -191,6 +209,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_icon = omg_window_sdl2_set_icon;
     base->set_title = omg_window_sdl2_set_title;
     base->mouse_warp = omg_window_sdl2_mouse_warp;
+    base->mouse_set_rel = omg_window_sdl2_mouse_set_rel;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;
