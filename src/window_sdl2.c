@@ -142,6 +142,11 @@ bool omg_window_sdl2_set_icon(OMG_WindowSdl2* this, OMG_SurfaceSdl2* icon) {
     return false;
 }
 
+bool omg_window_sdl2_mouse_warp(OMG_WindowSdl2* this, const OMG_FPoint* pos) {
+    this->sdl2->SDL_WarpMouseInWindow(this->win, (int)pos->x, (int)pos->y);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -185,6 +190,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->show = omg_window_sdl2_show;
     base->set_icon = omg_window_sdl2_set_icon;
     base->set_title = omg_window_sdl2_set_title;
+    base->mouse_warp = omg_window_sdl2_mouse_warp;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

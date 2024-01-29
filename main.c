@@ -134,6 +134,9 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
                 this->win,
                 (this->win->window_mode != OMG_WIN_MODE_WINDOW) ? OMG_WIN_MODE_WINDOW : OMG_WIN_MODE_DESKTOP_FULLSCREEN
             );
+        else if (event->code == OMG_SCANCODE_Y) {
+            this->win->mouse_warp(this->win, &OMG_FPOINT_MAKE(100.0f, 100.0f));
+        }
     }
     if (event->code == OMG_SCANCODE_F) {
         if (event->is_pressed)
