@@ -165,6 +165,19 @@ bool omg_window_sdl2_mouse_set_rel(OMG_WindowSdl2* this, int rel_mode) {
     return false;
 }
 
+bool omg_window_sdl2_set_grab(OMG_WindowSdl2* this, int grab_mode) {
+    if (grab_mode == 0)
+        this->sdl2->SDL_SetWindowGrab(this->win, SDL_FALSE);
+    else if (grab_mode == 1)
+        this->sdl2->SDL_SetWindowGrab(this->win, SDL_TRUE);
+    else if (grab_mode == 2)
+        this->sdl2->SDL_SetWindowGrab(this->win, this->sdl2->SDL_GetWindowGrab(this->win) ? SDL_FALSE : SDL_TRUE);
+    else {
+        return this->sdl2->SDL_GetWindowGrab(this->win) ? true : false;
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -210,6 +223,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_title = omg_window_sdl2_set_title;
     base->mouse_warp = omg_window_sdl2_mouse_warp;
     base->mouse_set_rel = omg_window_sdl2_mouse_set_rel;
+    base->set_grab = omg_window_sdl2_set_grab;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

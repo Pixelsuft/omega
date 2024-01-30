@@ -139,7 +139,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else if (event->code == OMG_SCANCODE_U)
             this->win->mouse_set_rel(this->win, 2); // 0 - Off, 1 - On, 2 - Toggle, Other - Query
         else if (event->code == OMG_SCANCODE_I)
-            this->win->mouse_set_grab(this->win, 2);
+            this->win->set_grab(this->win, 2);
     }
     if (event->code == OMG_SCANCODE_F) {
         if (event->is_pressed)
