@@ -7,7 +7,7 @@
 #include <omega/winmgr.h>
 #include <omega/window.h>
 #include <omega/events.h>
-#include <omega/keyboard.h>
+#include <omega/input.h>
 #include <omega/filesystem.h>
 #include <omega/audio.h>
 
