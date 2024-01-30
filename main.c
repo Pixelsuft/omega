@@ -369,6 +369,12 @@ void app_init(App* this, OMG_EntryData* data) {
     this->sound = this->audio->snd_from_file(this->audio, NULL, this->omg->file_from_fp(
         this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sound.ogg"), OMG_FILE_MODE_RB
     ), true, OMG_AUDIO_FORMAT_OGG);
+    int num_displays = this->omg->winmgr->display_get_count(this->omg->winmgr);
+    for (int i = 0; i < num_displays; i++) {
+        _OMG_LOG_INFO(
+            this->omg, "Display ", i + 1, ": ", this->omg->winmgr->display_get_name(this->omg->winmgr, i)
+        );
+    }
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
     OMG_INFO(this->omg, "File size: ", (int)file_size);

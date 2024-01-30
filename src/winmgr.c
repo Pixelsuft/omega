@@ -180,6 +180,22 @@ bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this) {
     return false;
 }
 
+int omg_winmgr_display_get_count(OMG_Winmgr* this) {
+    OMG_UNUSED(this);
+    return -1;
+}
+
+const OMG_String* omg_winmgr_display_get_name(OMG_Winmgr* this, int display_id) {
+    OMG_UNUSED(this, display_id);
+    return &OMG_STRING_MAKE_STATIC("");
+}
+
+bool omg_winmgr_display_get_bounds(OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable) {
+    OMG_UNUSED(this, display_id, only_usable);
+    rect->x = rect->y = rect->w = rect->h = 0.0f;
+    return true;
+}
+
 bool omg_winmgr_init(OMG_Winmgr* this) {
     this->cache = OMG_MALLOC(omg_base->mem, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
     if (OMG_ISNULL(this->cache))
@@ -213,6 +229,8 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->fontmgr_alloc = omg_winmgr_fontmgr_alloc;
     this->fontmgr_free = omg_winmgr_fontmgr_free;
     this->surf_set_locked = omg_winmgr_surf_set_locked;
+    this->display_get_count = omg_winmgr_display_get_count;
+    this->display_get_name = omg_winmgr_display_get_name;
     this->inited = true;
     return false;
 }
