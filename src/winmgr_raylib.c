@@ -143,6 +143,30 @@ OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_mem(OMG_WinmgrRaylib* this, OMG_S
     return surf;
 }
 
+int omg_winmgr_raylib_display_get_count(OMG_WinmgrRaylib* this) {
+    return this->raylib->GetMonitorCount();
+}
+
+const OMG_String* omg_winmgr_raylib_display_get_name(OMG_WinmgrRaylib* this, int display_id) {
+    return &OMG_STRING_MAKE_STATIC(this->raylib->GetMonitorName(display_id));
+}
+
+bool omg_winmgr_raylib_display_get_bounds(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* rect, bool only_usable) {
+    OMG_UNUSED(only_usable);
+    Vector2 m_pos = this->raylib->GetMonitorPosition(display_id);
+    rect->x = m_pos.x;
+    rect->y = m_pos.y;
+    rect->w = (float)this->raylib->GetMonitorWidth(display_id);
+    rect->h = (float)this->raylib->GetMonitorHeight(display_id);
+    return false;
+}
+
+bool omg_winmgr_raylib_display_get_scale(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* dpi) {
+    OMG_UNUSED(this, display_id);
+    dpi->px = dpi->py = dpi->pz = 1.0f;
+    return false;
+}
+
 bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -150,6 +174,10 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->sz_image_loader = sizeof(OMG_ImageLoaderRaylib);
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_winmgr_raylib_destroy;
+    base->display_get_count = omg_winmgr_raylib_display_get_count;
+    base->display_get_name = omg_winmgr_raylib_display_get_name;
+    base->display_get_bounds = omg_winmgr_raylib_display_get_bounds;
+    base->display_get_scale = omg_winmgr_raylib_display_get_scale;
     base->window_alloc = omg_winmgr_raylib_window_alloc;
     base->window_free = omg_winmgr_raylib_window_free;
     base->surf_create = omg_winmgr_raylib_surf_create;

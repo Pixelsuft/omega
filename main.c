@@ -290,11 +290,11 @@ void app_init(App* this, OMG_EntryData* data) {
 #if OMG_SUPPORT_WIN
     this->omg = (OMG_Omega*)omg_win_create(data);
 #endif
-#if OMG_SUPPORT_RAYLIB
-    this->omg = (OMG_Omega*)omg_raylib_create(data);
-#endif
 #if OMG_SUPPORT_SDL2
     this->omg = (OMG_Omega*)omg_sdl2_create(data);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    this->omg = (OMG_Omega*)omg_raylib_create(data);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -377,6 +377,7 @@ void app_init(App* this, OMG_EntryData* data) {
         _OMG_LOG_INFO(
             this->omg, "Display ", i + 1, ": ", &mon_name, ", Bounds ", &bounds
         );
+        omg_string_destroy(&mon_name);
     }
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
