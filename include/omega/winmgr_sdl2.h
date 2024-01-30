@@ -5,6 +5,7 @@
 typedef struct {
     OMG_Winmgr parent;
     OMG_Sdl2* sdl2;
+    SDL_Cursor* cursor_cache;
 } OMG_WinmgrSdl2;
 
 OMG_API bool omg_winmgr_sdl2_destroy(OMG_WinmgrSdl2* this);

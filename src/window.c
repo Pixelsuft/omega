@@ -141,6 +141,11 @@ bool omg_window_mouse_set_shown(OMG_Window* this, int show_mode) {
     return (show_mode == 1) || (show_mode == 2);
 }
 
+bool omg_window_mouse_set_system_cursor(OMG_Window* this, int cursor_id) {
+    OMG_UNUSED(this, cursor_id);
+    return true;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -172,6 +177,7 @@ bool omg_window_init(OMG_Window* this) {
     this->mouse_warp = omg_window_mouse_warp;
     this->mouse_set_rel = omg_window_mouse_set_rel;
     this->mouse_set_shown = omg_window_mouse_set_shown;
+    this->mouse_set_system_cursor = omg_window_mouse_set_system_cursor;
     this->set_grab = omg_window_set_grab;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {

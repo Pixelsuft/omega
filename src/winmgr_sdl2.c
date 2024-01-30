@@ -76,6 +76,10 @@ bool omg_winmgr_sdl2_window_free(OMG_WinmgrSdl2* this, OMG_WindowSdl2* window) {
 }
 
 bool omg_winmgr_sdl2_destroy(OMG_WinmgrSdl2* this) {
+    if (OMG_ISNOTNULL(this->cursor_cache)) {
+        this->sdl2->SDL_FreeCursor(this->cursor_cache);
+        this->cursor_cache = NULL;
+    }
     omg_winmgr_destroy((OMG_Winmgr*)this);
     return false;
 }
@@ -191,6 +195,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
     base->fnt_type = OMG_FONT_MGR_SDL2;
+    this->cursor_cache = NULL;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_winmgr_sdl2_destroy;
     base->window_alloc = omg_winmgr_sdl2_window_alloc;
