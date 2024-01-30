@@ -193,6 +193,20 @@ typedef enum {
     KEY_VOLUME_DOWN     = 25        
 } KeyboardKey;
 
+typedef enum {
+    MOUSE_CURSOR_DEFAULT       = 0,
+    MOUSE_CURSOR_ARROW         = 1,
+    MOUSE_CURSOR_IBEAM         = 2,
+    MOUSE_CURSOR_CROSSHAIR     = 3,
+    MOUSE_CURSOR_POINTING_HAND = 4,
+    MOUSE_CURSOR_RESIZE_EW     = 5,
+    MOUSE_CURSOR_RESIZE_NS     = 6,
+    MOUSE_CURSOR_RESIZE_NWSE   = 7,
+    MOUSE_CURSOR_RESIZE_NESW   = 8,
+    MOUSE_CURSOR_RESIZE_ALL    = 9,
+    MOUSE_CURSOR_NOT_ALLOWED   = 10
+} MouseCursor;
+
 typedef struct Image {
     void* data;
     int width;
@@ -543,6 +557,7 @@ typedef struct {
     void OMG_RAYLIB_PREFIX (*EnableCursor)(void);
     void OMG_RAYLIB_PREFIX (*DisableCursor)(void);
     bool OMG_RAYLIB_PREFIX (*IsCursorOnScreen)(void);
+    void OMG_RAYLIB_PREFIX (*SetMouseCursor)(int);
     void OMG_RAYLIB_PREFIX (*SetWindowPosition)(int, int);
     void OMG_RAYLIB_PREFIX (*SetWindowOpacity)(float);
     void* OMG_RAYLIB_PREFIX (*GetWindowHandle)(void);

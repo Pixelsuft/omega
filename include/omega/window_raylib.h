@@ -28,5 +28,6 @@ OMG_API bool omg_window_raylib_set_icon(OMG_WindowRaylib* this, OMG_SurfaceRayli
 OMG_API bool omg_window_raylib_mouse_set_shown(OMG_WindowRaylib* this, int show_mode);
 OMG_API bool omg_window_raylib_mouse_warp(OMG_WindowRaylib* this, const OMG_FPoint* pos);
 OMG_API bool omg_window_raylib_mouse_set_rel(OMG_WindowRaylib* this, int rel_mode);
+OMG_API bool omg_window_raylib_mouse_set_system_cursor(OMG_WindowRaylib* this, int cursor_id);
 #endif
 #endif

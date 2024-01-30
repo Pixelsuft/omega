@@ -167,6 +167,34 @@ bool omg_window_raylib_mouse_set_shown(OMG_WindowRaylib* this, int show_mode) {
     return false;
 }
 
+bool omg_window_raylib_mouse_set_system_cursor(OMG_WindowRaylib* this, int cursor_id) {
+    MouseCursor cur;
+    if (cursor_id == OMG_SYSTEM_CURSOR_ARROW)
+        cur = MOUSE_CURSOR_ARROW;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_IBEAM)
+        cur = MOUSE_CURSOR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEWE)
+        cur = MOUSE_CURSOR_RESIZE_EW;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENS)
+        cur = MOUSE_CURSOR_RESIZE_NS;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENWSE)
+        cur = MOUSE_CURSOR_RESIZE_NWSE;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENESW)
+        cur = MOUSE_CURSOR_RESIZE_NESW;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEALL)
+        cur = MOUSE_CURSOR_RESIZE_ALL;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_CROSSHAIR)
+        cur = MOUSE_CURSOR_CROSSHAIR;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_HAND)
+        cur = MOUSE_CURSOR_POINTING_HAND;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_NO)
+        cur = MOUSE_CURSOR_NOT_ALLOWED;
+    else
+        cur = MOUSE_CURSOR_DEFAULT;
+    this->raylib->SetMouseCursor(cur);
+    return false;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
@@ -187,6 +215,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->mouse_warp = omg_window_raylib_mouse_warp;
     base->mouse_set_rel = omg_window_raylib_mouse_set_rel;
     base->mouse_set_shown = omg_window_raylib_mouse_set_shown;
+    base->mouse_set_system_cursor = omg_window_raylib_mouse_set_system_cursor;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(
         FLAG_WINDOW_HIDDEN |

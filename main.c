@@ -143,38 +143,40 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else if (event->code == OMG_SCANCODE_O)
             this->win->mouse_set_shown(this->win, 2);
     }
-    if (event->code == OMG_SCANCODE_F) {
-        if (event->is_pressed)
-            this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
-        else
-            this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(255, 255, 255, 255));
-    }
-    else if (event->code == OMG_SCANCODE_G) {
-        this->fps_font->aa = !event->is_pressed;
-        this->ren->tex_set_scale_mode(this->ren, this->tex2, event->is_pressed ? OMG_SCALE_MODE_LINEAR : OMG_SCALE_MODE_NEAREST);
-    }
-    else if (event->code == OMG_SCANCODE_H) {
-        if (event->is_pressed) {
-            this->ren->auto_blend = false;
-            this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_MUL);
+    if (!event->is_repeated) {
+        if (event->code == OMG_SCANCODE_F) {
+            if (event->is_pressed)
+                this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
+            else
+                this->ren->tex_set_color_mod(this->ren, this->tex2, &OMG_COLOR_MAKE_RGBA(255, 255, 255, 255));
         }
-        else {
-            this->ren->auto_blend = true;
-            this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_BLEND);
+        else if (event->code == OMG_SCANCODE_G) {
+            this->fps_font->aa = !event->is_pressed;
+            this->ren->tex_set_scale_mode(this->ren, this->tex2, event->is_pressed ? OMG_SCALE_MODE_LINEAR : OMG_SCALE_MODE_NEAREST);
         }
+        else if (event->code == OMG_SCANCODE_H) {
+            if (event->is_pressed) {
+                this->ren->auto_blend = false;
+                this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_MUL);
+            }
+            else {
+                this->ren->auto_blend = true;
+                this->ren->set_blend_mode(this->ren, OMG_BLEND_MODE_BLEND);
+            }
+        }
+        else if (event->code == OMG_SCANCODE_J) {
+            this->clock->speed = event->is_pressed ? 2.0 : 1.0;
+            this->audio->mus_set_speed(this->audio, this->mus, (float)this->clock->speed);
+        }
+        else if (event->code == OMG_SCANCODE_K) {
+            this->clock->speed = event->is_pressed ? 0.5 : 1.0;
+            this->audio->mus_set_speed(this->audio, this->mus, (float)this->clock->speed);
+        }
+        else if (event->code == OMG_SCANCODE_C)
+            this->sin_mul = event->is_pressed ? 8.0 : 0.4;
+        else if (event->code == OMG_SCANCODE_P)
+            this->win->mouse_set_system_cursor(this->win, event->is_pressed ? OMG_SYSTEM_CURSOR_CROSSHAIR : OMG_SYSTEM_CURSOR_ARROW);
     }
-    else if (event->code == OMG_SCANCODE_J) {
-        this->clock->speed = event->is_pressed ? 2.0 : 1.0;
-        this->audio->mus_set_speed(this->audio, this->mus, (float)this->clock->speed);
-    }
-    else if (event->code == OMG_SCANCODE_K) {
-        this->clock->speed = event->is_pressed ? 0.5 : 1.0;
-        this->audio->mus_set_speed(this->audio, this->mus, (float)this->clock->speed);
-    }
-    else if (event->code == OMG_SCANCODE_C)
-        this->sin_mul = event->is_pressed ? 8.0 : 0.4;
-    else if (event->code == OMG_SCANCODE_P)
-        this->win->mouse_set_system_cursor(this->win, event->is_pressed ? OMG_SYSTEM_CURSOR_WAIT : OMG_SYSTEM_CURSOR_ARROW);
     if (!event->is_repeated)
         OMG_INFO(
             this->omg,

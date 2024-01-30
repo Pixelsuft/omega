@@ -221,6 +221,7 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(EnableCursor);
     LOAD_REQUIRED(DisableCursor);
     LOAD_REQUIRED(IsCursorOnScreen);
+    LOAD_REQUIRED(SetMouseCursor);
     LOAD_REQUIRED(SetWindowPosition);
     LOAD_REQUIRED(SetWindowOpacity);
     LOAD_REQUIRED(GetWindowHandle);
