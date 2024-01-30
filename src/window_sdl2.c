@@ -216,6 +216,13 @@ bool omg_window_sdl2_mouse_set_system_cursor(OMG_WindowSdl2* this, int cursor_id
     return false;
 }
 
+int omg_window_sdl2_display_get_index(OMG_WindowSdl2* this) {
+    int res = this->sdl2->SDL_GetWindowDisplayIndex(this->win);
+    if (res < 0)
+        _OMG_LOG_WARN(omg_base, "Failed to get window display index (", this->sdl2->SDL_GetError(), ")");
+    return res;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -264,6 +271,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->mouse_set_shown = omg_window_sdl2_mouse_set_shown;
     base->mouse_set_system_cursor = omg_window_sdl2_mouse_set_system_cursor;
     base->set_grab = omg_window_sdl2_set_grab;
+    base->display_get_index = omg_window_sdl2_display_get_index;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

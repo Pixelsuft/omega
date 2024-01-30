@@ -195,6 +195,10 @@ bool omg_window_raylib_mouse_set_system_cursor(OMG_WindowRaylib* this, int curso
     return false;
 }
 
+int omg_window_raylib_display_get_index(OMG_WindowRaylib* this) {
+    return this->raylib->GetCurrentMonitor();
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
@@ -216,6 +220,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->mouse_set_rel = omg_window_raylib_mouse_set_rel;
     base->mouse_set_shown = omg_window_raylib_mouse_set_shown;
     base->mouse_set_system_cursor = omg_window_raylib_mouse_set_system_cursor;
+    base->display_get_index = omg_window_raylib_display_get_index;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(
         FLAG_WINDOW_HIDDEN |
