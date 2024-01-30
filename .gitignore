@@ -20,6 +20,7 @@ src/spng.c
 src/miniz.c
 src/lodepng.c
 include/omega_libs/*.h
+.editorconfig
 *.stackdump
 *.zip
 *.tar
