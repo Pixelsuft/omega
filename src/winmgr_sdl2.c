@@ -199,7 +199,6 @@ int omg_winmgr_sdl2_display_get_count(OMG_WinmgrSdl2* this) {
 }
 
 const OMG_String* omg_winmgr_sdl2_display_get_name(OMG_WinmgrSdl2* this, int display_id) {
-    return omg_winmgr_display_get_name(base, display_id);
     const char* res = this->sdl2->SDL_GetDisplayName(display_id);
     if (OMG_ISNULL(res)) {
         _OMG_LOG_WARN(omg_base, "Failed to get display name (", this->sdl2->SDL_GetError(), ")");

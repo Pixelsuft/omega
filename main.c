@@ -371,8 +371,11 @@ void app_init(App* this, OMG_EntryData* data) {
     ), true, OMG_AUDIO_FORMAT_OGG);
     int num_displays = this->omg->winmgr->display_get_count(this->omg->winmgr);
     for (int i = 0; i < num_displays; i++) {
+        OMG_String mon_name = *this->omg->winmgr->display_get_name(this->omg->winmgr, i);
+        OMG_FRect bounds;
+        this->omg->winmgr->display_get_bounds(this->omg->winmgr, i, &bounds, false);
         _OMG_LOG_INFO(
-            this->omg, "Display ", i + 1, ": ", this->omg->winmgr->display_get_name(this->omg->winmgr, i)
+            this->omg, "Display ", i + 1, ": ", &mon_name, ", Bounds ", &bounds
         );
     }
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
