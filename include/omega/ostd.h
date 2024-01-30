@@ -23,8 +23,8 @@
 #define OMG_STRING_DYNAMIC 3
 #define OMG_STRING_CHUNK_SIZE_OFFSET 4
 #define OMG_STRING_CHUNK_SIZE (2 << OMG_STRING_CHUNK_SIZE_OFFSET)
-#define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = char_ptr })
-#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = char_ptr })
+#define OMG_STRING_MAKE_STATIC(char_ptr) ((OMG_String){ .type = OMG_STRING_STATIC, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = (char*)(char_ptr) })
+#define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = (char*)(char_ptr) })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
 #define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? ((((str_len) >> OMG_STRING_CHUNK_SIZE_OFFSET) + 1) << OMG_STRING_CHUNK_SIZE_OFFSET) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
 

@@ -191,6 +191,47 @@ bool omg_winmgr_sdl2_surf_set_locked(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf
     return false;
 }
 
+int omg_winmgr_sdl2_display_get_count(OMG_WinmgrSdl2* this) {
+    int res = this->sdl2->SDL_GetNumVideoDisplays();
+    if (res < 0)
+        _OMG_LOG_WARN(omg_base, "Failed to get num display modes (", this->sdl2->SDL_GetError(), ")");
+    return res;
+}
+
+const OMG_String* omg_winmgr_sdl2_display_get_name(OMG_WinmgrSdl2* this, int display_id) {
+    return omg_winmgr_display_get_name(base, display_id);
+    const char* res = this->sdl2->SDL_GetDisplayName(display_id);
+    if (OMG_ISNULL(res)) {
+        _OMG_LOG_WARN(omg_base, "Failed to get display name (", this->sdl2->SDL_GetError(), ")");
+        return omg_winmgr_display_get_name(base, display_id);
+    }
+    return &OMG_STRING_MAKE_STATIC(res);
+}
+
+bool omg_winmgr_sdl2_display_get_bounds(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* rect, bool only_usable) {
+    int res;
+    SDL_Rect sdl_rect;
+    if (only_usable && OMG_ISNOTNULL(this->sdl2->SDL_GetDisplayUsableBounds))
+        res = this->sdl2->SDL_GetDisplayUsableBounds(display_id, &sdl_rect);
+    else
+        res = this->sdl2->SDL_GetDisplayBounds(display_id, &sdl_rect);
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to get display bounds (", this->sdl2->SDL_GetError(), ")");
+        return omg_winmgr_display_get_bounds(base, display_id, rect, only_usable);
+    }
+    rect->x = (float)sdl_rect.x;
+    rect->y = (float)sdl_rect.y;
+    rect->w = (float)sdl_rect.w;
+    rect->h = (float)sdl_rect.h;
+    return true;
+}
+
+bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* dpi) {
+    OMG_UNUSED(this, display_id);
+    dpi->px = dpi->py = dpi->pz = 1.0f;
+    return true;
+}
+
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -198,6 +239,10 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     this->cursor_cache = NULL;
     OMG_BEGIN_POINTER_CAST();
     base->destroy = omg_winmgr_sdl2_destroy;
+    base->display_get_count = omg_winmgr_sdl2_display_get_count;
+    base->display_get_name = omg_winmgr_sdl2_display_get_name;
+    base->display_get_bounds = omg_winmgr_sdl2_display_get_bounds;
+    base->display_get_scale = omg_winmgr_sdl2_display_get_scale;
     base->window_alloc = omg_winmgr_sdl2_window_alloc;
     base->window_free = omg_winmgr_sdl2_window_free;
     base->surf_create = omg_winmgr_sdl2_surf_create;

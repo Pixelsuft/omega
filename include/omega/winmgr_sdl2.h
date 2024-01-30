@@ -21,6 +21,10 @@ OMG_API bool omg_winmgr_surf_sdl2_destroy(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2*
 OMG_API OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_mem(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf, const void* mem, size_t size, int format);
 OMG_API bool omg_winmgr_sdl2_surf_set_locked(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf, bool locked);
 OMG_API OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_fp(OMG_WinmgrSdl2* this, OMG_Surface* surf, const OMG_String* path, int format);
+OMG_API int omg_winmgr_sdl2_display_get_count(OMG_WinmgrSdl2* this);
+OMG_API const OMG_String* omg_winmgr_sdl2_display_get_name(OMG_WinmgrSdl2* this, int display_id);
+OMG_API bool omg_winmgr_sdl2_display_get_bounds(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* rect, bool only_usable);
+OMG_API bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* dpi);
 #endif
 #endif
 #endif
