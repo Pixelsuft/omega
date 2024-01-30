@@ -29,6 +29,7 @@ typedef struct OMG_Winmgr {
     int (*display_get_count)(struct OMG_Winmgr* this);
     const OMG_String* (*display_get_name)(struct OMG_Winmgr* this, int display_id);
     bool (*display_get_bounds)(struct OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable);
+    bool (*display_get_scale)(struct OMG_Winmgr* this, int display_id, OMG_FRect* dpi);
     int surf_depth;
     int image_formats;
     int fnt_type;
@@ -43,6 +44,7 @@ OMG_API OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, OMG_Surface* surf,
 OMG_API OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this);
 OMG_API const OMG_String* omg_winmgr_display_get_name(OMG_Winmgr* this, int display_id);
 OMG_API bool omg_winmgr_display_get_bounds(OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable);
+OMG_API bool omg_winmgr_display_get_scale(OMG_Winmgr* this, int display_id, OMG_FRect* dpi);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_winmgr_surf_destroy(OMG_Winmgr* this, OMG_Surface* surf);
 OMG_API bool omg_winmgr_surf_set_locked(OMG_Winmgr* this, OMG_Surface* surf, bool locked);

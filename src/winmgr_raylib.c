@@ -158,6 +158,7 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->surf_from_mem = omg_winmgr_raylib_surf_from_mem;
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_raylib_init);
     OMG_END_POINTER_CAST();
+    // TODO: get scale: 21.5 * (physical width) / (width)
     return false;
 }
 #endif
