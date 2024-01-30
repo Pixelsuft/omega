@@ -138,6 +138,23 @@ bool omg_window_raylib_set_icon(OMG_WindowRaylib* this, OMG_SurfaceRaylib* icon)
     return false;
 }
 
+bool omg_window_raylib_mouse_warp(OMG_WindowRaylib* this, const OMG_FPoint* pos) {
+    this->raylib->SetMousePosition((int)pos->x, (int)pos->y);
+    return false;
+}
+
+bool omg_window_raylib_mouse_set_rel(OMG_WindowRaylib* this, int rel_mode) {
+    if (rel_mode == 0)
+        this->raylib->EnableCursor();
+    else if (rel_mode == 1)
+        this->raylib->DisableCursor();
+    else if (rel_mode == 2)
+        (this->raylib->IsCursorHidden() ? this->raylib->EnableCursor : this->raylib->DisableCursor)();
+    else
+        return this->raylib->IsCursorHidden();
+    return false;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
@@ -155,6 +172,8 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->set_bordered = omg_window_raylib_set_bordered;
     base->set_always_on_top = omg_window_raylib_set_always_on_top;
     base->set_window_mode = omg_window_raylib_set_window_mode;
+    base->mouse_warp = omg_window_raylib_mouse_warp;
+    base->mouse_set_rel = omg_window_raylib_mouse_set_rel;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(
         FLAG_WINDOW_HIDDEN |
