@@ -44,6 +44,7 @@ typedef struct OMG_Window {
     bool (*mouse_set_shown)(struct OMG_Window* this, int show_mode);
     bool (*mouse_set_system_cursor)(struct OMG_Window* this, int cursor_id);
     bool (*set_grab)(struct OMG_Window* this, int grab_mode);
+    int (*display_get_index)(struct OMG_Window* this);
     OMG_Renderer* ren;
     void* extra1;
     void* extra2;
@@ -99,4 +100,5 @@ OMG_API bool omg_window_mouse_set_rel(OMG_Window* this, int rel_mode);
 OMG_API bool omg_window_mouse_set_shown(OMG_Window* this, int show_mode);
 OMG_API bool omg_window_mouse_set_system_cursor(OMG_Window* this, int cursor_id);
 OMG_API bool omg_window_set_grab(OMG_Window* this, int grab_mode);
+OMG_API int omg_window_display_get_index(OMG_Window* this);
 #endif
