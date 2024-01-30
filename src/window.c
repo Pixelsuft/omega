@@ -128,7 +128,12 @@ bool omg_window_mouse_warp(OMG_Window* this, const OMG_FPoint* pos) {
 
 bool omg_window_mouse_set_rel(OMG_Window* this, int rel_mode) {
     OMG_UNUSED(this, rel_mode);
-    return false;
+    return (rel_mode == 1) || (rel_mode == 2);
+}
+
+bool omg_window_mouse_set_grab(OMG_Window* this, int grab_mode) {
+    OMG_UNUSED(this, grab_mode);
+    return (grab_mode == 1) || (grab_mode == 2);
 }
 
 bool omg_window_init(OMG_Window* this) {
@@ -161,6 +166,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_icon = omg_window_set_icon;
     this->mouse_warp = omg_window_mouse_warp;
     this->mouse_set_rel = omg_window_mouse_set_rel;
+    this->mouse_set_grab = omg_window_mouse_set_grab;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;
