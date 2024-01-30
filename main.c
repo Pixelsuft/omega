@@ -173,6 +173,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
     }
     else if (event->code == OMG_SCANCODE_C)
         this->sin_mul = event->is_pressed ? 8.0 : 0.4;
+    else if (event->code == OMG_SCANCODE_P)
+        this->win->mouse_set_system_cursor(this->win, event->is_pressed ? OMG_SYSTEM_CURSOR_WAIT : OMG_SYSTEM_CURSOR_ARROW);
     if (!event->is_repeated)
         OMG_INFO(
             this->omg,

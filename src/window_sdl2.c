@@ -3,9 +3,11 @@
 #if OMG_SUPPORT_SDL2
 #include <omega/omega.h>
 #include <omega/surface_sdl2.h>
+#include <omega/winmgr_sdl2.h>
 #include <omega/renderer_sdl2.h>
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
+#define winmgr_sdl2 ((OMG_WinmgrSdl2*)omg_base->winmgr)
 #define ren_sdl2 ((OMG_RendererSdl2*)base->ren)
 
 bool omg_window_sdl2_show(OMG_WindowSdl2* this, bool show) {
@@ -196,6 +198,24 @@ bool omg_window_sdl2_mouse_set_shown(OMG_WindowSdl2* this, int show_mode) {
     return false;
 }
 
+bool omg_window_sdl2_mouse_set_system_cursor(OMG_WindowSdl2* this, int cursor_id) {
+    SDL_Cursor* cur;
+    if (cursor_id < 0)
+        cur = this->sdl2->SDL_GetDefaultCursor();
+    else
+        cur = this->sdl2->SDL_CreateSystemCursor((SDL_SystemCursor)cursor_id);
+    if (OMG_ISNULL(cur)) {
+        _OMG_LOG_WARN(omg_base, "Failed to set system cursor (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    if (OMG_ISNOTNULL(winmgr_sdl2->cursor_cache)) {
+        this->sdl2->SDL_FreeCursor(winmgr_sdl2->cursor_cache);
+    }
+    winmgr_sdl2->cursor_cache = cur;
+    this->sdl2->SDL_SetCursor(cur);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -242,6 +262,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->mouse_warp = omg_window_sdl2_mouse_warp;
     base->mouse_set_rel = omg_window_sdl2_mouse_set_rel;
     base->mouse_set_shown = omg_window_sdl2_mouse_set_shown;
+    base->mouse_set_system_cursor = omg_window_sdl2_mouse_set_system_cursor;
     base->set_grab = omg_window_sdl2_set_grab;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();

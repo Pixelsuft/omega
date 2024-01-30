@@ -34,5 +34,6 @@ OMG_API bool omg_window_sdl2_mouse_warp(OMG_WindowSdl2* this, const OMG_FPoint* 
 OMG_API bool omg_window_sdl2_mouse_set_rel(OMG_WindowSdl2* this, int rel_mode);
 OMG_API bool omg_window_sdl2_set_grab(OMG_WindowSdl2* this, int grab_mode);
 OMG_API bool omg_window_sdl2_mouse_set_shown(OMG_WindowSdl2* this, int show_mode);
+OMG_API bool omg_window_sdl2_mouse_set_system_cursor(OMG_WindowSdl2* this, int cursor_id);
 #endif
 #endif
