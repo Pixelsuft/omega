@@ -25,5 +25,8 @@ OMG_API bool omg_window_raylib_show(OMG_WindowRaylib* this, bool show);
 OMG_API bool omg_window_raylib_set_title(OMG_WindowRaylib* this, const OMG_String* new_title);
 OMG_API bool omg_window_raylib_renderer_alloc(OMG_WindowRaylib* this);
 OMG_API bool omg_window_raylib_set_icon(OMG_WindowRaylib* this, OMG_SurfaceRaylib* icon);
+OMG_API bool omg_window_raylib_mouse_set_shown(OMG_WindowRaylib* this, int show_mode);
+OMG_API bool omg_window_raylib_mouse_warp(OMG_WindowRaylib* this, const OMG_FPoint* pos);
+OMG_API bool omg_window_raylib_mouse_set_rel(OMG_WindowRaylib* this, int rel_mode);
 #endif
 #endif

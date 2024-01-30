@@ -60,6 +60,10 @@ typedef enum {
 } SDL_bool;
 #endif
 
+#define SDL_DISABLE 0
+#define SDL_ENABLE 1
+#define SDL_QUERY (-1)
+
 #define SDL_INIT_TIMER          0x00000001u
 #define SDL_INIT_AUDIO          0x00000010u
 #define SDL_INIT_VIDEO          0x00000020u

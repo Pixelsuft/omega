@@ -33,5 +33,6 @@ OMG_API bool omg_window_sdl2_set_icon(OMG_WindowSdl2* this, OMG_SurfaceSdl2* ico
 OMG_API bool omg_window_sdl2_mouse_warp(OMG_WindowSdl2* this, const OMG_FPoint* pos);
 OMG_API bool omg_window_sdl2_mouse_set_rel(OMG_WindowSdl2* this, int rel_mode);
 OMG_API bool omg_window_sdl2_set_grab(OMG_WindowSdl2* this, int grab_mode);
+OMG_API bool omg_window_sdl2_mouse_set_shown(OMG_WindowSdl2* this, int show_mode);
 #endif
 #endif

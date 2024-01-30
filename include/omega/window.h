@@ -41,6 +41,7 @@ typedef struct OMG_Window {
     bool (*set_icon)(struct OMG_Window* this, OMG_Surface* icon);
     bool (*mouse_warp)(struct OMG_Window* this, const OMG_FPoint* pos);
     bool (*mouse_set_rel)(struct OMG_Window* this, int rel_mode);
+    bool (*mouse_set_shown)(struct OMG_Window* this, int show_mode);
     bool (*set_grab)(struct OMG_Window* this, int grab_mode);
     OMG_Renderer* ren;
     void* extra1;
@@ -94,5 +95,6 @@ OMG_API bool omg_window_set_icon(OMG_Window* this, OMG_Surface* icon);
 OMG_API bool omg_window_show(OMG_Window* this, bool show);
 OMG_API bool omg_window_mouse_warp(OMG_Window* this, const OMG_FPoint* pos);
 OMG_API bool omg_window_mouse_set_rel(OMG_Window* this, int rel_mode);
+OMG_API bool omg_window_mouse_set_shown(OMG_Window* this, int show_mode);
 OMG_API bool omg_window_set_grab(OMG_Window* this, int grab_mode);
 #endif

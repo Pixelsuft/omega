@@ -178,6 +178,24 @@ bool omg_window_sdl2_set_grab(OMG_WindowSdl2* this, int grab_mode) {
     return false;
 }
 
+bool omg_window_sdl2_mouse_set_shown(OMG_WindowSdl2* this, int show_mode) {
+    int res;
+    if (show_mode == 0)
+        res = this->sdl2->SDL_ShowCursor(SDL_DISABLE);
+    else if (show_mode == 1)
+        res = this->sdl2->SDL_ShowCursor(SDL_ENABLE);
+    else if (show_mode == 2)
+        res = this->sdl2->SDL_ShowCursor((this->sdl2->SDL_ShowCursor(SDL_QUERY) == SDL_ENABLE) ? SDL_DISABLE : SDL_ENABLE);
+    else {
+        return this->sdl2->SDL_ShowCursor(SDL_QUERY) == SDL_ENABLE;
+    }
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set cursor show mode for window (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -223,6 +241,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_title = omg_window_sdl2_set_title;
     base->mouse_warp = omg_window_sdl2_mouse_warp;
     base->mouse_set_rel = omg_window_sdl2_mouse_set_rel;
+    base->mouse_set_shown = omg_window_sdl2_mouse_set_shown;
     base->set_grab = omg_window_sdl2_set_grab;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();

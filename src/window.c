@@ -136,6 +136,11 @@ bool omg_window_set_grab(OMG_Window* this, int grab_mode) {
     return (grab_mode == 1) || (grab_mode == 2);
 }
 
+bool omg_window_mouse_set_shown(OMG_Window* this, int show_mode) {
+    OMG_UNUSED(this, show_mode);
+    return (show_mode == 1) || (show_mode == 2);
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -166,6 +171,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_icon = omg_window_set_icon;
     this->mouse_warp = omg_window_mouse_warp;
     this->mouse_set_rel = omg_window_mouse_set_rel;
+    this->mouse_set_shown = omg_window_mouse_set_shown;
     this->set_grab = omg_window_set_grab;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
