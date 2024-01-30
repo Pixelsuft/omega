@@ -225,17 +225,18 @@ bool omg_winmgr_sdl2_display_get_bounds(OMG_WinmgrSdl2* this, int display_id, OM
     return false;
 }
 
-bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* dpi) {
+bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* scale) {
     if (OMG_ISNULL(this->sdl2->SDL_GetDisplayDPI))
-        return omg_winmgr_display_get_scale(base, display_id, dpi);
+        return omg_winmgr_display_get_scale(base, display_id, scale);
     float bx, by, bz;
     if (this->sdl2->SDL_GetDisplayDPI(display_id, &bx, &by, &bz) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to get display DPI (", this->sdl2->SDL_GetError(), ")");
-        return omg_winmgr_display_get_scale(base, display_id, dpi);
+        return omg_winmgr_display_get_scale(base, display_id, scale);
     }
-    dpi->px = bx / 96.0f;
-    dpi->py = by / 96.0f;
-    dpi->pz = bz / 96.0f;
+    scale->px = bx / 96.0f;
+    scale->py = by / 96.0f;
+    scale->pz = bz / 96.0f;
+    scale->pw = 1.0f;
     return false;
 }
 

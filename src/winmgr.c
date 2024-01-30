@@ -196,9 +196,9 @@ bool omg_winmgr_display_get_bounds(OMG_Winmgr* this, int display_id, OMG_FRect* 
     return true;
 }
 
-bool omg_winmgr_display_get_scale(OMG_Winmgr* this, int display_id, OMG_FRect* dpi) {
+bool omg_winmgr_display_get_scale(OMG_Winmgr* this, int display_id, OMG_FRect* scale) {
     OMG_UNUSED(this, display_id);
-    dpi->px = dpi->py = dpi->pz = 1.0f;
+    scale->px = scale->py = scale->pz = scale->pw = 1.0f;
     return true;
 }
 

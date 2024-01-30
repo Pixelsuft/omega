@@ -161,9 +161,11 @@ bool omg_winmgr_raylib_display_get_bounds(OMG_WinmgrRaylib* this, int display_id
     return false;
 }
 
-bool omg_winmgr_raylib_display_get_scale(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* dpi) {
-    OMG_UNUSED(this, display_id);
-    dpi->px = dpi->py = dpi->pz = 1.0f;
+bool omg_winmgr_raylib_display_get_scale(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* scale) {
+    scale->px = 96.0f * (float)this->raylib->GetMonitorPhysicalWidth(display_id) / (float)this->raylib->GetMonitorWidth(display_id) / 21.5f;
+    scale->py = 96.0f * (float)this->raylib->GetMonitorPhysicalHeight(display_id) / (float)this->raylib->GetMonitorHeight(display_id) / 21.5f;
+    scale->pz = (scale->px + scale->py) / 2.0f;
+    scale->pw = 1.0f;
     return false;
 }
 
@@ -186,7 +188,6 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->surf_from_mem = omg_winmgr_raylib_surf_from_mem;
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_raylib_init);
     OMG_END_POINTER_CAST();
-    // TODO: get scale: 21.5 * (physical width) / (width)
     return false;
 }
 #endif
