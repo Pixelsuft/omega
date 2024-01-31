@@ -1121,6 +1121,19 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     );
 }
 
+bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
+    RECT w_rect, c_rect;
+    if (this->u32->GetForegroundWindow() != this->hwnd) {
+        // Should I do focus?
+        return true;
+    }
+    if (!this->u32->GetWindowRect(this->hwnd, &w_rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
+        return true;
+    float bx = (float)(w_rect.right - w_rect.left - c_rect.right) / 2.0f;
+    float by = (float)(w_rect.bottom - w_rect.top - c_rect.bottom) - bx;
+    return !this->u32->SetCursorPos((int)((float)w_rect.left + bx + pos->x), (int)(w_rect.top + by + pos->y));
+}
+
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
@@ -1222,6 +1235,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->destroy = omg_window_win_destroy;
     base->renderer_alloc = omg_window_win_renderer_alloc;
     base->renderer_free = omg_window_win_renderer_free;
+    base->mouse_warp = omg_window_win_mouse_warp;
     OMG_END_POINTER_CAST();
     base->inited = true;
     _OMG_LOG_INFO(omg_base, "Win32 window created successfuly");

@@ -43,5 +43,6 @@ OMG_API bool omg_window_win_show(OMG_WindowWin* this, bool show);
 OMG_API bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title);
 OMG_API bool omg_window_win_renderer_alloc(OMG_WindowWin* this);
 OMG_API bool omg_window_win_renderer_free(OMG_WindowWin* this);
+OMG_API bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos);
 #endif
 #endif

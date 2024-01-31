@@ -728,6 +728,9 @@ typedef struct {
     HDC OMG_WIN_STD_PREFIX (*EndPaint)(HWND, const PAINTSTRUCT*);
     int OMG_WIN_STD_PREFIX (*FillRect)(HDC, const RECT*, HBRUSH);
     int OMG_WIN_STD_PREFIX (*FrameRect)(HDC, const RECT*, HBRUSH);
+    BOOL OMG_WIN_STD_PREFIX (*SetCursorPos)(int, int);
+    HWND OMG_WIN_STD_PREFIX (*SetFocus)(HWND);
+    BOOL OMG_WIN_STD_PREFIX (*SetForegroundWindow)(HWND);
 } OMG_User32;
 
 typedef struct {
