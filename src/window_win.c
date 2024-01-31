@@ -1131,7 +1131,11 @@ bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
         return true;
     float bx = (float)(w_rect.right - w_rect.left - c_rect.right) / 2.0f;
     float by = (float)(w_rect.bottom - w_rect.top - c_rect.bottom) - bx;
-    return !this->u32->SetCursorPos((int)((float)w_rect.left + bx + pos->x), (int)(w_rect.top + by + pos->y));
+    if (!this->u32->SetCursorPos((int)((float)w_rect.left + bx + pos->x), (int)(w_rect.top + by + pos->y)))
+        return true;
+    this->mouse_pos_cache.x = (int)pos->x;
+    this->mouse_pos_cache.y = (int)pos->y;
+    return false;
 }
 
 bool omg_window_win_init(OMG_WindowWin* this) {
