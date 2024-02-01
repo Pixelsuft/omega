@@ -2,3 +2,4 @@
 [-] Add function to set log callback
 [-] Track memory allocations
 [-] Fix dummy textures (bool is_dummy = true checks)
+[-] Vulkan renderer
