@@ -506,8 +506,11 @@ bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled) {
     if (!style)
         return true;
     base->always_on_top = enabled;
-    // TODO
-    return !SET_WIN_STYLE(style);
+    bool res = !this->u32->SetWindowPos(
+        this->hwnd, enabled ? HWND_TOPMOST : HWND_NOTOPMOST, 0, 0, 0, 0,
+        SWP_NOZORDER | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED
+    );
+    return !SET_WIN_STYLE(style) || res;
 }
 
 bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {

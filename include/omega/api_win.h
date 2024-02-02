@@ -403,6 +403,18 @@
 #ifndef MAPVK_VK_TO_VSC_EX
 #define MAPVK_VK_TO_VSC_EX 4
 #endif
+#ifndef HWND_BOTTOM
+#define HWND_BOTTOM (HWND)1
+#endif
+#ifndef HWND_NOTOPMOST
+#define HWND_NOTOPMOST (HWND)(-2)
+#endif
+#ifndef HWND_TOP
+#define HWND_TOP (HWND)0
+#endif
+#ifndef HWND_TOPMOST
+#define HWND_BOTTOM (HWND)(-1)
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
