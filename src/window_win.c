@@ -605,23 +605,29 @@ bool omg_window_win_renderer_free(OMG_WindowWin* this) {
 }
 
 bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
-    RECT w_rect, c_rect;
-    if (!this->u32->GetWindowRect(this->hwnd, &w_rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
-        return true;
-    if (grab_mode == 0)
+    if (grab_mode == 0) {
+        this->clip_rect.right = 0;
         return !this->u32->ClipCursor(NULL);
+    }
     if (grab_mode == 2) {
         if (this->clip_rect.right != 0) {
             this->clip_rect.right = 0;
             return !this->u32->ClipCursor(NULL);
         }
     }
-    LONG xoff = (w_rect.right - w_rect.left - c_rect.right) / 2;
-    LONG yoff = w_rect.bottom - w_rect.top - c_rect.bottom - xoff;
-    this->clip_rect.left = w_rect.left + xoff;
-    this->clip_rect.top = w_rect.top + yoff;
-    this->clip_rect.right = w_rect.right - xoff;
-    this->clip_rect.bottom = w_rect.bottom - xoff;
+    RECT c_rect;
+    POINT min_point, max_point;
+    min_point.x = min_point.y = 0;
+    if (!this->u32->GetClientRect(this->hwnd, &c_rect))
+        return true;
+    max_point.x = c_rect.right;
+    max_point.y = c_rect.bottom;
+    if (!this->u32->ClientToScreen(this->hwnd, &min_point) || !this->u32->ClientToScreen(this->hwnd, &max_point))
+        return true;
+    this->clip_rect.left = min_point.x;
+    this->clip_rect.top = min_point.y;
+    this->clip_rect.right = max_point.x;
+    this->clip_rect.bottom = max_point.y;
     return !this->u32->ClipCursor(&this->clip_rect);
 }
 
@@ -1160,7 +1166,6 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
 }
 
 bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
-    RECT c_rect;
     if (this->u32->GetForegroundWindow() != this->hwnd) {
         // Should I do focus?
         return true;
