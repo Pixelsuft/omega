@@ -27,7 +27,7 @@ typedef struct OMG_Winmgr {
     bool (*fontmgr_alloc)(struct OMG_Winmgr* this);
     bool (*fontmgr_free)(struct OMG_Winmgr* this);
     int (*display_get_count)(struct OMG_Winmgr* this);
-    const OMG_String* (*display_get_name)(struct OMG_Winmgr* this, int display_id);
+    OMG_String (*display_get_name)(struct OMG_Winmgr* this, int display_id);
     bool (*display_get_bounds)(struct OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable);
     bool (*display_get_scale)(struct OMG_Winmgr* this, int display_id, OMG_FRect* scale);
     int surf_depth;
@@ -42,7 +42,7 @@ OMG_API bool omg_winmgr_init(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_destroy(OMG_Winmgr* this);
 OMG_API OMG_Surface* omg_winmgr_surf_create(OMG_Winmgr* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha);
 OMG_API OMG_Surface* omg_winmgr_dummy_surf_create(OMG_Winmgr* this);
-OMG_API const OMG_String* omg_winmgr_display_get_name(OMG_Winmgr* this, int display_id);
+OMG_API OMG_String omg_winmgr_display_get_name(OMG_Winmgr* this, int display_id);
 OMG_API bool omg_winmgr_display_get_bounds(OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable);
 OMG_API bool omg_winmgr_display_get_scale(OMG_Winmgr* this, int display_id, OMG_FRect* scale);
 #if OMG_EXPORT_SHIT

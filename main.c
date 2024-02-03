@@ -371,7 +371,7 @@ void app_init(App* this, OMG_EntryData* data) {
     ), true, OMG_AUDIO_FORMAT_OGG);
     int num_displays = this->omg->winmgr->display_get_count(this->omg->winmgr);
     for (int i = 0; i < num_displays; i++) {
-        OMG_String mon_name = *this->omg->winmgr->display_get_name(this->omg->winmgr, i);
+        OMG_String mon_name = this->omg->winmgr->display_get_name(this->omg->winmgr, i);
         OMG_FRect bounds, scale;
         scale.pz = 0.0f;
         this->omg->winmgr->display_get_bounds(this->omg->winmgr, i, &bounds, false);

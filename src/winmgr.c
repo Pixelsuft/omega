@@ -185,11 +185,9 @@ int omg_winmgr_display_get_count(OMG_Winmgr* this) {
     return -1;
 }
 
-const OMG_String* omg_winmgr_display_get_name(OMG_Winmgr* this, int display_id) {
+OMG_String omg_winmgr_display_get_name(OMG_Winmgr* this, int display_id) {
     OMG_UNUSED(this, display_id);
-    static OMG_String res;
-    OMG_STRING_DUMMY_INIT(res);
-    return &res;
+    return OMG_STRING_MAKE_STATIC("\0");
 }
 
 bool omg_winmgr_display_get_bounds(OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable) {

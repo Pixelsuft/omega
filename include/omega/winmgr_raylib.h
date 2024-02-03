@@ -21,7 +21,7 @@ OMG_API OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_fp(OMG_WinmgrRaylib* this
 OMG_API OMG_SurfaceRaylib* omg_winmgr_raylib_surf_create(OMG_WinmgrRaylib* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha);
 OMG_API bool omg_winmgr_raylib_surf_destroy(OMG_WinmgrRaylib* this, OMG_SurfaceRaylib* surf);
 OMG_API int omg_winmgr_raylib_display_get_count(OMG_WinmgrRaylib* this);
-OMG_API const OMG_String* omg_winmgr_raylib_display_get_name(OMG_WinmgrRaylib* this, int display_id);
+OMG_API OMG_String omg_winmgr_raylib_display_get_name(OMG_WinmgrRaylib* this, int display_id);
 OMG_API bool omg_winmgr_raylib_display_get_bounds(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* rect, bool only_usable);
 OMG_API bool omg_winmgr_raylib_display_get_scale(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* dpi);
 #endif
