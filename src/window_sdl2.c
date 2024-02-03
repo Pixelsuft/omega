@@ -180,7 +180,7 @@ bool omg_window_sdl2_set_grab(OMG_WindowSdl2* this, int grab_mode) {
     return false;
 }
 
-bool omg_window_sdl2_mouse_set_shown(OMG_WindowSdl2* this, int show_mode) {
+bool omg_window_sdl2_cursor_set_shown(OMG_WindowSdl2* this, int show_mode) {
     int res;
     if (show_mode == 0)
         res = this->sdl2->SDL_ShowCursor(SDL_DISABLE);
@@ -268,7 +268,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_title = omg_window_sdl2_set_title;
     base->mouse_warp = omg_window_sdl2_mouse_warp;
     base->mouse_set_rel = omg_window_sdl2_mouse_set_rel;
-    base->mouse_set_shown = omg_window_sdl2_mouse_set_shown;
+    base->cursor_set_shown = omg_window_sdl2_cursor_set_shown;
     base->mouse_set_system_cursor = omg_window_sdl2_mouse_set_system_cursor;
     base->set_grab = omg_window_sdl2_set_grab;
     base->display_get_index = omg_window_sdl2_display_get_index;

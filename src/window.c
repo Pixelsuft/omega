@@ -136,7 +136,7 @@ bool omg_window_set_grab(OMG_Window* this, int grab_mode) {
     return (grab_mode == 1) || (grab_mode == 2);
 }
 
-bool omg_window_mouse_set_shown(OMG_Window* this, int show_mode) {
+bool omg_window_cursor_set_shown(OMG_Window* this, int show_mode) {
     OMG_UNUSED(this, show_mode);
     return (show_mode == 1) || (show_mode == 2);
 }
@@ -181,7 +181,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_icon = omg_window_set_icon;
     this->mouse_warp = omg_window_mouse_warp;
     this->mouse_set_rel = omg_window_mouse_set_rel;
-    this->mouse_set_shown = omg_window_mouse_set_shown;
+    this->cursor_set_shown = omg_window_cursor_set_shown;
     this->mouse_set_system_cursor = omg_window_mouse_set_system_cursor;
     this->set_grab = omg_window_set_grab;
     this->display_get_index = omg_window_display_get_index;

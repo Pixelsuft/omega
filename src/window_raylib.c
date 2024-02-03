@@ -155,7 +155,7 @@ bool omg_window_raylib_mouse_set_rel(OMG_WindowRaylib* this, int rel_mode) {
     return false;
 }
 
-bool omg_window_raylib_mouse_set_shown(OMG_WindowRaylib* this, int show_mode) {
+bool omg_window_raylib_cursor_set_shown(OMG_WindowRaylib* this, int show_mode) {
     if (show_mode == 0)
         this->raylib->ShowCursor();
     else if (show_mode == 1)
@@ -218,7 +218,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->set_window_mode = omg_window_raylib_set_window_mode;
     base->mouse_warp = omg_window_raylib_mouse_warp;
     base->mouse_set_rel = omg_window_raylib_mouse_set_rel;
-    base->mouse_set_shown = omg_window_raylib_mouse_set_shown;
+    base->cursor_set_shown = omg_window_raylib_cursor_set_shown;
     base->mouse_set_system_cursor = omg_window_raylib_mouse_set_system_cursor;
     base->display_get_index = omg_window_raylib_display_get_index;
     OMG_END_POINTER_CAST();

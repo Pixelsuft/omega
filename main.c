@@ -141,7 +141,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else if (event->code == OMG_SCANCODE_I)
             this->win->set_grab(this->win, 2);
         else if (event->code == OMG_SCANCODE_O)
-            this->win->mouse_set_shown(this->win, 2);
+            this->win->cursor_set_shown(this->win, 2);
     }
     if (!event->is_repeated) {
         if (event->code == OMG_SCANCODE_F) {
