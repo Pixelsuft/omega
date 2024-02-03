@@ -604,6 +604,73 @@ bool omg_window_win_renderer_free(OMG_WindowWin* this) {
     return res;
 }
 
+bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
+    if (this->u32->GetForegroundWindow() != this->hwnd) {
+        // Should I do focus?
+        return true;
+    }
+    POINT pnt;
+    pnt.x = (LONG)pos->x;
+    pnt.y = (LONG)pos->y;
+    if (!this->u32->ClientToScreen(this->hwnd, &pnt))
+        return true;
+    if (!this->u32->SetCursorPos((int)pnt.x, (int)pnt.y))
+        return true;
+    this->mouse_pos_cache.x = (int)pos->x;
+    this->mouse_pos_cache.y = (int)pos->y;
+    return false;
+}
+
+bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cursor_id) {
+    size_t cid;
+    if (cursor_id == OMG_SYSTEM_CURSOR_ARROW)
+        cid = (size_t)IDC_ARROW;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_IBEAM)
+        cid = (size_t)OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_WAIT)
+        cid = (size_t)OCR_WAIT;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_CROSSHAIR)
+        cid = (size_t)OCR_CROSS;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_WAITARROW)
+        cid = (size_t)OCR_APPSTARTING;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENWSE)
+        cid = (size_t)OCR_SIZENWSE;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENESW)
+        cid = (size_t)OCR_SIZENESW;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEWE)
+        cid = (size_t)OCR_SIZEWE;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENS)
+        cid = (size_t)OCR_SIZENS;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEALL)
+        cid = (size_t)OCR_SIZEALL;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_NO)
+        cid = (size_t)OCR_NO;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_HAND)
+        cid = (size_t)OCR_HAND;
+    else
+        cid = (size_t)OCR_NORMAL;
+    HCURSOR cur = (HCURSOR)this->u32->LoadImageW(
+        NULL, (LPCWSTR)cid,
+        IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED
+    );
+    this->wc.hCursor = cur;
+    this->u32->SetCursor(cur);
+    return true;
+}
+
+bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode) {
+    if (this->is_mouse_rel) // Hack
+        return false;
+    if (show_mode == 2) {
+        this->showing_cursor = !this->showing_cursor;
+        this->u32->ShowCursor(this->showing_cursor ? TRUE: FALSE);
+    }
+    else {
+        this->u32->ShowCursor((show_mode == 0) ? FALSE : TRUE);
+    }
+    return false;
+}
+
 bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
     if (grab_mode == 0) {
         this->clip_rect.right = 0;
@@ -632,7 +699,20 @@ bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
 }
 
 bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode) {
-    // TODO
+    bool should_rel = false;
+    if ((rel_mode == 1) || ((rel_mode == 2) && !this->is_mouse_rel))
+        should_rel = true;
+    this->is_mouse_rel = should_rel;
+    omg_window_win_set_grab(this, should_rel);
+    if (should_rel) {
+        if (this->showing_cursor)
+            this->u32->ShowCursor(FALSE);
+        omg_window_win_mouse_warp(this, &OMG_FPOINT_MAKE(base->size.w / 2.0f, base->size.h / 2.0f));
+    }
+    else {
+        if (this->showing_cursor)
+            this->u32->ShowCursor(TRUE);
+    }
     return false;
 }
 
@@ -665,8 +745,17 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.id = 0;
             event.pos.x = (float)x_pos;
             event.pos.y = (float)y_pos;
-            event.rel.x = (float)(x_pos - this->mouse_pos_cache.x);
-            event.rel.y = (float)(y_pos - this->mouse_pos_cache.y);
+            if (this->is_mouse_rel) {
+                event.rel.x = event.pos.x - (base->size.w / 2.0f);
+                event.rel.y = event.pos.y - (base->size.h / 2.0f);
+                if ((event.rel.x == 0.0f) && (event.rel.y == 0.0f))
+                    return FALSE;
+                omg_window_win_mouse_warp(this, &OMG_FPOINT_MAKE(base->size.w / 2.0f, base->size.h / 2.0f));
+            }
+            else {
+                event.rel.x = (float)(x_pos - this->mouse_pos_cache.x);
+                event.rel.y = (float)(y_pos - this->mouse_pos_cache.y);
+            }
             MOUSE_FILL_STATE(event.state, wparam);
             omg_win_windows_check_mouse_buttons(this, wparam, 0);
             this->mouse_state_cache = omg_base->mouse_state = event.state;
@@ -1169,71 +1258,6 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     );
 }
 
-bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
-    if (this->u32->GetForegroundWindow() != this->hwnd) {
-        // Should I do focus?
-        return true;
-    }
-    POINT pnt;
-    pnt.x = (LONG)pos->x;
-    pnt.y = (LONG)pos->y;
-    if (!this->u32->ClientToScreen(this->hwnd, &pnt))
-        return true;
-    if (!this->u32->SetCursorPos((int)pnt.x, (int)pnt.y))
-        return true;
-    this->mouse_pos_cache.x = (int)pos->x;
-    this->mouse_pos_cache.y = (int)pos->y;
-    return false;
-}
-
-bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cursor_id) {
-    size_t cid;
-    if (cursor_id == OMG_SYSTEM_CURSOR_ARROW)
-        cid = (size_t)IDC_ARROW;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_IBEAM)
-        cid = (size_t)OCR_IBEAM;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_WAIT)
-        cid = (size_t)OCR_WAIT;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_CROSSHAIR)
-        cid = (size_t)OCR_CROSS;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_WAITARROW)
-        cid = (size_t)OCR_APPSTARTING;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENWSE)
-        cid = (size_t)OCR_SIZENWSE;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENESW)
-        cid = (size_t)OCR_SIZENESW;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEWE)
-        cid = (size_t)OCR_SIZEWE;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENS)
-        cid = (size_t)OCR_SIZENS;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEALL)
-        cid = (size_t)OCR_SIZEALL;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_NO)
-        cid = (size_t)OCR_NO;
-    else if (cursor_id == OMG_SYSTEM_CURSOR_HAND)
-        cid = (size_t)OCR_HAND;
-    else
-        cid = (size_t)OCR_NORMAL;
-    HCURSOR cur = (HCURSOR)this->u32->LoadImageW(
-        NULL, (LPCWSTR)cid,
-        IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED
-    );
-    this->wc.hCursor = cur;
-    this->u32->SetCursor(cur);
-    return true;
-}
-
-bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode) {
-    if (show_mode == 2) {
-        this->showing_cursor = !this->showing_cursor;
-        this->u32->ShowCursor(this->showing_cursor ? TRUE: FALSE);
-    }
-    else {
-        this->u32->ShowCursor((show_mode == 0) ? FALSE : TRUE);
-    }
-    return false;
-}
-
 // TODO: https://learn.microsoft.com/en-us/windows/win32/menurc/cursors
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
@@ -1243,6 +1267,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->is_mouse_left = true;
     this->showing_cursor = true;
     this->is_focused = false;
+    this->is_mouse_rel = false;
     this->hdc = NULL;
     this->high_surrogate = 0;
     this->mouse_state_cache = 0;

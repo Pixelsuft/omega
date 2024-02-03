@@ -25,6 +25,7 @@ typedef struct {
     UINT resize_timer;
     int win_build_num;
     bool showing_cursor;
+    bool is_mouse_rel;
     bool is_mouse_left;
     bool is_focused;
     bool destroyed;
