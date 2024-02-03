@@ -203,6 +203,10 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(SetCursorPos);
     LOAD_REQUIRED(SetFocus);
     LOAD_REQUIRED(SetForegroundWindow);
+    LOAD_REQUIRED(SetSystemCursor);
+    LOAD_REQUIRED(SetCursor);
+    LOAD_REQUIRED(ShowCursor);
+    LOAD_REQUIRED(DestroyCursor);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwareness);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwarenessContext);

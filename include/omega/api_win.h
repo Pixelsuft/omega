@@ -3,6 +3,7 @@
 #include <omega/ostd.h>
 #if OMG_IS_WIN
 #define WIN32_LEAN_AND_MEAN
+#define OEMRESOURCE
 #if OMG_WINAPI_DYNAMIC
 #include <windows.h>
 #include <libloaderapi.h>
@@ -150,6 +151,45 @@
 #endif
 #ifndef IMAGE_CURSOR
 #define IMAGE_CURSOR 2
+#endif
+#ifndef OCR_NORMAL
+#define OCR_NORMAL 32512
+#endif
+#ifndef OCR_IBEAM
+#define OCR_IBEAM 32513
+#endif
+#ifndef OCR_WAIT
+#define OCR_WAIT 32514
+#endif
+#ifndef OCR_CROSS
+#define OCR_CROSS 32515
+#endif
+#ifndef OCR_UP
+#define OCR_UP 32516
+#endif
+#ifndef OCR_SIZENWSE
+#define OCR_SIZENWSE 32642
+#endif
+#ifndef OCR_SIZENESW
+#define OCR_SIZENESW 32643
+#endif
+#ifndef OCR_SIZEWE
+#define OCR_SIZEWE 32644
+#endif
+#ifndef OCR_SIZENS
+#define OCR_SIZENS 32645
+#endif
+#ifndef OCR_SIZEALL
+#define OCR_SIZEALL 32646
+#endif
+#ifndef OCR_NO
+#define OCR_NO 32648
+#endif
+#ifndef OCR_HAND
+#define OCR_HAND 32649
+#endif
+#ifndef OCR_APPSTARTING
+#define OCR_APPSTARTING 32650
 #endif
 #ifndef TRANSPARENT
 #define TRANSPARENT 1
@@ -743,6 +783,10 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*SetCursorPos)(int, int);
     HWND OMG_WIN_STD_PREFIX (*SetFocus)(HWND);
     BOOL OMG_WIN_STD_PREFIX (*SetForegroundWindow)(HWND);
+    BOOL OMG_WIN_STD_PREFIX (*SetSystemCursor)(HCURSOR, DWORD);
+    BOOL OMG_WIN_STD_PREFIX (*SetCursor)(HCURSOR);
+    int OMG_WIN_STD_PREFIX (*ShowCursor)(BOOL);
+    BOOL OMG_WIN_STD_PREFIX (*DestroyCursor)(HCURSOR);
 } OMG_User32;
 
 typedef struct {
