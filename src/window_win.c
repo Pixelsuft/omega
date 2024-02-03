@@ -1182,6 +1182,7 @@ bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cursor_id) 
     return true;
 }
 
+// TODO: https://learn.microsoft.com/en-us/windows/win32/menurc/cursors
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
