@@ -1055,8 +1055,11 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_SETCURSOR: {
-            this->u32->SetCursor(this->wc.hCursor);
-            return TRUE;
+            if (LOWORD(lparam) == HTCLIENT) {
+                this->u32->SetCursor(this->wc.hCursor);
+                return TRUE;
+            }
+            return RET_DEF_PROC();
         }
         default: {
             if (OMG_ISNOTNULL(this)) {

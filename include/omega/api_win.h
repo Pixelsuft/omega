@@ -152,6 +152,9 @@
 #ifndef IMAGE_CURSOR
 #define IMAGE_CURSOR 2
 #endif
+#ifndef HTCLIENT
+#define HTCLIENT 1
+#endif
 #ifndef OCR_NORMAL
 #define OCR_NORMAL 32512
 #endif
