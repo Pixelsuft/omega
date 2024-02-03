@@ -208,6 +208,8 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(ShowCursor);
     LOAD_REQUIRED(DestroyCursor);
     LOAD_REQUIRED(ClipCursor);
+    LOAD_REQUIRED(ScreenToClient);
+    LOAD_REQUIRED(ClientToScreen);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwareness);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwarenessContext);

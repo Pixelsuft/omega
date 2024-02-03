@@ -794,6 +794,8 @@ typedef struct {
     int OMG_WIN_STD_PREFIX (*ShowCursor)(BOOL);
     BOOL OMG_WIN_STD_PREFIX (*DestroyCursor)(HCURSOR);
     BOOL OMG_WIN_STD_PREFIX (*ClipCursor)(const RECT*);
+    BOOL OMG_WIN_STD_PREFIX (*ScreenToClient)(HWND, LPPOINT);
+    BOOL OMG_WIN_STD_PREFIX (*ClientToScreen)(HWND, LPPOINT);
 } OMG_User32;
 
 typedef struct {

@@ -1160,16 +1160,17 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
 }
 
 bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
-    RECT w_rect, c_rect;
+    RECT c_rect;
     if (this->u32->GetForegroundWindow() != this->hwnd) {
         // Should I do focus?
         return true;
     }
-    if (!this->u32->GetWindowRect(this->hwnd, &w_rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
+    POINT pnt;
+    pnt.x = (LONG)pos->x;
+    pnt.y = (LONG)pos->y;
+    if (!this->u32->ClientToScreen(this->hwnd, &pnt))
         return true;
-    float bx = (float)(w_rect.right - w_rect.left - c_rect.right) / 2.0f;
-    float by = (float)(w_rect.bottom - w_rect.top - c_rect.bottom) - bx;
-    if (!this->u32->SetCursorPos((int)((float)w_rect.left + bx + pos->x), (int)(w_rect.top + by + pos->y)))
+    if (!this->u32->SetCursorPos((int)pnt.x, (int)pnt.y))
         return true;
     this->mouse_pos_cache.x = (int)pos->x;
     this->mouse_pos_cache.y = (int)pos->y;
