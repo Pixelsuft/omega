@@ -1054,6 +1054,10 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 this->u32->EnableNonClientDpiScaling(hwnd);
             return RET_DEF_PROC();
         }
+        case WM_SETCURSOR: {
+            this->u32->SetCursor(this->wc.hCursor);
+            return TRUE;
+        }
         default: {
             if (OMG_ISNOTNULL(this)) {
                 // _OMG_LOG_WARN(omg_base, "TODO Event: ", (int)msg);
@@ -1142,7 +1146,39 @@ bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos) {
 }
 
 bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cursor_id) {
-    _OMG_LOG_INFO(omg_base, "TODO");
+    int cid;
+    if (cursor_id == OMG_SYSTEM_CURSOR_ARROW)
+        cid = IDC_ARROW;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_IBEAM)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_WAIT)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_CROSSHAIR)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_WAITARROW)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENWSE)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENESW)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEWE)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZENS)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_SIZEALL)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_NO)
+        cid = OCR_IBEAM;
+    else if (cursor_id == OMG_SYSTEM_CURSOR_HAND)
+        cid = OCR_IBEAM;
+    else
+        cid = OCR_NORMAL;
+    HCURSOR cur = (HCURSOR)this->u32->LoadImageW(
+        NULL, (LPCWSTR)OCR_SIZEALL,
+        IMAGE_CURSOR, 0, 0, LR_DEFAULTSIZE | LR_SHARED
+    );
+    this->wc.hCursor = cur;
+    this->u32->SetCursor(cur);
     return true;
 }
 

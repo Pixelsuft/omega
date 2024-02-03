@@ -614,6 +614,9 @@
 #ifndef WM_POINTERUPDATE
 #define WM_POINTERUPDATE 0x0245
 #endif
+#ifndef WM_SETCURSOR
+#define WM_SETCURSOR 0x0020
+#endif
 
 typedef struct {
     ULONG dwOSVersionInfoSize;
