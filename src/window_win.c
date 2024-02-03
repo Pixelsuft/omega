@@ -1196,6 +1196,14 @@ bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode) {
     return false;
 }
 
+bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode) {
+    return false;
+}
+
+bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
+    return false;
+}
+
 // TODO: https://learn.microsoft.com/en-us/windows/win32/menurc/cursors
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
@@ -1302,6 +1310,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->mouse_warp = omg_window_win_mouse_warp;
     base->mouse_set_system_cursor = omg_window_win_mouse_set_system_cursor;
     base->cursor_set_shown = omg_window_win_cursor_set_shown;
+    base->set_grab = omg_window_win_set_grab;
+    base->mouse_set_rel = omg_window_win_mouse_set_rel;
     OMG_END_POINTER_CAST();
     base->inited = true;
     _OMG_LOG_INFO(omg_base, "Win32 window created successfuly");

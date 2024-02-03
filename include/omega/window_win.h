@@ -46,5 +46,8 @@ OMG_API bool omg_window_win_renderer_alloc(OMG_WindowWin* this);
 OMG_API bool omg_window_win_renderer_free(OMG_WindowWin* this);
 OMG_API bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos);
 OMG_API bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cursor_id);
+OMG_API bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode);
+OMG_API bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode);
+OMG_API bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode);
 #endif
 #endif
