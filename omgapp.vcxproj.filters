@@ -78,9 +78,6 @@
     <ClCompile Include="src\image_sdl2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\keyboard.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\memory.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -160,6 +157,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\font_raylib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\input.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

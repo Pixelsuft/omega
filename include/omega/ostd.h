@@ -27,6 +27,7 @@
 #define OMG_STRING_MAKE_BUFFER(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = omg_std_static_strlen(char_ptr), .size = omg_std_static_strlen(char_ptr) + 1, .ptr = (char*)(char_ptr) })
 #define OMG_STRING_MAKE_BUFFER_A(char_ptr) ((OMG_String){ .type = OMG_STRING_BUFFER, .len = sizeof(char_ptr) - 1, .size = sizeof(char_ptr), .ptr = char_ptr })
 #define OMG_STRING_CALC_SIZE_BY_LENGTH(str_len) (((str_len) % OMG_STRING_CHUNK_SIZE) ? ((((str_len) >> OMG_STRING_CHUNK_SIZE_OFFSET) + 1) << OMG_STRING_CHUNK_SIZE_OFFSET) : ((str_len) ? (str_len) : OMG_STRING_CHUNK_SIZE))
+#define OMG_STRING_DUMMY_INIT(string) do { (string).type = OMG_STRING_STATIC; (string).len = 0; (string).size = 1; (string).ptr = "\0"; } while (0)
 
 #define OMG_POINT_MAKE(px, py) ((OMG_Point){ .w = (int)(px), .h = (int)(py) })
 #define OMG_FPOINT_MAKE(px, py) ((OMG_FPoint){ .w = (float)(px), .h = (float)(py) })
