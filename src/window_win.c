@@ -604,6 +604,32 @@ bool omg_window_win_renderer_free(OMG_WindowWin* this) {
     return res;
 }
 
+bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
+    RECT w_rect, c_rect;
+    if (!this->u32->GetWindowRect(this->hwnd, &w_rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
+        return true;
+    if (grab_mode == 0)
+        return !this->u32->ClipCursor(NULL);
+    if (grab_mode == 2) {
+        if (this->clip_rect.right != 0) {
+            this->clip_rect.right = 0;
+            return !this->u32->ClipCursor(NULL);
+        }
+    }
+    LONG xoff = (w_rect.right - w_rect.left - c_rect.right) / 2;
+    LONG yoff = w_rect.bottom - w_rect.top - c_rect.bottom - xoff;
+    this->clip_rect.left = w_rect.left + xoff;
+    this->clip_rect.top = w_rect.top + yoff;
+    this->clip_rect.right = w_rect.right - xoff;
+    this->clip_rect.bottom = w_rect.bottom - xoff;
+    return !this->u32->ClipCursor(&this->clip_rect);
+}
+
+bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode) {
+    // TODO
+    return false;
+}
+
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef SetWindowLongPtrW
     OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, GWLP_USERDATA);
@@ -1007,6 +1033,8 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 MAKE_EVENT(&event);
                 event.win = this;
                 event.is_focused = is_focused;
+                if (is_focused && (this->clip_rect.right != 0))
+                    omg_window_win_set_grab(this, true);
                 omg_base->on_focus_change(&event);
             }
             return RET_DEF_PROC();
@@ -1196,14 +1224,6 @@ bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode) {
     return false;
 }
 
-bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode) {
-    return false;
-}
-
-bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
-    return false;
-}
-
 // TODO: https://learn.microsoft.com/en-us/windows/win32/menurc/cursors
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
@@ -1218,6 +1238,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->mouse_state_cache = 0;
     this->last_mouse_state = 0;
     this->resize_timer = 0;
+    this->clip_rect.left = this->clip_rect.right = this->clip_rect.top = this->clip_rect.bottom = 0;
     this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;

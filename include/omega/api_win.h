@@ -793,6 +793,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*SetCursor)(HCURSOR);
     int OMG_WIN_STD_PREFIX (*ShowCursor)(BOOL);
     BOOL OMG_WIN_STD_PREFIX (*DestroyCursor)(HCURSOR);
+    BOOL OMG_WIN_STD_PREFIX (*ClipCursor)(const RECT*);
 } OMG_User32;
 
 typedef struct {

@@ -136,12 +136,6 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             );
         else if (event->code == OMG_SCANCODE_Y)
             this->win->mouse_warp(this->win, &OMG_FPOINT_MAKE(100.0f, 100.0f));
-        else if (event->code == OMG_SCANCODE_U)
-            this->win->mouse_set_rel(this->win, 2); // 0 - Off, 1 - On, 2 - Toggle, Other - Query
-        else if (event->code == OMG_SCANCODE_I)
-            this->win->set_grab(this->win, 2);
-        else if (event->code == OMG_SCANCODE_O)
-            this->win->cursor_set_shown(this->win, 2);
     }
     if (!event->is_repeated) {
         if (event->code == OMG_SCANCODE_F) {
@@ -176,6 +170,12 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             this->sin_mul = event->is_pressed ? 8.0 : 0.4;
         else if (event->code == OMG_SCANCODE_P)
             this->win->mouse_set_system_cursor(this->win, event->is_pressed ? OMG_SYSTEM_CURSOR_CROSSHAIR : OMG_SYSTEM_CURSOR_ARROW);
+        else if (event->code == OMG_SCANCODE_U)
+            this->win->mouse_set_rel(this->win, event->is_pressed ? 1 : 0); // 0 - Off, 1 - On, 2 - Toggle, Other - Query
+        else if (event->code == OMG_SCANCODE_I)
+            this->win->set_grab(this->win, event->is_pressed ? 1 : 0);
+        else if (event->code == OMG_SCANCODE_O)
+            this->win->cursor_set_shown(this->win, event->is_pressed ? 1 : 0);
     }
     if (!event->is_repeated)
         OMG_INFO(
