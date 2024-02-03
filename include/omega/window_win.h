@@ -44,5 +44,6 @@ OMG_API bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new
 OMG_API bool omg_window_win_renderer_alloc(OMG_WindowWin* this);
 OMG_API bool omg_window_win_renderer_free(OMG_WindowWin* this);
 OMG_API bool omg_window_win_mouse_warp(OMG_WindowWin* this, const OMG_FPoint* pos);
+OMG_API bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cursor_id);
 #endif
 #endif
