@@ -942,11 +942,16 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 event.win = this;
                 base->size.w = event.size.w = (float)new_w;
                 base->size.h = event.size.h = (float)new_h;
-                RECT rect;
                 RECT c_rect;
-                if (this->u32->GetWindowRect(hwnd, &rect) && this->u32->GetClientRect(hwnd, &c_rect)) {
-                    this->size_cache.w = base->size.w + (float)(rect.right - rect.left - c_rect.right);
-                    this->size_cache.h = base->size.h + (float)(rect.bottom - rect.top - c_rect.bottom);
+                POINT min_point, max_point;
+                if (this->u32->GetClientRect(hwnd, &c_rect)) {
+                    min_point.x = min_point.y = 0;
+                    max_point.x = c_rect.right;
+                    max_point.y = c_rect.bottom;
+                    if (this->u32->ClientToScreen(this->hwnd, &min_point) && this->u32->ClientToScreen(this->hwnd, &max_point)) {
+                        this->size_cache.w = (float)(max_point.x - min_point.x);
+                        this->size_cache.h = (float)(max_point.y - min_point.y);
+                    }
                 }
                 if (OMG_ISNOTNULL(base->ren))
                     base->ren->_on_update_window_size(base->ren);
@@ -1148,13 +1153,18 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     if (base->scale.x == 0.0f)
         base->scale.x = 1.0f;
     RECT desktop_rect;
-    RECT rect;
-    RECT c_rect;
+    RECT rect, c_rect;
     HWND hwnd_d = this->u32->GetDesktopWindow();
-    if (!this->u32->GetClientRect(hwnd_d, &desktop_rect) || !this->u32->GetWindowRect(this->hwnd, &rect) || !this->u32->GetClientRect(this->hwnd, &c_rect))
+    POINT min_point, max_point;
+    if (!this->u32->GetClientRect(hwnd_d, &desktop_rect) || !this->u32->GetClientRect(this->hwnd, &c_rect) || !this->u32->GetWindowRect(this->hwnd, &rect))
         return;
-    this->size_cache.w = base->size.w/* * new_scale.x*/ + (float)(rect.right - rect.left - c_rect.right);
-    this->size_cache.h = base->size.h/* * new_scale.y*/ + (float)(rect.bottom - rect.top - c_rect.bottom);
+    min_point.x = min_point.y = 0;
+    max_point.x = c_rect.right;
+    max_point.y = c_rect.bottom;
+    if (!this->u32->ClientToScreen(this->hwnd, &min_point) || !this->u32->ClientToScreen(this->hwnd, &max_point))
+        return;
+    this->size_cache.w = base->size.w + (float)(rect.right - rect.left - max_point.x + min_point.x);
+    this->size_cache.h = base->size.h + (float)(rect.bottom - rect.top - max_point.y + min_point.y);
     this->u32->SetWindowPos(
         this->hwnd,
         NULL,
