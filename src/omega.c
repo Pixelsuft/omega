@@ -3,6 +3,7 @@
 #include <stdio.h>
 #endif
 #include <omega/audio_fmod.h>
+#include <omega/audio_sdl2.h>
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
 
@@ -481,6 +482,28 @@ bool omg_dummy_audio_alloc(OMG_Omega* this) {
 
 bool omg_audio_alloc(OMG_Omega* this) {
     OMG_BEGIN_POINTER_CAST();
+#if OMG_SUPPORT_SDL2_MIXER
+    if (this->audio_type == OMG_AUDIO_TYPE_SDL2) {
+        if (OMG_ISNULL(this->audio)) {
+            this->audio = OMG_MALLOC(this->mem, sizeof(OMG_AudioSdl2) + sizeof(OMG_Sdl2));
+            if (OMG_ISNULL(this->audio))
+                return omg_dummy_audio_alloc(this);
+            this->audio->was_allocated = true;
+        }
+        else
+            this->audio->was_allocated = false;
+        omg_audio_fill_on_create(this->audio);
+        this->audio->omg = this;
+        ((OMG_AudioSdl2*)this->audio)->sdl2 = (OMG_Sdl2*)((size_t)this->audio + sizeof(OMG_AudioSdl2)); // Hack
+        if (omg_sdl2_dll_load(((OMG_AudioSdl2*)this->audio)->sdl2, this->sdl2_mixer_dll_path)) { // TODO: free SDL2
+            OMG_FREE(this->mem, this->audio);
+            this->audio = NULL;
+            return true;
+        }
+        this->audio->init = omg_audio_sdl2_init;
+        return false;
+    }
+#endif
 #if OMG_SUPPORT_FMOD
     this->audio_type = OMG_AUDIO_TYPE_FMOD; // Hack
     if (this->audio_type == OMG_AUDIO_TYPE_FMOD) {
