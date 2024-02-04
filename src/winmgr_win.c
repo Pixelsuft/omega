@@ -215,12 +215,18 @@ OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id) 
     DISPLAY_DEVICEW mon_d;
     if (omg_winmgr_win_find_display(this, &mon_d, display_id))
         return omg_winmgr_display_get_name(base, display_id);
-    static char monitor_name_buf[sizeof(mon_d.DeviceString) * 4];
+    static char monitor_name_buf[sizeof(mon_d.DeviceString) * 2];
     OMG_String res = OMG_STRING_MAKE_BUFFER_A(monitor_name_buf);
-    if (omg_string_add_wchar_p(&res, mon_d.DeviceString)) // TODO: fix
+    res.len = 0;
+    if (omg_string_add_wchar_p(&res, mon_d.DeviceString))
         return omg_winmgr_display_get_name(base, display_id);
-    // _OMG_LOG_INFO(omg_base, &res);
-    // MessageBoxW(NULL, mon_d.DeviceString, L"123", 0);
+    for (size_t i = 0; i < res.len; i++) {
+        if (res.ptr[i] == ',') {
+            res.ptr[i] = '\0';
+            res.len = i;
+            break;
+        }
+    }
     return res;
 }
 
