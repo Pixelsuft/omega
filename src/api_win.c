@@ -219,8 +219,8 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED_COMPAT(GetDpiForWindow);
     LOAD_REQUIRED_COMPAT(GetSystemMetrics);
     LOAD_REQUIRED_COMPAT(GetSystemMetricsForDpi);
-    LOAD_REQUIRED_COMPAT(QueryDisplayConfig);
-    LOAD_REQUIRED_COMPAT(DisplayConfigGetDeviceInfo);
+    // LOAD_REQUIRED_COMPAT(QueryDisplayConfig);
+    // LOAD_REQUIRED_COMPAT(DisplayConfigGetDeviceInfo);
     OMG_END_POINTER_CAST();
     return false;
 }
