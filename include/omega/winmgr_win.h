@@ -28,5 +28,7 @@ OMG_API bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* su
 OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_mem(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const void* mem, size_t size, int format);
 OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_String* path, int format);
 OMG_API int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this);
+OMG_API OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id);
+OMG_API bool omg_winmgr_win_find_display(OMG_WinmgrWin* this, DISPLAY_DEVICEW* monitor_dev, int display_id);
 #endif
 #endif

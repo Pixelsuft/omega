@@ -177,19 +177,10 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_SurfaceWin* 
     return surf;
 }
 
-BOOL omg_winmgr_win_display_count_proc(HMONITOR mon, HDC mon_hdc, LPRECT mon_rect, LPARAM lparam) {
-    OMG_UNUSED(mon, mon_hdc, mon_rect);
-    int* counter_ptr = (int*)lparam;
-    (*counter_ptr)++;
-    return TRUE;
-}
-
 int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this) {
     int counter = 0;
-    // if (!this->u32->EnumDisplayMonitors(NULL, NULL, omg_winmgr_win_display_count_proc, (LPARAM)&counter))
-    //     return -1;
     DISPLAY_DEVICEW dev_d, mon_d;
-    dev_d.cb = mon_d.cb = sizeof(DISPLAY_DEVICE);
+    dev_d.cb = mon_d.cb = sizeof(DISPLAY_DEVICEW);
     DWORD dev_index = 0;
     while (this->u32->EnumDisplayDevicesW(NULL, dev_index, &dev_d, 0)) {
         DWORD mon_index = 0;
@@ -200,6 +191,37 @@ int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this) {
         dev_index++;
     }
     return counter;
+}
+
+bool omg_winmgr_win_find_display(OMG_WinmgrWin* this, DISPLAY_DEVICEW* monitor_dev, int display_id) {
+    DISPLAY_DEVICEW dev_d;
+    dev_d.cb = monitor_dev->cb = sizeof(DISPLAY_DEVICEW);
+    int counter = 0;
+    DWORD dev_index = 0;
+    while (this->u32->EnumDisplayDevicesW(NULL, dev_index, &dev_d, 0)) {
+        DWORD mon_index = 0;
+        while (this->u32->EnumDisplayDevicesW(dev_d.DeviceName, mon_index, monitor_dev, 0)) {
+            if (counter >= display_id)
+                return false;
+            mon_index++;
+            counter++;
+        }
+        dev_index++;
+    }
+    return true;
+}
+
+OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id) {
+    DISPLAY_DEVICEW mon_d;
+    if (omg_winmgr_win_find_display(this, &mon_d, display_id))
+        return omg_winmgr_display_get_name(base, display_id);
+    static char monitor_name_buf[sizeof(mon_d.DeviceString) * 4];
+    OMG_String res = OMG_STRING_MAKE_BUFFER_A(monitor_name_buf);
+    if (omg_string_add_wchar_p(&res, mon_d.DeviceString)) // TODO: fix
+        return omg_winmgr_display_get_name(base, display_id);
+    // _OMG_LOG_INFO(omg_base, &res);
+    // MessageBoxW(NULL, mon_d.DeviceString, L"123", 0);
+    return res;
 }
 
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
@@ -218,6 +240,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->surf_from_fp = omg_winmgr_win_surf_from_fp;
     base->surf_from_mem = omg_winmgr_win_surf_from_mem;
     base->display_get_count = omg_winmgr_win_display_get_count;
+    base->display_get_name = omg_winmgr_win_display_get_name;
     OMG_END_POINTER_CAST();
     return false;
 }
