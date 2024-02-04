@@ -673,12 +673,12 @@ bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode) {
 
 bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode) {
     if (grab_mode == 0) {
-        this->clip_rect.right = 0;
+        this->clip_rect.right = -133700;
         return !this->u32->ClipCursor(NULL);
     }
     if (grab_mode == 2) {
-        if (this->clip_rect.right != 0) {
-            this->clip_rect.right = 0;
+        if (this->clip_rect.right != -133700) {
+            this->clip_rect.right = -133700;
             return !this->u32->ClipCursor(NULL);
         }
     }
@@ -1127,7 +1127,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
                 MAKE_EVENT(&event);
                 event.win = this;
                 event.is_focused = is_focused;
-                if (is_focused && (this->clip_rect.right != 0))
+                if (is_focused && (this->clip_rect.right != -133700))
                     omg_window_win_set_grab(this, true);
                 omg_base->on_focus_change(&event);
             }
@@ -1274,6 +1274,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     this->last_mouse_state = 0;
     this->resize_timer = 0;
     this->clip_rect.left = this->clip_rect.right = this->clip_rect.top = this->clip_rect.bottom = 0;
+    this->clip_rect.right = -133700;
     this->mouse_pos_cache.x = this->mouse_pos_cache.y = 0;
     this->wc.cbSize = sizeof(WNDCLASSEXW);
     this->wc.style = CS_HREDRAW | CS_VREDRAW;
