@@ -27,5 +27,6 @@ OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_Surf
 OMG_API bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf);
 OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_mem(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const void* mem, size_t size, int format);
 OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_String* path, int format);
+OMG_API int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this);
 #endif
 #endif

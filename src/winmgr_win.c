@@ -177,6 +177,20 @@ OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_SurfaceWin* 
     return surf;
 }
 
+BOOL omg_winmgr_win_display_count_proc(HMONITOR mon, HDC mon_hdc, LPRECT mon_rect, LPARAM lparam) {
+    OMG_UNUSED(mon, mon_hdc, mon_rect);
+    int* counter_ptr = (int*)lparam;
+    (*counter_ptr)++;
+    return TRUE;
+}
+
+int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this) {
+    int counter = 0;
+    if (!this->u32->EnumDisplayMonitors(NULL, NULL, omg_winmgr_win_display_count_proc, (LPARAM)&counter))
+        return -1;
+    return counter;
+}
+
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -192,6 +206,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->surf_destroy = omg_winmgr_win_surf_destroy;
     base->surf_from_fp = omg_winmgr_win_surf_from_fp;
     base->surf_from_mem = omg_winmgr_win_surf_from_mem;
+    base->display_get_count = omg_winmgr_win_display_get_count;
     OMG_END_POINTER_CAST();
     return false;
 }

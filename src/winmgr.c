@@ -237,6 +237,8 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->surf_set_locked = omg_winmgr_surf_set_locked;
     this->display_get_count = omg_winmgr_display_get_count;
     this->display_get_name = omg_winmgr_display_get_name;
+    this->display_get_scale = omg_winmgr_display_get_scale;
+    this->display_get_bounds = omg_winmgr_display_get_bounds;
     this->inited = true;
     return false;
 }

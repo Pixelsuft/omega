@@ -796,6 +796,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*ClipCursor)(const RECT*);
     BOOL OMG_WIN_STD_PREFIX (*ScreenToClient)(HWND, LPPOINT);
     BOOL OMG_WIN_STD_PREFIX (*ClientToScreen)(HWND, LPPOINT);
+    BOOL OMG_WIN_STD_PREFIX (*EnumDisplayMonitors)(HDC, LPRECT, MONITORENUMPROC, LPARAM);
 } OMG_User32;
 
 typedef struct {
