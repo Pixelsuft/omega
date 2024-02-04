@@ -147,7 +147,7 @@ bool omg_renderer_win_flip(OMG_RendererWin* this) {
 }
 
 bool omg_renderer_win_set_target(OMG_RendererWin* this, OMG_TextureWin* tex) {
-    this->cur_hwdc = OMG_ISNULL(tex) ? this->hwdc : tex->dc;
+    this->cur_hwdc = OMG_IS_DUMMY_TEX(tex_base) ? this->hwdc : tex->dc;
     if (1 || OMG_ISNOTNULL(this->cur_hpdc))
         this->cur_hpdc = OMG_ISNULL(tex) ? this->hpdc : tex->dc;
     base->target = tex_base;
@@ -210,6 +210,7 @@ bool omg_renderer_win_tex_destroy(OMG_RendererWin* this, OMG_TextureWin* tex) {
 }
 
 bool omg_renderer_win_copy(OMG_RendererWin* this, OMG_TextureWin* tex, const OMG_FPoint* pos) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     this->g32->SetStretchBltMode(this->cur_hpdc, HALFTONE);
     this->g32->StretchBlt(
         this->cur_hpdc,

@@ -98,7 +98,7 @@ bool omg_renderer_raylib_begin(OMG_RendererRaylib* this) {
 }
 
 bool omg_renderer_raylib_set_target(OMG_RendererRaylib* this, OMG_TextureRaylib* tex) {
-    if (OMG_ISNULL(tex))
+    if (OMG_IS_DUMMY_TEX(tex_base))
         this->raylib->EndTextureMode();
     else
         this->raylib->BeginTextureMode(tex->target);
@@ -184,6 +184,7 @@ bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint*
 }
 
 bool omg_renderer_raylib_tex_set_scale_mode(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, int scale_mode) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     this->raylib->SetTextureFilter(*tex->tex, (
         (scale_mode == OMG_SCALE_MODE_LINEAR) ? TEXTURE_FILTER_BILINEAR : (scale_mode == OMG_SCALE_MODE_NEAREST ? TEXTURE_FILTER_POINT : TEXTURE_FILTER_BILINEAR)
     ));
@@ -274,6 +275,7 @@ bool omg_renderer_raylib_tex_destroy(OMG_RendererRaylib* this, OMG_TextureRaylib
 }
 
 bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FPoint* pos) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     if (RAYLIB_HAS_SS() || tex->is_target) {
         RL_Rectangle src = { .x = 0.0f, .y = 0.0f, .width = tex_base->size.w, .height = tex_base->size.h };
         if (tex->is_target)
@@ -308,6 +310,7 @@ bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, 
 }
 
 bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     RL_Rectangle src_rect;
     RL_Rectangle dst_rect;
     Vector2 origin_vec;
@@ -363,6 +366,7 @@ bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* te
 }
 
 bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_Color* col) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     OMG_UNUSED(this);
     tex->tint = _OMG_RAYLIB_OMG_COLOR(col);
     return false;

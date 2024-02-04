@@ -5,6 +5,7 @@
 #include <omega/omega.h>
 #include <omega/font_sdl2.h>
 #include <omega/surface_sdl2.h>
+#include <omega/texture.h>
 #include <omega/texture_sdl2.h>
 #include <omega/api_sdl2_gfx.h>
 #define base ((OMG_Renderer*)this)
@@ -171,7 +172,7 @@ bool omg_renderer_sdl2_set_scale(OMG_RendererSdl2* this, const OMG_FPoint* offse
 }
 
 bool omg_renderer_sdl2_set_target(OMG_RendererSdl2* this, OMG_TextureSdl2* tex) {
-    if (this->sdl2->SDL_SetRenderTarget(this->ren, OMG_ISNULL(tex) ? NULL : tex->tex) < 0) {
+    if (this->sdl2->SDL_SetRenderTarget(this->ren, OMG_IS_DUMMY_TEX(tex_base) ? NULL : tex->tex) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set render target (", this->sdl2->SDL_GetError(), ")");
         return true;
     }
@@ -442,6 +443,7 @@ bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex)
 }
 
 bool omg_renderer_sdl2_tex_set_blend_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int blend_mode) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     if (this->sdl2->SDL_SetTextureBlendMode(tex->tex, (SDL_BlendMode)blend_mode) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set texture blend mode (", this->sdl2->SDL_GetError(), ")");
         return true;
@@ -450,6 +452,7 @@ bool omg_renderer_sdl2_tex_set_blend_mode(OMG_RendererSdl2* this, OMG_TextureSdl
 }
 
 bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* pos) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     SDL_FRect dst_rect;
     dst_rect.x = base->offset.x;
     dst_rect.y = base->offset.y;
@@ -473,6 +476,7 @@ bool omg_renderer_sdl2_copy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const 
 }
 
 bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     SDL_FRect dst_rect;
     SDL_Rect src_rect;
     SDL_RendererFlip flip = 0;
@@ -528,6 +532,7 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
 }
 
 bool omg_renderer_sdl2_tex_set_scale_mode(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, int scale_mode) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     if (this->sdl2->SDL_SetTextureScaleMode(tex->tex, (
         (scale_mode == OMG_SCALE_MODE_LINEAR) ? SDL_ScaleModeLinear : (scale_mode == OMG_SCALE_MODE_NEAREST ? SDL_ScaleModeNearest : SDL_ScaleModeBest)
     )) < 0) {
@@ -549,6 +554,7 @@ bool omg_renderer_sdl2_set_vsync(OMG_RendererSdl2* this, bool enabled) {
 }
 
 bool omg_renderer_sdl2_tex_set_color_mod(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_Color* col) {
+    _OMG_NULL_TEXTURE_CHECK(tex_base);
     bool res = false;
     if (this->sdl2->SDL_SetTextureColorMod(
         tex->tex,
