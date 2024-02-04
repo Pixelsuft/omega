@@ -186,8 +186,19 @@ BOOL omg_winmgr_win_display_count_proc(HMONITOR mon, HDC mon_hdc, LPRECT mon_rec
 
 int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this) {
     int counter = 0;
-    if (!this->u32->EnumDisplayMonitors(NULL, NULL, omg_winmgr_win_display_count_proc, (LPARAM)&counter))
-        return -1;
+    // if (!this->u32->EnumDisplayMonitors(NULL, NULL, omg_winmgr_win_display_count_proc, (LPARAM)&counter))
+    //     return -1;
+    DISPLAY_DEVICEW dev_d, mon_d;
+    dev_d.cb = mon_d.cb = sizeof(DISPLAY_DEVICE);
+    DWORD dev_index = 0;
+    while (this->u32->EnumDisplayDevicesW(NULL, dev_index, &dev_d, 0)) {
+        DWORD mon_index = 0;
+        while (this->u32->EnumDisplayDevicesW(dev_d.DeviceName, mon_index, &mon_d, 0)) {
+            mon_index++;
+            counter++;
+        }
+        dev_index++;
+    }
     return counter;
 }
 
