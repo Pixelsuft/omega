@@ -182,6 +182,7 @@ OMG_SurfaceSdl2* omg_winmgr_sdl2_surf_from_mem(OMG_WinmgrSdl2* this, OMG_Surface
 }
 
 bool omg_winmgr_sdl2_surf_set_locked(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf, bool locked) {
+    _OMG_NULL_SURF_CHECK(surf_base);
     if (SDL_MUSTLOCK(surf->surf)) {
         if ((locked ? this->sdl2->SDL_LockSurface : this->sdl2->SDL_UnlockSurface)(surf->surf) < 0) {
             _OMG_LOG_WARN(omg_base, "Failed to set surface locked (", this->sdl2->SDL_GetError(), ")");
