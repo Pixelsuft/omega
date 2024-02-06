@@ -168,6 +168,28 @@ bool omg_renderer_raylib_draw_circle(OMG_RendererRaylib* this, const OMG_FPoint*
     return false;
 }
 
+bool omg_renderer_raylib_draw_ellipse(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col) {
+    this->raylib->DrawEllipseLines(
+        (int)((pos->x + this->so.x) * this->ss.x),
+        (int)((pos->y + this->so.y) * this->ss.y),
+        rx * this->ss.x,
+        ry * this->ss.y,
+        _OMG_RAYLIB_OMG_COLOR(col)
+    );
+    return false;
+}
+
+bool omg_renderer_raylib_fill_ellipse(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col) {
+    this->raylib->DrawEllipse(
+        (int)((pos->x + this->so.x) * this->ss.x),
+        (int)((pos->y + this->so.y) * this->ss.y),
+        rx * this->ss.x,
+        ry * this->ss.y,
+        _OMG_RAYLIB_OMG_COLOR(col)
+    );
+    return false;
+}
+
 bool omg_renderer_raylib_fill_circle(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
     if (RAYLIB_HAS_SS())
         this->raylib->DrawEllipse(
@@ -466,6 +488,8 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->draw_line_ex = omg_renderer_raylib_draw_line_ex;
     base->draw_rect = omg_renderer_raylib_draw_rect;
     base->fill_rect = omg_renderer_raylib_fill_rect;
+    base->draw_ellipse = omg_renderer_raylib_draw_ellipse;
+    base->fill_ellipse = omg_renderer_raylib_fill_ellipse;
     base->draw_circle = omg_renderer_raylib_draw_circle;
     base->fill_circle = omg_renderer_raylib_fill_circle;
     base->tex_set_scale_mode = omg_renderer_raylib_tex_set_scale_mode;
