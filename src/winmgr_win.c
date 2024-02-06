@@ -230,7 +230,7 @@ OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id) 
     return res;
 }
 
-BOOL omg_winmgr_win_monitor_bounds_enum(HMONITOR hmon, HDC hdc, LPRECT mon_rect, LPARAM lparam) {
+BOOL omg_winmgr_win_monitor_check_enum(HMONITOR hmon, HDC hdc, LPRECT mon_rect, LPARAM lparam) {
     OMG_UNUSED(hmon, hdc);
     OMG_WinmgrWin* this = (OMG_WinmgrWin*)lparam;
     if (this->mon_counter == this->need_display) {
@@ -244,17 +244,21 @@ BOOL omg_winmgr_win_monitor_bounds_enum(HMONITOR hmon, HDC hdc, LPRECT mon_rect,
     return TRUE;
 }
 
-// https://stackoverflow.com/questions/18112616/how-do-i-get-the-dimensions-rect-of-all-the-screens-in-win32-api
 bool omg_winmgr_win_display_get_bounds(OMG_WinmgrWin* this, int display_id, OMG_FRect* rect, bool only_usable) {
     this->mon_counter = 0;
     this->need_display = display_id;
-    if (!this->u32->EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)omg_winmgr_win_monitor_bounds_enum, (LPARAM)this))
+    if (!this->u32->EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)omg_winmgr_win_monitor_check_enum, (LPARAM)this))
         return omg_winmgr_display_get_bounds(base, display_id, rect, only_usable);
     rect->x = this->temp_rect.x;
     rect->y = this->temp_rect.y;
     rect->w = this->temp_rect.w;
     rect->h = this->temp_rect.h;
     return false;
+}
+
+bool omg_winmgr_win_display_get_scale(OMG_WinmgrWin* this, int display_id, OMG_FRect* scale) {
+    // TODO https://stackoverflow.com/questions/70976583/get-real-screen-resolution-using-win32-api
+    return omg_winmgr_display_get_scale(base, display_id, scale);
 }
 
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
@@ -275,6 +279,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->display_get_count = omg_winmgr_win_display_get_count;
     base->display_get_name = omg_winmgr_win_display_get_name;
     base->display_get_bounds = omg_winmgr_win_display_get_bounds;
+    base->display_get_scale = omg_winmgr_win_display_get_scale;
     OMG_END_POINTER_CAST();
     return false;
 }

@@ -17,6 +17,7 @@ typedef struct {
     int need_display;
     int mon_counter;
     OMG_FRect temp_rect;
+    float temp_scale;
     int win_build_num;
 } OMG_WinmgrWin;
 
@@ -33,6 +34,8 @@ OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_Sur
 OMG_API int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this);
 OMG_API OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id);
 OMG_API bool omg_winmgr_win_find_display(OMG_WinmgrWin* this, DISPLAY_DEVICEW* monitor_dev, int display_id);
+OMG_API BOOL omg_winmgr_win_monitor_check_enum(HMONITOR hmon, HDC hdc, LPRECT mon_rect, LPARAM lparam);
 OMG_API bool omg_winmgr_win_display_get_bounds(OMG_WinmgrWin* this, int display_id, OMG_FRect* rect, bool only_usable);
+OMG_API bool omg_winmgr_win_display_get_scale(OMG_WinmgrWin* this, int display_id, OMG_FRect* scale);
 #endif
 #endif
