@@ -28,6 +28,7 @@ OMG_API bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display
 OMG_API int omg_winmgr_sdl2_display_get_num_modes(OMG_WinmgrSdl2* this, int display_id);
 OMG_API bool omg_winmgr_sdl2_display_get_mode(OMG_WinmgrSdl2* this, int display_id, int mode_id, OMG_VideoMode* mode);
 OMG_API bool omg_winmgr_sdl2_display_get_current_mode(OMG_WinmgrSdl2* this, int display_id, OMG_VideoMode* mode);
+OMG_API bool omg_winmgr_sdl2_display_get_desktop_mode(OMG_WinmgrSdl2* this, int display_id, OMG_VideoMode* mode);
 OMG_API int omg_winmgr_sdl2_display_get_orientation(OMG_WinmgrSdl2* this, int display_id);
 #endif
 #endif
