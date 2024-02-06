@@ -383,12 +383,14 @@ void app_init(App* this, OMG_EntryData* data) {
         );
         omg_string_destroy(&mon_name);
         int num_modes = this->omg->winmgr->display_get_num_modes(this->omg->winmgr, i);
+        OMG_VideoMode mode;
         for (int j = 0; j < num_modes; j++) {
-            OMG_VideoMode mode;
             if (this->omg->winmgr->display_get_mode(this->omg->winmgr, i, j, &mode))
                 continue;
             OMG_INFO(this->omg, "Mode ", j, ": ", &mode.size, ", ", mode.rate, "Hz");
         }
+        if (!this->omg->winmgr->display_get_current_mode(this->omg->winmgr, i, &mode))
+            OMG_INFO(this->omg, "Current mode: ", &mode.size, ", ", mode.rate, "Hz");
     }
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
     int64_t file_size = this->file->get_size(this->file);
