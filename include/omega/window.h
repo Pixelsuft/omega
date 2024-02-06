@@ -45,6 +45,7 @@ typedef struct OMG_Window {
     bool (*mouse_set_rel)(struct OMG_Window* this, int rel_mode);
     bool (*cursor_set_shown)(struct OMG_Window* this, int show_mode);
     bool (*mouse_set_system_cursor)(struct OMG_Window* this, int cursor_id);
+    bool (*mouse_set_rect)(struct OMG_Window* this, const OMG_FRect* rect);
     bool (*set_grab)(struct OMG_Window* this, int grab_mode);
     bool (*get_pos)(struct OMG_Window* this, OMG_FRect* pos);
     bool (*set_pos)(struct OMG_Window* this, const OMG_FRect* pos);
@@ -94,6 +95,7 @@ OMG_API bool omg_window_display_get_mode(OMG_Window* this, OMG_VideoMode* mode);
 OMG_API bool omg_window_display_set_mode(OMG_Window* this, const OMG_VideoMode* mode);
 OMG_API bool omg_window_get_pos(OMG_Window* this, OMG_FRect* pos);
 OMG_API bool omg_window_set_pos(OMG_Window* this, const OMG_FRect* pos);
+OMG_API bool omg_window_mouse_set_rect(OMG_Window* this, const OMG_FRect* rect);
 OMG_API bool omg_window_raise(OMG_Window* this);
 OMG_API int omg_window_display_get_index(OMG_Window* this);
 #if OMG_EXPORT_SHIT

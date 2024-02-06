@@ -181,6 +181,10 @@ bool omg_window_raise(OMG_Window* this) {
     return true;
 }
 
+bool omg_window_mouse_set_rect(OMG_Window* this, const OMG_FRect* rect) {
+    return this->set_grab(this, OMG_ISNOTNULL(rect));
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
