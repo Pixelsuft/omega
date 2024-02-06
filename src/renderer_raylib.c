@@ -469,7 +469,7 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
 bool omg_renderer_raylib_draw_line_ex(OMG_RendererRaylib* this, const OMG_FRect* start_end, float thick, const OMG_Color* col) {
     Vector2 vec1 = { .x = (start_end->x1 + this->so.x) * this->ss.x, .y = (start_end->y1 + this->so.y) * this->ss.y };
     Vector2 vec2 = { .x = (start_end->x2 + this->so.x) * this->ss.x, .y = (start_end->y2 + this->so.y) * this->ss.y };
-    this->raylib->DrawLineEx(vec1, vec2, thick * this->ss.w, _OMG_RAYLIB_OMG_COLOR(col));
+    this->raylib->DrawLineEx(vec1, vec2, thick * this->ss.w / 2.0f, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
