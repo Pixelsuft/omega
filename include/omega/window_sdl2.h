@@ -42,5 +42,9 @@ OMG_API bool omg_window_sdl2_display_set_mode(OMG_WindowSdl2* this, const OMG_Vi
 OMG_API bool omg_window_sdl2_mouse_set_rect(OMG_WindowSdl2* this, const OMG_FRect* rect);
 OMG_API bool omg_window_sdl2_get_pos(OMG_WindowSdl2* this, OMG_FRect* pos);
 OMG_API bool omg_window_sdl2_set_pos(OMG_WindowSdl2* this, const OMG_FRect* pos);
+OMG_API bool omg_window_sdl2_set_brightness(OMG_WindowSdl2* this, float brightness);
+OMG_API float omg_window_sdl2_get_brightness(OMG_WindowSdl2* this);
+OMG_API bool omg_window_sdl2_set_opacity(OMG_WindowSdl2* this, float opacity);
+OMG_API float omg_window_sdl2_get_opacity(OMG_WindowSdl2* this);
 #endif
 #endif

@@ -53,7 +53,7 @@ typedef struct OMG_Window {
     bool (*display_set_mode)(struct OMG_Window* this, const OMG_VideoMode* mode);
     int (*display_get_index)(struct OMG_Window* this);
     bool (*set_brightness)(struct OMG_Window* this, float brightness);
-    float (*get_brighness)(struct OMG_Window* this);
+    float (*get_brightness)(struct OMG_Window* this);
     bool (*set_opacity)(struct OMG_Window* this, float opacity);
     float (*get_opacity)(struct OMG_Window* this);
     OMG_Renderer* ren;

@@ -286,6 +286,26 @@ bool omg_window_sdl2_mouse_set_rect(OMG_WindowSdl2* this, const OMG_FRect* rect)
     return false;
 }
 
+bool omg_window_sdl2_set_brightness(OMG_WindowSdl2* this, float brightness) {
+    OMG_UNUSED(this, brightness);
+    return true;
+}
+
+float omg_window_sdl2_get_brightness(OMG_WindowSdl2* this) {
+    OMG_UNUSED(this);
+    return -1.0f;
+}
+
+bool omg_window_sdl2_set_opacity(OMG_WindowSdl2* this, float opacity) {
+    OMG_UNUSED(this, opacity);
+    return true;
+}
+
+float omg_window_sdl2_get_opacity(OMG_WindowSdl2* this) {
+    OMG_UNUSED(this);
+    return -1.0f;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -341,6 +361,10 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->mouse_set_rect = omg_window_sdl2_mouse_set_rect;
     base->get_pos = omg_window_sdl2_get_pos;
     base->set_pos = omg_window_sdl2_set_pos;
+    base->set_brightness = omg_window_sdl2_set_brightness;
+    base->get_brightness = omg_window_sdl2_get_brightness;
+    base->set_opacity = omg_window_sdl2_set_opacity;
+    base->get_opacity = omg_window_sdl2_get_opacity;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

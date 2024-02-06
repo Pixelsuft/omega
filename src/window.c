@@ -245,7 +245,7 @@ bool omg_window_init(OMG_Window* this) {
     this->get_pos = omg_window_get_pos;
     this->set_pos = omg_window_set_pos;
     this->set_brightness = omg_window_set_brightness;
-    this->get_brighness = omg_window_get_brightness;
+    this->get_brightness = omg_window_get_brightness;
     this->set_opacity = omg_window_set_opacity;
     this->get_opacity = omg_window_get_opacity;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
