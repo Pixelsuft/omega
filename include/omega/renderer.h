@@ -53,6 +53,8 @@ typedef struct OMG_Renderer {
     bool (*fill_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     bool (*draw_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
     bool (*fill_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
+    bool (*draw_ellipse)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
+    bool (*fill_ellipse)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
     OMG_Texture* (*tex_from_surf)(struct OMG_Renderer* this, OMG_Texture* tex, OMG_Surface* surf, bool destroy_surf);
     OMG_Texture* (*tex_create)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha);
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
@@ -104,6 +106,8 @@ OMG_API bool omg_renderer_draw_point(OMG_Renderer* this, const OMG_FPoint* pos, 
 OMG_API bool omg_renderer_draw_line_ex(OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
+OMG_API bool omg_renderer_fill_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
+OMG_API bool omg_renderer_draw_ellipse(OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
 OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);
 OMG_API bool omg_renderer_tex_set_scale_mode(OMG_Renderer* this, OMG_Texture* tex, int scale_mode);
 OMG_API bool omg_renderer_tex_set_blend_mode(OMG_Renderer* this, OMG_Texture* tex, int blend_mode);
