@@ -161,7 +161,7 @@ bool omg_window_display_get_mode(OMG_Window* this, OMG_VideoMode* mode) {
     return omg_base->winmgr->display_get_current_mode(omg_base->winmgr, disp, mode);
 }
 
-bool omg_window_display_set_mode(OMG_Window* this, OMG_VideoMode* mode) {
+bool omg_window_display_set_mode(OMG_Window* this, const OMG_VideoMode* mode) {
     return this->set_size(this, &mode->size);
 }
 

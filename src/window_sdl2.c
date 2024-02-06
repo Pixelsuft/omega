@@ -237,7 +237,7 @@ bool omg_window_sdl2_display_get_mode(OMG_WindowSdl2* this, OMG_VideoMode* mode)
     return false;
 }
 
-bool omg_window_sdl2_display_set_mode(OMG_WindowSdl2* this, OMG_VideoMode* mode) {
+bool omg_window_sdl2_display_set_mode(OMG_WindowSdl2* this, const OMG_VideoMode* mode) {
     SDL_DisplayMode sdm;
     sdm.refresh_rate = (int)mode->rate;
     sdm.w = (int)mode->size.w;
