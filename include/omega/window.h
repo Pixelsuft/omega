@@ -52,6 +52,10 @@ typedef struct OMG_Window {
     bool (*display_get_mode)(struct OMG_Window* this, OMG_VideoMode* mode);
     bool (*display_set_mode)(struct OMG_Window* this, const OMG_VideoMode* mode);
     int (*display_get_index)(struct OMG_Window* this);
+    bool (*set_brightness)(struct OMG_Window* this, float brightness);
+    float (*get_brighness)(struct OMG_Window* this);
+    bool (*set_opacity)(struct OMG_Window* this, float opacity);
+    float (*get_opacity)(struct OMG_Window* this);
     OMG_Renderer* ren;
     void* extra1;
     void* extra2;
@@ -97,6 +101,10 @@ OMG_API bool omg_window_get_pos(OMG_Window* this, OMG_FRect* pos);
 OMG_API bool omg_window_set_pos(OMG_Window* this, const OMG_FRect* pos);
 OMG_API bool omg_window_mouse_set_rect(OMG_Window* this, const OMG_FRect* rect);
 OMG_API bool omg_window_raise(OMG_Window* this);
+OMG_API bool omg_window_set_opacity(OMG_Window* this, float opacity);
+OMG_API float omg_window_get_opacity(OMG_Window* this);
+OMG_API bool omg_window_set_brightness(OMG_Window* this, float brightness);
+OMG_API float omg_window_get_brightness(OMG_Window* this);
 OMG_API int omg_window_display_get_index(OMG_Window* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);

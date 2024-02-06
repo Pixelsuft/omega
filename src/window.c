@@ -185,6 +185,26 @@ bool omg_window_mouse_set_rect(OMG_Window* this, const OMG_FRect* rect) {
     return this->set_grab(this, OMG_ISNOTNULL(rect));
 }
 
+bool omg_window_set_brightness(OMG_Window* this, float brightness) {
+    OMG_UNUSED(this, brightness);
+    return true;
+}
+
+float omg_window_get_brightness(OMG_Window* this) {
+    OMG_UNUSED(this);
+    return -1.0f;
+}
+
+bool omg_window_set_opacity(OMG_Window* this, float opacity) {
+    OMG_UNUSED(this, opacity);
+    return true;
+}
+
+float omg_window_get_opacity(OMG_Window* this) {
+    OMG_UNUSED(this);
+    return -1.0f;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -224,6 +244,10 @@ bool omg_window_init(OMG_Window* this) {
     this->display_set_mode = omg_window_display_set_mode;
     this->get_pos = omg_window_get_pos;
     this->set_pos = omg_window_set_pos;
+    this->set_brightness = omg_window_set_brightness;
+    this->get_brighness = omg_window_get_brightness;
+    this->set_opacity = omg_window_set_opacity;
+    this->get_opacity = omg_window_get_opacity;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;
