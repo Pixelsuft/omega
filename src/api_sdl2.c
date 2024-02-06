@@ -271,8 +271,6 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_GetNumVideoDisplays);
     LOAD_REQUIRED(SDL_GetDisplayName);
     LOAD_REQUIRED(SDL_GetDisplayBounds);
-    LOAD_REQUIRED(SDL_GetDisplayUsableBounds);
-    LOAD_REQUIRED(SDL_GetDisplayOrientation);
     LOAD_REQUIRED(SDL_GetNumDisplayModes);
     LOAD_REQUIRED(SDL_GetDisplayMode);
     LOAD_REQUIRED(SDL_GetDesktopDisplayMode);
@@ -287,8 +285,10 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_SetWindowOpacity); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_GetWindowOpacity); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_SetWindowModalFor); // 2.0.5
+    LOAD_REQUIRED_COMPAT(SDL_GetDisplayUsableBounds); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.6
     LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
+    LOAD_REQUIRED_COMPAT(SDL_GetDisplayOrientation); // 2.0.9
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyExF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointF); // 2.0.10

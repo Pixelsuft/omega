@@ -276,6 +276,12 @@ bool omg_winmgr_sdl2_display_get_current_mode(OMG_WinmgrSdl2* this, int display_
     return false;
 }
 
+int omg_winmgr_sdl2_display_get_orientation(OMG_WinmgrSdl2* this, int display_id) {
+    if (OMG_ISNULL(this->sdl2->SDL_GetDisplayOrientation))
+        return omg_winmgr_display_get_orientation(base, display_id);
+    return (int)this->sdl2->SDL_GetDisplayOrientation(display_id);
+}
+
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -290,6 +296,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->display_get_num_modes = omg_winmgr_sdl2_display_get_num_modes;
     base->display_get_mode = omg_winmgr_sdl2_display_get_mode;
     base->display_get_current_mode = omg_winmgr_sdl2_display_get_current_mode;
+    base->display_get_orientation = omg_winmgr_sdl2_display_get_orientation;
     base->window_alloc = omg_winmgr_sdl2_window_alloc;
     base->window_free = omg_winmgr_sdl2_window_free;
     base->surf_create = omg_winmgr_sdl2_surf_create;
