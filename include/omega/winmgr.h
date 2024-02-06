@@ -4,6 +4,7 @@
 #include <omega/surface.h>
 #include <omega/image.h>
 #include <omega/font.h>
+#include <omega/display.h>
 
 typedef struct OMG_Winmgr {
     void* omg;
@@ -31,6 +32,7 @@ typedef struct OMG_Winmgr {
     bool (*display_get_bounds)(struct OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable);
     bool (*display_get_scale)(struct OMG_Winmgr* this, int display_id, OMG_FRect* scale);
     int (*display_get_num_modes)(struct OMG_Winmgr* this, int display_id);
+    bool (*display_get_mode)(struct OMG_Winmgr* this, int display_id, int mode_id, OMG_VideoMode* mode);
     int surf_depth;
     int image_formats;
     int fnt_type;
@@ -53,6 +55,7 @@ OMG_API bool omg_winmgr_image_loader_alloc(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_image_loader_free(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_fontmgr_alloc(OMG_Winmgr* this);
 OMG_API bool omg_winmgr_fontmgr_free(OMG_Winmgr* this);
+OMG_API bool omg_winmgr_display_get_mode(OMG_Winmgr* this, int display_id, int mode_id, OMG_VideoMode* mode);
 OMG_API int omg_winmgr_display_get_count(OMG_Winmgr* this);
 OMG_API int omg_winmgr_display_get_num_modes(OMG_Winmgr* this, int display_id);
 OMG_API OMG_Surface* omg_winmgr_surf_from_fp(OMG_Winmgr* this, OMG_Surface* surf, const OMG_String* path, int format);

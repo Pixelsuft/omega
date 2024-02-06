@@ -378,13 +378,16 @@ void app_init(App* this, OMG_EntryData* data) {
         scale.pz = 0.0f;
         this->omg->winmgr->display_get_bounds(this->omg->winmgr, i, &bounds, false);
         this->omg->winmgr->display_get_scale(this->omg->winmgr, i, &scale);
-        _OMG_LOG_INFO(
+        OMG_INFO(
             this->omg, "Display ", i + 1, ": ", &mon_name, ", Bounds ", &bounds, ", Scale ", &scale
         );
         omg_string_destroy(&mon_name);
         int num_modes = this->omg->winmgr->display_get_num_modes(this->omg->winmgr, i);
         for (int j = 0; j < num_modes; j++) {
-            // LATER
+            OMG_VideoMode mode;
+            if (this->omg->winmgr->display_get_mode(this->omg->winmgr, i, j, &mode))
+                continue;
+            OMG_INFO(this->omg, "Mode ", j, ": ", &mode.size, ", ", mode.rate, "Hz");
         }
     }
     this->file = this->omg->file_from_fp(this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/sample.txt"), OMG_FILE_MODE_RT);
