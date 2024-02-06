@@ -13,7 +13,7 @@
 typedef struct {
     OMG_Renderer parent;
     OMG_Raylib* raylib;
-    OMG_FPoint ss;
+    OMG_FRect ss;
     OMG_FPoint so;
     int blend_cache;
 } OMG_RendererRaylib;

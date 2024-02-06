@@ -48,6 +48,7 @@ typedef struct OMG_Renderer {
     bool (*set_target)(struct OMG_Renderer* this, OMG_Texture* tex);
     bool (*draw_point)(struct OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
     bool (*draw_line)(struct OMG_Renderer* this, const OMG_FRect* start_end, const OMG_Color* col);
+    bool (*draw_line_ex)(struct OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col);
     bool (*draw_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     bool (*fill_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     bool (*draw_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
@@ -100,6 +101,7 @@ OMG_API bool omg_renderer_begin(OMG_Renderer* this);
 OMG_API bool omg_renderer_flip(OMG_Renderer* this);
 OMG_API bool omg_renderer_set_target(OMG_Renderer* this, OMG_Texture* tex);
 OMG_API bool omg_renderer_draw_point(OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
+OMG_API bool omg_renderer_draw_line_ex(OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 OMG_API bool omg_renderer_tex_destroy(OMG_Renderer* this, OMG_Texture* tex);

@@ -45,7 +45,7 @@ int omg_renderer_raylib_get_supported_drivers(OMG_RendererRaylib* this) {
 bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* offset, const OMG_FPoint* scale) {
     omg_renderer_set_scale(base, offset, scale);
     if (IS_DEFAULT_SCALE()) {
-        this->ss.x = this->ss.y = 1.0f;
+        this->ss.x = this->ss.y = this->ss.w = 1.0f;
         this->so.x = this->so.y = 0.0f;
         this->raylib->EndMode2D();
     }
@@ -87,6 +87,7 @@ bool omg_renderer_raylib_set_scale(OMG_RendererRaylib* this, const OMG_FPoint* o
         else
             this->raylib->BeginMode2D(cam);
     }
+    this->ss.w = (this->ss.x + this->ss.y) / 2.0f;
     return false;
 }
 
@@ -443,6 +444,13 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
     return tex;
 }
 
+bool omg_renderer_raylib_draw_line_ex(OMG_RendererRaylib* this, const OMG_FRect* start_end, float thick, const OMG_Color* col) {
+    Vector2 vec1 = { .x = (start_end->x1 + this->so.x) * this->ss.x, .y = (start_end->y1 + this->so.y) * this->ss.y };
+    Vector2 vec2 = { .x = (start_end->x2 + this->so.x) * this->ss.x, .y = (start_end->y2 + this->so.y) * this->ss.y };
+    this->raylib->DrawLineEx(vec1, vec2, thick * this->ss.w, _OMG_RAYLIB_OMG_COLOR(col));
+    return false;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -455,6 +463,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->set_target = omg_renderer_raylib_set_target;
     base->draw_point = omg_renderer_raylib_draw_point;
     base->draw_line = omg_renderer_raylib_draw_line;
+    base->draw_line_ex = omg_renderer_raylib_draw_line_ex;
     base->draw_rect = omg_renderer_raylib_draw_rect;
     base->fill_rect = omg_renderer_raylib_fill_rect;
     base->draw_circle = omg_renderer_raylib_draw_circle;
@@ -470,7 +479,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->font_render = omg_renderer_raylib_font_render;
     OMG_END_POINTER_CAST();
     this->blend_cache = -1;
-    this->ss.x = this->ss.y = 1.0f;
+    this->ss.x = this->ss.y = this->ss.w = 1.0f;
     this->so.x = this->so.y = 0.0f;
     base->soft_offset = true;
     base->soft_scale = true;

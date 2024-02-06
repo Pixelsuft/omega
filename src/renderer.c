@@ -145,6 +145,11 @@ OMG_Texture* omg_renderer_font_render(OMG_Renderer* this, OMG_Texture* tex, OMG_
     return omg_renderer_dummy_tex_create(this);
 }
 
+bool omg_renderer_draw_line_ex(OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col) {
+    OMG_UNUSED(this, start_end, thick, col);
+    return false;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -175,6 +180,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->set_target = omg_renderer_set_target;
     this->draw_point = omg_renderer_draw_point;
     this->draw_line = omg_renderer_draw_fill_rect;
+    this->draw_line_ex = omg_renderer_draw_line_ex;
     this->draw_rect = omg_renderer_draw_fill_rect;
     this->fill_rect = omg_renderer_draw_fill_rect;
     this->draw_circle = omg_renderer_draw_circle;
