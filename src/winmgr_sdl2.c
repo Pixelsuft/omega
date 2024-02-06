@@ -264,6 +264,18 @@ bool omg_winmgr_sdl2_display_get_mode(OMG_WinmgrSdl2* this, int display_id, int 
     return false;
 }
 
+bool omg_winmgr_sdl2_display_get_current_mode(OMG_WinmgrSdl2* this, int display_id, OMG_VideoMode* mode) {
+    SDL_DisplayMode sdm;
+    if (this->sdl2->SDL_GetCurrentDisplayMode(display_id, &sdm) < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to get current display mode for display ", display_id, " (", this->sdl2->SDL_GetError(), ")");
+        return omg_winmgr_display_get_current_mode(base, display_id, mode);
+    }
+    mode->rate = (float)sdm.refresh_rate;
+    mode->size.w = (float)sdm.w;
+    mode->size.h = (float)sdm.h;
+    return false;
+}
+
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -276,6 +288,8 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->display_get_bounds = omg_winmgr_sdl2_display_get_bounds;
     base->display_get_scale = omg_winmgr_sdl2_display_get_scale;
     base->display_get_num_modes = omg_winmgr_sdl2_display_get_num_modes;
+    base->display_get_mode = omg_winmgr_sdl2_display_get_mode;
+    base->display_get_current_mode = omg_winmgr_sdl2_display_get_current_mode;
     base->window_alloc = omg_winmgr_sdl2_window_alloc;
     base->window_free = omg_winmgr_sdl2_window_free;
     base->surf_create = omg_winmgr_sdl2_surf_create;
@@ -283,7 +297,6 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
     base->surf_from_mem = omg_winmgr_sdl2_surf_from_mem;
     base->surf_set_locked = omg_winmgr_sdl2_surf_set_locked;
-    base->display_get_mode = omg_winmgr_sdl2_display_get_mode;
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);

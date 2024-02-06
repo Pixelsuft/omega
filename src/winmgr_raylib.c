@@ -169,6 +169,13 @@ bool omg_winmgr_raylib_display_get_scale(OMG_WinmgrRaylib* this, int display_id,
     return false;
 }
 
+bool omg_winmgr_raylib_display_get_current_mode(OMG_WinmgrRaylib* this, int display_id, OMG_VideoMode* mode) {
+    mode->rate = (float)this->raylib->GetMonitorRefreshRate(display_id);
+    mode->size.w = (float)this->raylib->GetMonitorWidth(display_id);
+    mode->size.h = (float)this->raylib->GetMonitorHeight(display_id);
+    return false;
+}
+
 bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -180,6 +187,7 @@ bool omg_winmgr_raylib_init(OMG_WinmgrRaylib* this) {
     base->display_get_name = omg_winmgr_raylib_display_get_name;
     base->display_get_bounds = omg_winmgr_raylib_display_get_bounds;
     base->display_get_scale = omg_winmgr_raylib_display_get_scale;
+    base->display_get_current_mode = omg_winmgr_raylib_display_get_current_mode;
     base->window_alloc = omg_winmgr_raylib_window_alloc;
     base->window_free = omg_winmgr_raylib_window_free;
     base->surf_create = omg_winmgr_raylib_surf_create;

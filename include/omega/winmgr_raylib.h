@@ -24,5 +24,6 @@ OMG_API int omg_winmgr_raylib_display_get_count(OMG_WinmgrRaylib* this);
 OMG_API OMG_String omg_winmgr_raylib_display_get_name(OMG_WinmgrRaylib* this, int display_id);
 OMG_API bool omg_winmgr_raylib_display_get_bounds(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* rect, bool only_usable);
 OMG_API bool omg_winmgr_raylib_display_get_scale(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* dpi);
+OMG_API bool omg_winmgr_raylib_display_get_current_mode(OMG_WinmgrRaylib* this, int display_id, OMG_VideoMode* mode);
 #endif
 #endif
