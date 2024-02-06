@@ -211,12 +211,28 @@ bool omg_window_raylib_set_pos(OMG_WindowRaylib* this, const OMG_FRect* pos) {
     return false;
 }
 
+bool omg_window_raylib_raise(OMG_WindowRaylib* this) {
+    this->raylib->SetWindowFocused();
+    return false;
+}
+
+bool omg_window_raylib_set_opacity(OMG_WindowRaylib* this, float opacity) {
+    this->raylib->SetWindowOpacity(opacity);
+    this->opacity_cache = opacity;
+    return false;
+}
+
+float omg_window_raylib_get_opacity(OMG_WindowRaylib* this) {
+    return this->opacity_cache;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
     base->inited = false;
     OMG_BEGIN_POINTER_CAST();
     base->show = omg_window_raylib_show;
+    base->raise = omg_window_raylib_raise;
     base->set_size = omg_window_set_size;
     base->set_icon = omg_window_raylib_set_icon;
     base->set_title = omg_window_raylib_set_title;
@@ -233,6 +249,8 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->cursor_set_shown = omg_window_raylib_cursor_set_shown;
     base->mouse_set_system_cursor = omg_window_raylib_mouse_set_system_cursor;
     base->display_get_index = omg_window_raylib_display_get_index;
+    base->set_opacity = omg_window_raylib_set_opacity;
+    base->get_opacity = omg_window_raylib_get_opacity;
     base->get_pos = omg_window_raylib_get_pos;
     base->set_pos = omg_window_raylib_set_pos;
     OMG_END_POINTER_CAST();
@@ -258,6 +276,7 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
             this->raylib->ToggleFullscreen();
         _OMG_LOG_INFO(omg_base, "Raylib window created successfuly");
     }
+    this->opacity_cache = 1.0f;
     return !base->inited;
 }
 #endif

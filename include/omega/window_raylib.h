@@ -7,6 +7,7 @@
 typedef struct {
     OMG_Window parent;
     OMG_Raylib* raylib;
+    float opacity_cache;
 } OMG_WindowRaylib;
 
 OMG_API bool omg_window_raylib_init(OMG_WindowRaylib* this);
@@ -32,5 +33,8 @@ OMG_API bool omg_window_raylib_mouse_set_system_cursor(OMG_WindowRaylib* this, i
 OMG_API int omg_window_raylib_display_get_index(OMG_WindowRaylib* this);
 OMG_API bool omg_window_raylib_get_pos(OMG_WindowRaylib* this, OMG_FRect* pos);
 OMG_API bool omg_window_raylib_set_pos(OMG_WindowRaylib* this, const OMG_FRect* pos);
+OMG_API bool omg_window_raylib_raise(OMG_WindowRaylib* this);
+OMG_API bool omg_window_raylib_set_opacity(OMG_WindowRaylib* this, float opacity);
+OMG_API float omg_window_raylib_get_opacity(OMG_WindowRaylib* this);
 #endif
 #endif
