@@ -249,6 +249,19 @@ bool omg_window_sdl2_display_set_mode(OMG_WindowSdl2* this, const OMG_VideoMode*
     return false;
 }
 
+bool omg_window_sdl2_get_pos(OMG_WindowSdl2* this, OMG_FRect* pos) {
+    int x_buf, y_buf;
+    this->sdl2->SDL_GetWindowPosition(this->win, &x_buf, &y_buf);
+    pos->x = (float)x_buf;
+    pos->y = (float)y_buf;
+    return false;
+}
+
+bool omg_window_sdl2_set_pos(OMG_WindowSdl2* this, const OMG_FRect* pos) {
+    this->sdl2->SDL_SetWindowPosition(this->win, (int)pos->x, (int)pos->y);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -300,6 +313,8 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->display_get_index = omg_window_sdl2_display_get_index;
     base->display_get_mode = omg_window_sdl2_display_get_mode;
     base->display_set_mode = omg_window_sdl2_display_set_mode;
+    base->get_pos = omg_window_sdl2_get_pos;
+    base->set_pos = omg_window_sdl2_set_pos;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

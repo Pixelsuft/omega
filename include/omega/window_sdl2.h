@@ -38,5 +38,7 @@ OMG_API bool omg_window_sdl2_mouse_set_system_cursor(OMG_WindowSdl2* this, int c
 OMG_API bool omg_window_sdl2_display_get_mode(OMG_WindowSdl2* this, OMG_VideoMode* mode);
 OMG_API int omg_window_sdl2_display_get_index(OMG_WindowSdl2* this);
 OMG_API bool omg_window_sdl2_display_set_mode(OMG_WindowSdl2* this, const OMG_VideoMode* mode);
+OMG_API bool omg_window_sdl2_get_pos(OMG_WindowSdl2* this, OMG_FRect* pos);
+OMG_API bool omg_window_sdl2_set_pos(OMG_WindowSdl2* this, const OMG_FRect* pos);
 #endif
 #endif
