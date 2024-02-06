@@ -202,6 +202,11 @@ bool omg_winmgr_display_get_scale(OMG_Winmgr* this, int display_id, OMG_FRect* s
     return true;
 }
 
+int omg_winmgr_display_get_num_modes(OMG_Winmgr* this, int display_id) {
+    OMG_UNUSED(this, display_id);
+    return -1;
+}
+
 bool omg_winmgr_init(OMG_Winmgr* this) {
     this->cache = OMG_MALLOC(omg_base->mem, sizeof(OMG_Window*) * OMG_MAX_WINDOWS);
     if (OMG_ISNULL(this->cache))
@@ -239,6 +244,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->display_get_name = omg_winmgr_display_get_name;
     this->display_get_scale = omg_winmgr_display_get_scale;
     this->display_get_bounds = omg_winmgr_display_get_bounds;
+    this->display_get_num_modes = omg_winmgr_display_get_num_modes;
     this->inited = true;
     return false;
 }

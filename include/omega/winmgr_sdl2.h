@@ -25,6 +25,7 @@ OMG_API int omg_winmgr_sdl2_display_get_count(OMG_WinmgrSdl2* this);
 OMG_API OMG_String omg_winmgr_sdl2_display_get_name(OMG_WinmgrSdl2* this, int display_id);
 OMG_API bool omg_winmgr_sdl2_display_get_bounds(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* rect, bool only_usable);
 OMG_API bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display_id, OMG_FRect* dpi);
+OMG_API int omg_winmgr_sdl2_display_get_num_modes(OMG_WinmgrSdl2* this, int display_id);
 #endif
 #endif
 #endif

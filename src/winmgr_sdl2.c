@@ -241,6 +241,15 @@ bool omg_winmgr_sdl2_display_get_scale(OMG_WinmgrSdl2* this, int display_id, OMG
     return false;
 }
 
+int omg_winmgr_sdl2_display_get_num_modes(OMG_WinmgrSdl2* this, int display_id) {
+    int res = this->sdl2->SDL_GetNumDisplayModes(display_id);
+    if (res < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to get num display modes for display ", display_id, " (", this->sdl2->SDL_GetError(), ")");
+        return -1;
+    }
+    return res;
+}
+
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     if (omg_winmgr_init((OMG_Winmgr*)this))
         return true;
@@ -252,6 +261,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->display_get_name = omg_winmgr_sdl2_display_get_name;
     base->display_get_bounds = omg_winmgr_sdl2_display_get_bounds;
     base->display_get_scale = omg_winmgr_sdl2_display_get_scale;
+    base->display_get_num_modes = omg_winmgr_sdl2_display_get_num_modes;
     base->window_alloc = omg_winmgr_sdl2_window_alloc;
     base->window_free = omg_winmgr_sdl2_window_free;
     base->surf_create = omg_winmgr_sdl2_surf_create;
