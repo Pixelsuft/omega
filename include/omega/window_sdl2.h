@@ -35,5 +35,7 @@ OMG_API bool omg_window_sdl2_mouse_set_rel(OMG_WindowSdl2* this, int rel_mode);
 OMG_API bool omg_window_sdl2_set_grab(OMG_WindowSdl2* this, int grab_mode);
 OMG_API bool omg_window_sdl2_mouse_set_shown(OMG_WindowSdl2* this, int show_mode);
 OMG_API bool omg_window_sdl2_mouse_set_system_cursor(OMG_WindowSdl2* this, int cursor_id);
+OMG_API bool omg_window_sdl2_display_get_mode(OMG_WindowSdl2* this, OMG_VideoMode* mode);
+OMG_API int omg_window_sdl2_display_get_index(OMG_WindowSdl2* this);
 #endif
 #endif
