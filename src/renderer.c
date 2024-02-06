@@ -146,8 +146,8 @@ OMG_Texture* omg_renderer_font_render(OMG_Renderer* this, OMG_Texture* tex, OMG_
 }
 
 bool omg_renderer_draw_line_ex(OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col) {
-    OMG_UNUSED(this, start_end, thick, col);
-    return false;
+    OMG_UNUSED(thick);
+    return this->draw_line(this, start_end, col);
 }
 
 bool omg_renderer_init(OMG_Renderer* this) {
