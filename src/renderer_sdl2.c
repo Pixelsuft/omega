@@ -225,14 +225,6 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     if (base->aa) {
-        /*aaLineRGBA(
-            this->ren,
-            (int16_t)(start_end->x1 + base->offset.x),
-            (int16_t)(start_end->y1 + base->offset.y),
-            (int16_t)(start_end->x2 + base->offset.x),
-            (int16_t)(start_end->y2 + base->offset.y),
-            _r_color, _g_color, _b_color, _a_color
-        );*/
         SDL2_SCALE_OFF(res);
         aaLineRGBA(
             this->ren,
@@ -248,6 +240,25 @@ bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_
         res = true;
         _OMG_LOG_WARN(omg_base, "Failed to draw line (", this->sdl2->SDL_GetError(), ")");
     }
+    return res;
+}
+
+bool omg_renderer_sdl2_draw_line_ex(OMG_RendererSdl2* this, const OMG_FRect* start_end, float thick, const OMG_Color* col) {
+    if (OMG_ISNULL(col))
+        col = &base->color;
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    SDL2_SCALE_OFF(res);
+    thickLineRGBA(
+        this->ren,
+        (int16_t)((start_end->x1 + base->offset.x) * base->scale.x),
+        (int16_t)((start_end->y1 + base->offset.y) * base->scale.y),
+        (int16_t)((start_end->x2 + base->offset.x) * base->scale.x),
+        (int16_t)((start_end->y2 + base->offset.y) * base->scale.y),
+        (uint8_t)(base->a_scale * thick),
+        _r_color, _g_color, _b_color, _a_color
+    );
+    SDL2_SCALE_ON(res);
     return res;
 }
 
@@ -666,6 +677,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->set_target = omg_renderer_sdl2_set_target;
     base->draw_point = omg_renderer_sdl2_draw_point;
     base->draw_line = omg_renderer_sdl2_draw_line;
+    base->draw_line_ex = omg_renderer_sdl2_draw_line_ex;
     base->draw_rect = omg_renderer_sdl2_draw_rect;
     base->fill_rect = omg_renderer_sdl2_fill_rect;
     base->draw_circle = omg_renderer_sdl2_draw_circle;
