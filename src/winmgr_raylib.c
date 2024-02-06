@@ -147,8 +147,8 @@ int omg_winmgr_raylib_display_get_count(OMG_WinmgrRaylib* this) {
     return this->raylib->GetMonitorCount();
 }
 
-const OMG_String* omg_winmgr_raylib_display_get_name(OMG_WinmgrRaylib* this, int display_id) {
-    return &OMG_STRING_MAKE_STATIC(this->raylib->GetMonitorName(display_id));
+OMG_String omg_winmgr_raylib_display_get_name(OMG_WinmgrRaylib* this, int display_id) {
+    return OMG_STRING_MAKE_STATIC(this->raylib->GetMonitorName(display_id));
 }
 
 bool omg_winmgr_raylib_display_get_bounds(OMG_WinmgrRaylib* this, int display_id, OMG_FRect* rect, bool only_usable) {
