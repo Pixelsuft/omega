@@ -288,8 +288,8 @@ bool omg_window_sdl2_mouse_set_rect(OMG_WindowSdl2* this, const OMG_FRect* rect)
 
 bool omg_window_sdl2_set_brightness(OMG_WindowSdl2* this, float brightness) {
     if (this->sdl2->SDL_SetWindowBrightness(this->win, brightness) < 0) {
-        _OMG_LOG_INFO(omg_base, "Failed to set brightness for window (", this->sdl2->SDL_GetError(), ")");
-        return true;
+        _OMG_LOG_INFO(omg_base, "Failed to set window brightness (", this->sdl2->SDL_GetError(), ")");
+        return omg_window_set_brightness(base, brightness);
     }
     return false;
 }
@@ -301,14 +301,21 @@ float omg_window_sdl2_get_brightness(OMG_WindowSdl2* this) {
 bool omg_window_sdl2_set_opacity(OMG_WindowSdl2* this, float opacity) {
     if (OMG_ISNULL(this->sdl2->SDL_SetWindowOpacity))
         return omg_window_set_opacity(base, opacity);
-    return true;
+    if (this->sdl2->SDL_SetWindowOpacity(this->win, opacity) < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to set window opacity (", this->sdl2->SDL_GetError(), ")");
+        return omg_window_set_opacity(base, opacity);
+    }
+    return false;
 }
 
 float omg_window_sdl2_get_opacity(OMG_WindowSdl2* this) {
     if (OMG_ISNULL(this->sdl2->SDL_GetWindowOpacity))
         return omg_window_get_opacity(base);
     float res = -1.0f;
-    this->sdl2->SDL_GetWindowOpacity(this->win, &res);
+    if (this->sdl2->SDL_GetWindowOpacity(this->win, &res) < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to get window opacity (", this->sdl2->SDL_GetError(), ")");
+        return omg_window_get_opacity(base);
+    }
     return res;
 }
 
