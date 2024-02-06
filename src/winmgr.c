@@ -221,6 +221,10 @@ bool omg_winmgr_display_get_current_mode(OMG_Winmgr* this, int display_id, OMG_V
     return true;
 }
 
+bool omg_winmgr_display_get_desktop_mode(OMG_Winmgr* this, int display_id, OMG_VideoMode* mode) {
+    return omg_winmgr_display_get_current_mode(this, display_id, mode);
+}
+
 int omg_winmgr_display_get_orientation(OMG_Winmgr* this, int display_id) {
     OMG_UNUSED(this, display_id);
     return OMG_DISPLAY_ORIENTATION_UNKNOWN;
@@ -267,6 +271,7 @@ bool omg_winmgr_init(OMG_Winmgr* this) {
     this->display_get_mode = omg_winmgr_display_get_mode;
     this->display_get_current_mode = omg_winmgr_display_get_current_mode;
     this->display_get_orientation = omg_winmgr_display_get_orientation;
+    this->display_get_desktop_mode = omg_winmgr_display_get_desktop_mode;
     this->inited = true;
     return false;
 }
