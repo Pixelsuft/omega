@@ -176,6 +176,11 @@ bool omg_window_set_pos(OMG_Window* this, const OMG_FRect* pos) {
     return true;
 }
 
+bool omg_window_raise(OMG_Window* this) {
+    OMG_UNUSED(this);
+    return true;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -193,6 +198,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_min_size = omg_window_set_min_size;
     this->set_max_size = omg_window_set_max_size;
     this->set_state = omg_window_set_state;
+    this->raise = omg_window_raise;
     this->set_sys_button = omg_window_set_sys_button;
     this->set_resizable = omg_window_set_resizable;
     this->set_bordered = omg_window_set_bordered;

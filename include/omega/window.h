@@ -33,6 +33,7 @@ typedef struct OMG_Window {
     bool (*renderer_alloc)(struct OMG_Window* this);
     bool (*renderer_free)(struct OMG_Window* this);
     bool (*set_state)(struct OMG_Window* this, int state);
+    bool (*raise)(struct OMG_Window* this);
     bool (*set_window_mode)(struct OMG_Window* this, int mode);
     bool (*set_sys_button)(struct OMG_Window* this, int id, bool enabled);
     bool (*set_resizable)(struct OMG_Window* this, bool enabled);
@@ -93,6 +94,7 @@ OMG_API bool omg_window_display_get_mode(OMG_Window* this, OMG_VideoMode* mode);
 OMG_API bool omg_window_display_set_mode(OMG_Window* this, const OMG_VideoMode* mode);
 OMG_API bool omg_window_get_pos(OMG_Window* this, OMG_FRect* pos);
 OMG_API bool omg_window_set_pos(OMG_Window* this, const OMG_FRect* pos);
+OMG_API bool omg_window_raise(OMG_Window* this);
 OMG_API int omg_window_display_get_index(OMG_Window* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);

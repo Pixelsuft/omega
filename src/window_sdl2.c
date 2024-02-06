@@ -262,6 +262,11 @@ bool omg_window_sdl2_set_pos(OMG_WindowSdl2* this, const OMG_FRect* pos) {
     return false;
 }
 
+bool omg_window_sdl2_raise(OMG_WindowSdl2* this) {
+    this->sdl2->SDL_RaiseWindow(this->win);
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -292,6 +297,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     }
     this->sdl2->SDL_SetWindowData(this->win, "a", this);
     OMG_BEGIN_POINTER_CAST();
+    base->raise = omg_window_sdl2_raise;
     base->set_size = omg_window_sdl2_set_size;
     base->set_min_size = omg_window_sdl2_set_min_size;
     base->set_max_size = omg_window_sdl2_set_max_size;
