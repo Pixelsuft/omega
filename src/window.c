@@ -162,8 +162,7 @@ bool omg_window_display_get_mode(OMG_Window* this, OMG_VideoMode* mode) {
 }
 
 bool omg_window_display_set_mode(OMG_Window* this, OMG_VideoMode* mode) {
-    OMG_UNUSED(this, mode);
-    return true;
+    return this->set_size(this, &mode->size);
 }
 
 bool omg_window_init(OMG_Window* this) {
