@@ -194,8 +194,10 @@ bool omg_winmgr_sdl2_surf_set_locked(OMG_WinmgrSdl2* this, OMG_SurfaceSdl2* surf
 
 int omg_winmgr_sdl2_display_get_count(OMG_WinmgrSdl2* this) {
     int res = this->sdl2->SDL_GetNumVideoDisplays();
-    if (res < 0)
-        _OMG_LOG_WARN(omg_base, "Failed to get num display modes (", this->sdl2->SDL_GetError(), ")");
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to get num displays (", this->sdl2->SDL_GetError(), ")");
+        return omg_winmgr_display_get_count(base);
+    }
     return res;
 }
 
@@ -245,9 +247,21 @@ int omg_winmgr_sdl2_display_get_num_modes(OMG_WinmgrSdl2* this, int display_id) 
     int res = this->sdl2->SDL_GetNumDisplayModes(display_id);
     if (res < 0) {
         _OMG_LOG_INFO(omg_base, "Failed to get num display modes for display ", display_id, " (", this->sdl2->SDL_GetError(), ")");
-        return -1;
+        return omg_winmgr_display_get_num_modes(base, display_id);
     }
     return res;
+}
+
+bool omg_winmgr_sdl2_display_get_mode(OMG_WinmgrSdl2* this, int display_id, int mode_id, OMG_VideoMode* mode) {
+    SDL_DisplayMode sdm;
+    if (this->sdl2->SDL_GetDisplayMode(display_id, mode_id, &sdm) < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to get display mode ", mode_id, " for display ", display_id, " (", this->sdl2->SDL_GetError(), ")");
+        return omg_winmgr_display_get_mode(base, display_id, mode_id, mode);
+    }
+    mode->rate = (float)sdm.refresh_rate;
+    mode->size.w = (float)sdm.w;
+    mode->size.h = (float)sdm.h;
+    return false;
 }
 
 bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
@@ -269,6 +283,7 @@ bool omg_winmgr_sdl2_init(OMG_WinmgrSdl2* this) {
     base->surf_from_fp = omg_winmgr_sdl2_surf_from_fp;
     base->surf_from_mem = omg_winmgr_sdl2_surf_from_mem;
     base->surf_set_locked = omg_winmgr_sdl2_surf_set_locked;
+    base->display_get_mode = omg_winmgr_sdl2_display_get_mode;
 #if OMG_SUPPORT_SDL2_IMAGE
     base->sz_image_loader = sizeof(OMG_ImageLoaderSdl2);
     base->_img_init_ptr = (void*)((size_t)omg_image_loader_sdl2_init);
