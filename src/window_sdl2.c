@@ -267,6 +267,25 @@ bool omg_window_sdl2_raise(OMG_WindowSdl2* this) {
     return false;
 }
 
+bool omg_window_sdl2_mouse_set_rect(OMG_WindowSdl2* this, const OMG_FRect* rect) {
+    int res;
+    if (OMG_ISNULL(rect))
+        res = this->sdl2->SDL_SetWindowMouseRect(this->win, NULL);
+    else {
+        SDL_Rect sdl_rect;
+        sdl_rect.x = (int)rect->x;
+        sdl_rect.y = (int)rect->y;
+        sdl_rect.w = (int)rect->w;
+        sdl_rect.h = (int)rect->h;
+        res = this->sdl2->SDL_SetWindowMouseRect(this->win, &sdl_rect);
+    }
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set window mouse rect (", this->sdl2->SDL_GetError(), ")");
+        return omg_window_mouse_set_rect(base, rect);
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -319,6 +338,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->display_get_index = omg_window_sdl2_display_get_index;
     base->display_get_mode = omg_window_sdl2_display_get_mode;
     base->display_set_mode = omg_window_sdl2_display_set_mode;
+    base->mouse_set_rect = omg_window_sdl2_mouse_set_rect;
     base->get_pos = omg_window_sdl2_get_pos;
     base->set_pos = omg_window_sdl2_set_pos;
     base->destroy = omg_window_sdl2_destroy;
