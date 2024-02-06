@@ -230,15 +230,31 @@ OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id) 
     return res;
 }
 
-BOOL omg_winmgr_win_monitor_bounds_enum(HMONITOR hMon, HDC hdc, LPRECT lprcMonitor, LPARAM pData) {
+BOOL omg_winmgr_win_monitor_bounds_enum(HMONITOR hmon, HDC hdc, LPRECT mon_rect, LPARAM lparam) {
+    OMG_UNUSED(hmon, hdc);
+    OMG_WinmgrWin* this = (OMG_WinmgrWin*)lparam;
+    if (this->mon_counter == this->need_display) {
+        this->temp_rect.x = (float)mon_rect->left;
+        this->temp_rect.y = (float)mon_rect->top;
+        this->temp_rect.w = (float)(mon_rect->right - mon_rect->left);
+        this->temp_rect.h = (float)(mon_rect->bottom - mon_rect->top);
+        return TRUE;
+    }
+    this->mon_counter++;
     return TRUE;
 }
 
 // https://stackoverflow.com/questions/18112616/how-do-i-get-the-dimensions-rect-of-all-the-screens-in-win32-api
 bool omg_winmgr_win_display_get_bounds(OMG_WinmgrWin* this, int display_id, OMG_FRect* rect, bool only_usable) {
+    this->mon_counter = 0;
+    this->need_display = display_id;
     if (!this->u32->EnumDisplayMonitors(NULL, NULL, (MONITORENUMPROC)omg_winmgr_win_monitor_bounds_enum, (LPARAM)this))
         return omg_winmgr_display_get_bounds(base, display_id, rect, only_usable);
-    return true;
+    rect->x = this->temp_rect.x;
+    rect->y = this->temp_rect.y;
+    rect->w = this->temp_rect.w;
+    rect->h = this->temp_rect.h;
+    return false;
 }
 
 bool omg_winmgr_win_init(OMG_WinmgrWin* this) {

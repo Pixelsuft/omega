@@ -14,6 +14,9 @@ typedef struct {
 #if OMG_SUPPORT_SDL2
     OMG_Sdl2* sdl2;
 #endif
+    int need_display;
+    int mon_counter;
+    OMG_FRect temp_rect;
     int win_build_num;
 } OMG_WinmgrWin;
 
