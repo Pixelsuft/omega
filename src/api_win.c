@@ -212,6 +212,7 @@ bool omg_winapi_user32_load(OMG_User32* this) {
     LOAD_REQUIRED(ClientToScreen);
     LOAD_REQUIRED(EnumDisplayMonitors);
     LOAD_REQUIRED(EnumDisplayDevicesW);
+    LOAD_REQUIRED(UnionRect);
     LOAD_REQUIRED_COMPAT(SetProcessDPIAware);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwareness);
     LOAD_REQUIRED_COMPAT(SetProcessDpiAwarenessContext);
