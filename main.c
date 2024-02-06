@@ -177,6 +177,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
                 this->win->set_grab(this->win, 2);
             else if (event->code == OMG_SCANCODE_O)
                 this->win->cursor_set_shown(this->win, 2);
+            else if (event->code == OMG_SCANCODE_B)
+                this->win->set_opacity(this->win, this->win->get_opacity(this->win) > 0.5f ? 0.5f : 1.0f);
         }
     }
     if (!event->is_repeated)
