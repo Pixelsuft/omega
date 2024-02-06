@@ -287,23 +287,29 @@ bool omg_window_sdl2_mouse_set_rect(OMG_WindowSdl2* this, const OMG_FRect* rect)
 }
 
 bool omg_window_sdl2_set_brightness(OMG_WindowSdl2* this, float brightness) {
-    OMG_UNUSED(this, brightness);
-    return true;
+    if (this->sdl2->SDL_SetWindowBrightness(this->win, brightness) < 0) {
+        _OMG_LOG_INFO(omg_base, "Failed to set brightness for window (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
 }
 
 float omg_window_sdl2_get_brightness(OMG_WindowSdl2* this) {
-    OMG_UNUSED(this);
-    return -1.0f;
+    return this->sdl2->SDL_GetWindowBrightness(this->win);
 }
 
 bool omg_window_sdl2_set_opacity(OMG_WindowSdl2* this, float opacity) {
-    OMG_UNUSED(this, opacity);
+    if (OMG_ISNULL(this->sdl2->SDL_SetWindowOpacity))
+        return omg_window_set_opacity(base, opacity);
     return true;
 }
 
 float omg_window_sdl2_get_opacity(OMG_WindowSdl2* this) {
-    OMG_UNUSED(this);
-    return -1.0f;
+    if (OMG_ISNULL(this->sdl2->SDL_GetWindowOpacity))
+        return omg_window_get_opacity(base);
+    float res = -1.0f;
+    this->sdl2->SDL_GetWindowOpacity(this->win, &res);
+    return res;
 }
 
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {

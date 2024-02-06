@@ -389,7 +389,6 @@ void app_init(App* this, OMG_EntryData* data) {
                 continue;
             OMG_INFO(this->omg, "Mode ", j, ": ", &mode.size, ", ", mode.rate, "Hz");
         }*/
-        
         if (!this->omg->winmgr->display_get_current_mode(this->omg->winmgr, i, &mode))
             OMG_INFO(this->omg, "Current mode: ", &mode.size, ", ", mode.rate, "Hz");
         if (!this->omg->winmgr->display_get_desktop_mode(this->omg->winmgr, i, &mode))
