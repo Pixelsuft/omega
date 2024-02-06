@@ -237,6 +237,18 @@ bool omg_window_sdl2_display_get_mode(OMG_WindowSdl2* this, OMG_VideoMode* mode)
     return false;
 }
 
+bool omg_window_sdl2_display_set_mode(OMG_WindowSdl2* this, OMG_VideoMode* mode) {
+    SDL_DisplayMode sdm;
+    sdm.refresh_rate = (int)mode->rate;
+    sdm.w = (int)mode->size.w;
+    sdm.h = (int)mode->size.h;
+    if (this->sdl2->SDL_SetWindowDisplayMode(this->win, &sdm) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set window display mode (", this->sdl2->SDL_GetError(), ")");
+        return omg_window_display_set_mode(base, mode);
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -287,6 +299,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->set_grab = omg_window_sdl2_set_grab;
     base->display_get_index = omg_window_sdl2_display_get_index;
     base->display_get_mode = omg_window_sdl2_display_get_mode;
+    base->display_set_mode = omg_window_sdl2_display_set_mode;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;

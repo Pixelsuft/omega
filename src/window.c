@@ -161,6 +161,11 @@ bool omg_window_display_get_mode(OMG_Window* this, OMG_VideoMode* mode) {
     return omg_base->winmgr->display_get_current_mode(omg_base->winmgr, disp, mode);
 }
 
+bool omg_window_display_set_mode(OMG_Window* this, OMG_VideoMode* mode) {
+    OMG_UNUSED(this, mode);
+    return true;
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -196,6 +201,7 @@ bool omg_window_init(OMG_Window* this) {
     this->set_grab = omg_window_set_grab;
     this->display_get_index = omg_window_display_get_index;
     this->display_get_mode = omg_window_display_get_mode;
+    this->display_set_mode = omg_window_display_set_mode;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;
