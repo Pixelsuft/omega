@@ -199,6 +199,18 @@ int omg_window_raylib_display_get_index(OMG_WindowRaylib* this) {
     return this->raylib->GetCurrentMonitor();
 }
 
+bool omg_window_raylib_get_pos(OMG_WindowRaylib* this, OMG_FRect* pos) {
+    Vector2 res = this->raylib->GetWindowPosition();
+    pos->x = res.x;
+    pos->y = res.y;
+    return false;
+}
+
+bool omg_window_raylib_set_pos(OMG_WindowRaylib* this, const OMG_FRect* pos) {
+    this->raylib->SetWindowPosition((int)pos->x, (int)pos->y);
+    return false;
+}
+
 bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_RAYLIB;
@@ -221,6 +233,8 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
     base->cursor_set_shown = omg_window_raylib_cursor_set_shown;
     base->mouse_set_system_cursor = omg_window_raylib_mouse_set_system_cursor;
     base->display_get_index = omg_window_raylib_display_get_index;
+    base->get_pos = omg_window_raylib_get_pos;
+    base->set_pos = omg_window_raylib_set_pos;
     OMG_END_POINTER_CAST();
     this->raylib->SetConfigFlags(
         FLAG_WINDOW_HIDDEN |
