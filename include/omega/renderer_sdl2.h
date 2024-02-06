@@ -37,8 +37,8 @@ OMG_API bool omg_renderer_sdl2_draw_point(OMG_RendererSdl2* this, const OMG_FPoi
 OMG_API bool omg_renderer_sdl2_draw_line(OMG_RendererSdl2* this, const OMG_FRect* start_end, const OMG_Color* col);
 OMG_API bool omg_renderer_sdl2_draw_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, const OMG_Color* col);
 OMG_API bool omg_renderer_sdl2_fill_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, const OMG_Color* col);
-OMG_API bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
-OMG_API bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
+OMG_API bool omg_renderer_sdl2_draw_ellipse(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
+OMG_API bool omg_renderer_sdl2_fill_ellipse(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col)
 OMG_API OMG_TextureSdl2* omg_renderer_sdl2_tex_from_surf(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Surface* surf, bool destroy_surf);
 OMG_API OMG_TextureSdl2* omg_renderer_sdl2_tex_create(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API bool omg_renderer_sdl2_tex_destroy(OMG_RendererSdl2* this, OMG_TextureSdl2* tex);

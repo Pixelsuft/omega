@@ -262,7 +262,7 @@ bool omg_renderer_sdl2_draw_line_ex(OMG_RendererSdl2* this, const OMG_FRect* sta
     return res;
 }
 
-bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+bool omg_renderer_sdl2_draw_ellipse(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col) {
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
@@ -271,8 +271,8 @@ bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
             this->ren,
             (int16_t)((pos->x + base->offset.x) * base->scale.x),
             (int16_t)((pos->y + base->offset.y) * base->scale.y),
-            (int16_t)(rad * base->scale.x),
-            (int16_t)(rad * base->scale.y),
+            (int16_t)(rx * base->scale.x),
+            (int16_t)(ry * base->scale.y),
             _r_color, _g_color, _b_color, _a_color
         );
     }
@@ -281,15 +281,15 @@ bool omg_renderer_sdl2_draw_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
             this->ren,
             (int16_t)((pos->x + base->offset.x) * base->scale.x),
             (int16_t)((pos->y + base->offset.y) * base->scale.y),
-            (int16_t)(rad * base->scale.x),
-            (int16_t)(rad * base->scale.y)
+            (int16_t)(rx * base->scale.x),
+            (int16_t)(ry * base->scale.y)
         );
     }
     SDL2_SCALE_ON(res);
     return res;
 }
 
-bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+bool omg_renderer_sdl2_fill_ellipse(OMG_RendererSdl2* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col) {
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
     SDL2_SCALE_OFF(res);
@@ -298,8 +298,8 @@ bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
             this->ren,
             (int16_t)((pos->x + base->offset.x) * base->scale.x),
             (int16_t)((pos->y + base->offset.y) * base->scale.y),
-            (int16_t)(rad * base->scale.x),
-            (int16_t)(rad * base->scale.y),
+            (int16_t)(rx * base->scale.x),
+            (int16_t)(ry * base->scale.y),
             _r_color, _g_color, _b_color, _a_color
         );
     }
@@ -308,8 +308,8 @@ bool omg_renderer_sdl2_fill_circle(OMG_RendererSdl2* this, const OMG_FPoint* pos
             this->ren,
             (int16_t)((pos->x + base->offset.x) * base->scale.x),
             (int16_t)((pos->y + base->offset.y) * base->scale.y),
-            (int16_t)(rad * base->scale.x),
-            (int16_t)(rad * base->scale.y)
+            (int16_t)(rx * base->scale.x),
+            (int16_t)(ry * base->scale.y)
         );
     }
     SDL2_SCALE_ON(res);
@@ -680,8 +680,8 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->draw_line_ex = omg_renderer_sdl2_draw_line_ex;
     base->draw_rect = omg_renderer_sdl2_draw_rect;
     base->fill_rect = omg_renderer_sdl2_fill_rect;
-    base->draw_circle = omg_renderer_sdl2_draw_circle;
-    base->fill_circle = omg_renderer_sdl2_fill_circle;
+    base->draw_ellipse = omg_renderer_sdl2_draw_ellipse;
+    base->fill_ellipse = omg_renderer_sdl2_fill_ellipse;
     base->tex_from_surf = omg_renderer_sdl2_tex_from_surf;
     base->tex_create = omg_renderer_sdl2_tex_create;
     base->tex_destroy = omg_renderer_sdl2_tex_destroy;
