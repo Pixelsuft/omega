@@ -198,6 +198,7 @@ bool omg_renderer_sdl2_draw_rect(OMG_RendererSdl2* this, const OMG_FRect* rect, 
         col = &base->color;
     bool res = false;
     APPLY_SDL2_DRAW(res, col);
+    // TODO: aa
     SDL_FRect sdl_rect = MAKE_SDL2_RECT(rect);
     if (this->sdl2->SDL_RenderDrawRectF(this->ren, &sdl_rect) < 0) {
         res = true;
@@ -612,6 +613,49 @@ bool omg_renderer_sdl2_set_clip_rect(OMG_RendererSdl2* this, const OMG_FRect* cl
     return false;
 }
 
+bool omg_renderer_sdl2_fill_rect_ex(OMG_RendererSdl2* this, const OMG_FRect* rect, float roundness, const OMG_Color* col) {
+    if (roundness == 0.0f)
+        return omg_renderer_sdl2_fill_rect(this, rect, col);
+    if (OMG_ISNULL(col))
+        col = &base->color;
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    SDL2_SCALE_OFF(res);
+    roundedBoxRGBA(
+        this->ren,
+        (int16_t)((rect->x + base->offset.x) * base->scale.x),
+        (int16_t)((rect->y + base->offset.y) * base->scale.y),
+        (int16_t)((rect->w + rect->x + base->offset.x) * base->scale.x),
+        (int16_t)((rect->h + rect->y + base->offset.y) * base->scale.y),
+        (uint8_t)(base->a_scale * roundness),
+        _r_color, _g_color, _b_color, _a_color
+    );
+    SDL2_SCALE_ON(res);
+    return res;
+}
+
+bool omg_renderer_sdl2_draw_rect_ex(OMG_RendererSdl2* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col) {
+    OMG_UNUSED(thick);
+    if (roundness == 0.0f)
+        return omg_renderer_sdl2_draw_rect(this, rect, col);
+    if (OMG_ISNULL(col))
+        col = &base->color;
+    bool res = false;
+    APPLY_SDL2_DRAW(res, col);
+    SDL2_SCALE_OFF(res);
+    roundedRectangleRGBA(
+        this->ren,
+        (int16_t)((rect->x + base->offset.x) * base->scale.x),
+        (int16_t)((rect->y + base->offset.y) * base->scale.y),
+        (int16_t)((rect->w + rect->x + base->offset.x) * base->scale.x),
+        (int16_t)((rect->h + rect->y + base->offset.y) * base->scale.y),
+        (uint8_t)(base->a_scale * roundness),
+        _r_color, _g_color, _b_color, _a_color
+    );
+    SDL2_SCALE_ON(res);
+    return res;
+}
+
 OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
 #if OMG_SUPPORT_SDL2_TTF
     if ((omg_base->winmgr->fnt->type != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
@@ -699,6 +743,8 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->draw_line_ex = omg_renderer_sdl2_draw_line_ex;
     base->draw_rect = omg_renderer_sdl2_draw_rect;
     base->fill_rect = omg_renderer_sdl2_fill_rect;
+    base->draw_rect_ex = omg_renderer_sdl2_draw_rect_ex;
+    base->fill_rect_ex = omg_renderer_sdl2_fill_rect_ex;
     base->draw_ellipse = omg_renderer_sdl2_draw_ellipse;
     base->fill_ellipse = omg_renderer_sdl2_fill_ellipse;
     base->tex_from_surf = omg_renderer_sdl2_tex_from_surf;

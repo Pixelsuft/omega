@@ -499,7 +499,7 @@ bool omg_renderer_raylib_draw_rect_ex(OMG_RendererRaylib* this, const OMG_FRect*
         .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
     };
     if (roundness <= 0.0f) {
-    this->raylib->DrawRectangleLinesEx(rec, thick * this->ss.w / _RL_THICK_DIV, _OMG_RAYLIB_OMG_COLOR(col));
+        this->raylib->DrawRectangleLinesEx(rec, thick * this->ss.w / _RL_THICK_DIV, _OMG_RAYLIB_OMG_COLOR(col));
         return false;
     }
     this->raylib->DrawRectangleRoundedLines(rec, roundness * this->ss.w, -1, thick * this->ss.w / _RL_THICK_DIV, _OMG_RAYLIB_OMG_COLOR(col));

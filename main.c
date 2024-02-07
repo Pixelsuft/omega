@@ -247,15 +247,14 @@ void app_on_paint(OMG_EventPaint* event) {
             this->ren->draw_point(this->ren, &pos, &OMG_COLOR_MAKE_RGB(0, 255, 0));
         }
     }
-    this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 200, 50, 50), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
+    this->ren->fill_rect_ex(this->ren, &OMG_FRECT_MAKE(200, 200, 50, 50), 5.0f, &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
     this->ren->draw_line_ex(this->ren, &OMG_FRECT_MAKE(0, 100, 200, 200), 2.0f, &OMG_COLOR_MAKE_RGB(0, 0, 255));
     this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(300, 300), 50.0f, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 128));
     // this->ren->set_clip_rect(this->ren, NULL);
     this->ren->set_target(this->ren, this->tex);
     // Drawing on a texture
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
-    // this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(50, 50, 100, 100), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 255));
-    this->ren->fill_rect_ex(this->ren, &OMG_FRECT_MAKE(50, 50, 100, 100), 10.0f, &OMG_COLOR_MAKE_RGBA(255, 0, 0, 255));
+    this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(50, 50, 100, 100), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 255));
     // this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(50, 50), 50.0f, &OMG_COLOR_MAKE_RGBA(255, 255, 0, 100));
     this->ren->set_target(this->ren, NULL);
     this->ren->copy(this->ren, this->tex, &OMG_FPOINT_MAKE(400, 200));
