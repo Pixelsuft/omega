@@ -103,37 +103,37 @@ bool omg_renderer_win_draw_point(OMG_RendererWin* this, const OMG_FPoint* pos, c
     return omg_renderer_win_fill_rect(this, &rect, col);
 }
 
-bool omg_renderer_win_draw_circle(OMG_RendererWin* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+bool omg_renderer_win_draw_ellipse(OMG_RendererWin* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col) {
     HPEN pen = this->g32->CreatePen(PS_SOLID, (int)base->a_scale, _OMG_WIN_OMG_RGB(col));
     if (OMG_ISNULL(pen))
         return true;
     this->g32->SelectObject(this->cur_hpdc, pen);
     bool res = !this->g32->Ellipse(
         this->cur_hpdc,
-        (int)((pos->x + base->offset.x - rad) * base->scale.x),
-        (int)((pos->y + base->offset.y - rad) * base->scale.y),
-        (int)((pos->x + base->offset.x + rad) * base->scale.x),
-        (int)((pos->y + base->offset.y + rad) * base->scale.y)
+        (int)((pos->x + base->offset.x - rx) * base->scale.x),
+        (int)((pos->y + base->offset.y - ry) * base->scale.y),
+        (int)((pos->x + base->offset.x + rx) * base->scale.x),
+        (int)((pos->y + base->offset.y + ry) * base->scale.y)
     );
     this->g32->DeleteObject(pen);
     return res;
 }
 
 
-bool omg_renderer_win_fill_circle(OMG_RendererWin* this, const OMG_FPoint* pos, float rad, const OMG_Color* col) {
+bool omg_renderer_win_fill_ellipse(OMG_RendererWin* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col) {
     HBRUSH brush = this->g32->CreateSolidBrush(_OMG_WIN_OMG_RGB(col));
     if (OMG_ISNULL(brush))
         return true;
     this->g32->SelectObject(this->cur_hpdc, brush);
     bool res = !this->g32->Ellipse(
         this->cur_hpdc,
-        (int)((pos->x + base->offset.x - rad) * base->scale.x),
-        (int)((pos->y + base->offset.y - rad) * base->scale.y),
-        (int)((pos->x + base->offset.x + rad) * base->scale.x),
-        (int)((pos->y + base->offset.y + rad) * base->scale.y)
+        (int)((pos->x + base->offset.x - rx) * base->scale.x),
+        (int)((pos->y + base->offset.y - ry) * base->scale.y),
+        (int)((pos->x + base->offset.x + rx) * base->scale.x),
+        (int)((pos->y + base->offset.y + ry) * base->scale.y)
     );
     this->g32->DeleteObject(brush);
-    omg_renderer_win_draw_circle(this, pos, rad, col); // Ugly border hack
+    omg_renderer_win_draw_ellipse(this, pos, rx, ry, col); // Ugly border hack
     return res;
 }
 
@@ -237,8 +237,8 @@ bool omg_renderer_win_init(OMG_RendererWin* this) {
     base->draw_rect = omg_renderer_win_draw_rect;
     base->fill_rect = omg_renderer_win_fill_rect;
     base->draw_point = omg_renderer_win_draw_point;
-    base->draw_circle = omg_renderer_win_draw_circle;
-    base->fill_circle = omg_renderer_win_fill_circle;
+    base->draw_ellipse = omg_renderer_win_draw_ellipse;
+    base->fill_ellipse = omg_renderer_win_fill_ellipse;
     base->set_target = omg_renderer_win_set_target;
     base->tex_create = omg_renderer_win_tex_create;
     base->tex_destroy = omg_renderer_win_tex_destroy;
