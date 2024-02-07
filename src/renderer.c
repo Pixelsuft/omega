@@ -158,6 +158,11 @@ bool omg_renderer_draw_line_ex(OMG_Renderer* this, const OMG_FRect* start_end, f
     return this->draw_line(this, start_end, col);
 }
 
+bool omg_renderer_set_clip_rect(OMG_Renderer* this, const OMG_FRect* clip_rect) {
+    OMG_UNUSED(this, clip_rect);
+    return true;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -202,6 +207,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->tex_set_color_mod = omg_renderer_tex_set_color_mod;
     this->tex_set_blend_mode = omg_renderer_tex_set_blend_mode;
     this->set_blend_mode = omg_renderer_set_blend_mode;
+    this->set_clip_rect = omg_renderer_set_clip_rect;
     OMG_BEGIN_POINTER_CAST();
     this->font_render = omg_renderer_font_render;
     OMG_END_POINTER_CAST();

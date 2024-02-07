@@ -1400,7 +1400,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_SetTextureAlphaMod)(SDL_Texture*, uint8_t);
     int OMG_SDL2_STD_PREFIX (*SDL_SetTextureBlendMode)(SDL_Texture*, SDL_BlendMode);
     int OMG_SDL2_STD_PREFIX (*SDL_SetTextureScaleMode)(SDL_Texture*, SDL_ScaleMode);
-    int OMG_SDL2_STD_PREFIX (*SDL_UpdateTexture)(SDL_Texture* texture, const SDL_Rect*, const void*, int);
+    int OMG_SDL2_STD_PREFIX (*SDL_UpdateTexture)(SDL_Texture*, const SDL_Rect*, const void*, int);
     int OMG_SDL2_STD_PREFIX (*SDL_LockTexture)(SDL_Texture*, const SDL_Rect*, void**, int*);
     int OMG_SDL2_STD_PREFIX (*SDL_UnlockTexture)(SDL_Texture*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderSetViewport)(SDL_Renderer*, const SDL_Rect*);

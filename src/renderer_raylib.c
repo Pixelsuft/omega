@@ -423,6 +423,14 @@ bool omg_renderer_raylib_set_vsync(OMG_RendererRaylib* this, bool enabled) {
     return false;
 }
 
+bool omg_renderer_raylib_set_clip_rect(OMG_RendererRaylib* this, const OMG_FRect* clip_rect) {
+    if (OMG_ISNULL(clip_rect))
+        this->raylib->EndScissorMode();
+    else
+        this->raylib->BeginScissorMode((int)clip_rect->x, (int)clip_rect->y, (int)clip_rect->w, (int)clip_rect->h);
+    return false;
+}
+
 OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
     if (omg_string_ensure_null((OMG_String*)text))
         return (OMG_TextureRaylib*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);

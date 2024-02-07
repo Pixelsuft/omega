@@ -593,6 +593,25 @@ bool omg_renderer_sdl2_set_blend_mode(OMG_RendererSdl2* this, int blend_mode) {
     return false;
 }
 
+bool omg_renderer_sdl2_set_clip_rect(OMG_RendererSdl2* this, const OMG_FRect* clip_rect) {
+    int res;
+    if (OMG_ISNULL(clip_rect))
+        res = this->sdl2->SDL_RenderSetClipRect(this->ren, NULL);
+    else {
+        SDL_Rect sdl_rect;
+        sdl_rect.x = (int)clip_rect->x;
+        sdl_rect.y = (int)clip_rect->y;
+        sdl_rect.w = (int)clip_rect->w;
+        sdl_rect.h = (int)clip_rect->h;
+        res = this->sdl2->SDL_RenderSetClipRect(this->ren, &sdl_rect);
+    }
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set renderer clip rect (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
 #if OMG_SUPPORT_SDL2_TTF
     if ((omg_base->winmgr->fnt->type != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))

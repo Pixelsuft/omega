@@ -47,7 +47,8 @@ OMG_API bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRa
 OMG_API bool omg_renderer_raylib_tex_set_color_mod(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, const OMG_Color* col);
 OMG_API bool omg_renderer_raylib_set_blend_mode(OMG_RendererRaylib* this, int blend_mode);
 OMG_API OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
-OMG_API bool omg_renderer_raylib_draw_ellipse(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col)
-OMG_API bool omg_renderer_raylib_fill_ellipse(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col)
+OMG_API bool omg_renderer_raylib_draw_ellipse(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_fill_ellipse(OMG_RendererRaylib* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_set_clip_rect(OMG_RendererRaylib* this, const OMG_FRect* clip_rect);
 #endif
 #endif
