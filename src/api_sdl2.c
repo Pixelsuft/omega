@@ -282,6 +282,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_GetWindowPixelFormat);
     LOAD_REQUIRED(SDL_GetWindowPosition);
     LOAD_REQUIRED(SDL_SetWindowPosition);
+    LOAD_REQUIRED(SDL_RenderReadPixels);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetDisplayDPI); // 2.0.4
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5

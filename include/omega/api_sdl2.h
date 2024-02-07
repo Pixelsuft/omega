@@ -1494,6 +1494,7 @@ typedef struct {
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_GetWindowPixelFormat)(SDL_Window*);
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowPosition)(SDL_Window*, int, int);
     void OMG_SDL2_STD_PREFIX (*SDL_GetWindowPosition)(SDL_Window*, int*, int*);
+    int OMG_SDL2_STD_PREFIX (*SDL_RenderReadPixels)(SDL_Renderer*, const SDL_Rect*, uint32_t, void*, int);
     uint64_t _tick64_emu;
     SDL_version ver;
     bool is_first;
