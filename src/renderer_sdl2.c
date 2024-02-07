@@ -712,6 +712,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->set_blend_mode = omg_renderer_sdl2_set_blend_mode;
     base->set_vsync = omg_renderer_sdl2_set_vsync;
     base->font_render = omg_renderer_sdl2_font_render;
+    base->set_clip_rect = omg_renderer_sdl2_set_clip_rect;
     OMG_END_POINTER_CAST();
     this->blend_cache = OMG_BLEND_MODE_NONE;
     base->type = OMG_REN_TYPE_SDL2;

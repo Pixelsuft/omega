@@ -239,6 +239,7 @@ void app_on_paint(OMG_EventPaint* event) {
     //     return;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(this->bg_col, this->bg_col, this->bg_col));
+    // this->ren->set_clip_rect(this->ren, &OMG_FRECT_MAKE(100, 100, 600, 500));
     this->ren->set_scale(this->ren, &this->offset_cache, &this->scale_cache);
     OMG_FPoint pos;
     for (pos.x = 100.0f; pos.x < 150.0f; pos.x += 2.0f) {
@@ -249,6 +250,7 @@ void app_on_paint(OMG_EventPaint* event) {
     this->ren->fill_rect(this->ren, &OMG_FRECT_MAKE(200, 200, 50, 50), &OMG_COLOR_MAKE_RGBA(255, 0, 0, 100));
     this->ren->draw_line_ex(this->ren, &OMG_FRECT_MAKE(0, 100, 200, 200), 2.0f, &OMG_COLOR_MAKE_RGB(0, 0, 255));
     this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(300, 300), 50.0f, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 128));
+    // this->ren->set_clip_rect(this->ren, NULL);
     this->ren->set_target(this->ren, this->tex);
     // Drawing on a texture
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGBA(0, 255, 255, 100));
@@ -362,6 +364,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->ren = this->win->ren;
     this->offset_cache.x = this->offset_cache.y = 0.0f;
     this->scale_cache.x = this->scale_cache.y = 1.0f;
+    this->ren->soft_offset = true;
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for doing fail checks here, but you shouldn't :)
     // Example of loading from file/mem

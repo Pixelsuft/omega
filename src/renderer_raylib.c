@@ -509,6 +509,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->tex_set_color_mod = omg_renderer_raylib_tex_set_color_mod;
     base->set_blend_mode = omg_renderer_raylib_set_blend_mode;
     base->font_render = omg_renderer_raylib_font_render;
+    base->set_clip_rect = omg_renderer_raylib_set_clip_rect;
     OMG_END_POINTER_CAST();
     this->blend_cache = -1;
     this->ss.x = this->ss.y = this->ss.w = 1.0f;
