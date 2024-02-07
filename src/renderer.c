@@ -163,6 +163,16 @@ bool omg_renderer_set_clip_rect(OMG_Renderer* this, const OMG_FRect* clip_rect) 
     return true;
 }
 
+bool omg_renderer_fill_rect_ex(OMG_Renderer* this, const OMG_FRect* rect, float roundness, const OMG_Color* col) {
+    OMG_UNUSED(roundness);
+    return this->fill_rect(this, rect, col);
+}
+
+bool omg_renderer_draw_rect_ex(OMG_Renderer* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col) {
+    OMG_UNUSED(roundness, thick);
+    return this->draw_rect(this, rect, col);
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -196,6 +206,8 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->draw_line_ex = omg_renderer_draw_line_ex;
     this->draw_rect = omg_renderer_draw_fill_rect;
     this->fill_rect = omg_renderer_draw_fill_rect;
+    this->draw_rect_ex = omg_renderer_draw_rect_ex;
+    this->fill_rect_ex = omg_renderer_fill_rect_ex;
     this->draw_circle = omg_renderer_draw_circle;
     this->fill_circle = omg_renderer_fill_circle;
     this->tex_from_surf = omg_renderer_tex_from_surf;

@@ -11,6 +11,7 @@
 #define win_base ((OMG_Window*)base->win)
 #define omg_base ((OMG_Omega*)base->omg)
 #define font_raylib ((OMG_FontRaylib*)font)
+#define _RL_THICK_DIV 2.0f
 #define IS_DEFAULT_SCALE() ((base->scale.x == 1.0f) && (base->scale.y == 1.0f) && (base->offset.x == 0.0f) && (base->offset.y == 0.0f))
 #define RAYLIB_HAS_SS() ((this->ss.x != 1.0f) || (this->ss.y != 1.0f))
 
@@ -477,7 +478,31 @@ OMG_TextureRaylib* omg_renderer_raylib_font_render(OMG_RendererRaylib* this, OMG
 bool omg_renderer_raylib_draw_line_ex(OMG_RendererRaylib* this, const OMG_FRect* start_end, float thick, const OMG_Color* col) {
     Vector2 vec1 = { .x = (start_end->x1 + this->so.x) * this->ss.x, .y = (start_end->y1 + this->so.y) * this->ss.y };
     Vector2 vec2 = { .x = (start_end->x2 + this->so.x) * this->ss.x, .y = (start_end->y2 + this->so.y) * this->ss.y };
-    this->raylib->DrawLineEx(vec1, vec2, thick * this->ss.w / 2.0f, _OMG_RAYLIB_OMG_COLOR(col));
+    this->raylib->DrawLineEx(vec1, vec2, thick * this->ss.w / _RL_THICK_DIV, _OMG_RAYLIB_OMG_COLOR(col));
+    return false;
+}
+
+bool omg_renderer_raylib_fill_rect_ex(OMG_RendererRaylib* this, const OMG_FRect* rect, float roundness, const OMG_Color* col) {
+    if (roundness <= 0.0f)
+        return omg_renderer_raylib_fill_rect(this, rect, col);
+    RL_Rectangle rec = {
+        .x = (rect->x + this->so.x) * this->ss.x, .y = (rect->y + this->so.y) * this->ss.y,
+        .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
+    };
+    this->raylib->DrawRectangleRounded(rec, roundness * this->ss.w, -1, _OMG_RAYLIB_OMG_COLOR(col));
+    return false;
+}
+
+bool omg_renderer_raylib_draw_rect_ex(OMG_RendererRaylib* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col) {
+    RL_Rectangle rec = {
+        .x = (rect->x + this->so.x) * this->ss.x, .y = (rect->y + this->so.y) * this->ss.y,
+        .width = rect->w * this->ss.x, .height = rect->h * this->ss.y
+    };
+    if (roundness <= 0.0f) {
+    this->raylib->DrawRectangleLinesEx(rec, thick * this->ss.w / _RL_THICK_DIV, _OMG_RAYLIB_OMG_COLOR(col));
+        return false;
+    }
+    this->raylib->DrawRectangleRoundedLines(rec, roundness * this->ss.w, -1, thick * this->ss.w / _RL_THICK_DIV, _OMG_RAYLIB_OMG_COLOR(col));
     return false;
 }
 
@@ -496,6 +521,8 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->draw_line_ex = omg_renderer_raylib_draw_line_ex;
     base->draw_rect = omg_renderer_raylib_draw_rect;
     base->fill_rect = omg_renderer_raylib_fill_rect;
+    base->fill_rect_ex = omg_renderer_raylib_fill_rect_ex;
+    base->draw_rect_ex = omg_renderer_raylib_draw_rect_ex;
     base->draw_ellipse = omg_renderer_raylib_draw_ellipse;
     base->fill_ellipse = omg_renderer_raylib_fill_ellipse;
     base->draw_circle = omg_renderer_raylib_draw_circle;

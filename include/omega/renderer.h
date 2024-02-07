@@ -51,6 +51,8 @@ typedef struct OMG_Renderer {
     bool (*draw_line_ex)(struct OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col);
     bool (*draw_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
     bool (*fill_rect)(struct OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
+    bool (*fill_rect_ex)(struct OMG_Renderer* this, const OMG_FRect* rect, float roundness, const OMG_Color* col);
+    bool (*draw_rect_ex)(struct OMG_Renderer* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col);
     bool (*draw_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
     bool (*fill_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
     bool (*draw_ellipse)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
@@ -107,6 +109,8 @@ OMG_API bool omg_renderer_set_clip_rect(OMG_Renderer* this, const OMG_FRect* cli
 OMG_API bool omg_renderer_draw_point(OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_line_ex(OMG_Renderer* this, const OMG_FRect* start_end, float thick, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_fill_rect(OMG_Renderer* this, const OMG_FRect* rect, const OMG_Color* col);
+OMG_API bool omg_renderer_fill_rect_ex(OMG_Renderer* this, const OMG_FRect* rect, float roundness, const OMG_Color* col);
+OMG_API bool omg_renderer_draw_rect_ex(OMG_Renderer* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 OMG_API bool omg_renderer_fill_circle(OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
 OMG_API bool omg_renderer_draw_ellipse(OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
