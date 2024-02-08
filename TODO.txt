@@ -3,3 +3,4 @@
 [-] Track memory allocations
 [-] Fix dummy textures (bool is_dummy = true checks)
 [-] Vulkan renderer
+[-] Emscripten JS audio
