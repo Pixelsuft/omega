@@ -190,6 +190,12 @@ typedef union {
         omg_color_t b;
         omg_color_t a;
     };
+    struct {
+        omg_color_t red;
+        omg_color_t green;
+        omg_color_t blue;
+        omg_color_t alpha;
+    };
     omg_color_t val[4];
 } OMG_Color;
 
@@ -201,6 +207,10 @@ typedef union {
     struct {
         int w;
         int h;
+    };
+    struct {
+        int width;
+        int height;
     };
     int val[2];
 } OMG_Point;
@@ -214,6 +224,10 @@ typedef union {
         float w;
         float h;
     };
+    struct {
+        float width;
+        float height;
+    };
     float val[2];
 } OMG_FPoint;
 
@@ -225,6 +239,10 @@ typedef union {
     struct {
         double w;
         double h;
+    };
+    struct {
+        double width;
+        double height;
     };
     double val[2];
 } OMG_DPoint;
@@ -241,6 +259,12 @@ typedef union {
         int y1;
         int x2;
         int y2;
+    };
+    struct {
+        int left;
+        int top;
+        int right;
+        int bottom;
     };
     struct {
         int px;
@@ -265,6 +289,12 @@ typedef union {
         float y2;
     };
     struct {
+        float left;
+        float top;
+        float right;
+        float bottom;
+    };
+    struct {
         float px;
         float py;
         float pz;
@@ -285,6 +315,12 @@ typedef union {
         double y1;
         double x2;
         double y2;
+    };
+    struct {
+        double left;
+        double top;
+        double right;
+        double bottom;
     };
     struct {
         double px;
