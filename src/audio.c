@@ -109,17 +109,17 @@ bool omg_audio_mus_destroy(OMG_Audio* this, OMG_Music* mus) {
 
 bool omg_audio_mus_play(OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in) {
     OMG_UNUSED(this, mus, loops, pos, fade_in);
-    return false;
+    return true;
 }
 
 bool omg_audio_mus_set_volume(OMG_Audio* this, OMG_Music* mus, float volume) {
     OMG_UNUSED(this, mus, volume);
-    return false;
+    return true;
 }
 
 bool omg_audio_mus_stop(OMG_Audio* this, OMG_Music* mus) {
     OMG_UNUSED(this, mus);
-    return false;
+    return true;
 }
 
 bool omg_audio_mus_pause(OMG_Audio* this, OMG_Music* mus, bool paused) {
@@ -129,12 +129,12 @@ bool omg_audio_mus_pause(OMG_Audio* this, OMG_Music* mus, bool paused) {
 
 bool omg_audio_snd_pause(OMG_Audio* this, OMG_Sound* snd, bool paused) {
     OMG_UNUSED(this, snd, paused);
-    return false;
+    return true;
 }
 
 bool omg_audio_snd_set_speed(OMG_Audio* this, OMG_Sound* snd, float speed) {
     OMG_UNUSED(this, snd, speed);
-    return false;
+    return true;
 }
 
 bool omg_audio_snd_destroy(OMG_Audio* this, OMG_Sound* snd) {
@@ -188,17 +188,17 @@ OMG_Sound* omg_audio_snd_from_file(OMG_Audio* this, OMG_Sound* snd, OMG_File* fi
 
 bool omg_audio_snd_set_volume(OMG_Audio* this, OMG_Sound* snd, float volume) {
     OMG_UNUSED(this, snd, volume);
-    return false;
+    return true;
 }
 
 bool omg_audio_snd_play(OMG_Audio* this, OMG_Sound* snd, int loops, double fade_in) {
     OMG_UNUSED(this, snd, loops, fade_in);
-    return false;
+    return true;
 }
 
 bool omg_audio_snd_stop(OMG_Audio* this, OMG_Sound* snd) {
     OMG_UNUSED(this, snd);
-    return false;
+    return true;
 }
 
 double omg_audio_mus_get_pos(OMG_Audio* this, OMG_Music* mus) {
@@ -208,12 +208,12 @@ double omg_audio_mus_get_pos(OMG_Audio* this, OMG_Music* mus) {
 
 bool omg_audio_mus_set_pos(OMG_Audio* this, OMG_Music* mus, double pos) {
     OMG_UNUSED(this, mus, pos);
-    return false;
+    return true;
 }
 
 bool omg_audio_mus_set_speed(OMG_Audio* this, OMG_Music* mus, float speed) {
     OMG_UNUSED(this, mus, speed);
-    return false;
+    return true;
 }
 
 bool omg_audio_init(OMG_Audio* this) {
