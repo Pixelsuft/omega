@@ -26,8 +26,9 @@ OMG_API bool omg_winmgr_win_init(OMG_WinmgrWin* this);
 OMG_API OMG_WindowWin* omg_winmgr_win_window_alloc(OMG_WinmgrWin* this);
 OMG_API bool omg_winmgr_win_window_free(OMG_WinmgrWin* this, OMG_WindowWin* window);
 #if OMG_EXPORT_SHIT
-#include <omega/surface.h>
-OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha);
+#include <omega/surface_win.h>
+
+OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_create(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_FPoint* size, bool has_alpha);
 OMG_API bool omg_winmgr_win_surf_destroy(OMG_WinmgrWin* this, OMG_SurfaceWin* surf);
 OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_mem(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const void* mem, size_t size, int format);
 OMG_API OMG_SurfaceWin* omg_winmgr_win_surf_from_fp(OMG_WinmgrWin* this, OMG_SurfaceWin* surf, const OMG_String* path, int format);

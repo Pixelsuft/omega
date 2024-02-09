@@ -41,5 +41,5 @@ OMG_API bool omg_memory_destroy(OMG_Memory* this);
 OMG_API void* omg_memory_alloc(OMG_Memory* this, OMG_MemoryExtra extra);
 OMG_API void* omg_memory_realloc(OMG_Memory* this, void* ptr, size_t size);
 OMG_API bool omg_memory_free(OMG_Memory* this, void* ptr);
-OMG_API size_t omg_memory_get_alloc_count(OMG_Memory* this);;
+OMG_API size_t omg_memory_get_alloc_count(OMG_Memory* this);
 #endif

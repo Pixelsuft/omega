@@ -1504,7 +1504,7 @@ OMG_API bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path);
 OMG_API bool omg_sdl2_dll_free(OMG_Sdl2* this);
 #if OMG_EXPORT_SHIT
 OMG_API int omg_sdl2_render_draw_pointf_emu(SDL_Renderer* ren, float px, float py);
-OMG_API int omg_sdl2_render_draw_linef_emu(SDL_Renderer* ren, float1, float1, float2, float2);
+OMG_API int omg_sdl2_render_draw_linef_emu(SDL_Renderer* ren, float x1, float y1, float x2, float y2);
 OMG_API int omg_sdl2_render_copyf_emu(SDL_Renderer* ren, SDL_Texture* tex, const SDL_Rect* src, const SDL_FRect* dst);
 OMG_API int omg_sdl2_render_copy_exf_emu(SDL_Renderer* ren, SDL_Texture* tex, const SDL_Rect* src, const SDL_FRect* dst, const double angle, const SDL_FPoint* center, const SDL_RendererFlip flip);
 OMG_API int omg_sdl2_render_draw_rectf_emu(SDL_Renderer* ren, const SDL_FRect* rect);
