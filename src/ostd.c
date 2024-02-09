@@ -945,6 +945,18 @@ OMG_String* omg_dummy_string_create(void) {
     return &dummy_str;
 }
 
+static char b64_encoding_table[] = {
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
+    'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+    'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f',
+    'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+    'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+    'w', 'x', 'y', 'z', '0', '1', '2', '3',
+    '4', '5', '6', '7', '8', '9', '+', '/'
+};
+static int b64_mod_table[] = { 0, 2, 1 };
+
 OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str) {
     // https://stackoverflow.com/questions/342409/how-do-i-base64-encode-decode-in-c
     if (OMG_ISNULL(input_str) || input_str->len <= 1)
@@ -959,5 +971,18 @@ OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str) {
     }
     else if (output_str->len < out_size)
         return omg_dummy_string_create();
+    uint32_t octet_a, octet_b, octet_c, triple;
+    for (size_t i = 0, j = 0; i < input_str->len;) {
+        octet_a = i < input_str->len ? (unsigned char)input_str->ptr[i++] : 0;
+        octet_b = i < input_str->len ? (unsigned char)input_str->ptr[i++] : 0;
+        octet_c = i < input_str->len ? (unsigned char)input_str->ptr[i++] : 0;
+        triple = (octet_a << 0x10) + (octet_b << 0x08) + octet_c;
+        output_str->ptr[j++] = b64_encoding_table[(triple >> 3 * 6) & 0x3F];
+        output_str->ptr[j++] = b64_encoding_table[(triple >> 2 * 6) & 0x3F];
+        output_str->ptr[j++] = b64_encoding_table[(triple >> 1 * 6) & 0x3F];
+        output_str->ptr[j++] = b64_encoding_table[(triple >> 0 * 6) & 0x3F];
+    }
+    for (size_t i = 0; i < b64_mod_table[input_str->len % 3]; i++)
+        output_str->ptr[out_size - 1 - i] = '=';
     return output_str;
 }

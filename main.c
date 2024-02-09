@@ -433,9 +433,11 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_mouse_move = app_on_mouse_move;
     this->omg->on_mouse_down = this->omg->on_mouse_up = app_on_mouse_button;
     this->omg->on_key_down = this->omg->on_key_up = app_on_keyboard;
+    /*
     OMG_String base64_str = *omg_base64_encode(&OMG_STRING_MAKE_STATIC("123456"), NULL);
     OMG_INFO(this->omg, "Base64 string: ", &base64_str);
     omg_string_destroy(&base64_str);
+    */
     this->rot_timer = 0.0;
     this->bg_col = 0.0f;
     this->bg_fow = true;
