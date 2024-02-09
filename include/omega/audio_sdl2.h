@@ -49,5 +49,6 @@ OMG_API bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, in
 OMG_API bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd);
 OMG_API bool omg_audio_sdl2_update(OMG_AudioSdl2* this);
 OMG_API bool omg_audio_sdl2_mus_pause(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, bool paused);
+OMG_API bool omg_audio_sdl2_snd_pause(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, bool paused);
 #endif
 #endif

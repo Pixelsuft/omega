@@ -230,6 +230,11 @@ bool omg_audio_raylib_mus_pause(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, boo
     return false;
 }
 
+bool omg_audio_raylib_snd_pause(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, bool paused) {
+    (paused ? this->raylib->PauseSound : this->raylib->ResumeSound)(snd->snd);
+    return false;
+}
+
 bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     omg_audio_init(base);
     this->raylib->InitAudioDevice();
@@ -257,6 +262,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->snd_set_volume = omg_audio_raylib_snd_set_volume;
     base->snd_play = omg_audio_raylib_snd_play;
     base->snd_stop = omg_audio_raylib_snd_stop;
+    base->snd_pause = omg_audio_raylib_snd_pause;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_RAYLIB;
     base->inited = true;
