@@ -934,3 +934,30 @@ bool omg_string_destroy(OMG_String* this) {
     this->type = OMG_STRING_NONE;
     return res;
 }
+
+OMG_String* omg_dummy_string_create(void) {
+    static OMG_String dummy_str = {
+        .len = 0,
+        .ptr = "\0",
+        .size = 1,
+        .type = OMG_STRING_STATIC
+    };
+    return &dummy_str;
+}
+
+OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str) {
+    // https://stackoverflow.com/questions/342409/how-do-i-base64-encode-decode-in-c
+    if (OMG_ISNULL(input_str) || input_str->len <= 1)
+        return omg_dummy_string_create();
+    OMG_Std* std = omg_def_std;
+    size_t out_size = OMG_B64_ENCODED_LEN(input_str->len);
+    if (OMG_ISNULL(output_str)) {
+        static OMG_String temp_str;
+        output_str = &temp_str;
+        if (omg_string_init_dynamic(output_str, NULL) || omg_string_resize(output_str, out_size))
+            return omg_dummy_string_create();
+    }
+    else if (output_str->len < out_size)
+        return omg_dummy_string_create();
+    return output_str;
+}

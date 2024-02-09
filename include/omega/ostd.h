@@ -40,6 +40,8 @@
 #define OMG_COLOR_MAKE_RGB(c_r, c_g, c_b) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)255 })
 #define OMG_COLOR_MAKE_RGBA(c_r, c_g, c_b, c_a) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)(c_a) })
 
+#define OMG_B64_ENCODED_LEN(input_len) (4 * (((size_t)input_len + 2) / 3))
+
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \
     char*: omg_string_add_char_p, \
@@ -423,3 +425,5 @@ OMG_API bool omg_string_add_dpoint(OMG_String* this, const OMG_DPoint* dpoint_to
 OMG_API bool omg_string_add_rect(OMG_String* this, const OMG_Rect* rect_to_add);
 OMG_API bool omg_string_add_frect(OMG_String* this, const OMG_FRect* frect_to_add);
 OMG_API bool omg_string_add_drect(OMG_String* this, const OMG_DRect* drect_to_add);
+OMG_API OMG_String* omg_dummy_string_create(void);
+OMG_API OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str);
