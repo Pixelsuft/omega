@@ -216,6 +216,16 @@ bool omg_audio_mus_set_speed(OMG_Audio* this, OMG_Music* mus, float speed) {
     return true;
 }
 
+bool omg_audio_mus_set_panning(OMG_Audio* this, OMG_Music* mus, float left, float right) {
+    OMG_UNUSED(this, mus, left, right);
+    return true;
+}
+
+bool omg_audio_snd_set_panning(OMG_Audio* this, OMG_Sound* snd, float left, float right) {
+    OMG_UNUSED(this, snd, left, right);
+    return true;
+}
+
 bool omg_audio_init(OMG_Audio* this) {
     this->inited = false;
     this->type = OMG_AUDIO_TYPE_NONE;
@@ -231,6 +241,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->mus_get_pos = omg_audio_mus_get_pos;
     this->mus_set_pos = omg_audio_mus_set_pos;
     this->mus_set_speed = omg_audio_mus_set_speed;
+    this->mus_set_panning = omg_audio_mus_set_panning;
     this->snd_destroy = omg_audio_snd_destroy;
     this->snd_from_fp = omg_audio_snd_from_fp;
     this->snd_from_mem = omg_audio_snd_from_mem;
@@ -239,6 +250,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->snd_stop = omg_audio_snd_stop;
     this->snd_pause = omg_audio_snd_pause;
     this->snd_set_speed = omg_audio_snd_set_speed;
+    this->snd_set_panning = omg_audio_snd_set_panning;
     OMG_BEGIN_POINTER_CAST();
     this->mus_from_file = omg_audio_mus_from_file;
     this->snd_from_file = omg_audio_snd_from_file;
