@@ -122,6 +122,11 @@ bool omg_audio_mus_stop(OMG_Audio* this, OMG_Music* mus) {
     return false;
 }
 
+bool omg_audio_mus_pause(OMG_Audio* this, OMG_Music* mus, bool paused) {
+    OMG_UNUSED(this, mus, paused);
+    return false;
+}
+
 bool omg_audio_snd_destroy(OMG_Audio* this, OMG_Sound* snd) {
     if (OMG_ISNULL(snd))
         return false;
@@ -212,6 +217,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->mus_play = omg_audio_mus_play;
     this->mus_set_volume = omg_audio_mus_set_volume;
     this->mus_stop = omg_audio_mus_stop;
+    this->mus_pause = omg_audio_mus_pause;
     this->mus_get_pos = omg_audio_mus_get_pos;
     this->mus_set_pos = omg_audio_mus_set_pos;
     this->mus_set_speed = omg_audio_mus_set_speed;

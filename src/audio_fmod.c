@@ -176,6 +176,17 @@ bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double 
     return false;
 }
 
+bool omg_audio_fmod_mus_pause(OMG_AudioFmod* this, OMG_MusicFmod* mus, bool paused) {
+    if (!IS_PLAYING(mus))
+        return false;
+    int res;
+    if (HAS_ERROR(res = this->fmod.FMOD_Channel_SetPaused(mus->channel, paused ? 1 : 0))) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio paused (", FMOD_ErrorString(res), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, float speed) {
     mus->pitch_cache = speed;
     if (!IS_PLAYING(mus))
@@ -469,6 +480,7 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
     base->mus_set_volume = omg_audio_fmod_mus_set_volume;
     base->mus_play = omg_audio_fmod_mus_play;
     base->mus_stop = omg_audio_fmod_mus_stop;
+    base->mus_pause = omg_audio_fmod_mus_pause;
     base->mus_get_pos = omg_audio_fmod_mus_get_pos;
     base->mus_set_pos = omg_audio_fmod_mus_set_pos;
     base->mus_set_speed = omg_audio_fmod_mus_set_speed;

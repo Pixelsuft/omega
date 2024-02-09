@@ -48,5 +48,6 @@ OMG_API bool omg_audio_sdl2_snd_set_volume(OMG_AudioSdl2* this, OMG_SoundSdl2* s
 OMG_API bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops, double fade_in);
 OMG_API bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd);
 OMG_API bool omg_audio_sdl2_update(OMG_AudioSdl2* this);
+OMG_API bool omg_audio_sdl2_mus_pause(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, bool paused);
 #endif
 #endif

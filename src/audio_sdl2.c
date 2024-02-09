@@ -369,6 +369,13 @@ bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops,
     return false;
 }
 
+bool omg_audio_sdl2_mus_pause(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, bool paused) {
+    if (!MUS_IS_PLAYING())
+        return false;
+    (paused ? this->mix.Mix_PauseMusic : this->mix.Mix_ResumeMusic)();
+    return false;
+}
+
 bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     omg_audio_init(base);
     if (omg_sdl2_mixer_dll_load(&this->mix, omg_base->sdl2_mixer_dll_path)) {
@@ -454,6 +461,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->mus_play = omg_audio_sdl2_mus_play;
     base->mus_set_volume = omg_audio_sdl2_mus_set_volume;
     base->mus_stop = omg_audio_sdl2_mus_stop;
+    base->mus_pause = omg_audio_sdl2_mus_pause;
     base->mus_get_pos = omg_audio_sdl2_mus_get_pos;
     base->mus_set_pos = omg_audio_sdl2_mus_set_pos;
     base->snd_from_fp = omg_audio_sdl2_snd_from_fp;

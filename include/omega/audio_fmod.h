@@ -36,5 +36,6 @@ OMG_API FMOD_RESULT omg_audio_fmod_mus_callback(FMOD_CHANNELCONTROL* channelcont
 OMG_API double omg_audio_fmod_mus_get_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus);
 OMG_API bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double pos);
 OMG_API bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, float speed);
+OMG_API bool omg_audio_fmod_mus_pause(OMG_AudioFmod* this, OMG_MusicFmod* mus, bool paused);
 #endif
 #endif
