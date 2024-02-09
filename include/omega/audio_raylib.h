@@ -42,5 +42,6 @@ OMG_API double omg_audio_raylib_mus_get_pos(OMG_AudioRaylib* this, OMG_MusicRayl
 OMG_API bool omg_audio_raylib_mus_set_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double pos);
 OMG_API bool omg_audio_raylib_mus_pause(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, bool paused);
 OMG_API bool omg_audio_raylib_snd_pause(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, bool paused);
+OMG_API bool omg_audio_raylib_snd_set_speed(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float speed);
 #endif
 #endif

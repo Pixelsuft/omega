@@ -54,6 +54,7 @@ typedef struct OMG_Audio {
     bool (*snd_stop)(struct OMG_Audio* this, OMG_Sound* snd);
     bool (*snd_pause)(struct OMG_Audio* this, OMG_Sound* snd, bool paused);
     bool (*snd_set_volume)(struct OMG_Audio* this, OMG_Sound* snd, float volume);
+    bool (*snd_set_speed)(struct OMG_Audio* this, OMG_Sound* snd, float speed);
     const OMG_String* dev_name;
     int init_flags;
     int freq;
@@ -95,4 +96,5 @@ OMG_API OMG_Music* omg_audio_mus_from_file(OMG_Audio* this, OMG_Music* mus, OMG_
 OMG_API double omg_audio_mus_get_pos(OMG_Audio* this, OMG_Music* mus);
 OMG_API bool omg_audio_mus_set_pos(OMG_Audio* this, OMG_Music* mus, double pos);
 OMG_API bool omg_audio_mus_set_speed(OMG_Audio* this, OMG_Music* mus, float speed);
+OMG_API bool omg_audio_snd_set_speed(OMG_Audio* this, OMG_Sound* snd, float speed);
 #endif

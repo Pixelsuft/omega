@@ -107,7 +107,7 @@
 
 #ifndef OMG_EXPORT_SHIT
 // Which should be default?
-#define OMG_EXPORT_SHIT OMG_DEBUG && 1
+#define OMG_EXPORT_SHIT OMG_DEBUG && 0
 #endif
 
 #ifndef OMG_LOG_MIN_LEVEL

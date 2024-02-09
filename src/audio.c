@@ -132,6 +132,11 @@ bool omg_audio_snd_pause(OMG_Audio* this, OMG_Sound* snd, bool paused) {
     return false;
 }
 
+bool omg_audio_snd_set_speed(OMG_Audio* this, OMG_Sound* snd, float speed) {
+    OMG_UNUSED(this, snd, speed);
+    return false;
+}
+
 bool omg_audio_snd_destroy(OMG_Audio* this, OMG_Sound* snd) {
     if (OMG_ISNULL(snd))
         return false;
@@ -233,6 +238,7 @@ bool omg_audio_init(OMG_Audio* this) {
     this->snd_play = omg_audio_snd_play;
     this->snd_stop = omg_audio_snd_stop;
     this->snd_pause = omg_audio_snd_pause;
+    this->snd_set_speed = omg_audio_snd_set_speed;
     OMG_BEGIN_POINTER_CAST();
     this->mus_from_file = omg_audio_mus_from_file;
     this->snd_from_file = omg_audio_snd_from_file;

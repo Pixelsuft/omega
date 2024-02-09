@@ -492,6 +492,7 @@ bool omg_audio_fmod_init(OMG_AudioFmod* this) {
     base->snd_play = omg_audio_fmod_mus_play;
     base->snd_stop = omg_audio_fmod_mus_stop;
     base->snd_pause = omg_audio_fmod_mus_pause;
+    base->snd_set_speed = omg_audio_fmod_mus_set_speed;
     OMG_END_POINTER_CAST();
     return false;
 }
