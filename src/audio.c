@@ -189,7 +189,7 @@ bool omg_audio_snd_set_volume(OMG_Audio* this, OMG_Sound* snd, float volume) {
     return true;
 }
 
-bool omg_audio_snd_play(OMG_Audio* this, OMG_Sound* snd, int loops, double fade_in) {
+bool omg_audio_snd_play(OMG_Audio* this, OMG_Sound* snd, int loops, double pos, double fade_in) {
     OMG_UNUSED(this, snd, loops, fade_in);
     return true;
 }

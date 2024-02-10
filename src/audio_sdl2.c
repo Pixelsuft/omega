@@ -353,7 +353,8 @@ void omg_audio_sdl2_channel_finish_cb(int channel) {
     snd->channel = -2;
 }
 
-bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops, double fade_in) {
+bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops, double pos, double fade_in) {
+    OMG_UNUSED(pos);
     omg_audio_sdl2_snd_stop(this, snd);
     int channel = -1;
     if (fade_in > 0.0)

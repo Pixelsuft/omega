@@ -7,6 +7,8 @@
 #define mus_base ((OMG_Music*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 
+// TODO: should I check readyState to play?
+
 bool omg_audio_emscripten_mus_destroy(OMG_AudioEm* this, OMG_MusicEm* mus) {
     if (OMG_ISNULL(mus) || (mus->id < 0)) {
         return false;
@@ -18,6 +20,7 @@ bool omg_audio_emscripten_mus_destroy(OMG_AudioEm* this, OMG_MusicEm* mus) {
         window.em_audio[$0] = undefined;
     }, mus->id);
     mus->id = -1;
+    omg_audio_mus_destroy(base, mus_base);
     return false;
 }
 
@@ -25,8 +28,6 @@ bool omg_audio_emscripten_mus_destroy(OMG_AudioEm* this, OMG_MusicEm* mus) {
 // https://stackoverflow.com/questions/37104199/how-to-await-for-a-callback-to-return
 EM_JS(int, omg_emscripten_mus_load, (const char* str_ptr), {
     var log_str = UTF8ToString(str_ptr);
-    console.log(log_str);
-    window.log_str = log_str;
     var cur_audio = new Audio(log_str);
     var temp_em_audio_id = -1;
     for (var temp_em_audio_i = 0; temp_em_audio_i < window.em_audio.length; temp_em_audio_i++) {
@@ -81,21 +82,38 @@ OMG_MusicEm* omg_audio_emscripten_mus_from_mem(OMG_AudioEm* this, OMG_MusicEm* m
 }
 
 bool omg_audio_emscripten_mus_set_volume(OMG_AudioEm* this, OMG_MusicEm* mus, float volume) {
-    EM_ASM({
+    int res = EM_ASM_INT({
         var em_cur_audio = window.em_audio[$0];
         if (em_cur_audio == undefined)
-            return;
+            return -1;
         em_cur_audio.volume = $1;
+        return 0;
     }, mus->id, volume);
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio volume");
+        return true;
+    }
     return false;
 }
 
 bool omg_audio_emscripten_mus_stop(OMG_AudioEm* this, OMG_MusicEm* mus) {
+    int res = EM_ASM_INT({
+        var em_cur_audio = window.em_audio[$0];
+        if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
+            return -1;
+        em_cur_audio.stop();
+        em_cur_audio.currentTime = 0;
+        return 0;
+    }, mus->id);
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to stop audio");
+        return true;
+    }
     return false;
 }
 
 bool omg_audio_emscripten_mus_play(OMG_AudioEm* this, OMG_MusicEm* mus, int loops, double pos, double fade_in) {
-    OMG_UNUSED(loops, fade_in);
+    OMG_UNUSED(loops, pos, fade_in);
     int res = EM_ASM_INT({
         var em_cur_audio = window.em_audio[$0];
         if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
@@ -108,6 +126,12 @@ bool omg_audio_emscripten_mus_play(OMG_AudioEm* this, OMG_MusicEm* mus, int loop
         _OMG_LOG_WARN(omg_base, "Failed to play audio");
         return true;
     }
+    mus_base->duration = EM_ASM_DOUBLE({
+        var em_cur_audio = window.em_audio[$0];
+        if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
+            return -1;
+        return em_cur_audio.duration;
+    }, mus->id, pos);
     return false;
 }
 

@@ -214,8 +214,8 @@ bool omg_audio_raylib_mus_set_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, d
     return false;
 }
 
-bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double fade_in) {
-    OMG_UNUSED(loops, fade_in);
+bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double pos, double fade_in) {
+    OMG_UNUSED(loops, pos, fade_in);
     this->raylib->PlaySound(snd->snd);
     return false;
 }

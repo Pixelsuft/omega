@@ -52,7 +52,7 @@ typedef struct OMG_Audio {
     OMG_Sound* (*snd_from_mem)(struct OMG_Audio* this, OMG_Sound* snd, const void* data, size_t size, int format);
     OMG_Sound* (*snd_from_file)(struct OMG_Audio* this, OMG_Sound* snd, const OMG_File* file, bool destroy_file, int format);
     bool (*snd_destroy)(struct OMG_Audio* this, OMG_Sound* snd);
-    bool (*snd_play)(struct OMG_Audio* this, OMG_Sound* snd, int loops, double fade_in);
+    bool (*snd_play)(struct OMG_Audio* this, OMG_Sound* snd, int loops, double pos, double fade_in);
     bool (*snd_stop)(struct OMG_Audio* this, OMG_Sound* snd);
     bool (*snd_pause)(struct OMG_Audio* this, OMG_Sound* snd, bool paused);
     bool (*snd_set_volume)(struct OMG_Audio* this, OMG_Sound* snd, float volume);
@@ -90,7 +90,7 @@ OMG_API bool omg_audio_mus_play(OMG_Audio* this, OMG_Music* mus, int loops, doub
 OMG_API bool omg_audio_mus_stop(OMG_Audio* this, OMG_Music* mus);
 OMG_API bool omg_audio_mus_pause(OMG_Audio* this, OMG_Music* mus, bool paused);
 OMG_API bool omg_audio_snd_set_volume(OMG_Audio* this, OMG_Sound* snd, float volume);
-OMG_API bool omg_audio_snd_play(OMG_Audio* this, OMG_Sound* snd, int loops, double fade_in);
+OMG_API bool omg_audio_snd_play(OMG_Audio* this, OMG_Sound* snd, int loops, double pos, double fade_in);
 OMG_API bool omg_audio_snd_stop(OMG_Audio* this, OMG_Sound* snd);
 OMG_API bool omg_audio_snd_pause(OMG_Audio* this, OMG_Sound* snd, bool paused);
 OMG_API OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_String* path, int format);
