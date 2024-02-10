@@ -253,6 +253,14 @@ typedef enum {
 } SDL_ThreadPriority;
 
 typedef enum {
+    SDL_POWERSTATE_UNKNOWN,
+    SDL_POWERSTATE_ON_BATTERY,
+    SDL_POWERSTATE_NO_BATTERY,
+    SDL_POWERSTATE_CHARGING,
+    SDL_POWERSTATE_CHARGED
+} SDL_PowerState;
+
+typedef enum {
     SDL_TOUCH_DEVICE_INVALID = -1,
     SDL_TOUCH_DEVICE_DIRECT,
     SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE,
@@ -1551,6 +1559,9 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_SetThreadPriority)(SDL_ThreadPriority);
     void OMG_SDL2_STD_PREFIX (*SDL_WaitThread)(SDL_Thread*, int*);
     void OMG_SDL2_STD_PREFIX (*SDL_DetachThread)(SDL_Thread*);
+    char* OMG_SDL2_STD_PREFIX (*SDL_GetBasePath)(void);
+    char* OMG_SDL2_STD_PREFIX (*SDL_GetPrefPath)(const char*, const char*);
+    SDL_PowerState OMG_SDL2_STD_PREFIX (*SDL_GetPowerInfo)(int*, int*);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;
