@@ -16,6 +16,7 @@ typedef struct {
 typedef struct {
     OMG_Music parent;
     Mix_Chunk* chunk;
+    uint8_t pan_cache[2];
     int channel;
     int vol_cache;
 } OMG_SoundSdl2;
@@ -50,5 +51,6 @@ OMG_API bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd);
 OMG_API bool omg_audio_sdl2_update(OMG_AudioSdl2* this);
 OMG_API bool omg_audio_sdl2_mus_pause(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, bool paused);
 OMG_API bool omg_audio_sdl2_snd_pause(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, bool paused);
+OMG_API bool omg_audio_sdl2_snd_set_panning(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, float left, float right);
 #endif
 #endif

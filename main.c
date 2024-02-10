@@ -81,7 +81,9 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
         "Mouse Button ", event->is_pressed ? "Press" : "Release" ," [", &event->pos, "], ",
         (int)event->clicks
     );
-    if (event->button == OMG_MBUTTON_RIGHT && event->is_pressed){
+    if (event->button == OMG_MBUTTON_RIGHT && event->is_pressed) {
+        float lpan = event->pos.x / this->win->size.w;
+        this->audio->snd_set_panning(this->audio, this->sound, lpan, 1.0f - lpan);
         this->audio->snd_play(this->audio, this->sound, 0, 0.0);
         return;
     }

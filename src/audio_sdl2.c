@@ -302,6 +302,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
     snd_base->duration = -1.0;
     snd->vol_cache = MIX_MAX_VOLUME;
     snd->channel = -2;
+    snd->pan_cache[0] = snd->pan_cache[1] = 255;
     return snd;
 }
 
@@ -331,6 +332,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_mem(OMG_AudioSdl2* this, OMG_SoundSdl2* s
     snd_base->duration = -1.0;
     snd->vol_cache = MIX_MAX_VOLUME;
     snd->channel = -2;
+    snd->pan_cache[0] = snd->pan_cache[1] = 255;
     return snd;
 }
 
@@ -366,6 +368,8 @@ bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops,
     this->mix.Mix_Volume(snd->channel, snd->vol_cache);
     this->play_cache[snd->channel] = snd;
     this->mix.Mix_ChannelFinished(omg_audio_sdl2_channel_finish_cb);
+    if ((snd->pan_cache[0] < 255) || (snd->pan_cache[1] < 255))
+        this->mix.Mix_SetPanning(snd->channel, snd->pan_cache[0], snd->pan_cache[1]);
     return false;
 }
 
@@ -380,6 +384,18 @@ bool omg_audio_sdl2_snd_pause(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, bool paus
     if (!SND_IS_PLAYING())
         return false;
     (paused ? this->mix.Mix_Pause : this->mix.Mix_Resume)(snd->channel);
+    return false;
+}
+
+bool omg_audio_sdl2_snd_set_panning(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, float left, float right) {
+    snd->pan_cache[0] = (uint8_t)(left * 255.0f);
+    snd->pan_cache[1] = (uint8_t)(right * 255.0f);
+    if (!SND_IS_PLAYING())
+        return false;
+    if (this->mix.Mix_SetPanning(snd->channel, snd->pan_cache[0], snd->pan_cache[1]) == 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set sound panning");
+        return true;
+    }
     return false;
 }
 
@@ -478,6 +494,7 @@ bool omg_audio_sdl2_init(OMG_AudioSdl2* this) {
     base->snd_stop = omg_audio_sdl2_snd_stop;
     base->snd_pause = omg_audio_sdl2_snd_pause;
     base->snd_set_volume = omg_audio_sdl2_snd_set_volume;
+    base->snd_set_panning = omg_audio_sdl2_snd_set_panning;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_SDL2;
     cur_audio_cache = this;
