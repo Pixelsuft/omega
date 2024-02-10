@@ -283,6 +283,10 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_GetWindowPosition);
     LOAD_REQUIRED(SDL_SetWindowPosition);
     LOAD_REQUIRED(SDL_RenderReadPixels);
+    LOAD_REQUIRED(SDL_GetNumTouchDevices);
+    LOAD_REQUIRED(SDL_GetTouchDevice);
+    LOAD_REQUIRED(SDL_GetNumTouchFingers);
+    LOAD_REQUIRED(SDL_GetTouchFinger);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetDisplayDPI); // 2.0.4
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
@@ -293,6 +297,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.6
     LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
     LOAD_REQUIRED_COMPAT(SDL_GetDisplayOrientation); // 2.0.9
+    LOAD_REQUIRED_COMPAT(SDL_GetTouchDeviceType); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyExF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderDrawPointF); // 2.0.10
@@ -318,6 +323,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometryRaw); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_RenderGeometry); // 2.0.18
     LOAD_REQUIRED_COMPAT(SDL_GetTicks64); // 2.0.18
+    LOAD_REQUIRED_COMPAT(SDL_GetTouchName); // 2.0.22
     LOAD_REQUIRED_COMPAT(SDL_GetDefaultAudioInfo); // 2.24.0
     LOAD_REQUIRED_COMPAT(SDL_GetPointDisplayIndex); // 2.24.0
     LOAD_REQUIRED_COMPAT(SDL_GetRectDisplayIndex); // 2.24.0

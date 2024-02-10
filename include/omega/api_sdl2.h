@@ -220,6 +220,9 @@ typedef void SDL_BlitMap;
 typedef void SDL_Texture;
 typedef void SDL_Cursor;
 
+typedef int64_t SDL_TouchID;
+typedef int64_t SDL_FingerID;
+
 typedef int32_t SDL_Keycode;
 
 typedef uint16_t SDL_AudioFormat;
@@ -237,6 +240,20 @@ typedef struct SDL_AudioSpec {
     SDL_AudioCallback callback;
     void* userdata;
 } SDL_AudioSpec;
+
+typedef enum {
+    SDL_TOUCH_DEVICE_INVALID = -1,
+    SDL_TOUCH_DEVICE_DIRECT,
+    SDL_TOUCH_DEVICE_INDIRECT_ABSOLUTE,
+    SDL_TOUCH_DEVICE_INDIRECT_RELATIVE
+} SDL_TouchDeviceType;
+
+typedef struct SDL_Finger {
+    SDL_FingerID id;
+    float x;
+    float y;
+    float pressure;
+} SDL_Finger;
 
 typedef struct SDL_Rect {
     int x;
@@ -1025,6 +1042,19 @@ typedef struct SDL_TextInputEvent {
     char text[SDL_TEXTINPUTEVENT_TEXT_SIZE];
 } SDL_TextInputEvent;
 
+typedef struct SDL_TouchFingerEvent {
+    uint32_t type;
+    uint32_t timestamp;
+    SDL_TouchID touchId;
+    SDL_FingerID fingerId;
+    float x;
+    float y;
+    float dx;
+    float dy;
+    float pressure;
+    uint32_t windowID;
+} SDL_TouchFingerEvent;
+
 typedef union SDL_Event {
     uint32_t type;
     SDL_CommonEvent common;
@@ -1036,6 +1066,7 @@ typedef union SDL_Event {
     SDL_MouseMotionEvent motion;
     SDL_MouseButtonEvent button;
     SDL_MouseWheelEvent wheel;
+    SDL_TouchFingerEvent tfinger;
     uint8_t padding[sizeof(void*) <= 8 ? 56 : sizeof(void*) == 16 ? 64 : 3 * sizeof(void*)];
 } SDL_Event;
 
@@ -1282,6 +1313,7 @@ typedef struct {
 #endif
 
 typedef struct {
+    uint64_t _tick64_emu;
     void* handle;
     int OMG_SDL2_STD_PREFIX (*SDL_Init)(uint32_t);
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_WasInit)(uint32_t);
@@ -1495,7 +1527,12 @@ typedef struct {
     void OMG_SDL2_STD_PREFIX (*SDL_SetWindowPosition)(SDL_Window*, int, int);
     void OMG_SDL2_STD_PREFIX (*SDL_GetWindowPosition)(SDL_Window*, int*, int*);
     int OMG_SDL2_STD_PREFIX (*SDL_RenderReadPixels)(SDL_Renderer*, const SDL_Rect*, uint32_t, void*, int);
-    uint64_t _tick64_emu;
+    int OMG_SDL2_STD_PREFIX (*SDL_GetNumTouchDevices)(void);
+    SDL_TouchID OMG_SDL2_STD_PREFIX (*SDL_GetTouchDevice)(int);
+    const char* OMG_SDL2_STD_PREFIX (*SDL_GetTouchName)(int);
+    SDL_TouchDeviceType OMG_SDL2_STD_PREFIX (*SDL_GetTouchDeviceType)(SDL_TouchID);
+    int OMG_SDL2_STD_PREFIX (*SDL_GetNumTouchFingers)(SDL_TouchID);
+    SDL_Finger* OMG_SDL2_STD_PREFIX (*SDL_GetTouchFinger)(SDL_TouchID, int);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;
