@@ -82,8 +82,8 @@ void app_on_mouse_button(OMG_EventMouseButton* event) {
         (int)event->clicks
     );
     if (event->button == OMG_MBUTTON_RIGHT && event->is_pressed) {
-        float lpan = event->pos.x / this->win->size.w;
-        this->audio->snd_set_panning(this->audio, this->sound, lpan, 1.0f - lpan);
+        float rpan = event->pos.x / this->win->size.w;
+        this->audio->snd_set_panning(this->audio, this->sound, 1.0f - rpan, rpan);
         this->audio->snd_play(this->audio, this->sound, 0, 0.0);
         return;
     }
