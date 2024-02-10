@@ -162,5 +162,8 @@
     <ClCompile Include="src\input.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\audio_emscripten.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -157,6 +157,7 @@
     <ClCompile Include="src\api_static.c" />
     <ClCompile Include="src\api_win.c" />
     <ClCompile Include="src\audio.c" />
+    <ClCompile Include="src\audio_emscripten.c" />
     <ClCompile Include="src\audio_fmod.c" />
     <ClCompile Include="src\audio_raylib.c" />
     <ClCompile Include="src\audio_sdl2.c" />

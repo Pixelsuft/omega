@@ -40,7 +40,7 @@
 #define OMG_COLOR_MAKE_RGB(c_r, c_g, c_b) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)255 })
 #define OMG_COLOR_MAKE_RGBA(c_r, c_g, c_b, c_a) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)(c_a) })
 
-#define OMG_B64_ENCODED_LEN(input_len) (4 * (((size_t)input_len + 2) / 3))
+#define OMG_B64_ENCODED_LEN(input_len) (4 * (((size_t)(input_len) + 2) / 3))
 
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \

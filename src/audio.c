@@ -59,8 +59,7 @@ OMG_Sound* omg_audio_dummy_snd_alloc(OMG_Audio* this, OMG_Sound* snd) {
 }
 
 OMG_Music* omg_audio_mus_from_fp(OMG_Audio* this, OMG_Music* mus, const OMG_String* path, int format) {
-    OMG_UNUSED(path, format);
-    return omg_audio_dummy_mus_alloc(this, mus);
+    return this->mus_from_file(this, mus, omg_base->file_from_fp(omg_base, NULL, path, OMG_FILE_MODE_RB), true, format);
 }
 
 OMG_Music* omg_audio_mus_from_mem(OMG_Audio* this, OMG_Music* mus, const void* data, size_t size, int format) {
@@ -148,8 +147,7 @@ bool omg_audio_snd_destroy(OMG_Audio* this, OMG_Sound* snd) {
 }
 
 OMG_Sound* omg_audio_snd_from_fp(OMG_Audio* this, OMG_Sound* snd, const OMG_String* path, int format) {
-    OMG_UNUSED(path, format);
-    return omg_audio_dummy_snd_alloc(this, snd);
+    return this->snd_from_file(this, snd, omg_base->file_from_fp(omg_base, NULL, path, OMG_FILE_MODE_RB), true, format);
 }
 
 OMG_Sound* omg_audio_snd_from_mem(OMG_Audio* this, OMG_Sound* snd, const void* data, size_t size, int format) {

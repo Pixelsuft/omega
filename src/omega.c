@@ -4,6 +4,7 @@
 #endif
 #include <omega/audio_fmod.h>
 #include <omega/audio_sdl2.h>
+#include <omega/audio_emscripten.h>
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
 
@@ -489,6 +490,22 @@ bool omg_dummy_audio_alloc(OMG_Omega* this) {
 
 bool omg_audio_alloc(OMG_Omega* this) {
     OMG_BEGIN_POINTER_CAST();
+#if OMG_SUPPORT_EMSCRIPTEN_AUDIO
+    if ((this->audio_type == OMG_AUDIO_TYPE_FMOD) || (this->audio_type == OMG_AUDIO_FORMAT_AUTO)) {
+        if (OMG_ISNULL(this->audio)) {
+            this->audio = OMG_MALLOC(this->mem, sizeof(OMG_AudioEm));
+            if (OMG_ISNULL(this->audio))
+                return omg_dummy_audio_alloc(this);
+            this->audio->was_allocated = true;
+        }
+        else
+            this->audio->was_allocated = false;
+        omg_audio_fill_on_create(this->audio);
+        this->audio->omg = this;
+        this->audio->init = omg_audio_emscripten_init;
+        return false;
+    }
+#endif
 #if OMG_SUPPORT_SDL2_MIXER
     if (this->audio_type == OMG_AUDIO_TYPE_SDL2) {
         if (OMG_ISNULL(this->audio)) {
