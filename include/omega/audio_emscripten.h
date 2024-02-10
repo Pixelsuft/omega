@@ -18,5 +18,7 @@ OMG_API bool omg_audio_emscripten_init(OMG_AudioEm* this);
 OMG_API bool omg_audio_emscripten_mus_set_volume(OMG_AudioEm* this, OMG_MusicEm* mus, float volume);
 OMG_API bool omg_audio_emscripten_mus_stop(OMG_AudioEm* this, OMG_MusicEm* mus);
 OMG_API bool omg_audio_emscripten_mus_play(OMG_AudioEm* this, OMG_MusicEm* mus, int loops, double pos, double fade_in);
+OMG_API double omg_audio_emscripten_mus_get_pos(OMG_AudioEm* this, OMG_MusicEm* mus);
+OMG_API bool omg_audio_emscripten_mus_set_pos(OMG_AudioEm* this, OMG_AudioEm* mus, double pos);
 #endif
 #endif

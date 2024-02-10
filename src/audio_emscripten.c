@@ -135,6 +135,33 @@ bool omg_audio_emscripten_mus_play(OMG_AudioEm* this, OMG_MusicEm* mus, int loop
     return false;
 }
 
+double omg_audio_emscripten_mus_get_pos(OMG_AudioEm* this, OMG_MusicEm* mus) {
+    double res = EM_ASM_DOUBLE({
+        var em_cur_audio = window.em_audio[$0];
+        if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
+            return -1.0;
+        return em_cur_audio.currentTime;
+    }, mus->id);
+    if (res < 0.0) {
+        _OMG_LOG_WARN(omg_base, "Failed to get audio pos");
+    return res;
+}
+
+bool omg_audio_emscripten_mus_set_pos(OMG_AudioEm* this, OMG_AudioEm* mus, double pos) {
+    int res = EM_ASM_INT({
+        var em_cur_audio = window.em_audio[$0];
+        if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
+            return -1;
+        em_cur_audio.currentTime = $1;
+        return 0;
+    }, mus->id, pos);
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio pos");
+        return true;
+    }
+    return false;
+}
+
 bool omg_audio_emscripten_init(OMG_AudioEm* this) {
     omg_audio_init(base);
     EM_ASM({
@@ -146,6 +173,8 @@ bool omg_audio_emscripten_init(OMG_AudioEm* this) {
     base->mus_set_volume = omg_audio_emscripten_mus_set_volume;
     base->mus_stop = omg_audio_emscripten_mus_stop;
     base->mus_play = omg_audio_emscripten_mus_play;
+    base->mus_get_pos = omg_audio_fmod_mus_get_pos;
+    base->mus_set_pos = omg_audio_emscripten_mus_set_pos;
     // Hacky
     base->snd_from_mem = omg_audio_emscripten_mus_from_mem;
     base->snd_destroy = omg_audio_emscripten_mus_destroy;
