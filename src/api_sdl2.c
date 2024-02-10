@@ -306,6 +306,12 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_SemWaitTimeout);
     LOAD_REQUIRED(SDL_SemPost);
     LOAD_REQUIRED(SDL_SemValue);
+    LOAD_REQUIRED(SDL_CreateCond);
+    LOAD_REQUIRED(SDL_DestroyCond);
+    LOAD_REQUIRED(SDL_CondSignal);
+    LOAD_REQUIRED(SDL_CondBroadcast);
+    LOAD_REQUIRED(SDL_CondWait);
+    LOAD_REQUIRED(SDL_CondWaitTimeout);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetBasePath); // 2.0.1
     LOAD_REQUIRED_COMPAT(SDL_GetPrefPath); // 2.0.1

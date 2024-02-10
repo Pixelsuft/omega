@@ -1580,6 +1580,12 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_SemWaitTimeout)(SDL_sem*, uint32_t);
     int OMG_SDL2_STD_PREFIX (*SDL_SemPost)(SDL_sem*);
     uint32_t OMG_SDL2_STD_PREFIX (*SDL_SemValue)(SDL_sem*);
+    SDL_cond* OMG_SDL2_STD_PREFIX (*SDL_CreateCond)(void);
+    void OMG_SDL2_STD_PREFIX (*SDL_DestroyCond)(SDL_cond*);
+    int OMG_SDL2_STD_PREFIX (*SDL_CondSignal)(SDL_cond*);
+    int OMG_SDL2_STD_PREFIX (*SDL_CondBroadcast)(SDL_cond*);
+    int OMG_SDL2_STD_PREFIX (*SDL_CondWait)(SDL_cond*, SDL_mutex*);
+    int OMG_SDL2_STD_PREFIX (*SDL_CondWaitTimeout)(SDL_cond*, SDL_mutex*, uint32_t);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;
