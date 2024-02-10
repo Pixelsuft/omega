@@ -121,8 +121,9 @@ bool omg_audio_emscripten_mus_play(OMG_AudioEm* this, OMG_MusicEm* mus, int loop
             return -1;
         em_cur_audio.currentTime = $1;
         em_cur_audio.play();
+        em_cur_audio.loop = $2 < 0;
         return 0;
-    }, mus->id, pos);
+    }, mus->id, pos, loops);
     if (res < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to play audio");
         return true;
@@ -143,9 +144,12 @@ double omg_audio_emscripten_mus_get_pos(OMG_AudioEm* this, OMG_MusicEm* mus) {
             return -1.0;
         return em_cur_audio.currentTime;
     }, mus->id);
+    OMG_UNUSED(this);
+    /*
     if (res < 0.0)
         _OMG_LOG_WARN(omg_base, "Failed to get audio pos");
-    return 0;
+    */
+    return res;
 }
 
 bool omg_audio_emscripten_mus_set_pos(OMG_AudioEm* this, OMG_MusicEm* mus, double pos) {
@@ -158,6 +162,39 @@ bool omg_audio_emscripten_mus_set_pos(OMG_AudioEm* this, OMG_MusicEm* mus, doubl
     }, mus->id, pos);
     if (res < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to set audio pos");
+        return true;
+    }
+    return false;
+}
+
+bool omg_audio_emscripten_mus_pause(OMG_AudioEm* this, OMG_MusicEm* mus, bool paused) {
+    int res = EM_ASM_INT({
+        var em_cur_audio = window.em_audio[$0];
+        if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
+            return -1;
+        if ($1)
+            em_cur_audio.pause();
+        else
+            em_cur_audio.play();
+        return 0;
+    }, mus->id, (int)paused);
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio paused");
+        return true;
+    }
+    return false;
+}
+
+bool omg_audio_emscripten_mus_set_speed(OMG_AudioEm* this, OMG_MusicEm* mus, float speed) {
+    int res = EM_ASM_INT({
+        var em_cur_audio = window.em_audio[$0];
+        if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
+            return -1;
+        em_cur_audio.playbackRate = $1;
+        return 0;
+    }, mus->id, speed);
+    if (res < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to set audio speed");
         return true;
     }
     return false;
@@ -176,12 +213,16 @@ bool omg_audio_emscripten_init(OMG_AudioEm* this) {
     base->mus_play = omg_audio_emscripten_mus_play;
     base->mus_get_pos = omg_audio_emscripten_mus_get_pos;
     base->mus_set_pos = omg_audio_emscripten_mus_set_pos;
+    base->mus_pause = omg_audio_emscripten_mus_pause;
+    base->mus_set_speed = omg_audio_emscripten_mus_set_speed;
     // Hacky
     base->snd_from_mem = omg_audio_emscripten_mus_from_mem;
     base->snd_destroy = omg_audio_emscripten_mus_destroy;
     base->snd_set_volume = omg_audio_emscripten_mus_set_volume;
     base->snd_stop = omg_audio_emscripten_mus_stop;
     base->snd_play = omg_audio_emscripten_mus_play;
+    base->snd_pause = omg_audio_emscripten_mus_pause;
+    base->snd_set_speed = omg_audio_emscripten_mus_set_speed;
     OMG_END_POINTER_CAST();
     return false;
 }
