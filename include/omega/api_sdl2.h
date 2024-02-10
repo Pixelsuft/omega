@@ -247,6 +247,8 @@ struct SDL_semaphore;
 typedef struct SDL_semaphore SDL_sem;
 struct SDL_mutex;
 typedef struct SDL_mutex SDL_mutex;
+struct SDL_cond;
+typedef struct SDL_cond SDL_cond;
 typedef int (*SDL_ThreadFunction) (void*);
 
 typedef enum {
@@ -1571,6 +1573,13 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_TryLockMutex)(SDL_mutex*);
     int OMG_SDL2_STD_PREFIX (*SDL_UnlockMutex)(SDL_mutex*);
     void OMG_SDL2_STD_PREFIX (*SDL_DestroyMutex)(SDL_mutex*);
+    SDL_sem* OMG_SDL2_STD_PREFIX (*SDL_CreateSemaphore)(uint32_t);
+    void OMG_SDL2_STD_PREFIX (*SDL_DestroySemaphore)(SDL_sem*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SemWait)(SDL_sem*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SemTryWait)(SDL_sem*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SemWaitTimeout)(SDL_sem*, uint32_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_SemPost)(SDL_sem*);
+    uint32_t OMG_SDL2_STD_PREFIX (*SDL_SemValue)(SDL_sem*);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;

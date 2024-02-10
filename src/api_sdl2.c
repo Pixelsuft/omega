@@ -299,6 +299,13 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_TryLockMutex);
     LOAD_REQUIRED(SDL_UnlockMutex);
     LOAD_REQUIRED(SDL_DestroyMutex);
+    LOAD_REQUIRED(SDL_CreateSemaphore);
+    LOAD_REQUIRED(SDL_DestroySemaphore);
+    LOAD_REQUIRED(SDL_SemWait);
+    LOAD_REQUIRED(SDL_SemTryWait);
+    LOAD_REQUIRED(SDL_SemWaitTimeout);
+    LOAD_REQUIRED(SDL_SemPost);
+    LOAD_REQUIRED(SDL_SemValue);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetBasePath); // 2.0.1
     LOAD_REQUIRED_COMPAT(SDL_GetPrefPath); // 2.0.1
