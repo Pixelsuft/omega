@@ -393,7 +393,7 @@ bool omg_audio_sdl2_snd_set_panning(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, flo
     if (!SND_IS_PLAYING())
         return false;
     if (this->mix.Mix_SetPanning(snd->channel, snd->pan_cache[0], snd->pan_cache[1]) == 0) {
-        _OMG_LOG_WARN(omg_base, "Failed to set sound panning");
+        _OMG_LOG_WARN(omg_base, "Failed to set sound panning (", MIX_GETERROR(), ")");
         return true;
     }
     return false;
