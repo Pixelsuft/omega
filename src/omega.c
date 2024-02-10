@@ -207,6 +207,10 @@ void omg_event_on_text_input(OMG_EventTextInput* event) {
     OMG_UNUSED(event);
 }
 
+void omg_event_on_touch(OMG_EventTouch* event) {
+    OMG_UNUSED(event);
+}
+
 void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_quit = omg_event_on_quit;
     this->on_update = omg_event_on_update;
@@ -228,6 +232,9 @@ void omg_reset_event_handlers(OMG_Omega* this) {
     this->on_key_down = omg_event_on_keyboard;
     this->on_key_up = omg_event_on_keyboard;
     this->on_text_input = omg_event_on_text_input;
+    this->on_touch_down = omg_event_on_touch;
+    this->on_touch_up = omg_event_on_touch;
+    this->on_touch_move = omg_event_on_touch;
 }
 
 bool omg_file_destroy(OMG_File* file) {

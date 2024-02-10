@@ -119,3 +119,11 @@ typedef struct {
     void* win;
     OMG_String* text;
 } OMG_EventTextInput;
+
+typedef struct {
+    int64_t touch_id;
+    int64_t finger_id;
+    OMG_FPoint pos;
+    OMG_FPoint rel;
+    float pressure;
+} OMG_EventTouch;
