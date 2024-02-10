@@ -240,6 +240,18 @@ bool omg_audio_raylib_snd_set_speed(OMG_AudioRaylib* this, OMG_SoundRaylib* snd,
     return false;
 }
 
+bool omg_audio_raylib_mus_set_panning(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float left, float right) {
+    left /= (left + right);
+    this->raylib->SetMusicPan(mus->mus, left);
+    return false;
+}
+
+bool omg_audio_raylib_snd_set_panning(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float left, float right) {
+    left /= (left + right);
+    this->raylib->SetSoundPan(snd->snd, left);
+    return false;
+}
+
 bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     omg_audio_init(base);
     this->raylib->InitAudioDevice();
@@ -261,6 +273,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->mus_get_pos = omg_audio_raylib_mus_get_pos;
     base->mus_set_pos = omg_audio_raylib_mus_set_pos;
     base->mus_set_speed = omg_audio_raylib_mus_set_speed;
+    base->mus_set_panning = omg_audio_raylib_mus_set_panning;
     base->snd_from_fp = omg_audio_raylib_snd_from_fp;
     base->snd_from_mem = omg_audio_raylib_snd_from_mem;
     base->snd_destroy = omg_audio_raylib_snd_destroy;
@@ -269,6 +282,7 @@ bool omg_audio_raylib_init(OMG_AudioRaylib* this) {
     base->snd_stop = omg_audio_raylib_snd_stop;
     base->snd_pause = omg_audio_raylib_snd_pause;
     base->snd_set_speed = omg_audio_raylib_snd_set_speed;
+    base->snd_set_panning = omg_audio_raylib_snd_set_panning;
     OMG_END_POINTER_CAST();
     base->type = OMG_AUDIO_TYPE_RAYLIB;
     base->inited = true;
