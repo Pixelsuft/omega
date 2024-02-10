@@ -243,6 +243,10 @@ typedef struct SDL_AudioSpec {
 
 typedef struct SDL_Thread SDL_Thread;
 typedef unsigned long SDL_threadID;
+struct SDL_semaphore;
+typedef struct SDL_semaphore SDL_sem;
+struct SDL_mutex;
+typedef struct SDL_mutex SDL_mutex;
 typedef int (*SDL_ThreadFunction) (void*);
 
 typedef enum {
@@ -1562,6 +1566,11 @@ typedef struct {
     char* OMG_SDL2_STD_PREFIX (*SDL_GetBasePath)(void);
     char* OMG_SDL2_STD_PREFIX (*SDL_GetPrefPath)(const char*, const char*);
     SDL_PowerState OMG_SDL2_STD_PREFIX (*SDL_GetPowerInfo)(int*, int*);
+    SDL_mutex* OMG_SDL2_STD_PREFIX (*SDL_CreateMutex)(void);
+    int OMG_SDL2_STD_PREFIX (*SDL_LockMutex)(SDL_mutex*);
+    int OMG_SDL2_STD_PREFIX (*SDL_TryLockMutex)(SDL_mutex*);
+    int OMG_SDL2_STD_PREFIX (*SDL_UnlockMutex)(SDL_mutex*);
+    void OMG_SDL2_STD_PREFIX (*SDL_DestroyMutex)(SDL_mutex*);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;
