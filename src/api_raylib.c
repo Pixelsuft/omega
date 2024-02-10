@@ -239,6 +239,9 @@ bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(GetMonitorName);
     LOAD_REQUIRED(SetClipboardText);
     LOAD_REQUIRED(GetClipboardText);
+    LOAD_REQUIRED(GetTouchPosition);
+    LOAD_REQUIRED(GetTouchPointId);
+    LOAD_REQUIRED(GetTouchPointCount);
     OMG_END_POINTER_CAST();
     return false;
 }

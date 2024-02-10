@@ -575,6 +575,9 @@ typedef struct {
     const OMG_RAYLIB_PREFIX char* (*GetMonitorName)(int);
     void OMG_RAYLIB_PREFIX (*SetClipboardText)(const char*);
     const char* OMG_RAYLIB_PREFIX (*GetClipboardText)(void);
+    Vector2 OMG_RAYLIB_PREFIX (*GetTouchPosition)(int);
+    int OMG_RAYLIB_PREFIX (*GetTouchPointId)(int);
+    int OMG_RAYLIB_PREFIX (*GetTouchPointCount)(void); 
 } OMG_Raylib;
 
 OMG_API bool omg_raylib_dll_load(OMG_Raylib* this, const OMG_String* dll_path);
