@@ -4,7 +4,7 @@
 #include <omega/omega.h>
 #include <emscripten.h>
 #define base ((OMG_Audio*)this)
-#define mus_base ((OMG_Music*)this)
+#define mus_base ((OMG_Music*)mus)
 #define omg_base ((OMG_Omega*)base->omg)
 
 // TODO: should I check readyState to play?
@@ -64,6 +64,7 @@ OMG_MusicEm* omg_audio_emscripten_mus_from_mem(OMG_AudioEm* this, OMG_MusicEm* m
             OMG_FREE(omg_base->mem, mus);
         return (OMG_MusicEm*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
+    mus_base->duration = -1.0;
     base_str.len = 0;
     omg_string_add_char_p(&base_str, "data:audio/");
     OMG_UNUSED(format);

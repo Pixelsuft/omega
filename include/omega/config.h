@@ -8,7 +8,7 @@
 #define OMG_DEBUG_FILL_MEM 1
 #endif
 #ifndef OMG_DEBUG_MEM
-#define OMG_DEBUG_MEM OMG_DEBUG && 1
+#define OMG_DEBUG_MEM OMG_DEBUG && 0
 #endif
 
 #ifndef OMG_ENTRY
