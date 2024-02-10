@@ -227,6 +227,26 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 // Probably in the future
                 break;
             }
+            case SDL_FINGERDOWN:
+            case SDL_FINGERUP:
+            case SDL_FINGERMOTION: {
+                OMG_Window* win = NULL;
+                FIND_SDL2_WIN(win, this->ev.button.windowID);
+                if (OMG_ISNULL(win))
+                    break;
+                OMG_EventTouch event;
+                MAKE_EVENT(&event);
+                event.win = win;
+                event.touch_id = (int64_t)this->ev.tfinger.touchId;
+                event.finger_id = (int64_t)this->ev.tfinger.fingerId;
+                // BIG NOTE: It's normalized
+                event.pos.x = this->ev.tfinger.x;
+                event.pos.y = this->ev.tfinger.y;
+                event.rel.x = this->ev.tfinger.dx;
+                event.rel.y = this->ev.tfinger.dy;
+                event.pressure = this->ev.tfinger.pressure;
+                break;
+            }
             case SDL_WINDOWEVENT: {
                 OMG_Window* win = NULL;
                 FIND_SDL2_WIN(win, this->ev.window.windowID);

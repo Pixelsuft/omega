@@ -121,6 +121,8 @@ typedef struct {
 } OMG_EventTextInput;
 
 typedef struct {
+    OMG_Event parent;
+    void* win;
     int64_t touch_id;
     int64_t finger_id;
     OMG_FPoint pos;
