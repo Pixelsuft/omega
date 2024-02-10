@@ -287,6 +287,12 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_GetTouchDevice);
     LOAD_REQUIRED(SDL_GetNumTouchFingers);
     LOAD_REQUIRED(SDL_GetTouchFinger);
+    LOAD_REQUIRED(SDL_CreateThread);
+    LOAD_REQUIRED(SDL_ThreadID);
+    LOAD_REQUIRED(SDL_GetThreadID);
+    LOAD_REQUIRED(SDL_SetThreadPriority);
+    LOAD_REQUIRED(SDL_WaitThread);
+    LOAD_REQUIRED(SDL_DetachThread);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetDisplayDPI); // 2.0.4
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
@@ -297,6 +303,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED_COMPAT(SDL_LoadFile_RW); // 2.0.6
     LOAD_REQUIRED_COMPAT(SDL_GetNumAllocations); // 2.0.7
     LOAD_REQUIRED_COMPAT(SDL_GetDisplayOrientation); // 2.0.9
+    LOAD_REQUIRED_COMPAT(SDL_CreateThreadWithStackSize); // 2.0.9
     LOAD_REQUIRED_COMPAT(SDL_GetTouchDeviceType); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyF); // 2.0.10
     LOAD_REQUIRED_COMPAT(SDL_RenderCopyExF); // 2.0.10

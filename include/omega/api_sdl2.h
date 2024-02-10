@@ -241,6 +241,17 @@ typedef struct SDL_AudioSpec {
     void* userdata;
 } SDL_AudioSpec;
 
+typedef struct SDL_Thread SDL_Thread;
+typedef unsigned long SDL_threadID;
+typedef int (*SDL_ThreadFunction) (void*);
+
+typedef enum {
+    SDL_THREAD_PRIORITY_LOW,
+    SDL_THREAD_PRIORITY_NORMAL,
+    SDL_THREAD_PRIORITY_HIGH,
+    SDL_THREAD_PRIORITY_TIME_CRITICAL
+} SDL_ThreadPriority;
+
 typedef enum {
     SDL_TOUCH_DEVICE_INVALID = -1,
     SDL_TOUCH_DEVICE_DIRECT,
@@ -1533,6 +1544,13 @@ typedef struct {
     SDL_TouchDeviceType OMG_SDL2_STD_PREFIX (*SDL_GetTouchDeviceType)(SDL_TouchID);
     int OMG_SDL2_STD_PREFIX (*SDL_GetNumTouchFingers)(SDL_TouchID);
     SDL_Finger* OMG_SDL2_STD_PREFIX (*SDL_GetTouchFinger)(SDL_TouchID, int);
+    SDL_Thread* OMG_SDL2_STD_PREFIX (*SDL_CreateThread)(SDL_ThreadFunction, const char*, void*);
+    SDL_Thread* OMG_SDL2_STD_PREFIX (*SDL_CreateThreadWithStackSize)(SDL_ThreadFunction, const char*, const size_t, void*);
+    SDL_threadID OMG_SDL2_STD_PREFIX (*SDL_ThreadID)(void);
+    SDL_threadID OMG_SDL2_STD_PREFIX (*SDL_GetThreadID)(SDL_Thread*);
+    int OMG_SDL2_STD_PREFIX (*SDL_SetThreadPriority)(SDL_ThreadPriority);
+    void OMG_SDL2_STD_PREFIX (*SDL_WaitThread)(SDL_Thread*, int*);
+    void OMG_SDL2_STD_PREFIX (*SDL_DetachThread)(SDL_Thread*);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;
