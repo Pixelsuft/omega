@@ -193,14 +193,13 @@ int omg_winmgr_win_display_get_count(OMG_WinmgrWin* this) {
     return counter;
 }
 
-bool omg_winmgr_win_find_display(OMG_WinmgrWin* this, DISPLAY_DEVICEW* monitor_dev, int display_id) {
-    DISPLAY_DEVICEW dev_d;
-    dev_d.cb = monitor_dev->cb = sizeof(DISPLAY_DEVICEW);
+bool omg_winmgr_win_find_display(OMG_WinmgrWin* this, DISPLAY_DEVICEW* dev_d, DISPLAY_DEVICEW* monitor_dev, int display_id) {
+    dev_d->cb = monitor_dev->cb = sizeof(DISPLAY_DEVICEW);
     int counter = 0;
     DWORD dev_index = 0;
-    while (this->u32->EnumDisplayDevicesW(NULL, dev_index, &dev_d, 0)) {
+    while (this->u32->EnumDisplayDevicesW(NULL, dev_index, dev_d, 0)) {
         DWORD mon_index = 0;
-        while (this->u32->EnumDisplayDevicesW(dev_d.DeviceName, mon_index, monitor_dev, 0)) {
+        while (this->u32->EnumDisplayDevicesW(dev_d->DeviceName, mon_index, monitor_dev, 0)) {
             if (counter >= display_id)
                 return false;
             mon_index++;
@@ -212,8 +211,8 @@ bool omg_winmgr_win_find_display(OMG_WinmgrWin* this, DISPLAY_DEVICEW* monitor_d
 }
 
 OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id) {
-    DISPLAY_DEVICEW mon_d;
-    if (omg_winmgr_win_find_display(this, &mon_d, display_id))
+    DISPLAY_DEVICEW mon_d, dev_d;
+    if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
         return omg_winmgr_display_get_name(base, display_id);
     static char monitor_name_buf[sizeof(mon_d.DeviceString) * 2];
     OMG_String res = OMG_STRING_MAKE_BUFFER_A(monitor_name_buf);
@@ -256,6 +255,22 @@ bool omg_winmgr_win_display_get_bounds(OMG_WinmgrWin* this, int display_id, OMG_
     return false;
 }
 
+bool omg_winmgr_win_display_get_current_mode(OMG_WinmgrWin* this, int display_id, OMG_VideoMode* mode) {
+    DISPLAY_DEVICEW dev_d, mon_d;
+    DEVMODEW dev_mode_w;
+    dev_mode_w.dmSize = sizeof(DEVMODEW);
+    if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
+        return omg_winmgr_display_get_current_mode(base, display_id, mode);
+    if (!this->u32->EnumDisplaySettingsW(dev_d.DeviceName, ENUM_CURRENT_SETTINGS, &dev_mode_w)) {
+        _OMG_LOG_WARN(omg_base, "Failed to get current display settings", (int)this->k32->GetLastError());
+        return true;
+    }
+    mode->size.w = (float)dev_mode_w.dmPelsWidth;
+    mode->size.h = (float)dev_mode_w.dmPelsHeight;
+    mode->rate = (float)dev_mode_w.dmDisplayFrequency;
+    return false;
+}
+
 bool omg_winmgr_win_display_get_scale(OMG_WinmgrWin* this, int display_id, OMG_FRect* scale) {
     // TODO https://stackoverflow.com/questions/70976583/get-real-screen-resolution-using-win32-api
     return omg_winmgr_display_get_scale(base, display_id, scale);
@@ -280,6 +295,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->display_get_name = omg_winmgr_win_display_get_name;
     base->display_get_bounds = omg_winmgr_win_display_get_bounds;
     base->display_get_scale = omg_winmgr_win_display_get_scale;
+    base->display_get_current_mode = omg_winmgr_win_display_get_current_mode;
     OMG_END_POINTER_CAST();
     return false;
 }
