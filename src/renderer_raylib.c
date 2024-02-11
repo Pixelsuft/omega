@@ -521,8 +521,8 @@ bool omg_renderer_raylib_font_render_to(OMG_RendererRaylib* this, const OMG_FPoi
         this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(bg));
     }
     Vector2 text_pos;
-    text_pos.x = pos->x;
-    text_pos.y = pos->y;
+    text_pos.x = pos->x + this->so.x * this->ss.x;
+    text_pos.y = pos->y + this->so.y * this->ss.y;
     this->raylib->DrawTextEx(font_raylib->font, text->ptr, text_pos, font->size * _RAYLIB_FONT_SIZE_MUL * font->a_scale, font->spacing, _OMG_RAYLIB_OMG_COLOR(fg));
     if (OMG_ISNOTNULL(rect)) {
         rect->x = rect->y = 0.0f;
