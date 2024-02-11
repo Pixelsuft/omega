@@ -2,6 +2,8 @@
 #include <omega/ostd.h>
 #include <omega/filesystem.h>
 
+#define OMG_IS_DUMMY_FONT(font) ((OMG_ISNULL((font))) || ((font)->is_dummy))
+
 #define OMG_FONT_MGR_NONE 0
 #define OMG_FONT_MGR_SDL2 1
 #define OMG_FONT_MGR_RAYLIB 2
@@ -17,6 +19,7 @@ typedef struct {
     float spacing;
     int text_type;
     bool wrapping;
+    bool is_dummy;
     bool aa;
     bool was_allocated;
 } OMG_Font;

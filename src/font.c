@@ -18,6 +18,7 @@ OMG_Font* omg_fontmgr_dummy_font_create(OMG_FontMgr* this) {
     font.spacing = 0.0f;
     font.text_type = OMG_FONT_TEXT_TYPE_TEXT;
     font.wrapping = false;
+    font.is_dummy = true;
     return &font;
 #else
     return NULL;
@@ -71,6 +72,7 @@ OMG_Font* omg_fontmgr_font_from_file(OMG_FontMgr* this, OMG_Font* font, OMG_File
         OMG_FREE(omg_base->mem, buf);
     else
         res->extra1 = buf;
+    res->is_dummy = false;
     return res;
 }
 

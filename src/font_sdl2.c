@@ -17,7 +17,7 @@ bool omg_fontmgr_sdl2_destroy(OMG_FontMgrSdl2* this) {
 }
 
 bool omg_fontmgr_font_sdl2_destroy(OMG_FontMgrSdl2* this, OMG_FontSdl2* font) {
-    if (OMG_ISNOTNULL(font)) {
+    if (!OMG_IS_DUMMY_FONT(font_base)) {
         if (OMG_ISNOTNULL(font->font)) {
             this->ttf.TTF_CloseFont(font->font);
             font->font = NULL;
@@ -32,6 +32,8 @@ bool omg_fontmgr_font_sdl2_destroy(OMG_FontMgrSdl2* this, OMG_FontSdl2* font) {
 }
 
 bool omg_fontmgr_sdl2_font_set_scale(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_FPoint* scale) {
+    if (OMG_IS_DUMMY_FONT(font_base))
+        return true;
     if (OMG_ISNULL(this->ttf.TTF_SetFontSizeDPI)) {
         // Should I try to re-open font???
         _OMG_LOG_WARN(omg_base, "Failed to set font size (Setting size is not supported for this SDL2_ttf version)");
@@ -74,6 +76,7 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
     font_base->aa = true;
     font_base->size = size;
     font_base->extra1 = NULL;
+    font_base->is_dummy = false;
     font_base->wrapping = true;
     return font;
 }
@@ -109,11 +112,12 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_mem(OMG_FontMgrSdl2* this, OMG_FontSdl2
     font_base->aa = true;
     font_base->size = size;
     font_base->wrapping = true;
+    font_base->is_dummy = false;
     return font;
 }
 
 bool omg_fontmgr_sdl2_font_query_text_size(OMG_FontMgrSdl2* this, OMG_FontSdl2* font, const OMG_String* text, OMG_FRect* size_buf) {
-    if (omg_string_ensure_null((OMG_String*)text))
+    if (OMG_IS_DUMMY_FONT(font_base) || omg_string_ensure_null((OMG_String*)text))
         return true;
     int w_buf, h_buf;
     size_buf->x = size_buf->y = 0.0f;

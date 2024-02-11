@@ -658,7 +658,7 @@ bool omg_renderer_sdl2_draw_rect_ex(OMG_RendererSdl2* this, const OMG_FRect* rec
 
 OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
 #if OMG_SUPPORT_SDL2_TTF
-    if ((omg_base->winmgr->fnt->type != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
+    if (OMG_IS_DUMMY_FONT(font) || (omg_base->winmgr->fnt->type != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
         return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
     if (OMG_ISNULL(tex)) {
         tex = OMG_MALLOC(omg_base->mem, sizeof(OMG_TextureSdl2));

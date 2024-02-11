@@ -48,6 +48,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     font_base->extra1 = NULL;
     font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
     font_base->wrapping = true;
+    font_base->is_dummy = false;
     return font;
 }
 
@@ -74,16 +75,19 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_mem(OMG_FontMgrRaylib* this, OMG_Fo
     font_base->extra1 = NULL;
     font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
     font_base->wrapping = true;
+    font_base->is_dummy = false;
     return font;
 }
 
 bool omg_fontmgr_raylib_font_set_scale(OMG_FontMgrRaylib* this, OMG_FontRaylib* font, const OMG_FPoint* scale) {
+    if (OMG_IS_DUMMY_FONT(font_base))
+        return true;
     OMG_UNUSED(this, font, scale); // TODO
     return false;
 }
 
 bool omg_fontmgr_raylib_font_query_text_size(OMG_FontMgrRaylib* this, OMG_FontRaylib* font, const OMG_String* text, OMG_FRect* size_buf) {
-    if (omg_string_ensure_null((OMG_String*)text))
+    if (OMG_IS_DUMMY_FONT(font_base) || omg_string_ensure_null((OMG_String*)text))
         return true;
     Vector2 tex_size = rl->MeasureTextEx(font->font, text->ptr, font_base->size * _RAYLIB_FONT_SIZE_MUL * font_base->a_scale, font_base->spacing);
     size_buf->x = size_buf->y = 0.0f;
