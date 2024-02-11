@@ -703,14 +703,14 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
         bg_col.b = (uint8_t)(bg->b * (omg_color_t)255 / OMG_MAX_COLOR);
         bg_col.a = (uint8_t)(bg->a * (omg_color_t)255 / OMG_MAX_COLOR);
         if (font->wrapping) {
-            if (font->aa) {
+            if (font->aa || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderUTF8_LCD_Wrapped) || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderText_LCD_Wrapped)) {
                 sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Shaded_Wrapped)(font_sdl2->font, text->ptr, fg_col, bg_col, 0);
             }
             else {
                 sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_LCD_Wrapped : fnt_sdl2->ttf.TTF_RenderText_LCD_Wrapped)(font_sdl2->font, text->ptr, fg_col, bg_col, 0);
             }
         }
-        else if (font->aa) {
+        else if (font->aa || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderUTF8_LCD) || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderText_LCD)) {
             sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded : fnt_sdl2->ttf.TTF_RenderText_Shaded)(font_sdl2->font, text->ptr, fg_col, bg_col);
         }
         else {

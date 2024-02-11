@@ -68,6 +68,7 @@ typedef struct OMG_Renderer {
     bool (*set_blend_mode)(struct OMG_Renderer* this, int blend_mode);
     bool (*set_clip_rect)(struct OMG_Renderer* this, const OMG_FRect* clip_rect);
     OMG_Texture* (*font_render)(struct OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect);
+    bool (*font_render_to)(struct OMG_Renderer* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect);
     void* omg;
     void* win;
     OMG_Texture* target;
@@ -121,4 +122,5 @@ OMG_API bool omg_renderer_tex_set_color_mod(OMG_Renderer* this, OMG_Texture* tex
 OMG_API bool omg_renderer_set_blend_mode(OMG_Renderer* this, int blend_mode);
 OMG_API bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
 OMG_API bool omg_renderer_copy_ex(OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
+OMG_API bool omg_renderer_font_render_to(OMG_Renderer* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
 #endif

@@ -173,6 +173,15 @@ bool omg_renderer_draw_rect_ex(OMG_Renderer* this, const OMG_FRect* rect, float 
     return this->draw_rect(this, rect, col);
 }
 
+bool omg_renderer_font_render_to(OMG_Renderer* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
+    OMG_Texture* tex = this->font_render(this, NULL, font, text, bg, fg, rect);
+    if (OMG_IS_DUMMY_TEX(tex))
+        return true;
+    bool res = this->copy(this, tex, pos);
+    this->tex_destroy(this, tex);
+    return res;
+}
+
 bool omg_renderer_init(OMG_Renderer* this) {
     this->type = OMG_REN_TYPE_NONE;
     this->inited = false;
@@ -222,6 +231,7 @@ bool omg_renderer_init(OMG_Renderer* this) {
     this->set_clip_rect = omg_renderer_set_clip_rect;
     OMG_BEGIN_POINTER_CAST();
     this->font_render = omg_renderer_font_render;
+    this->font_render_to = omg_renderer_font_render_to;
     OMG_END_POINTER_CAST();
     return false;
 }
