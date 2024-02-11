@@ -755,6 +755,18 @@ bool omg_window_win_set_size(OMG_WindowWin* this, const OMG_FRect* new_size) {
     );
 }
 
+bool omg_window_win_get_pos(OMG_WindowWin* this, OMG_FRect* pos) {
+    POINT pos_point;
+    pos_point.x = pos_point.y = 0;
+    if (!this->u32->ClientToScreen(this->hwnd, &pos_point)) {
+        pos->x = pos->y = 0.0f;
+        return true;
+    }
+    pos->x = (float)pos_point.x;
+    pos->y = (float)pos_point.y;
+    return false;
+}
+
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef SetWindowLongPtrW
     OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, GWLP_USERDATA);
@@ -1409,6 +1421,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->set_grab = omg_window_win_set_grab;
     base->set_pos = omg_window_win_set_pos;
     base->set_size = omg_window_win_set_size;
+    base->get_pos = omg_window_win_get_pos;
     base->mouse_set_rel = omg_window_win_mouse_set_rel;
     OMG_END_POINTER_CAST();
     base->inited = true;

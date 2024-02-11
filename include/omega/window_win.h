@@ -53,5 +53,6 @@ OMG_API bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode);
 OMG_API bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode);
 OMG_API bool omg_window_win_set_pos(OMG_WindowWin* this, const OMG_FRect* pos);
 OMG_API bool omg_window_win_set_size(OMG_WindowWin* this, const OMG_FRect* new_size);
+OMG_API bool omg_window_win_get_pos(OMG_WindowWin* this, OMG_FRect* pos);
 #endif
 #endif
