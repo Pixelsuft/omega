@@ -373,7 +373,7 @@ bool omg_file_std_destroy(OMG_FileStd* file) {
     OMG_BEGIN_POINTER_CAST();
     omg_file_destroy(file);
     OMG_END_POINTER_CAST();
-    if (OMG_ISNULL(handle)) {
+    if (OMG_ISNOTNULL(handle)) {
         if (fclose(handle) != 0)
             res = true;
     }
