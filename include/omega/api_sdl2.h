@@ -344,6 +344,14 @@ typedef enum {
 } SDL_BlendMode;
 
 typedef enum {
+    SDL_MESSAGEBOX_ERROR                 = 0x00000010,
+    SDL_MESSAGEBOX_WARNING               = 0x00000020,
+    SDL_MESSAGEBOX_INFORMATION           = 0x00000040,
+    SDL_MESSAGEBOX_BUTTONS_LEFT_TO_RIGHT = 0x00000080,
+    SDL_MESSAGEBOX_BUTTONS_RIGHT_TO_LEFT = 0x00000100
+} SDL_MessageBoxFlags;
+
+typedef enum {
     SDL_SCANCODE_UNKNOWN = 0,
     SDL_SCANCODE_A = 4,
     SDL_SCANCODE_B = 5,
@@ -1586,6 +1594,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_CondBroadcast)(SDL_cond*);
     int OMG_SDL2_STD_PREFIX (*SDL_CondWait)(SDL_cond*, SDL_mutex*);
     int OMG_SDL2_STD_PREFIX (*SDL_CondWaitTimeout)(SDL_cond*, SDL_mutex*, uint32_t);
+    int OMG_SDL2_STD_PREFIX (*SDL_ShowSimpleMessageBox)(uint32_t, const char*, const char*, SDL_Window*);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;
