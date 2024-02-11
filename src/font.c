@@ -17,6 +17,7 @@ OMG_Font* omg_fontmgr_dummy_font_create(OMG_FontMgr* this) {
     font.aa = false;
     font.spacing = 0.0f;
     font.text_type = OMG_FONT_TEXT_TYPE_TEXT;
+    font.wrapping = false;
     return &font;
 #else
     return NULL;

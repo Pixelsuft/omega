@@ -682,7 +682,15 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
     fg_col.b = (uint8_t)(fg->b * (omg_color_t)255 / OMG_MAX_COLOR);
     fg_col.a = (uint8_t)(fg->a * (omg_color_t)255 / OMG_MAX_COLOR);
     if (OMG_ISNULL(bg)) {
-        if (font->aa) {
+        if (font->wrapping) {
+            if (font->aa) {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Blended_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Blended_Wrapped)(font_sdl2->font, text->ptr, fg_col, 0);
+            }
+            else {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Solid_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Solid_Wrapped)(font_sdl2->font, text->ptr, fg_col, 0);
+            }
+        }
+        else if (font->aa) {
             sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Blended : fnt_sdl2->ttf.TTF_RenderText_Blended)(font_sdl2->font, text->ptr, fg_col);
         }
         else {
@@ -694,7 +702,15 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
         bg_col.g = (uint8_t)(bg->g * (omg_color_t)255 / OMG_MAX_COLOR);
         bg_col.b = (uint8_t)(bg->b * (omg_color_t)255 / OMG_MAX_COLOR);
         bg_col.a = (uint8_t)(bg->a * (omg_color_t)255 / OMG_MAX_COLOR);
-        if (font->aa) {
+        if (font->wrapping) {
+            if (font->aa) {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Shaded_Wrapped)(font_sdl2->font, text->ptr, fg_col, bg_col, 0);
+            }
+            else {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_LCD_Wrapped : fnt_sdl2->ttf.TTF_RenderText_LCD_Wrapped)(font_sdl2->font, text->ptr, fg_col, bg_col, 0);
+            }
+        }
+        else if (font->aa) {
             sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded : fnt_sdl2->ttf.TTF_RenderText_Shaded)(font_sdl2->font, text->ptr, fg_col, bg_col);
         }
         else {

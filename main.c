@@ -423,6 +423,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;
+    // this->fps_font->wrapping = false; // We render only one line
     this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT; // We don't need UTF-8 support for drawing FPS
     this->win->allow_alt = false;
     this->omg->event_arg = this;

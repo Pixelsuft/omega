@@ -74,6 +74,7 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_fp(OMG_FontMgrSdl2* this, OMG_FontSdl2*
     font_base->aa = true;
     font_base->size = size;
     font_base->extra1 = NULL;
+    font_base->wrapping = true;
     return font;
 }
 
@@ -107,6 +108,7 @@ OMG_FontSdl2* omg_fontmgr_sdl2_font_from_mem(OMG_FontMgrSdl2* this, OMG_FontSdl2
     font_base->text_type = OMG_FONT_TEXT_TYPE_UTF8;
     font_base->aa = true;
     font_base->size = size;
+    font_base->wrapping = true;
     return font;
 }
 

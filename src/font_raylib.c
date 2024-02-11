@@ -47,6 +47,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_fp(OMG_FontMgrRaylib* this, OMG_Fon
     font_base->aa = true;
     font_base->extra1 = NULL;
     font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
+    font_base->wrapping = true;
     return font;
 }
 
@@ -72,6 +73,7 @@ OMG_FontRaylib* omg_fontmgr_raylib_font_from_mem(OMG_FontMgrRaylib* this, OMG_Fo
     font_base->aa = true;
     font_base->extra1 = NULL;
     font_base->size = (float)int_sz / _RAYLIB_FONT_SIZE_MUL;
+    font_base->wrapping = true;
     return font;
 }
 
