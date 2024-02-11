@@ -271,6 +271,22 @@ bool omg_winmgr_win_display_get_current_mode(OMG_WinmgrWin* this, int display_id
     return false;
 }
 
+bool omg_winmgr_win_display_get_desktop_mode(OMG_WinmgrWin* this, int display_id, OMG_VideoMode* mode) {
+    DISPLAY_DEVICEW dev_d, mon_d;
+    DEVMODEW dev_mode_w;
+    dev_mode_w.dmSize = sizeof(DEVMODEW);
+    if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
+        return omg_winmgr_display_get_desktop_mode(base, display_id, mode);
+    if (!this->u32->EnumDisplaySettingsW(dev_d.DeviceName, ENUM_REGISTRY_SETTINGS, &dev_mode_w)) {
+        _OMG_LOG_WARN(omg_base, "Failed to get desktop display settings", (int)this->k32->GetLastError());
+        return true;
+    }
+    mode->size.w = (float)dev_mode_w.dmPelsWidth;
+    mode->size.h = (float)dev_mode_w.dmPelsHeight;
+    mode->rate = (float)dev_mode_w.dmDisplayFrequency;
+    return false;
+}
+
 bool omg_winmgr_win_display_get_scale(OMG_WinmgrWin* this, int display_id, OMG_FRect* scale) {
     // TODO https://stackoverflow.com/questions/70976583/get-real-screen-resolution-using-win32-api
     return omg_winmgr_display_get_scale(base, display_id, scale);
@@ -296,6 +312,7 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->display_get_bounds = omg_winmgr_win_display_get_bounds;
     base->display_get_scale = omg_winmgr_win_display_get_scale;
     base->display_get_current_mode = omg_winmgr_win_display_get_current_mode;
+    base->display_get_desktop_mode = omg_winmgr_win_display_get_desktop_mode;
     OMG_END_POINTER_CAST();
     return false;
 }

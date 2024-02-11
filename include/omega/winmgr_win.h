@@ -39,5 +39,6 @@ OMG_API BOOL omg_winmgr_win_monitor_check_enum(HMONITOR hmon, HDC hdc, LPRECT mo
 OMG_API bool omg_winmgr_win_display_get_bounds(OMG_WinmgrWin* this, int display_id, OMG_FRect* rect, bool only_usable);
 OMG_API bool omg_winmgr_win_display_get_scale(OMG_WinmgrWin* this, int display_id, OMG_FRect* scale);
 OMG_API bool omg_winmgr_win_display_get_current_mode(OMG_WinmgrWin* this, int display_id, OMG_VideoMode* mode);
+OMG_API bool omg_winmgr_win_display_get_desktop_mode(OMG_WinmgrWin* this, int display_id, OMG_VideoMode* mode);
 #endif
 #endif
