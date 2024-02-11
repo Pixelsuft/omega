@@ -2,6 +2,9 @@
 #if OMG_HAS_STD
 #include <stdio.h>
 #endif
+#include <omega/omega_raylib.h>
+#include <omega/omega_sdl2.h>
+#include <omega/omega_win.h>
 #include <omega/audio_fmod.h>
 #include <omega/audio_sdl2.h>
 #include <omega/audio_emscripten.h>
@@ -17,6 +20,22 @@ OMG_Omega* omg_get_default_omega(void) {
 OMG_Omega* omg_create(OMG_EntryData* data) {
     OMG_UNUSED(data);
     return NULL;
+}
+
+OMG_Omega* omg_create_by_type(OMG_EntryData* data, int omg_type) {
+#if OMG_SUPPORT_SDL2
+    if (omg_type == OMG_OMEGA_TYPE_SDL2)
+        return (OMG_Omega*)omg_sdl2_create(data);
+#endif
+#if OMG_SUPPORT_WIN
+    if (omg_type == OMG_OMEGA_TYPE_WIN)
+        return (OMG_Omega*)omg_win_create(data);
+#endif
+#if OMG_SUPPORT_RAYLIB
+    if (omg_type == OMG_OMEGA_TYPE_RAYLIB)
+        return (OMG_Omega*)omg_raylib_create(data);
+#endif
+    return omg_create(data);
 }
 
 void omg_delay(OMG_Omega* this, double seconds) {

@@ -137,6 +137,7 @@ typedef struct OMG_Omega {
 OMG_API OMG_Omega* omg_alloc_omega_internal(OMG_EntryData* data, size_t size);
 OMG_API void omg_free_omega_internal(OMG_Omega* this);
 OMG_API OMG_Omega* omg_create(OMG_EntryData* data);
+OMG_API OMG_Omega* omg_create_by_type(OMG_EntryData* data, int omg_type);
 OMG_API void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data);
 OMG_API OMG_Omega* omg_get_default_omega(void);
 OMG_API bool omg_destroy(OMG_Omega* this);
