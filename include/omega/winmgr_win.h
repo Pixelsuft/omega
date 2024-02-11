@@ -40,5 +40,7 @@ OMG_API bool omg_winmgr_win_display_get_bounds(OMG_WinmgrWin* this, int display_
 OMG_API bool omg_winmgr_win_display_get_scale(OMG_WinmgrWin* this, int display_id, OMG_FRect* scale);
 OMG_API bool omg_winmgr_win_display_get_current_mode(OMG_WinmgrWin* this, int display_id, OMG_VideoMode* mode);
 OMG_API bool omg_winmgr_win_display_get_desktop_mode(OMG_WinmgrWin* this, int display_id, OMG_VideoMode* mode);
+OMG_API int omg_winmgr_win_display_get_num_modes(OMG_WinmgrWin* this, int display_id);
+OMG_API bool omg_winmgr_win_display_get_mode(OMG_WinmgrWin* this, int display_id, int mode_id, OMG_VideoMode* mode);
 #endif
 #endif

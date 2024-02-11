@@ -262,7 +262,7 @@ bool omg_winmgr_win_display_get_current_mode(OMG_WinmgrWin* this, int display_id
     if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
         return omg_winmgr_display_get_current_mode(base, display_id, mode);
     if (!this->u32->EnumDisplaySettingsW(dev_d.DeviceName, ENUM_CURRENT_SETTINGS, &dev_mode_w)) {
-        _OMG_LOG_WARN(omg_base, "Failed to get current display settings", (int)this->k32->GetLastError());
+        _OMG_LOG_WARN(omg_base, "Failed to get current display ", display_id, " settings");
         return true;
     }
     mode->size.w = (float)dev_mode_w.dmPelsWidth;
@@ -278,7 +278,36 @@ bool omg_winmgr_win_display_get_desktop_mode(OMG_WinmgrWin* this, int display_id
     if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
         return omg_winmgr_display_get_desktop_mode(base, display_id, mode);
     if (!this->u32->EnumDisplaySettingsW(dev_d.DeviceName, ENUM_REGISTRY_SETTINGS, &dev_mode_w)) {
-        _OMG_LOG_WARN(omg_base, "Failed to get desktop display settings", (int)this->k32->GetLastError());
+        _OMG_LOG_WARN(omg_base, "Failed to get desktop display ", display_id, " settings");
+        return true;
+    }
+    mode->size.w = (float)dev_mode_w.dmPelsWidth;
+    mode->size.h = (float)dev_mode_w.dmPelsHeight;
+    mode->rate = (float)dev_mode_w.dmDisplayFrequency;
+    return false;
+}
+
+int omg_winmgr_win_display_get_num_modes(OMG_WinmgrWin* this, int display_id) {
+    DISPLAY_DEVICEW dev_d, mon_d;
+    DEVMODEW dev_mode_w;
+    dev_mode_w.dmSize = sizeof(DEVMODEW);
+    int counter = 0;
+    if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
+        return omg_winmgr_display_get_num_modes(base, display_id);
+    while (this->u32->EnumDisplaySettingsW(dev_d.DeviceName, (DWORD)counter, &dev_mode_w)) {
+        counter++;
+    }
+    return counter;
+}
+
+bool omg_winmgr_win_display_get_mode(OMG_WinmgrWin* this, int display_id, int mode_id, OMG_VideoMode* mode) {
+    DISPLAY_DEVICEW dev_d, mon_d;
+    DEVMODEW dev_mode_w;
+    dev_mode_w.dmSize = sizeof(DEVMODEW);
+    if (omg_winmgr_win_find_display(this, &dev_d, &mon_d, display_id))
+        return omg_winmgr_display_get_mode(base, display_id, mode_id, mode);
+    if (!this->u32->EnumDisplaySettingsW(dev_d.DeviceName, (DWORD)mode_id, &dev_mode_w)) {
+        _OMG_LOG_WARN(omg_base, "Failed to get display ", display_id, " settings for mode ", mode_id);
         return true;
     }
     mode->size.w = (float)dev_mode_w.dmPelsWidth;
@@ -313,6 +342,8 @@ bool omg_winmgr_win_init(OMG_WinmgrWin* this) {
     base->display_get_scale = omg_winmgr_win_display_get_scale;
     base->display_get_current_mode = omg_winmgr_win_display_get_current_mode;
     base->display_get_desktop_mode = omg_winmgr_win_display_get_desktop_mode;
+    base->display_get_num_modes = omg_winmgr_win_display_get_num_modes;
+    base->display_get_mode = omg_winmgr_win_display_get_mode;
     OMG_END_POINTER_CAST();
     return false;
 }
