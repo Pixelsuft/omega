@@ -716,6 +716,45 @@ bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode) {
     return false;
 }
 
+bool omg_window_win_set_pos(OMG_WindowWin* this, const OMG_FRect* pos) {
+    POINT pos_point;
+    RECT win_rect;
+    pos_point.x = pos_point.y = 0;
+    if (!this->u32->GetWindowRect(this->hwnd, &win_rect) || !this->u32->ClientToScreen(this->hwnd, &pos_point)) {
+        return true;
+    }
+    int new_pos_x = (int)pos->x + (int)(pos_point.x - win_rect.left);
+    int new_pos_y = (int)pos->y + (int)(pos_point.y - win_rect.top);
+    return !this->u32->SetWindowPos(
+        this->hwnd,
+        NULL,
+        new_pos_x,
+        new_pos_y,
+        0, 0,
+        SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE | SWP_FRAMECHANGED
+    );
+}
+
+bool omg_window_win_set_size(OMG_WindowWin* this, const OMG_FRect* new_size) {
+    POINT pos_point, size_point;
+    RECT win_rect;
+    pos_point.x = pos_point.y = 0;
+    size_point.x = (LONG)new_size->w;
+    size_point.y = (LONG)new_size->h;
+    if (!this->u32->GetWindowRect(this->hwnd, &win_rect) || !this->u32->ClientToScreen(this->hwnd, &pos_point) || !this->u32->ClientToScreen(this->hwnd, &size_point)) {
+        return true;
+    }
+    int new_size_w = (int)new_size->w + (int)(win_rect.right - win_rect.left - (size_point.x - pos_point.x));
+    int new_size_h = (int)new_size->h +(int)(win_rect.bottom - win_rect.top - (size_point.y - pos_point.y));
+    return !this->u32->SetWindowPos(
+        this->hwnd,
+        NULL,
+        0, 0,
+        new_size_w, new_size_h,
+        SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOREPOSITION | SWP_FRAMECHANGED
+    );
+}
+
 LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 #ifdef SetWindowLongPtrW
     OMG_WindowWin* this = (OMG_WindowWin*)OMG_WIN_CB_GetWindowLongW(hwnd, GWLP_USERDATA);
@@ -1258,7 +1297,7 @@ void omg_window_win_update_scale(OMG_WindowWin* this) {
     );
 }
 
-// TODO: https://learn.microsoft.com/en-us/windows/win32/menurc/cursors
+// Cursor info: https://learn.microsoft.com/en-us/windows/win32/menurc/cursors
 bool omg_window_win_init(OMG_WindowWin* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_WIN;
@@ -1368,6 +1407,8 @@ bool omg_window_win_init(OMG_WindowWin* this) {
     base->mouse_set_system_cursor = omg_window_win_mouse_set_system_cursor;
     base->cursor_set_shown = omg_window_win_cursor_set_shown;
     base->set_grab = omg_window_win_set_grab;
+    base->set_pos = omg_window_win_set_pos;
+    base->set_size = omg_window_win_set_size;
     base->mouse_set_rel = omg_window_win_mouse_set_rel;
     OMG_END_POINTER_CAST();
     base->inited = true;

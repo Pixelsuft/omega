@@ -51,5 +51,7 @@ OMG_API bool omg_window_win_mouse_set_system_cursor(OMG_WindowWin* this, int cur
 OMG_API bool omg_window_win_cursor_set_shown(OMG_WindowWin* this, int show_mode);
 OMG_API bool omg_window_win_mouse_set_rel(OMG_WindowWin* this, int rel_mode);
 OMG_API bool omg_window_win_set_grab(OMG_WindowWin* this, int grab_mode);
+OMG_API bool omg_window_win_set_pos(OMG_WindowWin* this, const OMG_FRect* pos);
+OMG_API bool omg_window_win_set_size(OMG_WindowWin* this, const OMG_FRect* new_size);
 #endif
 #endif
