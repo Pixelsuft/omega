@@ -35,6 +35,7 @@ OMG_Music* omg_audio_dummy_mus_alloc(OMG_Audio* this, OMG_Music* mus) {
         static OMG_Music mus_buf;
         mus = &mus_buf;
     }
+    mus->is_dummy = true;
     mus->was_allocated = false;
     return mus;
 #else
@@ -50,6 +51,7 @@ OMG_Sound* omg_audio_dummy_snd_alloc(OMG_Audio* this, OMG_Sound* snd) {
         static OMG_Sound snd_buf;
         snd = &snd_buf;
     }
+    snd->is_dummy = true;
     snd->was_allocated = false;
     return snd;
 #else

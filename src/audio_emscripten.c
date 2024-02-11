@@ -65,6 +65,7 @@ OMG_MusicEm* omg_audio_emscripten_mus_from_mem(OMG_AudioEm* this, OMG_MusicEm* m
         return (OMG_MusicEm*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     mus_base->duration = -1.0;
+    mus_base->is_dummy = false;
     base_str.len = 0;
     omg_string_add_char_p(&base_str, "data:audio/");
     OMG_UNUSED(format);

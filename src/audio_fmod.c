@@ -227,6 +227,7 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     mus->vol_cache = 1.0f;
     mus->pitch_cache = 1.0f;
     mus->channel = NULL;
+    mus_base->is_dummy = false;
     unsigned int len_buf;
     if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
         mus_base->duration = -1.0;
@@ -314,6 +315,7 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_file(OMG_AudioFmod* this, OMG_MusicFmod* 
     mus->pitch_cache = 1.0f;
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
+    mus_base->is_dummy = false;
     unsigned int len_buf;
     if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
         mus_base->duration = -1.0;
@@ -358,6 +360,7 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* m
     mus->pitch_cache = 1.0f;
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
+    mus_base->is_dummy = false;
     unsigned int len_buf;
     if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
         mus_base->duration = -1.0;
@@ -396,6 +399,7 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_fp(OMG_AudioFmod* this, OMG_MusicFmod* mu
     mus->pitch_cache = 1.0f;
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
+    mus_base->is_dummy = false;
     unsigned int len_buf;
     if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
         mus_base->duration = -1.0;
@@ -436,6 +440,7 @@ OMG_MusicFmod* omg_audio_fmod_snd_from_mem(OMG_AudioFmod* this, OMG_MusicFmod* m
     mus->pitch_cache = 1.0f;
     mus->vol_cache = 1.0f;
     mus->channel = NULL;
+    mus_base->is_dummy = false;
     unsigned int len_buf;
     if (HAS_ERROR(res = this->fmod.FMOD_Sound_GetLength(mus->mus, &len_buf, FMOD_TIMEUNIT_MS))) {
         mus_base->duration = -1.0;

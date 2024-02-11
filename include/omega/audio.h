@@ -2,6 +2,8 @@
 #include <omega/ostd.h>
 #include <omega/filesystem.h>
 
+#define OMG_IS_DUMMY_AUDIO(audio) (OMG_ISNULL((audio)) || ((audio)->is_dummy))
+
 #define OMG_AUDIO_TYPE_NONE 0
 #define OMG_AUDIO_TYPE_AUTO 1
 #define OMG_AUDIO_TYPE_SDL2 2
@@ -22,11 +24,13 @@
 
 typedef struct {
     double duration;
+    bool is_dummy;
     bool was_allocated;
 } OMG_Music;
 
 typedef struct {
     double duration;
+    bool is_dummy;
     bool was_allocated;
 } OMG_Sound;
 

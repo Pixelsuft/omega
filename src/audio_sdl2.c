@@ -77,6 +77,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_fp(OMG_AudioSdl2* this, OMG_MusicSdl2* mu
         mus_base->duration = -1.0;
     else
         mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
+    mus_base->is_dummy = false;
     mus->vol_cache = MIX_MAX_VOLUME;
     mus->time_cache1 = 0;
     mus->time_cache2 = 0;
@@ -111,6 +112,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_mem(OMG_AudioSdl2* this, OMG_MusicSdl2* m
         mus_base->duration = -1.0;
     else
         mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
+    mus_base->is_dummy = false;
     mus->vol_cache = MIX_MAX_VOLUME;
     mus->time_cache1 = 0;
     mus->time_cache2 = 0;
@@ -175,6 +177,7 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_file(OMG_AudioSdl2* this, OMG_MusicSdl2* 
         mus_base->duration = -1.0;
     else
         mus_base->duration = this->mix.Mix_MusicDuration(mus->mus);
+    mus_base->is_dummy = false;
     mus->vol_cache = MIX_MAX_VOLUME;
     mus->time_cache1 = 0;
     mus->time_cache2 = 0;
@@ -300,6 +303,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_fp(OMG_AudioSdl2* this, OMG_SoundSdl2* sn
         return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
     snd_base->duration = -1.0;
+    snd_base->is_dummy = false;
     snd->vol_cache = MIX_MAX_VOLUME;
     snd->channel = -2;
     snd->pan_cache[0] = snd->pan_cache[1] = 255;
@@ -330,6 +334,7 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_mem(OMG_AudioSdl2* this, OMG_SoundSdl2* s
         return (OMG_SoundSdl2*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
     snd_base->duration = -1.0;
+    snd_base->is_dummy = false;
     snd->vol_cache = MIX_MAX_VOLUME;
     snd->channel = -2;
     snd->pan_cache[0] = snd->pan_cache[1] = 255;

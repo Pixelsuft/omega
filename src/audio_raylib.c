@@ -115,6 +115,7 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_fp(OMG_AudioRaylib* this, OMG_MusicRa
         return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
     mus->temp_buf = NULL;
+    mus_base->is_dummy = false;
     mus_base->duration = (double)this->raylib->GetMusicTimeLength(mus->mus);
     return mus;
 }
@@ -140,6 +141,7 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_mem(OMG_AudioRaylib* this, OMG_MusicR
         _OMG_LOG_ERROR(omg_base, "Failed to load Raylib music from memory");
         return (OMG_MusicRaylib*)omg_audio_dummy_mus_alloc(base, mus_base);
     }
+    mus_base->is_dummy = false;
     mus_base->duration = (double)this->raylib->GetMusicTimeLength(mus->mus);
     return mus;
 }
@@ -170,6 +172,7 @@ OMG_SoundRaylib* omg_audio_raylib_snd_from_fp(OMG_AudioRaylib* this, OMG_SoundRa
         _OMG_LOG_ERROR(omg_base, "Failed to open sound ", path->ptr);
         return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
+    snd_base->is_dummy = false;
     snd_base->duration = -1.0;
     return snd;
 }
@@ -198,6 +201,7 @@ OMG_SoundRaylib* omg_audio_raylib_snd_from_mem(OMG_AudioRaylib* this, OMG_SoundR
         _OMG_LOG_ERROR(omg_base, "Failed to open sound from mem");
         return (OMG_SoundRaylib*)omg_audio_dummy_snd_alloc(base, snd_base);
     }
+    snd_base->is_dummy = false;
     snd_base->duration = -1.0;
     return snd;
 }
