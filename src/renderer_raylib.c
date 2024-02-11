@@ -506,6 +506,32 @@ bool omg_renderer_raylib_draw_rect_ex(OMG_RendererRaylib* this, const OMG_FRect*
     return false;
 }
 
+bool omg_renderer_raylib_font_render_to(OMG_RendererRaylib* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
+    if (OMG_IS_DUMMY_FONT(font) || omg_string_ensure_null((OMG_String*)text))
+        return omg_renderer_font_render_to(base, pos, font, text, bg, fg, rect);
+    if (OMG_ISNULL(pos)) {
+        pos = &OMG_FPOINT_MAKE(0, 0);
+    }
+    Vector2 tex_size = this->raylib->MeasureTextEx(font_raylib->font, text->ptr, font->size * _RAYLIB_FONT_SIZE_MUL * font->a_scale, font->spacing);
+    if (OMG_ISNOTNULL(bg)) {
+        RL_Rectangle rec = {
+            .x = (pos->x + this->so.x) * this->ss.x, .y = (pos->y + this->so.y) * this->ss.y,
+            .width = tex_size.x * this->ss.x, .height = tex_size.y * this->ss.y
+        };
+        this->raylib->DrawRectangleRec(rec, _OMG_RAYLIB_OMG_COLOR(bg));
+    }
+    Vector2 text_pos;
+    text_pos.x = pos->x;
+    text_pos.y = pos->y;
+    this->raylib->DrawTextEx(font_raylib->font, text->ptr, text_pos, font->size * _RAYLIB_FONT_SIZE_MUL * font->a_scale, font->spacing, _OMG_RAYLIB_OMG_COLOR(fg));
+    if (OMG_ISNOTNULL(rect)) {
+        rect->x = rect->y = 0.0f;
+        rect->w = tex_size.x;
+        rect->h = tex_size.y;
+    }
+    return false;
+}
+
 bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -536,6 +562,7 @@ bool omg_renderer_raylib_init(OMG_RendererRaylib* this) {
     base->tex_set_color_mod = omg_renderer_raylib_tex_set_color_mod;
     base->set_blend_mode = omg_renderer_raylib_set_blend_mode;
     base->font_render = omg_renderer_raylib_font_render;
+    base->font_render_to = omg_renderer_raylib_font_render_to;
     base->set_clip_rect = omg_renderer_raylib_set_clip_rect;
     OMG_END_POINTER_CAST();
     this->blend_cache = -1;

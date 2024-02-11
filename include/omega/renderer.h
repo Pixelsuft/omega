@@ -98,6 +98,7 @@ OMG_API OMG_Texture* omg_renderer_tex_from_surf(OMG_Renderer* this, OMG_Texture*
 OMG_API OMG_Texture* omg_renderer_tex_create(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha);
 OMG_API OMG_Texture* omg_renderer_dummy_tex_create(OMG_Renderer* this);
 OMG_API OMG_Texture* omg_renderer_font_render(OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
+OMG_API bool omg_renderer_font_render_to(OMG_Renderer* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
 #if OMG_EXPORT_SHIT
 OMG_API int omg_renderer_get_supported_drivers(OMG_Renderer* this);
 OMG_API bool omg_renderer_set_vsync(OMG_Renderer* this, bool enabled);
@@ -122,5 +123,4 @@ OMG_API bool omg_renderer_tex_set_color_mod(OMG_Renderer* this, OMG_Texture* tex
 OMG_API bool omg_renderer_set_blend_mode(OMG_Renderer* this, int blend_mode);
 OMG_API bool omg_renderer_copy(OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
 OMG_API bool omg_renderer_copy_ex(OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
-OMG_API bool omg_renderer_font_render_to(OMG_Renderer* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
 #endif

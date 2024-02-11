@@ -52,5 +52,6 @@ OMG_API bool omg_renderer_raylib_fill_ellipse(OMG_RendererRaylib* this, const OM
 OMG_API bool omg_renderer_raylib_set_clip_rect(OMG_RendererRaylib* this, const OMG_FRect* clip_rect);
 OMG_API bool omg_renderer_raylib_fill_rect_ex(OMG_RendererRaylib* this, const OMG_FRect* rect, float roundness, const OMG_Color* col);
 OMG_API bool omg_renderer_raylib_draw_rect_ex(OMG_RendererRaylib* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col);
+OMG_API bool omg_renderer_raylib_font_render_to(OMG_RendererRaylib* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
 #endif
 #endif
