@@ -47,7 +47,7 @@ bool omg_audio_sdl2_destroy(OMG_AudioSdl2* this) {
 }
 
 bool omg_audio_sdl2_mus_destroy(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
-    if (OMG_ISNULL(mus) || OMG_ISNULL(mus->mus))
+    if (OMG_IS_DUMMY_AUDIO(mus_base) || OMG_ISNULL(mus->mus))
         return false;
     this->mix.Mix_FreeMusic(mus->mus);
     mus->mus = NULL;
@@ -185,6 +185,8 @@ OMG_MusicSdl2* omg_audio_sdl2_mus_from_file(OMG_AudioSdl2* this, OMG_MusicSdl2* 
 }
 
 bool omg_audio_sdl2_mus_play(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, int loops, double pos, double fade_in) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     int res;
     mus->loops_cache = loops;
     if (!this->supports_get_pos)
@@ -225,6 +227,8 @@ bool omg_audio_sdl2_update(OMG_AudioSdl2* this) {
 }
 
 bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, float volume) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     mus->vol_cache = (int)(volume * (float)MIX_MAX_VOLUME);
     if (MUS_IS_PLAYING())
         this->mix.Mix_VolumeMusic(mus->vol_cache);
@@ -232,6 +236,8 @@ bool omg_audio_sdl2_mus_set_volume(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, floa
 }
 
 bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (MUS_IS_PLAYING()) {
         this->mix.Mix_HaltMusic();
         cur_mus_cache = NULL;
@@ -240,6 +246,8 @@ bool omg_audio_sdl2_mus_stop(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
 }
 
 double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return -1.0;
     // Is this right???
     if (!MUS_IS_PLAYING())
         return 0.0;
@@ -249,12 +257,16 @@ double omg_audio_sdl2_mus_get_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus) {
 }
 
 bool omg_audio_sdl2_snd_stop(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     if (SND_IS_PLAYING())
         this->mix.Mix_HaltChannel(snd->channel);
     return false;
 }
 
 bool omg_audio_sdl2_mus_set_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, double pos) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (pos < 0.0)
         pos = 0.0;
     if (!MUS_IS_PLAYING())
@@ -270,7 +282,7 @@ bool omg_audio_sdl2_mus_set_pos(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, double 
 }
 
 bool omg_audio_sdl2_snd_destroy(OMG_AudioSdl2* this, OMG_SoundSdl2* snd) {
-    if (OMG_ISNULL(snd) || OMG_ISNULL(snd->chunk))
+    if (OMG_IS_DUMMY_AUDIO(snd_base) || OMG_ISNULL(snd->chunk))
         return false;
     omg_audio_sdl2_snd_stop(this, snd);
     this->mix.Mix_FreeChunk(snd->chunk);
@@ -342,6 +354,8 @@ OMG_SoundSdl2* omg_audio_sdl2_snd_from_mem(OMG_AudioSdl2* this, OMG_SoundSdl2* s
 }
 
 bool omg_audio_sdl2_snd_set_volume(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, float volume) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     snd->vol_cache = (int)(volume * (float)MIX_MAX_VOLUME);
     if (SND_IS_PLAYING())
         this->mix.Mix_Volume(snd->channel, snd->vol_cache);
@@ -359,6 +373,8 @@ void omg_audio_sdl2_channel_finish_cb(int channel) {
 }
 
 bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops, double pos, double fade_in) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     OMG_UNUSED(pos);
     omg_audio_sdl2_snd_stop(this, snd);
     int channel = -1;
@@ -380,6 +396,8 @@ bool omg_audio_sdl2_snd_play(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, int loops,
 }
 
 bool omg_audio_sdl2_mus_pause(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, bool paused) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (!MUS_IS_PLAYING())
         return false;
     (paused ? this->mix.Mix_PauseMusic : this->mix.Mix_ResumeMusic)();
@@ -387,6 +405,8 @@ bool omg_audio_sdl2_mus_pause(OMG_AudioSdl2* this, OMG_MusicSdl2* mus, bool paus
 }
 
 bool omg_audio_sdl2_snd_pause(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, bool paused) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     if (!SND_IS_PLAYING())
         return false;
     (paused ? this->mix.Mix_Pause : this->mix.Mix_Resume)(snd->channel);
@@ -394,6 +414,8 @@ bool omg_audio_sdl2_snd_pause(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, bool paus
 }
 
 bool omg_audio_sdl2_snd_set_panning(OMG_AudioSdl2* this, OMG_SoundSdl2* snd, float left, float right) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     snd->pan_cache[0] = (uint8_t)(left * 255.0f);
     snd->pan_cache[1] = (uint8_t)(right * 255.0f);
     if (!SND_IS_PLAYING())

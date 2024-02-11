@@ -41,11 +41,15 @@ bool omg_audio_raylib_update(OMG_AudioRaylib* this) {
 }
 
 bool omg_audio_raylib_mus_set_volume(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float volume) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     this->raylib->SetMusicVolume(mus->mus, volume);
     return false;
 }
 
 bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int loops, double pos, double fade_in) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     OMG_UNUSED(fade_in);
     mus->mus.looping = loops == -1;
     if (this->raylib->IsMusicStreamPlaying(mus->mus)) {
@@ -65,7 +69,7 @@ bool omg_audio_raylib_mus_play(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, int 
 }
 
 bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
-    if (OMG_ISNULL(mus))
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
         return false;
     for (size_t i = 0; i < OMG_MAX_PLAYING_MUSIC; i++) {
         if (this->mus_play_cache[i] == mus) {
@@ -83,15 +87,21 @@ bool omg_audio_raylib_mus_destroy(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
 }
 
 bool omg_audio_raylib_mus_stop(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     this->raylib->StopMusicStream(mus->mus);
     return false;
 }
 
 double omg_audio_raylib_mus_get_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return -1.0;
     return (double)this->raylib->GetMusicTimePlayed(mus->mus);
 }
 
 bool omg_audio_raylib_mus_set_speed(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float speed) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     this->raylib->SetMusicPitch(mus->mus, speed);
     return false;
 }
@@ -147,7 +157,7 @@ OMG_MusicRaylib* omg_audio_raylib_mus_from_mem(OMG_AudioRaylib* this, OMG_MusicR
 }
 
 bool omg_audio_raylib_snd_destroy(OMG_AudioRaylib* this, OMG_SoundRaylib* snd) {
-    if (OMG_ISNULL(snd))
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
         return false;
     this->raylib->UnloadSound(snd->snd);
     omg_audio_snd_destroy(base, snd_base);
@@ -207,11 +217,15 @@ OMG_SoundRaylib* omg_audio_raylib_snd_from_mem(OMG_AudioRaylib* this, OMG_SoundR
 }
 
 bool omg_audio_raylib_snd_set_volume(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float volume) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     this->raylib->SetSoundVolume(snd->snd, volume);
     return false;
 }
 
 bool omg_audio_raylib_mus_set_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, double pos) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (pos < 0.0)
         pos = 0.0;
     this->raylib->SeekMusicStream(mus->mus, (float)pos);
@@ -219,38 +233,52 @@ bool omg_audio_raylib_mus_set_pos(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, d
 }
 
 bool omg_audio_raylib_snd_play(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, int loops, double pos, double fade_in) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     OMG_UNUSED(loops, pos, fade_in);
     this->raylib->PlaySound(snd->snd);
     return false;
 }
 
 bool omg_audio_raylib_snd_stop(OMG_AudioRaylib* this, OMG_SoundRaylib* snd) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     this->raylib->StopSound(snd->snd);
     return false;
 }
 
 bool omg_audio_raylib_mus_pause(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, bool paused) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     (paused ? this->raylib->PauseMusicStream : this->raylib->ResumeMusicStream)(mus->mus);
     return false;
 }
 
 bool omg_audio_raylib_snd_pause(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, bool paused) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     (paused ? this->raylib->PauseSound : this->raylib->ResumeSound)(snd->snd);
     return false;
 }
 
 bool omg_audio_raylib_snd_set_speed(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float speed) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     this->raylib->SetSoundPitch(snd->snd, speed);
     return false;
 }
 
 bool omg_audio_raylib_mus_set_panning(OMG_AudioRaylib* this, OMG_MusicRaylib* mus, float left, float right) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     left /= (left + right);
     this->raylib->SetMusicPan(mus->mus, left);
     return false;
 }
 
 bool omg_audio_raylib_snd_set_panning(OMG_AudioRaylib* this, OMG_SoundRaylib* snd, float left, float right) {
+    if (OMG_IS_DUMMY_AUDIO(snd_base))
+        return true;
     left /= (left + right);
     this->raylib->SetSoundPan(snd->snd, left);
     return false;

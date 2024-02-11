@@ -86,6 +86,8 @@ FMOD_RESULT omg_audio_fmod_mus_callback(FMOD_CHANNELCONTROL* channelcontrol, FMO
 }
 
 bool omg_audio_fmod_mus_stop(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (IS_PLAYING(mus)) {
         int res;
         if (HAS_ERROR(res = this->fmod.FMOD_Channel_Stop(mus->channel))) {
@@ -97,6 +99,8 @@ bool omg_audio_fmod_mus_stop(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
 }
 
 bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops, double pos, double fade_in) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     OMG_UNUSED(fade_in); // TODO
     if (OMG_ISNOTNULL(mus->channel))
         omg_audio_fmod_mus_stop(this, mus);
@@ -131,8 +135,8 @@ bool omg_audio_fmod_mus_play(OMG_AudioFmod* this, OMG_MusicFmod* mus, int loops,
 }
 
 bool omg_audio_fmod_mus_destroy(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
-    if (OMG_ISNULL(mus) || OMG_ISNULL(mus->mus))
-        return false;
+    if (OMG_IS_DUMMY_AUDIO(mus_base) || OMG_ISNULL(mus->mus))
+        return true;
     mus->channel = NULL;
     bool retval = false;
     int res;
@@ -150,7 +154,7 @@ bool omg_audio_fmod_mus_destroy(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
 }
 
 double omg_audio_fmod_mus_get_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
-    if (!IS_PLAYING(mus))
+    if (OMG_IS_DUMMY_AUDIO(mus_base) || !IS_PLAYING(mus))
         return 0.0;
     int res;
     unsigned int pos;
@@ -162,6 +166,8 @@ double omg_audio_fmod_mus_get_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus) {
 }
 
 bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double pos) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (pos < 0.0)
         pos = 0.0;
     else if (pos > mus_base->duration) // Should I use this hack???
@@ -177,6 +183,8 @@ bool omg_audio_fmod_mus_set_pos(OMG_AudioFmod* this, OMG_MusicFmod* mus, double 
 }
 
 bool omg_audio_fmod_mus_pause(OMG_AudioFmod* this, OMG_MusicFmod* mus, bool paused) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     if (!IS_PLAYING(mus))
         return false;
     int res;
@@ -188,6 +196,8 @@ bool omg_audio_fmod_mus_pause(OMG_AudioFmod* this, OMG_MusicFmod* mus, bool paus
 }
 
 bool omg_audio_fmod_mus_set_speed(OMG_AudioFmod* this, OMG_MusicFmod* mus, float speed) {
+    if (OMG_IS_DUMMY_AUDIO(mus_base))
+        return true;
     mus->pitch_cache = speed;
     if (!IS_PLAYING(mus))
         return false;
