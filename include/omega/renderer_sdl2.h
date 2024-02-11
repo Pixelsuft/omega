@@ -52,5 +52,6 @@ OMG_API bool omg_renderer_sdl2_draw_line_ex(OMG_RendererSdl2* this, const OMG_FR
 OMG_API bool omg_renderer_sdl2_set_clip_rect(OMG_RendererSdl2* this, const OMG_FRect* clip_rect);
 OMG_API bool omg_renderer_sdl2_fill_rect_ex(OMG_RendererSdl2* this, const OMG_FRect* rect, float roundness, const OMG_Color* col);
 OMG_API bool omg_renderer_sdl2_draw_rect_ex(OMG_RendererSdl2* this, const OMG_FRect* rect, float roundness, float thick, const OMG_Color* col);
+OMG_API bool omg_renderer_sdl2_font_render_to(OMG_RendererSdl2* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect);
 #endif
 #endif

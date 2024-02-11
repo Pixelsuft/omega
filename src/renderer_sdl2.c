@@ -672,7 +672,6 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
     else
         tex_base->was_allocated = false;
 #endif
-    // TODO: compability with SDL2_ttf < 2.0.18 (LCD rendering)
     // TODO: macro for converting colors to sdl2 colors
     SDL_Surface* sdl_surf;
     SDL_Color fg_col;
@@ -744,6 +743,89 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
 #endif
 }
 
+bool omg_renderer_sdl2_font_render_to(OMG_RendererSdl2* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, OMG_FRect* rect) {
+#if OMG_SUPPORT_SDL2_TTF
+    if (OMG_IS_DUMMY_FONT(font) || (omg_base->winmgr->fnt->type != OMG_FONT_MGR_SDL2) || omg_string_ensure_null((OMG_String*)text))
+        return omg_renderer_font_render_to(base, pos, font, text, bg, fg, rect);
+    SDL_Surface* sdl_surf;
+    SDL_Color fg_col;
+    SDL_Color bg_col;
+    fg_col.r = (uint8_t)(fg->r * (omg_color_t)255 / OMG_MAX_COLOR);
+    fg_col.g = (uint8_t)(fg->g * (omg_color_t)255 / OMG_MAX_COLOR);
+    fg_col.b = (uint8_t)(fg->b * (omg_color_t)255 / OMG_MAX_COLOR);
+    fg_col.a = (uint8_t)(fg->a * (omg_color_t)255 / OMG_MAX_COLOR);
+    if (OMG_ISNULL(bg)) {
+        if (font->wrapping) {
+            if (font->aa) {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Blended_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Blended_Wrapped)(font_sdl2->font, text->ptr, fg_col, 0);
+            }
+            else {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Solid_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Solid_Wrapped)(font_sdl2->font, text->ptr, fg_col, 0);
+            }
+        }
+        else if (font->aa) {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Blended : fnt_sdl2->ttf.TTF_RenderText_Blended)(font_sdl2->font, text->ptr, fg_col);
+        }
+        else {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Solid : fnt_sdl2->ttf.TTF_RenderText_Solid)(font_sdl2->font, text->ptr, fg_col);
+        }
+    }
+    else {
+        bg_col.r = (uint8_t)(bg->r * (omg_color_t)255 / OMG_MAX_COLOR);
+        bg_col.g = (uint8_t)(bg->g * (omg_color_t)255 / OMG_MAX_COLOR);
+        bg_col.b = (uint8_t)(bg->b * (omg_color_t)255 / OMG_MAX_COLOR);
+        bg_col.a = (uint8_t)(bg->a * (omg_color_t)255 / OMG_MAX_COLOR);
+        if (font->wrapping) {
+            if (font->aa || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderUTF8_LCD_Wrapped) || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderText_LCD_Wrapped)) {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded_Wrapped : fnt_sdl2->ttf.TTF_RenderText_Shaded_Wrapped)(font_sdl2->font, text->ptr, fg_col, bg_col, 0);
+            }
+            else {
+                sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_LCD_Wrapped : fnt_sdl2->ttf.TTF_RenderText_LCD_Wrapped)(font_sdl2->font, text->ptr, fg_col, bg_col, 0);
+            }
+        }
+        else if (font->aa || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderUTF8_LCD) || OMG_ISNULL(fnt_sdl2->ttf.TTF_RenderText_LCD)) {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_Shaded : fnt_sdl2->ttf.TTF_RenderText_Shaded)(font_sdl2->font, text->ptr, fg_col, bg_col);
+        }
+        else {
+            sdl_surf = (font_sdl2_is_utf8 ? fnt_sdl2->ttf.TTF_RenderUTF8_LCD : fnt_sdl2->ttf.TTF_RenderText_LCD)(font_sdl2->font, text->ptr, fg_col, bg_col);
+        }
+    }
+    if (OMG_ISNULL(sdl_surf)) {
+        _OMG_LOG_WARN(omg_base, "Failed to render text to (", this->sdl2->SDL_GetError(), ")");
+        return omg_renderer_font_render_to(base, pos, font, text, bg, fg, rect);
+    }
+    SDL_FRect dst_rect;
+    dst_rect.w = (float)sdl_surf->w;
+    dst_rect.h = (float)sdl_surf->h;
+    SDL_Texture* tex = this->sdl2->SDL_CreateTextureFromSurface(this->ren, sdl_surf);
+    this->sdl2->SDL_FreeSurface(sdl_surf);
+    if (OMG_ISNULL(tex)) {
+        _OMG_LOG_WARN(omg_base, "Failed to create font tex from surf (", this->sdl2->SDL_GetError(), ")");
+        return omg_renderer_font_render_to(base, pos, font, text, bg, fg, rect);
+    }
+    if (OMG_ISNOTNULL(rect)) {
+        rect->x = rect->y = 0.0f;
+        rect->w = dst_rect.w;
+        rect->h = dst_rect.h;
+    }
+    if (OMG_ISNULL(pos))
+        dst_rect.x = dst_rect.y = 0.0f;
+    else {
+        dst_rect.x = pos->x;
+        dst_rect.y = pos->y;
+    }
+    if (this->sdl2->SDL_RenderCopyF(this->ren, tex, NULL, &dst_rect) < 0) {
+        _OMG_LOG_WARN(omg_base, "Failed to render font texture (", this->sdl2->SDL_GetError(), ")");
+        this->sdl2->SDL_DestroyTexture(tex);
+        return true;
+    }
+    this->sdl2->SDL_DestroyTexture(tex);
+    return false;
+#else
+    return omg_renderer_font_render_to(base, pos, font, text, bg, fg, rect);
+#endif
+}
+
 bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     OMG_BEGIN_POINTER_CAST();
     omg_renderer_init(this);
@@ -774,6 +856,7 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     base->set_blend_mode = omg_renderer_sdl2_set_blend_mode;
     base->set_vsync = omg_renderer_sdl2_set_vsync;
     base->font_render = omg_renderer_sdl2_font_render;
+    base->font_render_to = omg_renderer_sdl2_font_render_to;
     base->set_clip_rect = omg_renderer_sdl2_set_clip_rect;
     OMG_END_POINTER_CAST();
     this->blend_cache = OMG_BLEND_MODE_NONE;
