@@ -457,7 +457,7 @@ OMG_FileWin* omg_win_file_from_fp(OMG_OmegaWin* this, OMG_FileWin* file, const O
     return file;
 }
 
-bool omg_win_init(OMG_OmegaWin* this) {
+bool omg_win_loads_libs(OMG_OmegaWin* this) {
     // TODO: cleanups on errors
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
@@ -505,6 +505,12 @@ bool omg_win_init(OMG_OmegaWin* this) {
     }
     else
         this->should_free_ntdll = false;
+    return false;
+}
+
+bool omg_win_init(OMG_OmegaWin* this) {
+    if (omg_win_loads_libs(this))
+        return true;
     if (OMG_ISNULL(base->std)) {
         base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
         if (OMG_ISNULL(base->std)) {
