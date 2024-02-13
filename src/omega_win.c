@@ -435,9 +435,9 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {
-    base->type = OMG_OMEGA_TYPE_WIN;
-    this->con_result = 0;
     omg_omg_init(base);
+    this->con_result = 0;
+    base->type = OMG_OMEGA_TYPE_WIN;
     if (omg_win_loads_libs1(base))
         return true;
     if (OMG_ISNULL(base->mem)) {
