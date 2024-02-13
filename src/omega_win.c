@@ -468,16 +468,13 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
     return result;
 }
 
-bool omg_win_loads_libs(OMG_OmegaWin* this) {
-    // TODO: cleanups on errors
+bool omg_win_loads_libs1(OMG_OmegaWin* this) {
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
+        this->should_free_k32 = false;
         if (omg_winapi_kernel32_load(this->k32))
             return true;
-        this->should_free_k32 = true;
     }
-    else
-        this->should_free_k32 = false;
     OMG_BEGIN_POINTER_CAST();
     omg_omg_init(this);
     base->type = OMG_OMEGA_TYPE_WIN;
@@ -485,67 +482,35 @@ bool omg_win_loads_libs(OMG_OmegaWin* this) {
     if (OMG_ISNULL(base->mem)) {
         base->mem = omg_memory_win_create(this, this->k32);
         if (OMG_ISNULL(base->mem)) {
-            if (this->should_free_k32) {
-                omg_winapi_kernel32_free(this->k32);
-                this->k32 = NULL;
-            }
+            omg_win_destroy_clean2(this);
             return true;
         }
         base->should_free_mem = true;
     }
-    else
-        base->should_free_mem = false;
     if (OMG_ISNULL(this->nt)) {
         this->nt = OMG_MALLOC(base->mem, sizeof(OMG_Ntdll));
-        if (OMG_ISNULL(this->nt)) {
+        if (OMG_ISNULL(this->nt) || omg_winapi_ntdll_load(this->nt)) {
+            omg_win_destroy_clean1(this);
+            if (OMG_ISNOTNULL(this->nt)) {
+                OMG_FREE(base->mem, this->nt);
+            }
             base->mem->destroy(base->mem);
             base->mem = NULL;
-            omg_winapi_kernel32_free(this->k32);
-            this->k32 = NULL;
-            return true;
-        }
-        if (omg_winapi_ntdll_load(this->nt)) {
-            OMG_FREE(base->mem, this->nt);
-            base->mem->destroy(base->mem);
-            base->mem = NULL;
-            omg_winapi_kernel32_free(this->k32);
-            this->k32 = NULL;
+            omg_win_destroy_clean2(this);
             return true;
         }
         this->should_free_ntdll = true;
     }
-    else
-        this->should_free_ntdll = false;
-    return false;
-}
-
-bool omg_win_init(OMG_OmegaWin* this) {
-    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = false;
-    if (omg_win_loads_libs(this))
-        return true;
-    if (OMG_ISNULL(base->std)) {
-        base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
-        if (OMG_ISNULL(base->std)) {
-            if (this->should_free_k32) {
-                omg_winapi_kernel32_free(this->k32);
-                this->k32 = NULL;
-            }
-            return true;
-        }
-        omg_std_fill_defaults(base->std);
-        omg_std_set_default_handle(base->std);
-        omg_win_fill_std(this);
-        base->should_free_std = true;
-    }
-    else
-        base->should_free_std = false;
     OMG_WIN_NTDLL_OSVERSIONINFOEXW os_ver_info;
     os_ver_info.dwOSVersionInfoSize = sizeof(OMG_WIN_NTDLL_OSVERSIONINFOEXW);
     this->nt->RtlGetVersion(&os_ver_info);
     this->win_major_ver = (int)os_ver_info.dwMajorVersion;
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
     this->win_build_number = (int)os_ver_info.dwBuildNumber;
-    base->sz_file = sizeof(OMG_FileWin);
+    return false;
+}
+
+bool omg_win_loads_libs2(OMG_OmegaWin* this) {
     if (OMG_ISNULL(this->dwm)) {
         this->dwm = OMG_MALLOC(base->mem, sizeof(OMG_Dwmapi));
         if (OMG_ISNULL(this->dwm)) {
@@ -554,8 +519,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
         omg_winapi_dwmapi_load(this->dwm);
         this->should_free_dwm = true;
     }
-    else
-        this->should_free_dwm = false;
     if (OMG_ISNULL(this->uxtheme)) {
         this->uxtheme = OMG_MALLOC(base->mem, sizeof(OMG_Uxtheme));
         if (OMG_ISNULL(this->uxtheme)) {
@@ -564,8 +527,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
         omg_winapi_uxtheme_load(this->uxtheme, this->win_build_number);
         this->should_free_uxtheme = true;
     }
-    else
-        this->should_free_uxtheme = false;
     if (OMG_ISNULL(this->u32)) {
         this->u32 = OMG_MALLOC(base->mem, sizeof(OMG_User32));
         if (OMG_ISNULL(this->u32)) {
@@ -577,8 +538,6 @@ bool omg_win_init(OMG_OmegaWin* this) {
         }
         this->should_free_u32 = true;
     }
-    else
-        this->should_free_u32 = false;
     if (OMG_ISNULL(this->g32)) {
         this->g32 = OMG_MALLOC(base->mem, sizeof(OMG_Gdi32));
         if (OMG_ISNULL(this->g32)) {
@@ -590,8 +549,32 @@ bool omg_win_init(OMG_OmegaWin* this) {
         }
         this->should_free_g32 = true;
     }
-    else
-        this->should_free_g32 = false;
+    return false;
+}
+
+bool omg_win_init(OMG_OmegaWin* this) {
+    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = base->should_free_std = false;
+    if (omg_win_loads_libs1(this))
+        return true;
+    if (OMG_ISNULL(base->std)) {
+        base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
+        if (OMG_ISNULL(base->std)) {
+            omg_win_destroy_clean2(this);
+            return true;
+        }
+        omg_std_fill_defaults(base->std);
+        omg_std_set_default_handle(base->std);
+        omg_win_fill_std(this);
+        base->should_free_std = true;
+    }
+    if (omg_win_loads_libs2(this)) {
+        omg_win_destroy_clean1(this);
+        base->mem->destroy(base->mem);
+        base->mem = NULL;
+        omg_win_destroy_clean2(this);
+        return true;
+    }
+    base->sz_file = sizeof(OMG_FileWin);
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
     base->delay = omg_win_delay;
