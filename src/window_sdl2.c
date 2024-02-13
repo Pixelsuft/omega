@@ -5,6 +5,14 @@
 #include <omega/surface_sdl2.h>
 #include <omega/winmgr_sdl2.h>
 #include <omega/renderer_sdl2.h>
+#include <omega/config.h>
+#if OMG_IS_WIN && (!OMG_SDL2_DYNAMIC)
+#if OMG_IS_VC || OMG_IS_UNIX || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID
+#include <SDL_syswm.h>
+#else
+#include <SDL2/SDL_syswm.h>
+#endif
+#endif
 #define base ((OMG_Window*)this)
 #define omg_base ((OMG_Omega*)base->omg)
 #define winmgr_sdl2 ((OMG_WinmgrSdl2*)omg_base->winmgr)
@@ -348,6 +356,19 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         this->id = 1;
     }
     this->sdl2->SDL_SetWindowData(this->win, "a", this);
+#if OMG_IS_WIN
+    SDL_SysWMinfo wm_info;
+    wm_info.version.major = 2;
+    wm_info.version.minor = 31;
+    wm_info.version.patch = 0;
+    if (this->sdl2->SDL_GetWindowWMInfo(this->win, &wm_info) == SDL_TRUE) {
+        this->hwnd = (void*)wm_info.win.window;
+    }
+    else {
+        this->hwnd = NULL;
+        _OMG_LOG_WARN(omg_base, "Failed to get window manager info (", this->sdl2->SDL_GetError(), ")");
+    }
+#endif
     OMG_BEGIN_POINTER_CAST();
     base->raise = omg_window_sdl2_raise;
     base->set_size = omg_window_sdl2_set_size;
