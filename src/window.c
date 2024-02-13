@@ -1,6 +1,9 @@
 #include <omega/omega.h>
 #include <omega/window.h>
+#include <omega/api_win.h>
 #define omg_base ((OMG_Omega*)this->omg)
+#define d_uxtheme ((OMG_Uxtheme*)omg_base->uxtheme)
+#define d_dwm ((OMG_Dwmapi*)omg_base->dwm)
 
 void omg_window_fill_on_create(OMG_Window* this) {
     this->type = OMG_WIN_TYPE_NONE;
@@ -203,6 +206,30 @@ bool omg_window_set_opacity(OMG_Window* this, float opacity) {
 float omg_window_get_opacity(OMG_Window* this) {
     OMG_UNUSED(this);
     return -1.0f;
+}
+
+void omg_window_win_check_dark_mode(OMG_Window* this) {
+#if OMG_IS_WIN
+    if (OMG_ISNOTNULL(d_uxtheme->ShouldAppsUseDarkMode) && (true || (omg_base->theme == OMG_THEME_NONE))) {
+        omg_base->theme = d_uxtheme->ShouldAppsUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT;
+    }
+    if (OMG_ISNULL(this->win32_handle))
+        return;
+    if (OMG_ISNOTNULL(d_uxtheme->AllowDarkModeForWindow)) {
+        d_uxtheme->AllowDarkModeForWindow(
+            (HWND)this->win32_handle,
+            ((omg_base->app_theme == OMG_THEME_DARK) || (omg_base->app_theme == OMG_THEME_AUTO)) && (omg_base->theme != OMG_THEME_LIGHT)
+        );
+    }
+    if (OMG_ISNOTNULL(d_dwm->DwmSetWindowAttribute)) {
+        DWORD val = (omg_base->theme == OMG_THEME_DARK) ? 1 : 0;
+        d_dwm->DwmSetWindowAttribute((HWND)this->win32_handle, 19, &val, sizeof(DWORD));
+        val = (omg_base->theme == OMG_THEME_DARK) ? 1 : 0;
+        d_dwm->DwmSetWindowAttribute((HWND)this->win32_handle, 20, &val, sizeof(DWORD));
+    }
+#else
+    OMG_UNUSED(this);
+#endif
 }
 
 bool omg_window_init(OMG_Window* this) {

@@ -396,24 +396,6 @@ static OMG_Scancode omg_window_win_code_to_scancode(OMG_WindowWin* this, LPARAM 
     return code;
 }
 
-void omg_window_win_check_dark_mode(OMG_WindowWin* this) {
-    if (OMG_ISNOTNULL(this->uxtheme->ShouldAppsUseDarkMode) && (true || (omg_base->theme == OMG_THEME_NONE))) {
-        omg_base->theme = this->uxtheme->ShouldAppsUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT;
-    }
-    if (OMG_ISNOTNULL(this->uxtheme->AllowDarkModeForWindow)) {
-        this->uxtheme->AllowDarkModeForWindow(
-            this->hwnd,
-            ((omg_base->app_theme == OMG_THEME_DARK) || (omg_base->app_theme == OMG_THEME_AUTO)) && (omg_base->theme != OMG_THEME_LIGHT)
-        );
-    }
-    if (OMG_ISNOTNULL(this->dwm->DwmSetWindowAttribute)) {
-        DWORD val = (omg_base->theme == OMG_THEME_DARK) ? 1 : 0;
-        this->dwm->DwmSetWindowAttribute(this->hwnd, 19, &val, sizeof(DWORD));
-        val = (omg_base->theme == OMG_THEME_DARK) ? 1 : 0;
-        this->dwm->DwmSetWindowAttribute(this->hwnd, 20, &val, sizeof(DWORD));
-    }
-}
-
 bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title) {
     size_t count;
     _OMG_WIN_GET_ENCODE_SIZE(count, new_title, this->k32);
@@ -1129,7 +1111,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             return RET_DEF_PROC();
         }
         case WM_THEMECHANGED: {
-            omg_window_win_check_dark_mode(this);
+            omg_window_win_check_dark_mode(base);
             return RET_DEF_PROC();
         }
         case WM_NCCALCSIZE: {
@@ -1398,7 +1380,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         return true;
     }
     base->win32_handle = (void*)this->hwnd;
-    omg_window_win_check_dark_mode(this);
+    omg_window_win_check_dark_mode(base);
     base->scale.x = 0.0f; // Hack
     omg_window_win_update_scale(this);
     // TODO: Do I really need a DC here?

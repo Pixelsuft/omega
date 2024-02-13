@@ -368,6 +368,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         base->win32_handle = NULL;
         _OMG_LOG_WARN(omg_base, "Failed to get window manager info (", this->sdl2->SDL_GetError(), ")");
     }
+    omg_window_win_check_dark_mode(base);
 #endif
     OMG_BEGIN_POINTER_CAST();
     base->raise = omg_window_sdl2_raise;

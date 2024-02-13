@@ -41,7 +41,6 @@ OMG_API bool omg_window_win_set_sys_button(OMG_WindowWin* this, int id, bool ena
 OMG_API bool omg_window_win_set_resizable(OMG_WindowWin* this, bool enabled);
 OMG_API bool omg_window_win_set_bordered(OMG_WindowWin* this, bool enabled);
 OMG_API bool omg_window_win_set_always_on_top(OMG_WindowWin* this, bool enabled);
-OMG_API void omg_window_win_check_dark_mode(OMG_WindowWin* this);
 OMG_API bool omg_window_win_show(OMG_WindowWin* this, bool show);
 OMG_API bool omg_window_win_set_title(OMG_WindowWin* this, const OMG_String* new_title);
 OMG_API bool omg_window_win_renderer_alloc(OMG_WindowWin* this);

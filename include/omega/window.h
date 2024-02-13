@@ -106,6 +106,7 @@ OMG_API bool omg_window_set_opacity(OMG_Window* this, float opacity);
 OMG_API float omg_window_get_opacity(OMG_Window* this);
 OMG_API bool omg_window_set_brightness(OMG_Window* this, float brightness);
 OMG_API float omg_window_get_brightness(OMG_Window* this);
+OMG_API void omg_window_win_check_dark_mode(OMG_Window* this);
 OMG_API int omg_window_display_get_index(OMG_Window* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);
