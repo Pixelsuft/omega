@@ -49,6 +49,23 @@
 #define OMG_MBUTTON_X3MASK   OMG_MBUTTON(OMG_MBUTTON_X3)
 #define OMG_MBUTTON_X4MASK   OMG_MBUTTON(OMG_MBUTTON_X4)
 
+#define _OMG_CHECK_DARK_MODE_INTERNAL() do { \
+    if (OMG_ISNOTNULL(d_uxtheme->AllowDarkModeForApp)) \
+        d_uxtheme->AllowDarkModeForApp((base->app_theme == OMG_THEME_DARK) || (base->app_theme == OMG_THEME_AUTO)); \
+    if (OMG_ISNOTNULL(d_uxtheme->SetPreferredAppMode)) { \
+        if (base->app_theme == OMG_THEME_AUTO) \
+            d_uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_ALLOW_DARK); \
+        else if (base->app_theme == OMG_THEME_NONE) \
+            d_uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_DEFAULT); \
+        else if (base->app_theme == OMG_THEME_LIGHT) \
+            d_uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_FORCE_LIGHT); \
+        else if (base->app_theme == OMG_THEME_DARK) \
+            d_uxtheme->SetPreferredAppMode(OMG_WIN_APPMODE_FORCE_DARK); \
+    } \
+    if (OMG_ISNOTNULL(d_uxtheme->ShouldSystemUseDarkMode)) \
+        base->theme = d_uxtheme->ShouldSystemUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT; \
+} while (0)
+
 typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;

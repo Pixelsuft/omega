@@ -8,6 +8,7 @@
 #include <omega/filesystem_sdl2.h>
 #include <omega/audio_sdl2.h>
 #include <omega/audio_fmod.h>
+#include <omega/api_win.h>
 #if OMG_IS_EMSCRIPTEN
 #include <emscripten.h>
 #endif
@@ -17,6 +18,7 @@
 #define file_omg_base ((OMG_Omega*)file_base->omg)
 #define audio_sdl2 ((OMG_AudioSdl2*)base->audio)
 #define winmgr_sdl2 ((OMG_WinmgrSdl2*)base->winmgr)
+#define d_uxtheme ((OMG_Uxtheme*)base->uxtheme)
 #define MAKE_EVENT(event) do { \
     ((OMG_Event*)event)->omg = this; \
     ((OMG_Event*)event)->data = base->event_arg; \
@@ -524,6 +526,9 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
         return true;
     }
     base->supports_screen_keyboard = this->sdl2->SDL_HasScreenKeyboardSupport();
+#if OMG_IS_WIN
+    _OMG_CHECK_DARK_MODE_INTERNAL();
+#endif
     _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
     base->inited = true;
     return false;
