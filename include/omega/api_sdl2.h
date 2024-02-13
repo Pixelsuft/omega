@@ -352,6 +352,24 @@ typedef enum {
 } SDL_MessageBoxFlags;
 
 typedef enum {
+    SDL_SYSWM_UNKNOWN,
+    SDL_SYSWM_WINDOWS,
+    SDL_SYSWM_X11,
+    SDL_SYSWM_DIRECTFB,
+    SDL_SYSWM_COCOA,
+    SDL_SYSWM_UIKIT,
+    SDL_SYSWM_WAYLAND,
+    SDL_SYSWM_MIR,
+    SDL_SYSWM_WINRT,
+    SDL_SYSWM_ANDROID,
+    SDL_SYSWM_VIVANTE,
+    SDL_SYSWM_OS2,
+    SDL_SYSWM_HAIKU,
+    SDL_SYSWM_KMSDRM,
+    SDL_SYSWM_RISCOS
+} SDL_SYSWM_TYPE;
+
+typedef enum {
     SDL_SCANCODE_UNKNOWN = 0,
     SDL_SCANCODE_A = 4,
     SDL_SCANCODE_B = 5,
@@ -891,6 +909,23 @@ typedef struct SDL_version {
     uint8_t minor;
     uint8_t patch;
 } SDL_version;
+
+struct SDL_SysWMinfo {
+    SDL_version version;
+    SDL_SYSWM_TYPE subsystem;
+    union {
+#if 1
+        struct
+        {
+            void* window;
+            void* hdc;
+            void* hinstance;
+        } win;
+#endif
+        uint8_t dummy[64];
+    };
+};
+typedef struct SDL_SysWMinfo SDL_SysWMinfo;
 
 typedef struct SDL_Color {
     uint8_t r;
@@ -1595,6 +1630,7 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_CondWait)(SDL_cond*, SDL_mutex*);
     int OMG_SDL2_STD_PREFIX (*SDL_CondWaitTimeout)(SDL_cond*, SDL_mutex*, uint32_t);
     int OMG_SDL2_STD_PREFIX (*SDL_ShowSimpleMessageBox)(uint32_t, const char*, const char*, SDL_Window*);
+    SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowWMInfo)(SDL_Window*, SDL_SysWMinfo*);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;

@@ -1,8 +1,6 @@
 #include <omega/omega.h>
 #include <omega/entry.h>
-#include <omega/omega_win.h>
-#include <omega/omega_sdl2.h>
-#include <omega/omega_raylib.h>
+#include <omega/api_win.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
@@ -358,6 +356,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    OMG_INFO(this->omg, this->omg->theme, " ", this->omg->app_theme);
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
