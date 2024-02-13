@@ -410,6 +410,7 @@ OMG_FileWin* omg_win_file_from_fp(OMG_OmegaWin* this, OMG_FileWin* file, const O
 }
 
 bool omg_win_destroy_clean1(OMG_OmegaWin* this) {
+#if OMG_IS_WIN
     bool result = false;
     if (this->should_free_g32 && OMG_ISNOTNULL(this->g32)) {
         result = omg_winapi_gdi32_free(this->g32) || result;
@@ -437,15 +438,24 @@ bool omg_win_destroy_clean1(OMG_OmegaWin* this) {
         this->nt = NULL;
     }
     return result;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
 }
 
 bool omg_win_destroy_clean2(OMG_OmegaWin* this) {
+#if OMG_IS_WIN
     bool result = false;
     if (this->should_free_k32 && OMG_ISNOTNULL(this->k32)) {
         result = omg_winapi_kernel32_free(this->k32) || result;
         this->k32 = NULL;
     }
     return result;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
 }
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
@@ -469,6 +479,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
 }
 
 bool omg_win_loads_libs1(OMG_OmegaWin* this) {
+#if OMG_IS_WIN
     if (OMG_ISNULL(this->k32)) {
         this->k32 = &this->k32_stk;
         this->should_free_k32 = false;
@@ -508,9 +519,14 @@ bool omg_win_loads_libs1(OMG_OmegaWin* this) {
     this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
     this->win_build_number = (int)os_ver_info.dwBuildNumber;
     return false;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
 }
 
 bool omg_win_loads_libs2(OMG_OmegaWin* this) {
+#if OMG_IS_WIN
     if (OMG_ISNULL(this->dwm)) {
         this->dwm = OMG_MALLOC(base->mem, sizeof(OMG_Dwmapi));
         if (OMG_ISNULL(this->dwm)) {
@@ -550,6 +566,10 @@ bool omg_win_loads_libs2(OMG_OmegaWin* this) {
         this->should_free_g32 = true;
     }
     return false;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
 }
 
 bool omg_win_init(OMG_OmegaWin* this) {

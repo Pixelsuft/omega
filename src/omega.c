@@ -2,6 +2,7 @@
 #if OMG_HAS_STD
 #include <stdio.h>
 #endif
+#include <omega/api_win.h>
 #include <omega/omega_raylib.h>
 #include <omega/omega_sdl2.h>
 #include <omega/omega_win.h>
