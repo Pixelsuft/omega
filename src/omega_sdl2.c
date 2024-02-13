@@ -648,6 +648,10 @@ bool omg_sdl2_audio_alloc(OMG_OmegaSdl2* this) {
 
 bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
     bool result = base->app_quit((OMG_Omega*)this);
+#if OMG_IS_WIN
+    result = omg_win_destroy_clean1(base) || result;
+    result = omg_win_destroy_clean2(base) || result;
+#endif
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -706,6 +710,14 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     }
     else
         base->should_free_std = false;
+#if OMG_IS_WIN
+    if (omg_win_loads_libs1(base) || omg_win_loads_libs2(base) || omg_win_loads_libs3(base)) {
+        base->inited = true;
+        omg_sdl2_destroy(this);
+        base->inited = false;
+        return true;
+    }
+#endif
     base->sz_file = sizeof(OMG_FileSdl2);
     base->app_init = omg_sdl2_app_init;
     base->app_quit = omg_sdl2_app_quit;
