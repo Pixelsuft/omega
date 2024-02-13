@@ -333,7 +333,6 @@ OMG_MusicFmod* omg_audio_fmod_mus_from_file(OMG_AudioFmod* this, OMG_MusicFmod* 
     }
     else
         mus_base->duration = (double)len_buf / 1000.0;
-    _OMG_LOG_INFO(omg_base, mus_base->duration);
     return mus;
 }
 
