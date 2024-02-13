@@ -362,10 +362,10 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     wm_info.version.minor = 31;
     wm_info.version.patch = 0;
     if (this->sdl2->SDL_GetWindowWMInfo(this->win, &wm_info) == SDL_TRUE) {
-        this->hwnd = (void*)wm_info.win.window;
+        base->win32_handle = (void*)wm_info.win.window;
     }
     else {
-        this->hwnd = NULL;
+        base->win32_handle = NULL;
         _OMG_LOG_WARN(omg_base, "Failed to get window manager info (", this->sdl2->SDL_GetError(), ")");
     }
 #endif

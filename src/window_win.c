@@ -1397,6 +1397,7 @@ bool omg_window_win_init(OMG_WindowWin* this) {
         this->u32->UnregisterClassW(this->wc.lpszClassName, this->wc.hInstance);
         return true;
     }
+    base->win32_handle = (void*)this->hwnd;
     omg_window_win_check_dark_mode(this);
     base->scale.x = 0.0f; // Hack
     omg_window_win_update_scale(this);

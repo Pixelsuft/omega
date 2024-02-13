@@ -213,6 +213,7 @@ bool omg_window_init(OMG_Window* this) {
     this->min_size.w = this->min_size.h = 0.0f;
     this->max_size.w = this->max_size.h = 0.0f;
     this->ren = NULL;
+    this->win32_handle = NULL;
     this->allow_alt = true;
     this->allow_alt_f4 = true;
     this->enable_paint = true;

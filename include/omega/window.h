@@ -63,6 +63,7 @@ typedef struct OMG_Window {
     void* extra4;
     void* extra5;
     void* omg;
+    void* win32_handle;
     size_t array_pos;
     OMG_FPoint size;
     OMG_FPoint min_size;

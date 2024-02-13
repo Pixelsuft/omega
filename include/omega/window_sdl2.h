@@ -9,9 +9,6 @@ typedef struct {
     OMG_Window parent;
     SDL_Window* win;
     OMG_Sdl2* sdl2;
-#if OMG_IS_WIN
-    void* hwnd;
-#endif
     uint32_t id;
 } OMG_WindowSdl2;
 
