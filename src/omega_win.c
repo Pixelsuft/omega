@@ -416,7 +416,7 @@ OMG_FileWin* omg_win_file_from_fp(OMG_OmegaWin* this, OMG_FileWin* file, const O
 
 bool omg_win_destroy(OMG_OmegaWin* this) {
     bool result = base->app_quit((OMG_Omega*)this);
-    result = omg_win_destroy_clean1(this) || result;
+    result = omg_win_destroy_clean1(base) || result;
     if (this->con_result > 1) {
         result = !d_k32->FreeConsole() || result;
         this->con_result = 0;
@@ -429,7 +429,7 @@ bool omg_win_destroy(OMG_OmegaWin* this) {
         result = base->mem->destroy(base->mem) || result;
         base->mem = NULL;
     }
-    result = omg_win_destroy_clean2(this) || result;
+    result = omg_win_destroy_clean2(base) || result;
     omg_destroy((OMG_Omega*)this);
     return result;
 }
@@ -438,12 +438,27 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->type = OMG_OMEGA_TYPE_WIN;
     this->con_result = 0;
     omg_omg_init(base);
-    if (omg_win_loads_libs1(this))
+    if (omg_win_loads_libs1(base))
         return true;
+    if (OMG_ISNULL(base->mem)) {
+        base->mem = (OMG_Memory*)omg_memory_win_create(this, base->k32);
+        if (OMG_ISNULL(base->mem)) {
+            omg_win_destroy_clean2(base);
+            return true;
+        }
+        base->should_free_mem = true;
+    }
+    if (omg_win_loads_libs2(base)) {
+        omg_win_destroy_clean1(base);
+        base->mem->destroy(base->mem);
+        base->mem = NULL;
+        omg_win_destroy_clean2(base);
+        return true;
+    }
     if (OMG_ISNULL(base->std)) {
         base->std = OMG_MALLOC(base->mem, sizeof(OMG_Std));
         if (OMG_ISNULL(base->std)) {
-            omg_win_destroy_clean2(this);
+            omg_win_destroy_clean2(base);
             return true;
         }
         omg_std_fill_defaults(base->std);
@@ -451,22 +466,15 @@ bool omg_win_init(OMG_OmegaWin* this) {
         omg_win_fill_std(this);
         base->should_free_std = true;
     }
-    if (OMG_ISNULL(base->mem)) {
-        base->mem = omg_memory_win_create(this, base->k32);
-        if (OMG_ISNULL(base->mem)) {
-            omg_win_destroy_clean2(this);
-            return true;
-        }
-        base->should_free_mem = true;
-    }
-    if (omg_win_loads_libs3(this)) {
-        omg_win_destroy_clean1(this);
+    if (omg_win_loads_libs3(base)) {
+        omg_win_destroy_clean1(base);
         base->mem->destroy(base->mem);
         base->mem = NULL;
-        omg_win_destroy_clean2(this);
+        omg_win_destroy_clean2(base);
         return true;
     }
     base->sz_file = sizeof(OMG_FileWin);
+    OMG_BEGIN_POINTER_CAST();
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
     base->delay = omg_win_delay;

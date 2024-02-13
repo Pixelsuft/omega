@@ -639,6 +639,7 @@ bool omg_win_loads_libs1(OMG_Omega* this) {
         if (omg_winapi_kernel32_load(this->k32))
             return true;
     }
+    return false;
 #else
     OMG_UNUSED(this);
     return false;
