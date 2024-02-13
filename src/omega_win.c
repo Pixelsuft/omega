@@ -489,11 +489,11 @@ bool omg_win_init(OMG_OmegaWin* this) {
     OMG_END_POINTER_CAST();
     _OMG_LOG_INFO(base, "Omega successfully inited with Win32 backend");
     // TODO: correct version by check build number
-    _OMG_LOG_INFO(
+    /* _OMG_LOG_INFO(
         base, "Running on Windows ",
         (base->win_major_ver == 10 && base->win_build_number >= 21996) ? 11 : base->win_major_ver, // Fuck Microsoft
         " build ", base->win_build_number
-    );
+    ); */
     return false;
 }
 #endif
