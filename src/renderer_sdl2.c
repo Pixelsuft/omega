@@ -814,6 +814,8 @@ bool omg_renderer_sdl2_font_render_to(OMG_RendererSdl2* this, const OMG_FPoint* 
         dst_rect.x = pos->x;
         dst_rect.y = pos->y;
     }
+    dst_rect.x += base->offset.x;
+    dst_rect.y += base->offset.y;
     if (this->sdl2->SDL_RenderCopyF(this->ren, tex, NULL, &dst_rect) < 0) {
         _OMG_LOG_WARN(omg_base, "Failed to render font texture (", this->sdl2->SDL_GetError(), ")");
         this->sdl2->SDL_DestroyTexture(tex);
