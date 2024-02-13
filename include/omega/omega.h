@@ -115,6 +115,15 @@ typedef struct OMG_Omega {
     void (*on_touch_down)(OMG_EventTouch* event);
     void (*on_touch_up)(OMG_EventTouch* event);
     void (*on_touch_move)(OMG_EventTouch* event);
+#if OMG_IS_WIN
+    uint64_t k32_stk[50];
+    void* k32;
+    void* nt;
+    void* dwm;
+    void* u32;
+    void* g32;
+    void* uxtheme;
+#endif
     OMG_FPoint scale;
     uint32_t mouse_state;
     int log_level_lib;
@@ -124,6 +133,11 @@ typedef struct OMG_Omega {
     int audio_type;
     int theme;
     int app_theme;
+#if OMG_IS_WIN
+    int win_major_ver;
+    int win_minor_ver;
+    int win_build_number;
+#endif
     bool emulate_mouse;
     bool enable_paint;
     bool looping;
@@ -131,6 +145,14 @@ typedef struct OMG_Omega {
     bool support_highdpi;
     bool should_free_mem;
     bool should_free_std;
+#if OMG_IS_WIN
+    bool should_free_k32;
+    bool should_free_ntdll;
+    bool should_free_dwm;
+    bool should_free_u32;
+    bool should_free_g32;
+    bool should_free_uxtheme;
+#endif
     bool inited;
 } OMG_Omega;
 
@@ -150,6 +172,11 @@ OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API bool omg_dummy_audio_alloc(OMG_Omega* this);
 OMG_API OMG_File* omg_file_from_fp(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
 OMG_API bool omg_file_destroy(OMG_File* file);
+OMG_API bool omg_win_destroy_clean1(OMG_Omega* this);
+OMG_API bool omg_win_destroy_clean2(OMG_Omega* this);
+OMG_API bool omg_win_loads_libs1(OMG_Omega* this);
+OMG_API bool omg_win_loads_libs2(OMG_Omega* this);
+OMG_API bool omg_win_loads_libs3(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 

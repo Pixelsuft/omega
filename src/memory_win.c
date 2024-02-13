@@ -25,7 +25,7 @@ bool omg_memory_win_destroy(OMG_MemoryWin* this) {
 
 void* omg_memory_win_alloc(OMG_MemoryWin* this, OMG_MemoryExtra extra) {
 #if OMG_DEBUG_MEM
-    OMG_MemoryExtra* result = omg_win->k32->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
+    OMG_MemoryExtra* result = ((OMG_Kernel32*)omg_base->k32)->HeapAlloc(this->heap, 0, extra.size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(result)) {
         if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(extra.func)) {
             DWORD error = this->k32->GetLastError();

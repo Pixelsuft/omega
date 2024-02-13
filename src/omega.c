@@ -582,8 +582,150 @@ bool omg_audio_free(OMG_Omega* this) {
     return false;    
 }
 
+bool omg_win_destroy_clean1(OMG_Omega* this) {
+#if OMG_IS_WIN
+    bool result = false;
+    if (this->should_free_g32 && OMG_ISNOTNULL(this->g32)) {
+        result = omg_winapi_gdi32_free(this->g32) || result;
+        result = OMG_FREE(this->mem, this->g32) || result;
+        this->g32 = NULL;
+    }
+    if (this->should_free_u32 && OMG_ISNOTNULL(this->u32)) {
+        result = omg_winapi_user32_free(this->u32) || result;
+        result = OMG_FREE(this->mem, this->u32) || result;
+        this->u32 = NULL;
+    }
+    if (this->should_free_uxtheme && OMG_ISNOTNULL(this->uxtheme)) {
+        result = omg_winapi_uxtheme_free(this->uxtheme) || result;
+        result = OMG_FREE(this->mem, this->uxtheme) || result;
+        this->uxtheme = NULL;
+    }
+    if (this->should_free_dwm && OMG_ISNOTNULL(this->dwm)) {
+        result = omg_winapi_dwmapi_free(this->dwm) || result;
+        result = OMG_FREE(this->mem, this->dwm) || result;
+        this->dwm = NULL;
+    }
+    if (this->should_free_ntdll && OMG_ISNOTNULL(this->dwm)) {
+        result = omg_winapi_ntdll_free(this->nt) || result;
+        result = OMG_FREE(this->mem, this->nt) || result;
+        this->nt = NULL;
+    }
+    return result;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+bool omg_win_destroy_clean2(OMG_Omega* this) {
+#if OMG_IS_WIN
+    bool result = false;
+    if (this->should_free_k32 && OMG_ISNOTNULL(this->k32)) {
+        result = omg_winapi_kernel32_free(this->k32) || result;
+        this->k32 = NULL;
+    }
+    return result;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+bool omg_win_loads_libs1(OMG_Omega* this) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(this->k32)) {
+        this->k32 = &this->k32_stk;
+        this->should_free_k32 = false;
+        if (omg_winapi_kernel32_load(this->k32))
+            return true;
+    }
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+bool omg_win_loads_libs2(OMG_Omega* this) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(this->nt)) {
+        this->nt = OMG_MALLOC(this->mem, sizeof(OMG_Ntdll));
+        if (OMG_ISNULL(this->nt) || omg_winapi_ntdll_load(this->nt)) {
+            omg_win_destroy_clean1(this);
+            if (OMG_ISNOTNULL(this->nt)) {
+                OMG_FREE(this->mem, this->nt);
+            }
+            this->mem->destroy(this->mem);
+            this->mem = NULL;
+            omg_win_destroy_clean2(this);
+            return true;
+        }
+        this->should_free_ntdll = true;
+    }
+    OMG_WIN_NTDLL_OSVERSIONINFOEXW os_ver_info;
+    os_ver_info.dwOSVersionInfoSize = sizeof(OMG_WIN_NTDLL_OSVERSIONINFOEXW);
+    ((OMG_Ntdll*)(this->nt))->RtlGetVersion(&os_ver_info);
+    this->win_major_ver = (int)os_ver_info.dwMajorVersion;
+    this->win_minor_ver = (int)os_ver_info.dwMinorVersion;
+    this->win_build_number = (int)os_ver_info.dwBuildNumber;
+    return false;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+bool omg_win_loads_libs3(OMG_Omega* this) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(this->dwm)) {
+        this->dwm = OMG_MALLOC(this->mem, sizeof(OMG_Dwmapi));
+        if (OMG_ISNULL(this->dwm)) {
+            return true;
+        }
+        omg_winapi_dwmapi_load(this->dwm);
+        this->should_free_dwm = true;
+    }
+    if (OMG_ISNULL(this->uxtheme)) {
+        this->uxtheme = OMG_MALLOC(this->mem, sizeof(OMG_Uxtheme));
+        if (OMG_ISNULL(this->uxtheme)) {
+            return true;
+        }
+        omg_winapi_uxtheme_load(this->uxtheme, this->win_build_number);
+        this->should_free_uxtheme = true;
+    }
+    if (OMG_ISNULL(this->u32)) {
+        this->u32 = OMG_MALLOC(this->mem, sizeof(OMG_User32));
+        if (OMG_ISNULL(this->u32)) {
+            return true;
+        }
+        if (omg_winapi_user32_load(this->u32)) {
+            OMG_FREE(this->mem, this->u32);
+            return true;
+        }
+        this->should_free_u32 = true;
+    }
+    if (OMG_ISNULL(this->g32)) {
+        this->g32 = OMG_MALLOC(this->mem, sizeof(OMG_Gdi32));
+        if (OMG_ISNULL(this->g32)) {
+            return true;
+        }
+        if (omg_winapi_gdi32_load(this->g32)) {
+            OMG_FREE(this->mem, this->g32);
+            return true;
+        }
+        this->should_free_g32 = true;
+    }
+    return false;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
+#if OMG_IS_WIN
+    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = false;
+#endif
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
     this->std = NULL;
     this->clock = NULL;

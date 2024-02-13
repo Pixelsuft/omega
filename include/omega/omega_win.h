@@ -6,18 +6,18 @@
 
 typedef struct {
     OMG_Omega parent;
-    OMG_Kernel32 k32_stk;
+    // OMG_Kernel32 k32_stk;
     MSG msg;
-    OMG_Kernel32* k32;
+    /* OMG_Kernel32* k32;
     OMG_Ntdll* nt;
     OMG_Dwmapi* dwm;
     OMG_User32* u32;
     OMG_Gdi32* g32;
-    OMG_Uxtheme* uxtheme;
+    OMG_Uxtheme* uxtheme; */
     HANDLE stdout_handle;
     HANDLE stderr_handle;
     int con_result;
-    int win_major_ver;
+    /* int win_major_ver;
     int win_minor_ver;
     int win_build_number;
     bool should_free_k32;
@@ -25,7 +25,7 @@ typedef struct {
     bool should_free_dwm;
     bool should_free_u32;
     bool should_free_g32;
-    bool should_free_uxtheme;
+    bool should_free_uxtheme; */
 } OMG_OmegaWin;
 
 OMG_API OMG_OmegaWin* omg_win_create(OMG_EntryData* data);
