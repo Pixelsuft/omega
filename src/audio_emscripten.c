@@ -103,7 +103,7 @@ bool omg_audio_emscripten_mus_stop(OMG_AudioEm* this, OMG_MusicEm* mus) {
         var em_cur_audio = window.em_audio[$0];
         if (em_cur_audio == undefined || em_cur_audio.readyState < 4)
             return -1;
-        em_cur_audio.stop();
+        em_cur_audio.pause();
         em_cur_audio.currentTime = 0;
         return 0;
     }, mus->id);
