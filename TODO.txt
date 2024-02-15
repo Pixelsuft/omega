@@ -2,3 +2,4 @@
 [-] Add function to set log callback
 [-] Track memory allocations
 [-] Vulkan renderer
+[-] Android test
