@@ -81,7 +81,7 @@ void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_l
 }
 
 bool omg_log_str_type(OMG_Omega* this, const OMG_String* data, int type) {
-    OMG_UNUSED(this, data);
+    OMG_UNUSED(this, data, type);
     return false;
 }
 

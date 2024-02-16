@@ -30,6 +30,19 @@
 #define OMG_IS_CPP 0
 #endif
 
+#if OMG_IS_WIN || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID
+#define OMG_IS_MUSL 0
+#else
+#define _GNU_SOURCE
+#include <features.h>
+#ifndef __USE_GNU
+#define OMG_IS_MUSL 1
+#else
+#define OMG_IS_MUSL 0
+#endif
+#undef _GNU_SOURCE
+#endif
+
 #ifdef NOSTDLIB
 #define OMG_HAS_STD 0
 #else
