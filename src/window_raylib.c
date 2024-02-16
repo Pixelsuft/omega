@@ -277,6 +277,10 @@ bool omg_window_raylib_init(OMG_WindowRaylib* this) {
         _OMG_LOG_INFO(omg_base, "Raylib window created successfuly");
     }
     this->opacity_cache = 1.0f;
+#if OMG_IS_WIN
+    base->win32_handle = this->raylib->GetWindowHandle();
+    omg_window_win_check_dark_mode(base);
+#endif
     return !base->inited;
 }
 #endif
