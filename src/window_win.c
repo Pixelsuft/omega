@@ -549,7 +549,6 @@ bool omg_window_win_renderer_alloc(OMG_WindowWin* this) {
         ren_sdl2->sdl2 = winmgr_win->sdl2;
         omg_renderer_fill_on_create(base->ren);
         ren_sdl2->id_cache[0] = -1;
-        ren_sdl2->win_build_num = this->win_build_num;
         base->ren->was_allocated = true;
         base->ren->inited = false;
         base->ren->win = this;

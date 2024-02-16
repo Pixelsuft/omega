@@ -15,7 +15,6 @@ typedef struct {
     SDL_Renderer* ren;
     int id_cache[10];
     int blend_cache;
-    int win_build_num;
 } OMG_RendererSdl2;
 
 OMG_API bool omg_renderer_sdl2_init(OMG_RendererSdl2* this);
