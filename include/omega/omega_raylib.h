@@ -26,9 +26,6 @@ OMG_API bool omg_raylib_app_init(OMG_OmegaRaylib* this);
 OMG_API bool omg_raylib_app_quit(OMG_OmegaRaylib* this);
 OMG_API void omg_raylib_delay(OMG_OmegaRaylib* this, double seconds);
 OMG_API bool omg_raylib_audio_alloc(OMG_OmegaRaylib* this);
-OMG_API bool omg_raylib_log_info_str(OMG_OmegaRaylib* this, const OMG_String* data);
-OMG_API bool omg_raylib_log_warn_str(OMG_OmegaRaylib* this, const OMG_String* data);
-OMG_API bool omg_raylib_log_error_str(OMG_OmegaRaylib* this, const OMG_String* data);
-OMG_API bool omg_raylib_log_fatal_str(OMG_OmegaRaylib* this, const OMG_String* data);
+OMG_API bool omg_raylib_log_str_type(OMG_OmegaRaylib* this, const OMG_String* data, int type);
 #endif
 #endif

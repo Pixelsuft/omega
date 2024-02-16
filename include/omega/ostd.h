@@ -111,25 +111,33 @@
     print_func(omg, &_omg_temp_str); \
     omg_string_destroy(&_omg_temp_str); \
 } while (0)
+#define _OMG_PRINT_BY_FUNC_TYPE(omg, print_func, type, ...) do { \
+    OMG_String _omg_temp_str; \
+    if (omg_string_init_dynamic(&_omg_temp_str, NULL)) \
+        break; \
+    OMG_STRING_ADD_MANY(&_omg_temp_str, __VA_ARGS__); \
+    print_func(omg, &_omg_temp_str, type); \
+    omg_string_destroy(&_omg_temp_str); \
+} while (0)
 #if OMG_DEBUG
 #define _OMG_LOG_FORMAT "[", __FILE__, ":", __LINE__, " at ", __func__, "] "
-#define OMG_INFO(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define OMG_WARN(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC(omg, omg->log_warn_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define OMG_ERROR(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC(omg, omg->log_error_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define OMG_FATAL(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC(omg, omg->log_fatal_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define _OMG_LOG_INFO(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level_omg <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define _OMG_LOG_WARN(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level_omg <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC(omg, omg->log_warn_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define _OMG_LOG_ERROR(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level_omg <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC(omg, omg->log_error_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
-#define _OMG_LOG_FATAL(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level_omg <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC(omg, omg->log_fatal_str, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define OMG_INFO(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_INFO, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define OMG_WARN(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_WARN, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define OMG_ERROR(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_ERROR, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define OMG_FATAL(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_FATAL, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define _OMG_LOG_INFO(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level_omg <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_INFO, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define _OMG_LOG_WARN(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level_omg <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_WARN, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define _OMG_LOG_ERROR(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level_omg <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_ERROR, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
+#define _OMG_LOG_FATAL(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level_omg <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_FATAL, _OMG_LOG_FORMAT, __VA_ARGS__); } while (0)
 #else
-#define OMG_INFO(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, __VA_ARGS__); } while (0)
-#define OMG_WARN(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC(omg, omg->log_warn_str, __VA_ARGS__); } while (0)
-#define OMG_ERROR(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC(omg, omg->log_error_str, __VA_ARGS__); } while (0)
-#define OMG_FATAL(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC(omg, omg->log_fatal_str, __VA_ARGS__); } while (0)
-#define _OMG_LOG_INFO(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level_omg <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC(omg, omg->log_info_str, __VA_ARGS__); } while (0)
-#define _OMG_LOG_WARN(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level_omg <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC(omg, omg->log_warn_str, __VA_ARGS__); } while (0)
-#define _OMG_LOG_ERROR(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level_omg <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC(omg, omg->log_error_str, __VA_ARGS__); } while (0)
-#define _OMG_LOG_FATAL(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level_omg <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC(omg, omg->log_fatal_str, __VA_ARGS__); } while (0)
+#define OMG_INFO(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_INFO, __VA_ARGS__); } while (0)
+#define OMG_WARN(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_WARN, __VA_ARGS__); } while (0)
+#define OMG_ERROR(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_ERROR, __VA_ARGS__); } while (0)
+#define OMG_FATAL(omg, ...) do { if ((OMG_LOG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_FATAL, __VA_ARGS__); } while (0)
+#define _OMG_LOG_INFO(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_INFO) && (omg->log_level_omg <= OMG_LOG_CATEGORY_INFO)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_INFO, __VA_ARGS__); } while (0)
+#define _OMG_LOG_WARN(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_WARN) && (omg->log_level_omg <= OMG_LOG_CATEGORY_WARN)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_WARN, __VA_ARGS__); } while (0)
+#define _OMG_LOG_ERROR(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_ERROR) && (omg->log_level_omg <= OMG_LOG_CATEGORY_ERROR)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_ERROR, __VA_ARGS__); } while (0)
+#define _OMG_LOG_FATAL(omg, ...) do { if ((OMG_LOG_OMG_MIN_LEVEL <= OMG_LOG_CATEGORY_FATAL) && (omg->log_level_omg <= OMG_LOG_CATEGORY_FATAL)) _OMG_PRINT_BY_FUNC_TYPE(omg, omg->log_str_type, OMG_LOG_CATEGORY_FATAL, __VA_ARGS__); } while (0)
 #endif
 
 #define _OMG_UNUSED1(p1) ((void)p1)

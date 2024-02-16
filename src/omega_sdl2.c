@@ -105,31 +105,17 @@ void omg_sdl2_fill_std(OMG_OmegaSdl2* this) {
     base->std->powf = this->sdl2->SDL_powf;
 }
 
-bool omg_sdl2_log_info_str(OMG_OmegaSdl2* this, const OMG_String* data) {
+bool omg_sdl2_log_str_type(OMG_OmegaSdl2* this, const OMG_String* data, int type) {
     if (omg_string_ensure_null((OMG_String*)data))
         return true;
-    this->sdl2->SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
-    return false;
-}
-
-bool omg_sdl2_log_warn_str(OMG_OmegaSdl2* this, const OMG_String* data) {
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    this->sdl2->SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
-    return false;
-}
-
-bool omg_sdl2_log_error_str(OMG_OmegaSdl2* this, const OMG_String* data) {
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    this->sdl2->SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
-    return false;
-}
-
-bool omg_sdl2_log_fatal_str(OMG_OmegaSdl2* this, const OMG_String* data) {
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    this->sdl2->SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
+    if (type == OMG_LOG_CATEGORY_INFO)
+        this->sdl2->SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
+    else if (type == OMG_LOG_CATEGORY_WARN)
+        this->sdl2->SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
+    else if (type == OMG_LOG_CATEGORY_ERROR)
+        this->sdl2->SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
+    else if (type == OMG_LOG_CATEGORY_FATAL)
+        this->sdl2->SDL_LogCritical(SDL_LOG_CATEGORY_APPLICATION, data->ptr);
     return false;
 }
 
@@ -728,10 +714,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->app_quit = omg_sdl2_app_quit;
     base->delay = omg_sdl2_delay;
     base->set_text_input_state = omg_sdl2_set_text_input_state;
-    base->log_info_str = omg_sdl2_log_info_str;
-    base->log_warn_str = omg_sdl2_log_warn_str;
-    base->log_error_str = omg_sdl2_log_error_str;
-    base->log_fatal_str = omg_sdl2_log_fatal_str;
+    base->log_str_type = omg_sdl2_log_str_type;
     base->auto_loop_run = omg_sdl2_auto_loop_run;
     base->winmgr_alloc = omg_sdl2_alloc_winmgr;
     base->audio_alloc = omg_sdl2_audio_alloc;

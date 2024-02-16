@@ -104,20 +104,26 @@ void omg_win_attach_console(OMG_OmegaWin* this) {
     }
 }
 
-bool omg_win_log_info_str(OMG_OmegaWin* this, const OMG_String* data) {
-    _OMG_WIN_LOG_MACRO(this, data, L"[INFO]: ", 8, 16, false);
-}
-
-bool omg_win_log_warn_str(OMG_OmegaWin* this, const OMG_String* data) {
-    _OMG_WIN_LOG_MACRO(this, data, L"[WARN]: ", 8, 16, false);
-}
-
-bool omg_win_log_error_str(OMG_OmegaWin* this, const OMG_String* data) {
-    _OMG_WIN_LOG_MACRO(this, data, L"[ERROR]: ", 9, 18, true);
-}
-
-bool omg_win_log_fatal_str(OMG_OmegaWin* this, const OMG_String* data) {
-    _OMG_WIN_LOG_MACRO(this, data, L"[FATAL]: ", 9, 18, true);
+bool omg_win_log_str_type(OMG_OmegaWin* this, const OMG_String* data, int type) {
+    wchar_t* header_text = L"[FATAL]: ";
+    size_t type_len1 = 9;
+    size_t type_len2 = 18;
+    bool is_stderr = true;
+    if (type == OMG_LOG_CATEGORY_INFO) {
+        is_stderr = false;
+        type_len1 = 8;
+        type_len2 = 16;
+        header_text = L"[INFO]: ";
+    }
+    else if (type == OMG_LOG_CATEGORY_WARN) {
+        is_stderr = false;
+        type_len1 = 8;
+        type_len2 = 16;
+        header_text = L"[WARN]: ";
+    }
+    else if (type == OMG_LOG_CATEGORY_ERROR)
+        header_text = L"[ERROR]: ";
+    _OMG_WIN_LOG_MACRO(this, data, header_text, type_len1, type_len2, is_stderr);
 }
 
 void omg_win_poll_events(OMG_OmegaWin* this) {
@@ -465,10 +471,7 @@ bool omg_win_init(OMG_OmegaWin* this) {
     base->app_init = omg_win_app_init;
     base->app_quit = omg_win_app_quit;
     base->delay = omg_win_delay;
-    base->log_info_str = omg_win_log_info_str;
-    base->log_warn_str = omg_win_log_warn_str;
-    base->log_error_str = omg_win_log_error_str;
-    base->log_fatal_str = omg_win_log_fatal_str;
+    base->log_str_type = omg_win_log_str_type;
     base->auto_loop_run = omg_win_auto_loop_run;
     base->winmgr_alloc = omg_win_alloc_winmgr;
     base->destroy = omg_win_destroy;

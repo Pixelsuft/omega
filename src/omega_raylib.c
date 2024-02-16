@@ -71,31 +71,19 @@ void omg_raylib_fill_std(OMG_OmegaRaylib* this) {
     base->std->memory_allocator = base->mem;
 }
 
-bool omg_raylib_log_info_str(OMG_OmegaRaylib* this, const OMG_String* data) {
+bool omg_raylib_log_str_type(OMG_OmegaRaylib* this, const OMG_String* data, int type) {
     if (omg_string_ensure_null((OMG_String*)data))
         return true;
-    this->raylib->TraceLog(LOG_INFO, data->ptr);
-    return false;
-}
-
-bool omg_raylib_log_warn_str(OMG_OmegaRaylib* this, const OMG_String* data) {
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    this->raylib->TraceLog(LOG_WARNING, data->ptr);
-    return false;
-}
-
-bool omg_raylib_log_error_str(OMG_OmegaRaylib* this, const OMG_String* data) {
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    this->raylib->TraceLog(LOG_ERROR, data->ptr);
-    return false;
-}
-
-bool omg_raylib_log_fatal_str(OMG_OmegaRaylib* this, const OMG_String* data) {
-    if (omg_string_ensure_null((OMG_String*)data))
-        return true;
-    this->raylib->TraceLog(LOG_FATAL, data->ptr);
+    int rl_type = 0;
+    if (type == OMG_LOG_CATEGORY_INFO)
+        rl_type = LOG_INFO;
+    else if (type == OMG_LOG_CATEGORY_WARN)
+        rl_type = LOG_WARNING;
+    else if (type == OMG_LOG_CATEGORY_ERROR)
+        rl_type = LOG_ERROR;
+    else
+        rl_type = LOG_FATAL;
+    this->raylib->TraceLog(rl_type, data->ptr);
     return false;
 }
 
@@ -611,10 +599,7 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     }
     else
         base->should_free_std = false;
-    base->log_info_str = omg_raylib_log_info_str;
-    base->log_warn_str = omg_raylib_log_warn_str;
-    base->log_error_str = omg_raylib_log_error_str;
-    base->log_fatal_str = omg_raylib_log_fatal_str;
+    base->log_str_type = omg_raylib_log_str_type;
     base->auto_loop_run = omg_raylib_auto_loop_run;
     base->app_init = omg_raylib_app_init;
     base->app_quit = omg_raylib_app_quit;

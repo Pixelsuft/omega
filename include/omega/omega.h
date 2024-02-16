@@ -97,10 +97,7 @@ typedef struct OMG_Omega {
     bool (*winmgr_alloc)(struct OMG_Omega* this);
     void (*delay)(struct OMG_Omega* this, double seconds);
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
-    bool (*log_info_str)(struct OMG_Omega* this, const OMG_String* data);
-    bool (*log_warn_str)(struct OMG_Omega* this, const OMG_String* data);
-    bool (*log_error_str)(struct OMG_Omega* this, const OMG_String* data);
-    bool (*log_fatal_str)(struct OMG_Omega* this, const OMG_String* data);
+    bool (*log_str_type)(struct OMG_Omega* this, const OMG_String* data, int type);
     void (*auto_loop_run)(struct OMG_Omega* this);
     void (*auto_loop_stop)(struct OMG_Omega* this);
     int (*set_text_input_state)(struct OMG_Omega* this, int state);
@@ -240,7 +237,7 @@ OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API bool omg_audio_free(OMG_Omega* this);
 OMG_API void omg_delay(OMG_Omega* this, double seconds);
 OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
-OMG_API bool omg_log_info_str(OMG_Omega* this, const OMG_String* data);
+OMG_API bool omg_log_str_type(OMG_Omega* this, const OMG_String* data, int type);
 OMG_API void omg_auto_loop_run(OMG_Omega* this);
 OMG_API void omg_auto_loop_stop(OMG_Omega* this);
 #endif

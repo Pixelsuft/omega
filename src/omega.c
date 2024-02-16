@@ -65,10 +65,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->sdl2_ttf_dll_path = NULL;
     this->fmod_dll_path = NULL;
     this->spng_dll_path = NULL;
-    this->log_info_str = NULL;
-    this->log_warn_str = NULL;
-    this->log_error_str = NULL;
-    this->log_fatal_str = NULL;
+    this->log_str_type = NULL;
     this->support_highdpi = true;
     this->app_theme = OMG_THEME_AUTO;
     this->omg_init = omg_omg_init;
@@ -83,7 +80,7 @@ void omg_log_set_level(OMG_Omega* this, const int log_level, const int omg_log_l
         this->log_level_lib = lib_log_level;
 }
 
-bool omg_log_info_str(OMG_Omega* this, const OMG_String* data) {
+bool omg_log_str_type(OMG_Omega* this, const OMG_String* data, int type) {
     OMG_UNUSED(this, data);
     return false;
 }
@@ -745,14 +742,8 @@ bool omg_omg_init(OMG_Omega* this) {
         this->log_level = OMG_LOG_MIN_LEVEL;
     if (this->log_level_omg == -1)
         this->log_level_omg = OMG_LOG_OMG_MIN_LEVEL;
-    if (OMG_ISNULL(this->log_info_str))
-        this->log_info_str = omg_log_info_str;
-    if (OMG_ISNULL(this->log_warn_str))
-        this->log_warn_str = omg_log_info_str;
-    if (OMG_ISNULL(this->log_error_str))
-        this->log_error_str = omg_log_info_str;
-    if (OMG_ISNULL(this->log_fatal_str))
-        this->log_fatal_str = omg_log_info_str;
+    if (OMG_ISNULL(this->log_str_type))
+        this->log_str_type = omg_log_str_type;
     this->log_set_level = omg_log_set_level;
     this->destroy = omg_destroy;
     this->app_init = omg_app_init;
