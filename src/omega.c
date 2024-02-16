@@ -725,6 +725,9 @@ bool omg_omg_init(OMG_Omega* this) {
 #if OMG_IS_WIN
     this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = false;
 #endif
+#if OMG_SUPPORT_LIBC
+    this->libc = NULL;
+#endif
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
     this->std = NULL;
     this->clock = NULL;

@@ -139,6 +139,9 @@ typedef struct OMG_Omega {
     void* g32;
     void* uxtheme;
 #endif
+#if OMG_SUPPORT_LIBC
+    void* libc;
+#endif
     OMG_FPoint scale;
     uint32_t mouse_state;
     int log_level_lib;
