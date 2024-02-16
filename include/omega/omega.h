@@ -80,6 +80,7 @@ typedef struct OMG_Omega {
     OMG_String* sdl2_ttf_dll_path;
     OMG_String* fmod_dll_path;
     OMG_String* spng_dll_path;
+    OMG_String* libc_dll_path;
     bool* keyboard_state;
     const OMG_Keycode* keymap;
     void* extra1;
@@ -147,11 +148,9 @@ typedef struct OMG_Omega {
     int audio_type;
     int theme;
     int app_theme;
-#if OMG_IS_WIN
     int win_major_ver;
     int win_minor_ver;
     int win_build_number;
-#endif
     bool emulate_mouse;
     bool enable_paint;
     bool looping;

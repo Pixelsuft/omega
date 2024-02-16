@@ -65,6 +65,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->sdl2_ttf_dll_path = NULL;
     this->fmod_dll_path = NULL;
     this->spng_dll_path = NULL;
+    this->libc_dll_path = NULL;
     this->log_str_type = NULL;
     this->support_highdpi = true;
     this->app_theme = OMG_THEME_AUTO;
@@ -736,6 +737,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->should_free_mem = false;
     this->audio_type = OMG_AUDIO_TYPE_AUTO;
     this->theme = OMG_THEME_NONE;
+    this->win_build_number = this->win_major_ver = this->win_minor_ver = 0;
     this->scale.x = this->scale.y = 1.0f;
     this->mouse_state = 0;
     if (this->log_level == -1)

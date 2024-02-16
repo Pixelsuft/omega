@@ -15,6 +15,13 @@
 #define OMG_ENTRY 1
 #endif
 
+#ifndef OMG_SUPPORT_LIBC
+#define OMG_SUPPORT_LIBC (!OMG_IS_WIN)
+#endif
+#ifndef OMG_LIBC_DYNAMIC
+#define OMG_LIBC_DYNAMIC 1
+#endif
+
 #ifndef OMG_SUPPORT_WIN
 #define OMG_SUPPORT_WIN OMG_IS_WIN
 #endif
