@@ -538,6 +538,10 @@ bool omg_raylib_audio_alloc(OMG_OmegaRaylib* this) {
 
 bool omg_raylib_destroy(OMG_OmegaRaylib* this) {
     bool result = base->app_quit((OMG_Omega*)this);
+#if OMG_IS_WIN
+    result = omg_win_destroy_clean1(base) || result;
+    result = omg_win_destroy_clean2(base) || result;
+#endif
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -599,6 +603,14 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     }
     else
         base->should_free_std = false;
+#if OMG_IS_WIN
+    if (omg_win_loads_libs1(base) || omg_win_loads_libs2(base) || omg_win_loads_libs3(base)) {
+        base->inited = true;
+        omg_raylib_destroy(this);
+        base->inited = false;
+        return true;
+    }
+#endif
     base->log_str_type = omg_raylib_log_str_type;
     base->auto_loop_run = omg_raylib_auto_loop_run;
     base->app_init = omg_raylib_app_init;
