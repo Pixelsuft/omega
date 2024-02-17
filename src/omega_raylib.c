@@ -542,6 +542,9 @@ bool omg_raylib_destroy(OMG_OmegaRaylib* this) {
     result = omg_win_destroy_clean1(base) || result;
     result = omg_win_destroy_clean2(base) || result;
 #endif
+#if OMG_SUPPORT_LIBC
+    result = omg_libc_destroy(base) || result;
+#endif
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -620,6 +623,13 @@ bool omg_raylib_init(OMG_OmegaRaylib* this) {
     base->winmgr_alloc = omg_raylib_alloc_winmgr;
     base->destroy = omg_raylib_destroy;
     OMG_END_POINTER_CAST();
+    base->inited = true;
+#if OMG_SUPPORT_LIBC
+    if (omg_libc_init(base)) {
+        omg_raylib_destroy(this);
+        return true;
+    }
+#endif
     return false;
 }
 #endif

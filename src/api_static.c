@@ -12,7 +12,7 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
     OMG_UNUSED(adv_fn);
     char* fn_ptr;
-    if (OMG_ISNULL(fn->ptr))
+    if (OMG_ISNULL(fn))
         fn_ptr = LIBC_SO;
     else {
         omg_string_ensure_null((OMG_String*)fn);
@@ -44,7 +44,7 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #elif OMG_IS_UNIX && OMG_HAS_STD
     OMG_UNUSED(adv_fn);
     char* fn_ptr;
-    if (OMG_ISNULL(fn->ptr))
+    if (OMG_ISNULL(fn))
         fn_ptr = LIBC_SO;
     else {
         omg_string_ensure_null((OMG_String*)fn);

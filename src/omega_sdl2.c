@@ -643,6 +643,9 @@ bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
     result = omg_win_destroy_clean1(base) || result;
     result = omg_win_destroy_clean2(base) || result;
 #endif
+#if OMG_SUPPORT_LIBC
+    result = omg_libc_destroy(base) || result;
+#endif
     if (base->should_free_std) {
         result = OMG_FREE(base->mem, base->std) || result;
         base->std = NULL;
@@ -722,6 +725,12 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->file_from_fp = omg_sdl2_file_from_fp;
     OMG_END_POINTER_CAST();
     base->inited = true;
+#if OMG_SUPPORT_LIBC
+    if (omg_libc_init(base)) {
+        omg_sdl2_destroy(this);
+        return true;
+    }
+#endif
     return false;
 }
 #endif
