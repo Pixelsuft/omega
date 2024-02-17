@@ -25,15 +25,20 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
         result = (void*)LoadLibraryExW(adv_fn, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
     }
 #if OMG_WIN_BETTER_LIBRARY_LOAD
-    wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
-    if (OMG_ISNOTNULL(out_buf)) {
-        int res = MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)(fn->len * 4));
-        if (res > 0) {
-            // TODO: fn->len or res?
-            out_buf[res] = L'\0';
-            result = (void*)LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+    if (OMG_ISNULL(fn)) {
+        result = (void*)LoadLibraryExW(L"ntdll.dll", NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL | LOAD_LIBRARY_SEARCH_SYSTEM32);
+    }
+    else {
+        wchar_t* out_buf = HeapAlloc(GetProcessHeap(), 0, fn->len * 4 + 2);
+        if (OMG_ISNOTNULL(out_buf)) {
+            int res = MultiByteToWideChar(WIN_CP_UTF8, 0, fn->ptr, fn->len, out_buf, (int)(fn->len * 4));
+            if (res > 0) {
+                // TODO: fn->len or res?
+                out_buf[res] = L'\0';
+                result = (void*)LoadLibraryExW(out_buf, NULL, LOAD_IGNORE_CODE_AUTHZ_LEVEL);
+            }
+            HeapFree(GetProcessHeap(), 0, out_buf);
         }
-        HeapFree(GetProcessHeap(), 0, out_buf);
     }
 #endif
     if (OMG_ISNULL(result)) {

@@ -4,13 +4,21 @@
 #include <omega/ostd.h>
 #if !OMG_LIBC_DYNAMIC
 #define OMG_LIBC_STD_PREFIX
+typedef void FILE;
 #else
 #define OMG_LIBC_STD_PREFIX
+#include <stdio.h>
 #endif
 
 typedef struct {
     void* handle;
     unsigned int OMG_LIBC_STD_PREFIX (*sleep)(unsigned int);
+    int (*fclose)(FILE*);
+    long (*ftell)(FILE*);
+    int (*fseek)(FILE*, long, int);
+    size_t (*fread)(void*, size_t, size_t, FILE*);
+    size_t (*fwrite)(const void*, size_t, size_t, FILE*);
+    FILE* (*fopen)(const char*, const char*);
     bool loaded;
 } OMG_Libc;
 

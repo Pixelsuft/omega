@@ -13,6 +13,7 @@
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
 #define d_k32 ((OMG_Kernel32*)this->k32)
+#define d_libc ((OMG_Libc*)this->libc)
 
 static OMG_Omega* omg_def_omega = NULL;
 
@@ -395,6 +396,7 @@ OMG_FileMem* omg_file_from_mem(OMG_Omega* this, OMG_FileMem* file, const void* m
 }
 
 #if OMG_HAS_STD
+// TODO: move win32 api here like this
 // TODO: support 64-bit types
 bool omg_file_std_destroy(OMG_FileStd* file) {
     bool res = false;
