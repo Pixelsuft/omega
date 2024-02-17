@@ -4,14 +4,21 @@
 #elif OMG_IS_WIN
 #include <omega/api_win.h>
 #elif OMG_IS_UNIX && OMG_HAS_STD
+#include <gnu/lib-names.h>
 #include <dlfcn.h>
 #endif
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
     OMG_UNUSED(adv_fn);
-    omg_string_ensure_null((OMG_String*)fn);
-    return SDL_LoadObject(fn->ptr);
+    char* fn_ptr;
+    if (OMG_ISNULL(fn->ptr))
+        fn_ptr = LIBC_SO;
+    else {
+        omg_string_ensure_null((OMG_String*)fn);
+        fn_ptr = fn->ptr;
+    }
+    return SDL_LoadObject(fn_ptr);
 #elif OMG_IS_WIN
     void* result = NULL;
     if (OMG_ISNOTNULL(adv_fn)) {
@@ -36,8 +43,14 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
     return result;
 #elif OMG_IS_UNIX && OMG_HAS_STD
     OMG_UNUSED(adv_fn);
-    omg_string_ensure_null((OMG_String*)fn);
-    void* res = dlopen(fn->ptr, RTLD_GLOBAL | RTLD_NOW);
+    char* fn_ptr;
+    if (OMG_ISNULL(fn->ptr))
+        fn_ptr = LIBC_SO;
+    else {
+        omg_string_ensure_null((OMG_String*)fn);
+        fn_ptr = fn->ptr;
+    }
+    void* res = dlopen(fn_ptr, RTLD_GLOBAL | RTLD_NOW);
     // printf("%s %s %p\n", fn->ptr, dlerror(), res);
     return res;
 #else

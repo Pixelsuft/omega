@@ -10,11 +10,8 @@
 
 bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     this->loaded = false;
-#if OMG_SPNG_DYNAMIC
-    if (OMG_ISNULL(dll_path))
-        this->handle = omg_static_lib_load(&OMG_STRING_MAKE_STATIC("libc.so"), NULL);
-    else
-        this->handle = omg_static_lib_load(dll_path, NULL);
+#if OMG_LIBC_DYNAMIC
+    this->handle = omg_static_lib_load(dll_path, NULL);
     if (OMG_ISNULL(this->handle))
         return true;
 #else
