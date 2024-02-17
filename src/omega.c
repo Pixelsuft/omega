@@ -723,12 +723,12 @@ bool omg_win_loads_libs3(OMG_Omega* this) {
 
 bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type) {
 #if OMG_IS_WIN
-    if (OMG_ISNULL(this->k32))
+    if (OMG_ISNULL(d_k32->GetFileAttributesW))
         return false;
     size_t count;
     _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
     if (count == 0) {
-        _OMG_LOG_ERROR(this, "Failed to check Win32 file", path);
+        _OMG_LOG_ERROR(this, "Failed to check Win32 file ", path);
         return NULL;
     }
     wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
@@ -746,6 +746,40 @@ bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type) {
     if (type == 1)
         return (res & FILE_ATTRIBUTE_DIRECTORY) > 0;
     return (res != INVALID_FILE_ATTRIBUTES);
+#else
+    // TODO: libc
+    OMG_UNUSED(this, path);
+    return false;
+#endif
+}
+
+bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(d_k32->RemoveDirectoryW) || OMG_ISNULL(d_k32->DeleteFileW))
+        return true;
+    if (!this->fs_is_file_or_dir(this, path, (type == 2) ? 1 : type))
+        return true;
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
+    if (count == 0) {
+        _OMG_LOG_ERROR(this, "Failed to remove Win32 path ", path);
+        return NULL;
+    }
+    wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(w_fp)) {
+        _OMG_LOG_ERROR(this, "Failed to remove Win32 path ", path);
+        return NULL;
+    }
+    int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, w_fp, (int)count);
+    if (out_len > 0)
+        w_fp[out_len] = L'\0';
+    bool res = false;
+    if (type == 0)
+        res = !d_k32->DeleteFileW(w_fp);
+    else if ((type == 1) || (type == 2))
+        res = !d_k32->RemoveDirectoryW(w_fp);
+    OMG_FREE(this->mem, w_fp);
+    return res;
 #else
     // TODO: libc
     OMG_UNUSED(this, path);
@@ -796,6 +830,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->audio_alloc = omg_audio_alloc;
     this->audio_free = omg_audio_free;
     this->fs_is_file_or_dir = omg_fs_is_file_or_dir;
+    this->fs_remove_file_or_dir = omg_fs_remove_file_or_dir;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
