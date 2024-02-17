@@ -171,6 +171,9 @@ typedef struct OMG_Omega {
     bool should_free_g32;
     bool should_free_uxtheme;
 #endif
+#if OMG_SUPPORT_LIBC
+    bool should_free_libc;
+#endif
     bool inited;
 } OMG_Omega;
 

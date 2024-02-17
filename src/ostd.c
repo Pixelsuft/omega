@@ -510,7 +510,7 @@ void omg_std_fill_defaults(OMG_Std* this) {
 #else
     this->ulltoa = omg_std_ulltoa;
 #endif
-#if OMG_HAS_STD && OMG_IS_UNIX
+#if OMG_SUPPORT_LIBC
     this->sleep = sleep;
 #else
     this->sleep = NULL;

@@ -9,6 +9,7 @@
 #include <omega/audio_fmod.h>
 #include <omega/audio_sdl2.h>
 #include <omega/audio_emscripten.h>
+#include <omega/api_libc.h>
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
 #define d_k32 ((OMG_Kernel32*)this->k32)
@@ -799,7 +800,19 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
 
 bool omg_libc_init(OMG_Omega* this) {
 #if OMG_SUPPORT_LIBC
-    OMG_UNUSED(this);
+    if (OMG_ISNULL(this->libc)) {
+        this->libc = OMG_MALLOC(this->mem, sizeof(OMG_Libc));
+        if (OMG_ISNULL(this->libc))
+            return true;
+        this->should_free_libc = true;
+    }
+    if (omg_libc_dll_load(this->libc, this->libc_dll_path)) {
+        if (this->should_free_libc) {
+            this->should_free_libc = false;
+            OMG_FREE(this->mem, this->libc);
+        }
+        return true;
+    }
     return false;
 #else
     OMG_UNUSED(this);
@@ -809,8 +822,14 @@ bool omg_libc_init(OMG_Omega* this) {
 
 bool omg_libc_destroy(OMG_Omega* this) {
 #if OMG_SUPPORT_LIBC
-    OMG_UNUSED(this);
-    return false;
+    if (OMG_ISNULL(this->libc))
+        return false;
+    bool res = omg_libc_dll_free(this->libc);
+    if (this->should_free_libc) {
+        this->should_free_libc = false;
+        OMG_FREE(this->mem, this->libc);
+    }
+    return res;
 #else
     OMG_UNUSED(this);
     return false;
@@ -823,7 +842,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = false;
 #endif
 #if OMG_SUPPORT_LIBC
-    this->libc = NULL;
+    this->should_free_libc = false;
 #endif
     this->extra1 = this->extra2 = this->extra3 = this->extra4 = this->extra5 = NULL;
     this->std = NULL;

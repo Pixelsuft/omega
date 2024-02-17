@@ -10,6 +10,7 @@
 
 typedef struct {
     void* handle;
+    unsigned int OMG_LIBC_STD_PREFIX (*sleep)(unsigned int);
     bool loaded;
 } OMG_Libc;
 

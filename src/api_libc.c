@@ -18,7 +18,7 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     OMG_UNUSED(dll_path);
 #endif
     OMG_BEGIN_POINTER_CAST();
-    // TODO
+    LOAD_REQUIRED(sleep);
     OMG_END_POINTER_CAST();
     this->loaded = true;
     return false;
