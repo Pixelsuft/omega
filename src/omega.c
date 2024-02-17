@@ -819,7 +819,21 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
     return true;
 #else
     OMG_UNUSED(this, path, type);
-    return false;
+    return true;
+#endif
+}
+
+bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path) {
+#if OMG_IS_WIN
+    OMG_UNUSED(this, path);
+    return true;
+#elif OMG_SUPPORT_LIBC
+    if (omg_string_ensure_null((OMG_String*)old_path) || omg_string_ensure_null((OMG_String*)new_path))
+        return true;
+    return (d_libc->rename(old_path->ptr, new_path->ptr) != 0);
+#else
+    OMG_UNUSED(this, path);
+    return true;
 #endif
 }
 
@@ -903,6 +917,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->audio_free = omg_audio_free;
     this->fs_is_file_or_dir = omg_fs_is_file_or_dir;
     this->fs_remove_file_or_dir = omg_fs_remove_file_or_dir;
+    this->fs_move = omg_fs_move;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;

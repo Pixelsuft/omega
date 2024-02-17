@@ -106,6 +106,7 @@ typedef struct OMG_Omega {
     bool (*audio_free)(struct OMG_Omega* this);
     bool (*fs_is_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
     bool (*fs_remove_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
+    bool (*fs_move)(struct OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
     OMG_File* (*file_from_fp)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
     void (*reset_event_handlers)(struct OMG_Omega* this);
@@ -203,6 +204,7 @@ OMG_API bool omg_libc_destroy(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
+OMG_API bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
 OMG_API bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type);
 OMG_API bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type);
 OMG_API int64_t omg_file_get_size(OMG_File* file);

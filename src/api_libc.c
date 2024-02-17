@@ -29,6 +29,7 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(stat);
     LOAD_REQUIRED(remove);
     LOAD_REQUIRED(rmdir);
+    LOAD_REQUIRED(rename);
     OMG_END_POINTER_CAST();
     this->loaded = true;
     return false;

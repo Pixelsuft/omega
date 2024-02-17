@@ -31,6 +31,7 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*stat)(const char*, struct stat*);
     int OMG_LIBC_STD_PREFIX (*remove)(const char*);
     int OMG_LIBC_STD_PREFIX (*rmdir)(const char*);
+    int OMG_LIBC_STD_PREFIX (*rename)(const char*, const char*);
     bool loaded;
 } OMG_Libc;
 
