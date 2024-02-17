@@ -92,6 +92,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED_COMPAT(GetFileSizeEx);
     LOAD_REQUIRED_COMPAT(SetFilePointerEx);
     LOAD_REQUIRED_COMPAT(CancelSynchronousIo);
+    LOAD_REQUIRED_COMPAT(GetFileAttributesW);
     LOAD_REQUIRED_COMPAT(ReadFile);
     LOAD_REQUIRED_COMPAT(WriteFile);
     if (OMG_ISNULL(this->GetTickCount64))
