@@ -806,14 +806,11 @@ bool omg_libc_init(OMG_Omega* this) {
         this->libc = OMG_MALLOC(this->mem, sizeof(OMG_Libc));
         if (OMG_ISNULL(this->libc))
             return true;
-        this->should_free_libc = true;
-    }
-    if (omg_libc_dll_load(this->libc, this->libc_dll_path)) {
-        if (this->should_free_libc) {
-            this->should_free_libc = false;
+        if (omg_libc_dll_load(this->libc, this->libc_dll_path)) {
             OMG_FREE(this->mem, this->libc);
+            return true;
         }
-        return true;
+        this->should_free_libc = true;
     }
     return false;
 #else
@@ -826,9 +823,10 @@ bool omg_libc_destroy(OMG_Omega* this) {
 #if OMG_SUPPORT_LIBC
     if (OMG_ISNULL(this->libc))
         return false;
-    bool res = omg_libc_dll_free(this->libc);
+    bool res = false;
     if (this->should_free_libc) {
         this->should_free_libc = false;
+        res = omg_libc_dll_free(this->libc);
         OMG_FREE(this->mem, this->libc);
     }
     return res;
