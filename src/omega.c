@@ -11,6 +11,7 @@
 #include <omega/audio_emscripten.h>
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
+#define d_k32 ((OMG_Kernel32*)this->k32)
 
 static OMG_Omega* omg_def_omega = NULL;
 
@@ -720,6 +721,60 @@ bool omg_win_loads_libs3(OMG_Omega* this) {
 #endif
 }
 
+bool omg_fs_is_file(OMG_Omega* this, const OMG_String* path) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(this->k32))
+        return false;
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
+    if (count == 0) {
+        _OMG_LOG_ERROR(this, "Failed to check Win32 file", path);
+        return NULL;
+    }
+    wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(w_fp)) {
+        _OMG_LOG_ERROR(this, "Failed to check Win32 file ", path);
+        return NULL;
+    }
+    int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, w_fp, (int)count);
+    if (out_len > 0)
+        w_fp[out_len] = L'\0';
+    DWORD res = d_k32->GetFileAttributesW(w_fp);
+    OMG_FREE(this->mem, w_fp);
+    return (res != INVALID_FILE_ATTRIBUTES) && !(res & FILE_ATTRIBUTE_DIRECTORY);
+#else
+    OMG_UNUSED(this, path);
+    return false;
+#endif
+}
+
+bool omg_fs_is_dir(OMG_Omega* this, const OMG_String* path) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(this->k32))
+        return false;
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
+    if (count == 0) {
+        _OMG_LOG_ERROR(this, "Failed to check Win32 dir", path);
+        return NULL;
+    }
+    wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(w_fp)) {
+        _OMG_LOG_ERROR(this, "Failed to check Win32 dir ", path);
+        return NULL;
+    }
+    int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, w_fp, (int)count);
+    if (out_len > 0)
+        w_fp[out_len] = L'\0';
+    DWORD res = d_k32->GetFileAttributesW(w_fp);
+    OMG_FREE(this->mem, w_fp);
+    return (res & FILE_ATTRIBUTE_DIRECTORY) > 0;
+#else
+    OMG_UNUSED(this, path);
+    return false;
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -762,6 +817,8 @@ bool omg_omg_init(OMG_Omega* this) {
     this->winmgr_free = omg_free_winmgr;
     this->audio_alloc = omg_audio_alloc;
     this->audio_free = omg_audio_free;
+    this->fs_is_file = omg_fs_is_file;
+    this->fs_is_dir = omg_fs_is_dir;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
