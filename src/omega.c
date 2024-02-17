@@ -743,6 +743,7 @@ bool omg_fs_is_file(OMG_Omega* this, const OMG_String* path) {
     OMG_FREE(this->mem, w_fp);
     return (res != INVALID_FILE_ATTRIBUTES) && !(res & FILE_ATTRIBUTE_DIRECTORY);
 #else
+    // TODO: libc
     OMG_UNUSED(this, path);
     return false;
 #endif
@@ -770,6 +771,7 @@ bool omg_fs_is_dir(OMG_Omega* this, const OMG_String* path) {
     OMG_FREE(this->mem, w_fp);
     return (res & FILE_ATTRIBUTE_DIRECTORY) > 0;
 #else
+    // TODO: libc
     OMG_UNUSED(this, path);
     return false;
 #endif

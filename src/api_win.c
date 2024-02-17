@@ -95,6 +95,9 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED_COMPAT(GetFileAttributesW);
     LOAD_REQUIRED_COMPAT(ReadFile);
     LOAD_REQUIRED_COMPAT(WriteFile);
+    LOAD_REQUIRED_COMPAT(DeleteFileW);
+    LOAD_REQUIRED_COMPAT(RemoveDirectoryW);
+    LOAD_REQUIRED_COMPAT(MoveFileW);
     if (OMG_ISNULL(this->GetTickCount64))
         this->GetTickCount64 = omg_win_get_tick_count64_emu;
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
