@@ -759,8 +759,18 @@ bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type) {
     if (type == 1)
         return (res & FILE_ATTRIBUTE_DIRECTORY) > 0;
     return (res != INVALID_FILE_ATTRIBUTES);
+#elif OMG_SUPPORT_LIBC
+    if (omg_string_ensure_null((OMG_String*)path))
+        return false;
+    struct stat stat_buf;
+    if (d_libc->stat(path->ptr, &stat_buf) != 0)
+        return false;
+    if (type == 0)
+        return !S_ISDIR(stat_buf.st_mode);
+    else if (type == 1)
+        return S_ISDIR(stat_buf.st_mode);
+    return true;
 #else
-    // TODO: libc
     OMG_UNUSED(this, path, type);
     return false;
 #endif
@@ -793,8 +803,10 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
         res = !d_k32->RemoveDirectoryW(w_fp);
     OMG_FREE(this->mem, w_fp);
     return res;
+#elif OMG_SUPPORT_LIBC
+    OMG_UNUSED(this, path, type);
+    return false;
 #else
-    // TODO: libc
     OMG_UNUSED(this, path, type);
     return false;
 #endif
