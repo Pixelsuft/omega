@@ -1,15 +1,14 @@
 #include <omega/config.h>
 #include <omega/ostd.h>
 #include <omega/memory.h>
+#include <omega/omega.h>
+#include <omega/api_libc.h>
 #if OMG_SUPPORT_WIN
 #include <omega/omega_win.h>
 #endif
 #if OMG_HAS_STD
 #include <string.h>
 #include <stdlib.h>
-#if OMG_IS_UNIX
-#include <unistd.h>
-#endif
 #endif
 #include <math.h>
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
@@ -511,7 +510,8 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->ulltoa = omg_std_ulltoa;
 #endif
 #if OMG_SUPPORT_LIBC
-    this->sleep = sleep;
+    OMG_Omega* omg = omg_get_default_omega();
+    this->sleep = OMG_ISNULL(omg->libc) ? NULL : ((OMG_Libc*)omg->libc)->sleep;
 #else
     this->sleep = NULL;
 #endif
