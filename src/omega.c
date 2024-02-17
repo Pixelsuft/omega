@@ -804,8 +804,19 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
     OMG_FREE(this->mem, w_fp);
     return res;
 #elif OMG_SUPPORT_LIBC
-    OMG_UNUSED(this, path, type);
-    return false;
+    if (omg_string_ensure_null((OMG_String*)path))
+        return true;
+    if (type == 0) {
+        if (this->fs_is_file_or_dir(this, path, 0))
+            return (d_libc->remove(path->ptr) != 0);
+        return true;
+    }
+    if (type == 1) {
+        if (this->fs_is_file_or_dir(this, path, 1))
+            return (d_libc->rmdir(path->ptr) != 0);
+        return true;
+    }
+    return true;
 #else
     OMG_UNUSED(this, path, type);
     return false;

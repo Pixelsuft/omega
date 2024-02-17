@@ -29,6 +29,8 @@ typedef struct {
     FILE* OMG_LIBC_STD_PREFIX (*fopen)(const char*, const char*);
     int OMG_LIBC_STD_PREFIX (*access)(const char*, int);
     int OMG_LIBC_STD_PREFIX (*stat)(const char*, struct stat*);
+    int OMG_LIBC_STD_PREFIX (*remove)(const char*);
+    int OMG_LIBC_STD_PREFIX (*rmdir)(const char*);
     bool loaded;
 } OMG_Libc;
 
