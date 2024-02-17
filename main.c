@@ -362,7 +362,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->offset_cache.x = this->offset_cache.y = 0.0f;
     this->scale_cache.x = this->scale_cache.y = 1.0f;
     this->ren->soft_offset = true;
-    // OMG_INFO(this->omg, "IS FILE:", this->omg->fs_is_file(this->omg, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf")));
+    OMG_INFO(this->omg, "Font is file: ", this->omg->fs_is_file_or_dir(this->omg, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), 0)); // 0 - file, 1 - dir, 2 - any of
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for doing fail checks here, but you shouldn't :)
     // Example of loading from file/mem
