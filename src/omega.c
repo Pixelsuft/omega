@@ -68,6 +68,16 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->spng_dll_path = NULL;
     this->libc_dll_path = NULL;
     this->log_str_type = NULL;
+#if OMG_IS_WIN
+    this->k32 = NULL;
+    this->dwm = NULL;
+    this->uxtheme = NULL;
+    this->g32 = NULL;
+    this->ntdll = NULL;
+#endif
+#if OMG_SUPPORT_LIBC
+    this->libc = NULL;
+#endif
     this->support_highdpi = true;
     this->app_theme = OMG_THEME_AUTO;
     this->omg_init = omg_omg_init;
@@ -748,7 +758,7 @@ bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type) {
     return (res != INVALID_FILE_ATTRIBUTES);
 #else
     // TODO: libc
-    OMG_UNUSED(this, path);
+    OMG_UNUSED(this, path, type);
     return false;
 #endif
 }
@@ -782,7 +792,27 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
     return res;
 #else
     // TODO: libc
-    OMG_UNUSED(this, path);
+    OMG_UNUSED(this, path, type);
+    return false;
+#endif
+}
+
+bool omg_libc_init(OMG_Omega* this) {
+#if OMG_SUPPORT_LIBC
+    OMG_UNUSED(this);
+    return false;
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
+bool omg_libc_destroy(OMG_Omega* this) {
+#if OMG_SUPPORT_LIBC
+    OMG_UNUSED(this);
+    return false;
+#else
+    OMG_UNUSED(this);
     return false;
 #endif
 }

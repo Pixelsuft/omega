@@ -69,7 +69,6 @@
 }
 
 void omg_win_fill_after_create(OMG_OmegaWin* this, OMG_EntryData* data) {
-    base->k32 = NULL;
     OMG_BEGIN_POINTER_CAST();
     omg_fill_on_create(this, data);
     base->omg_init = omg_win_init;

@@ -195,6 +195,8 @@ OMG_API bool omg_win_destroy_clean2(OMG_Omega* this);
 OMG_API bool omg_win_loads_libs1(OMG_Omega* this);
 OMG_API bool omg_win_loads_libs2(OMG_Omega* this);
 OMG_API bool omg_win_loads_libs3(OMG_Omega* this);
+OMG_API bool omg_libc_init(OMG_Omega* this);
+OMG_API bool omg_libc_destroy(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 

@@ -220,7 +220,7 @@ OMG_String omg_winmgr_win_display_get_name(OMG_WinmgrWin* this, int display_id) 
     if (omg_string_add_wchar_p(&res, mon_d.DeviceString))
         return omg_winmgr_display_get_name(base, display_id);
     for (size_t i = 0; i < res.len; i++) {
-        if (res.ptr[i] == ',') {
+        if (res.ptr[i] == ',') { // Should i do this?
             res.ptr[i] = '\0';
             res.len = i;
             break;
