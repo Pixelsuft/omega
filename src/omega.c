@@ -75,7 +75,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->dwm = NULL;
     this->uxtheme = NULL;
     this->g32 = NULL;
-    this->ntdll = NULL;
+    this->nt = NULL;
 #endif
 #if OMG_SUPPORT_LIBC
     this->libc = NULL;
@@ -825,14 +825,14 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
 
 bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path) {
 #if OMG_IS_WIN
-    OMG_UNUSED(this, path);
+    OMG_UNUSED(this, old_path, new_path);
     return true;
 #elif OMG_SUPPORT_LIBC
     if (omg_string_ensure_null((OMG_String*)old_path) || omg_string_ensure_null((OMG_String*)new_path))
         return true;
     return (d_libc->rename(old_path->ptr, new_path->ptr) != 0);
 #else
-    OMG_UNUSED(this, path);
+    OMG_UNUSED(this, old_path, new_path);
     return true;
 #endif
 }

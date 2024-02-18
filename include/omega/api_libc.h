@@ -8,9 +8,9 @@ typedef void FILE;
 #else
 #define OMG_LIBC_STD_PREFIX
 #include <stdio.h>
+#include <sys/stat.h>
 #if OMG_IS_UNIX
 #include <unistd.h>
-#include <sys/stat.h>
 #endif
 #endif
 
