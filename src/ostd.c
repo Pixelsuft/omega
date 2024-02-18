@@ -798,22 +798,6 @@ bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
     if (OMG_ISNULL(tmp_omg))
         return true;
     int omg_type = tmp_omg->type;
-#if OMG_SUPPORT_WIN
-    if (omg_type == OMG_OMEGA_TYPE_WIN) {
-        OMG_OmegaWin* omg = (OMG_OmegaWin*)tmp_omg;
-        size_t need_len = omg_def_std->wcslen(wstr_to_add);
-        size_t need_count;
-        _OMG_WIN_GET_DECODE_SIZE(need_count, wstr_to_add, ((OMG_Omega*)omg)->k32, need_len);
-        if ((need_count == 0) || omg_string_ensure_free_len(this, need_count))
-            return true;
-        int res = ((OMG_Kernel32*)(((OMG_Omega*)omg)->k32))->WideCharToMultiByte(CP_UTF8, 0, wstr_to_add, (int)need_len, this->ptr + this->len, (int)need_count, NULL, NULL);
-        if (res > 0) {
-            this->len += (size_t)res;
-            return false;
-        }
-        return true;
-    }
-#endif
 #if OMG_SUPPORT_SDL2
     if (omg_type == OMG_OMEGA_TYPE_SDL2) {
         OMG_OmegaSdl2* omg = (OMG_OmegaSdl2*)tmp_omg;
@@ -829,6 +813,21 @@ bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
         bool res = omg_string_add_char_p(this, out_buf);
         omg->sdl2->SDL_free(out_buf);
         return res;
+    }
+#endif
+#if OMG_SUPPORT_WIN
+    if ((omg_type == OMG_OMEGA_TYPE_WIN) || true) {
+        size_t need_len = omg_def_std->wcslen(wstr_to_add);
+        size_t need_count;
+        _OMG_WIN_GET_DECODE_SIZE(need_count, wstr_to_add, tmp_omg->k32, need_len);
+        if ((need_count == 0) || omg_string_ensure_free_len(this, need_count))
+            return true;
+        int res = ((OMG_Kernel32*)(tmp_omg->k32))->WideCharToMultiByte(CP_UTF8, 0, wstr_to_add, (int)need_len, this->ptr + this->len, (int)need_count, NULL, NULL);
+        if (res > 0) {
+            this->len += (size_t)res;
+            return false;
+        }
+        return true;
     }
 #endif
     OMG_UNUSED(this, wstr_to_add);

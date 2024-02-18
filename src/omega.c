@@ -931,7 +931,6 @@ OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
         OMG_FREE(this->mem, buf);
         return *omg_dummy_string_create();
     }
-    OMG_FREE(this->mem, buf);
     return res;
 #elif OMG_SUPPORT_LIBC
     OMG_UNUSED(this, key_name);
