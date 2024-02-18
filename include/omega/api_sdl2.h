@@ -1633,6 +1633,7 @@ typedef struct {
     SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowWMInfo)(SDL_Window*, SDL_SysWMinfo*);
     char* OMG_SDL2_STD_PREFIX (*SDL_getenv)(const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_setenv)(const char*, const char*, int);
+    char* (*SDL_iconv_string)(const char*, const char*, const char*, size_t);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;

@@ -6,6 +6,9 @@
 #if OMG_SUPPORT_WIN
 #include <omega/omega_win.h>
 #endif
+#if OMG_SUPPORT_SDL2
+#include <omega/omega_sdl2.h>
+#endif
 #if OMG_HAS_STD
 #include <string.h>
 #include <stdlib.h>
@@ -789,28 +792,47 @@ bool omg_string_add_drect(OMG_String* this, const OMG_DRect* drect_to_add) {
 }
 
 bool omg_string_add_wchar_p(OMG_String* this, const wchar_t* wstr_to_add) {
-#if OMG_SUPPORT_WIN
     if (this->type < OMG_STRING_BUFFER || OMG_ISNULL(wstr_to_add))
         return true;
-    OMG_OmegaWin* omg = (OMG_OmegaWin*)omg_get_default_omega();
-    if (OMG_ISNULL(omg) || (((OMG_Omega*)omg)->type != OMG_OMEGA_TYPE_WIN))
+    OMG_Omega* tmp_omg = omg_get_default_omega();
+    if (OMG_ISNULL(tmp_omg))
         return true;
-    size_t need_len = omg_def_std->wcslen(wstr_to_add);
-    size_t need_count;
-    _OMG_WIN_GET_DECODE_SIZE(need_count, wstr_to_add, ((OMG_Omega*)omg)->k32, need_len);
-    if ((need_count == 0) || omg_string_ensure_free_len(this, need_count))
+    int omg_type = tmp_omg->type;
+#if OMG_SUPPORT_WIN
+    if (omg_type == OMG_OMEGA_TYPE_WIN) {
+        OMG_OmegaWin* omg = (OMG_OmegaWin*)tmp_omg;
+        size_t need_len = omg_def_std->wcslen(wstr_to_add);
+        size_t need_count;
+        _OMG_WIN_GET_DECODE_SIZE(need_count, wstr_to_add, ((OMG_Omega*)omg)->k32, need_len);
+        if ((need_count == 0) || omg_string_ensure_free_len(this, need_count))
+            return true;
+        int res = ((OMG_Kernel32*)(((OMG_Omega*)omg)->k32))->WideCharToMultiByte(CP_UTF8, 0, wstr_to_add, (int)need_len, this->ptr + this->len, (int)need_count, NULL, NULL);
+        if (res > 0) {
+            this->len += (size_t)res;
+            return false;
+        }
         return true;
-    int res = ((OMG_Kernel32*)(((OMG_Omega*)omg)->k32))->WideCharToMultiByte(CP_UTF8, 0, wstr_to_add, (int)need_len, this->ptr + this->len, (int)need_count, NULL, NULL);
-    if (res > 0) {
-        this->len += (size_t)res;
-        return false;
     }
-    return true;
-#else
-    // TODO: non-weendoes way
+#endif
+#if OMG_SUPPORT_SDL2
+    if (omg_type == OMG_OMEGA_TYPE_SDL2) {
+        OMG_OmegaSdl2* omg = (OMG_OmegaSdl2*)tmp_omg;
+        char* out_buf = omg->sdl2->SDL_iconv_string(
+            "UTF-8", "WCHAR_T",
+            (char*)wstr_to_add, (omg->sdl2->SDL_wcslen(wstr_to_add) + 1) * sizeof(wchar_t)
+        );
+        if (OMG_ISNULL(out_buf))
+            return true;
+        size_t buf_len = omg_def_std->strlen(out_buf);
+        if (buf_len == 0)
+            return true;
+        bool res = omg_string_add_char_p(this, out_buf);
+        omg->sdl2->SDL_free(out_buf);
+        return res;
+    }
+#endif
     OMG_UNUSED(this, wstr_to_add);
     return true;
-#endif
 }
 
 bool omg_string_init_dynamic(OMG_String* this, const OMG_String* base) {
