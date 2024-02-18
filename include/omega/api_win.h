@@ -961,7 +961,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*RemoveDirectoryW)(LPCWSTR);
     BOOL OMG_WIN_STD_PREFIX (*MoveFileW)(LPCWSTR, LPCWSTR);
     DWORD OMG_WIN_STD_PREFIX (*GetEnvironmentVariableW)(LPCWSTR, LPWSTR, DWORD);
-    BOOL OMG_WIN_STD_PREFIX (*SetEnvironmentVariableW)(LPCWSTR);
+    BOOL OMG_WIN_STD_PREFIX (*SetEnvironmentVariableW)(LPCWSTR, LPCWSTR);
     // TODO: SHFileOperationW
     uint64_t _tick64_emu;
 } OMG_Kernel32;

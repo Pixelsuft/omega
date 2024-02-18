@@ -908,8 +908,38 @@ OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
 
 bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite) {
 #if OMG_IS_WIN
-    OMG_UNUSED(this, key_name, key_value, overwrite);
-    return true;
+    if (!overwrite) {
+        OMG_String temp_res = this->env_get(this, key_name);
+        if (temp_res.len > 0) {
+            omg_string_destroy(&temp_res);
+            return false;
+        }
+    }
+    size_t count1;
+    size_t count2;
+    _OMG_WIN_GET_ENCODE_SIZE(count1, key_name, d_k32);
+    if (OMG_ISNULL(key_value))
+        count2 = 0;
+    else
+        _OMG_WIN_GET_ENCODE_SIZE(count2, key_value, d_k32);
+    if (count1 == 0) {
+        return true;
+    }
+    wchar_t* w_o_fp = OMG_MALLOC(this->mem, (size_t)(count1 + count2) * 2 + 4);
+    if (OMG_ISNULL(w_o_fp))
+        return true;
+    wchar_t* w_n_fp = (wchar_t*)((size_t)w_o_fp + ((size_t)(count1) * 2) + 2);
+    int out_len_o = d_k32->MultiByteToWideChar(CP_UTF8, 0, key_name->ptr, (int)key_name->len, w_o_fp, (int)count1);
+    if (out_len_o > 0)
+        w_o_fp[out_len_o] = L'\0';
+    if (OMG_ISNOTNULL(key_value)) {
+        int out_len_n = d_k32->MultiByteToWideChar(CP_UTF8, 0, key_value->ptr, (int)key_value->len, w_n_fp, (int)count2);
+        if (out_len_n > 0)
+            w_n_fp[out_len_n] = L'\0';
+    }
+    bool res = !d_k32->SetEnvironmentVariableW(w_o_fp, OMG_ISNULL(key_value) ? NULL : w_n_fp);
+    OMG_FREE(this->mem, w_o_fp);
+    return res;
 #elif OMG_SUPPORT_LIBC
     OMG_UNUSED(this, key_name, key_value, overwrite);
     return true;
