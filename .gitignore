@@ -10,6 +10,7 @@ CMakeCache
 build
 build32
 Release
+enc_temp_folder
 Debug
 x86
 x64
