@@ -416,6 +416,9 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"), OMG_FILE_MODE_RB
     );
     this->mus = this->audio->mus_from_file(this->audio, NULL, this->file, false, OMG_AUDIO_FORMAT_MP3);
+    OMG_String path_str = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("PATH"));
+    OMG_INFO(this->omg, "PATH: ", &path_str);
+    omg_string_destroy(&path_str);
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;

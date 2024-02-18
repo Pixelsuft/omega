@@ -786,12 +786,12 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
     _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
     if (count == 0) {
         _OMG_LOG_ERROR(this, "Failed to remove Win32 path ", path);
-        return NULL;
+        return true;
     }
     wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
     if (OMG_ISNULL(w_fp)) {
         _OMG_LOG_ERROR(this, "Failed to remove Win32 path ", path);
-        return NULL;
+        return true;
     }
     int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, w_fp, (int)count);
     if (out_len > 0)
@@ -895,8 +895,39 @@ bool omg_libc_destroy(OMG_Omega* this) {
 
 OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
 #if OMG_IS_WIN
-    OMG_UNUSED(this, key_name);
-    return *omg_dummy_string_create();
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, key_name, d_k32);
+    if (count == 0)
+        return *omg_dummy_string_create();
+    wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(w_fp))
+        return *omg_dummy_string_create();
+    int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, key_name->ptr, (int)key_name->len, w_fp, (int)count);
+    if (out_len > 0)
+        w_fp[out_len] = L'\0';
+    DWORD need_len = d_k32->GetEnvironmentVariableW(w_fp, NULL, 0);
+    wchar_t* buf;
+    if ((need_len <= 1) || OMG_ISNULL(buf = OMG_MALLOC(this->mem, need_len + 5))) {
+        OMG_FREE(this->mem, w_fp);
+        return *omg_dummy_string_create();
+    }
+    DWORD read_len = d_k32->GetEnvironmentVariableW(w_fp, buf, need_len + 2);
+    OMG_FREE(this->mem, w_fp);
+    if (read_len == 0)
+        return *omg_dummy_string_create();
+    buf[read_len] = L'\0';
+    OMG_String res;
+    if (omg_string_init_dynamic(&res, NULL)) {
+        OMG_FREE(this->mem, buf);
+        return *omg_dummy_string_create();
+    }
+    if (omg_string_add_wchar_p(&res, buf)) {
+        omg_string_destroy(&res);
+        OMG_FREE(this->mem, buf);
+        return *omg_dummy_string_create();
+    }
+    OMG_FREE(this->mem, buf);
+    return res;
 #elif OMG_SUPPORT_LIBC
     OMG_UNUSED(this, key_name);
     return *omg_dummy_string_create();
