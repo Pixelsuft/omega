@@ -662,6 +662,21 @@ bool omg_sdl2_destroy(OMG_OmegaSdl2* this) {
     return result;
 }
 
+OMG_String omg_sdl2_env_get(OMG_OmegaSdl2* this, const OMG_String* key_name) {
+    if (omg_string_ensure_null((OMG_String*)key_name))
+        return *omg_dummy_string_create();
+    char* res = this->sdl2->SDL_getenv(key_name->ptr);
+    if (OMG_ISNULL(res))
+        return *omg_dummy_string_create();
+    return OMG_STRING_MAKE_STATIC(res);
+}
+
+bool omg_sdl2_env_set(OMG_OmegaSdl2* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite) {
+    if (omg_string_ensure_null((OMG_String*)key_name) || omg_string_ensure_null((OMG_String*)key_value))
+        return true;
+    return this->sdl2->SDL_setenv(key_name->ptr, key_value->ptr, overwrite ? 1 : 0) < 0;
+}
+
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->inited = false;
     if (OMG_ISNULL(this->sdl2)) {
@@ -723,6 +738,8 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->audio_alloc = omg_sdl2_audio_alloc;
     base->destroy = omg_sdl2_destroy;
     base->file_from_fp = omg_sdl2_file_from_fp;
+    base->env_get = omg_sdl2_env_get;
+    base->env_set = omg_sdl2_env_set;
     OMG_END_POINTER_CAST();
     base->inited = true;
 #if OMG_SUPPORT_LIBC

@@ -42,5 +42,7 @@ OMG_API size_t omg_sdl2_file_read(OMG_FileSdl2* file, void* buf, size_t size, si
 OMG_API size_t omg_sdl2_file_write(OMG_FileSdl2* file, const void* buf, size_t size, size_t num);
 OMG_API bool omg_sdl2_log_str_type(OMG_OmegaSdl2* this, const OMG_String* data, int type);
 OMG_API bool omg_sdl2_audio_alloc(OMG_OmegaSdl2* this);
+OMG_API OMG_String omg_sdl2_env_get(OMG_OmegaSdl2* this, const OMG_String* key_name);
+OMG_API bool omg_sdl2_env_set(OMG_OmegaSdl2* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
 #endif
 #endif
