@@ -292,7 +292,6 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_GetThreadID);
     LOAD_REQUIRED(SDL_SetThreadPriority);
     LOAD_REQUIRED(SDL_WaitThread);
-    LOAD_REQUIRED(SDL_DetachThread);
     LOAD_REQUIRED(SDL_GetPowerInfo);
     LOAD_REQUIRED(SDL_CreateMutex);
     LOAD_REQUIRED(SDL_LockMutex);
@@ -320,6 +319,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetBasePath); // 2.0.1
     LOAD_REQUIRED_COMPAT(SDL_GetPrefPath); // 2.0.1
+    LOAD_REQUIRED_COMPAT(SDL_DetachThread); // 2.0.2
     LOAD_REQUIRED_COMPAT(SDL_GetDisplayDPI); // 2.0.4
     LOAD_REQUIRED_COMPAT(SDL_SetWindowResizable); // 2.0.5
     LOAD_REQUIRED_COMPAT(SDL_SetWindowOpacity); // 2.0.5
