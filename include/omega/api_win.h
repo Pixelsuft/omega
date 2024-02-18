@@ -962,6 +962,15 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*MoveFileW)(LPCWSTR, LPCWSTR);
     DWORD OMG_WIN_STD_PREFIX (*GetEnvironmentVariableW)(LPCWSTR, LPWSTR, DWORD);
     BOOL OMG_WIN_STD_PREFIX (*SetEnvironmentVariableW)(LPCWSTR, LPCWSTR);
+    HANDLE OMG_WIN_STD_PREFIX (*CreateThread)(LPSECURITY_ATTRIBUTES, SIZE_T, LPTHREAD_START_ROUTINE, __drv_aliasesMem LPVOID, DWORD, LPDWORD);
+    HANDLE OMG_WIN_STD_PREFIX (*GetCurrentThread)(void);
+    void OMG_WIN_STD_PREFIX (*ExitThread)(DWORD);
+    BOOL OMG_WIN_STD_PREFIX (*GetExitCodeThread)(HANDLE, LPDWORD);
+    BOOL OMG_WIN_STD_PREFIX (*TerminateThread)(HANDLE, DWORD);
+    int OMG_WIN_STD_PREFIX (*GetThreadPriority)(HANDLE);
+    BOOL OMG_WIN_STD_PREFIX (*SetPriorityClass)(HANDLE, DWORD);
+    BOOL OMG_WIN_STD_PREFIX (*SetThreadPriority)(HANDLE, int);
+    DWORD OMG_WIN_STD_PREFIX (*WaitForSingleObjectEx)(HANDLE, DWORD, bool);
     // TODO: SHFileOperationW
     uint64_t _tick64_emu;
 } OMG_Kernel32;

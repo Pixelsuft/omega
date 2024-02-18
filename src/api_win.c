@@ -89,6 +89,15 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(GetFileSize);
     LOAD_REQUIRED(GetEnvironmentVariableW);
     LOAD_REQUIRED(SetEnvironmentVariableW);
+    LOAD_REQUIRED(CreateThread);
+    LOAD_REQUIRED(GetCurrentThread);
+    LOAD_REQUIRED(ExitThread);
+    LOAD_REQUIRED(GetExitCodeThread);
+    LOAD_REQUIRED(TerminateThread);
+    LOAD_REQUIRED(GetThreadPriority);
+    LOAD_REQUIRED(SetPriorityClass);
+    LOAD_REQUIRED(SetThreadPriority);
+    LOAD_REQUIRED(WaitForSingleObjectEx);
     LOAD_REQUIRED_COMPAT(AttachConsole);
     LOAD_REQUIRED_COMPAT(GetTickCount64);
     LOAD_REQUIRED_COMPAT(GetFileSizeEx);
