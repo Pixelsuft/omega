@@ -742,12 +742,12 @@ bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type) {
     _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
     if (count == 0) {
         _OMG_LOG_ERROR(this, "Failed to check Win32 file ", path);
-        return NULL;
+        return false;
     }
     wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
     if (OMG_ISNULL(w_fp)) {
         _OMG_LOG_ERROR(this, "Failed to check Win32 file ", path);
-        return NULL;
+        return false;
     }
     int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, w_fp, (int)count);
     if (out_len > 0)
@@ -825,8 +825,28 @@ bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type
 
 bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path) {
 #if OMG_IS_WIN
-    OMG_UNUSED(this, old_path, new_path);
-    return true;
+    if (OMG_ISNULL(d_k32->MoveFileW))
+        return false;
+    size_t count1;
+    size_t count2;
+    _OMG_WIN_GET_ENCODE_SIZE(count1, old_path, d_k32);
+    _OMG_WIN_GET_ENCODE_SIZE(count2, new_path, d_k32);
+    if ((count1 == 0) || (count2 == 0)) {
+        return true;
+    }
+    wchar_t* w_o_fp = OMG_MALLOC(this->mem, (size_t)(count1 + count2) * 2 + 4);
+    if (OMG_ISNULL(w_o_fp))
+        return true;
+    wchar_t* w_n_fp = (wchar_t*)((size_t)w_o_fp + ((size_t)(count1) * 2) + 2);
+    int out_len_o = d_k32->MultiByteToWideChar(CP_UTF8, 0, old_path->ptr, (int)old_path->len, w_o_fp, (int)count1);
+    int out_len_n = d_k32->MultiByteToWideChar(CP_UTF8, 0, new_path->ptr, (int)new_path->len, w_n_fp, (int)count2);
+    if (out_len_o > 0)
+        w_o_fp[out_len_o] = L'\0';
+    if (out_len_n > 0)
+        w_n_fp[out_len_n] = L'\0';
+    bool res = !d_k32->MoveFileW(w_o_fp, w_n_fp);
+    OMG_FREE(this->mem, w_o_fp);
+    return res;
 #elif OMG_SUPPORT_LIBC
     if (omg_string_ensure_null((OMG_String*)old_path) || omg_string_ensure_null((OMG_String*)new_path))
         return true;
