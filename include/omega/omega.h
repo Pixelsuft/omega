@@ -107,6 +107,8 @@ typedef struct OMG_Omega {
     bool (*fs_is_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
     bool (*fs_remove_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
     bool (*fs_move)(struct OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
+    OMG_String (*env_get)(struct OMG_Omega* this, const OMG_String* key_name);
+    bool (*env_set)(struct OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
     OMG_File* (*file_from_fp)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
     void (*reset_event_handlers)(struct OMG_Omega* this);
@@ -204,6 +206,8 @@ OMG_API bool omg_libc_destroy(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
+OMG_API OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name);
+OMG_API bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
 OMG_API bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
 OMG_API bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type);
 OMG_API bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type);

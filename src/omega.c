@@ -893,6 +893,32 @@ bool omg_libc_destroy(OMG_Omega* this) {
 #endif
 }
 
+OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
+#if OMG_IS_WIN
+    OMG_UNUSED(this, key_name);
+    return *omg_dummy_string_create();
+#elif OMG_SUPPORT_LIBC
+    OMG_UNUSED(this, key_name);
+    return *omg_dummy_string_create();
+#else
+    OMG_UNUSED(this, key_name);
+    return *omg_dummy_string_create();
+#endif
+}
+
+bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite) {
+#if OMG_IS_WIN
+    OMG_UNUSED(this, key_name, key_value, overwrite);
+    return true;
+#elif OMG_SUPPORT_LIBC
+    OMG_UNUSED(this, key_name, key_value, overwrite);
+    return true;
+#else
+    OMG_UNUSED(this, key_name, key_value, overwrite);
+    return true;
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -938,6 +964,8 @@ bool omg_omg_init(OMG_Omega* this) {
     this->fs_is_file_or_dir = omg_fs_is_file_or_dir;
     this->fs_remove_file_or_dir = omg_fs_remove_file_or_dir;
     this->fs_move = omg_fs_move;
+    this->env_get = omg_env_get;
+    this->env_set = omg_env_set;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
