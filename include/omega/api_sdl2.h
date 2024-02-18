@@ -1631,6 +1631,8 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_CondWaitTimeout)(SDL_cond*, SDL_mutex*, uint32_t);
     int OMG_SDL2_STD_PREFIX (*SDL_ShowSimpleMessageBox)(uint32_t, const char*, const char*, SDL_Window*);
     SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowWMInfo)(SDL_Window*, SDL_SysWMinfo*);
+    char* OMG_SDL2_STD_PREFIX (*SDL_getenv)(const char*);
+    int OMG_SDL2_STD_PREFIX (*SDL_setenv)(const char*, const char*, int);
     SDL_version ver;
     bool is_first;
 } OMG_Sdl2;

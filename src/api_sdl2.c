@@ -314,6 +314,8 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_CondWaitTimeout);
     LOAD_REQUIRED(SDL_ShowSimpleMessageBox);
     LOAD_REQUIRED(SDL_GetWindowWMInfo);
+    LOAD_REQUIRED(SDL_getenv);
+    LOAD_REQUIRED(SDL_setenv);
     // TODO: check using SDL2 versions
     LOAD_REQUIRED_COMPAT(SDL_GetBasePath); // 2.0.1
     LOAD_REQUIRED_COMPAT(SDL_GetPrefPath); // 2.0.1
