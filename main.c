@@ -465,7 +465,9 @@ void app_init(App* this, OMG_EntryData* data) {
     ), true);
     // this->tex2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STRING_MAKE_STATIC("assets/sprite.png"));
     this->ren->tex_set_scale_mode(this->ren, this->tex2, OMG_SCALE_MODE_NEAREST);
-    this->clock->init(this->clock, true);
+    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
+    this->clock->init(this->clock, temp_env.type >= 0);
+    omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     this->audio->mus_set_volume(this->audio, this->mus, 0.1f);
