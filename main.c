@@ -468,6 +468,15 @@ void app_init(App* this, OMG_EntryData* data) {
     temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
     this->clock->init(this->clock, temp_env.type >= 0);
     omg_string_destroy(&temp_env);
+    // TODO: fix memory leak
+    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
+    omg_string_destroy(&temp_env);
+    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
+    omg_string_destroy(&temp_env);
+    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
+    omg_string_destroy(&temp_env);
+    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
+    omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     this->audio->mus_set_volume(this->audio, this->mus, 0.1f);

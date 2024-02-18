@@ -895,6 +895,7 @@ bool omg_libc_destroy(OMG_Omega* this) {
 
 OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
 #if OMG_IS_WIN
+    // TODO: Where does leak peace of microsoft's shit here???!!!
     size_t count;
     _OMG_WIN_GET_ENCODE_SIZE(count, key_name, d_k32);
     if (count == 0)
@@ -914,7 +915,7 @@ OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
             OMG_FREE(this->mem, w_fp);
         return *omg_dummy_string_create();
     }
-    DWORD read_len = d_k32->GetEnvironmentVariableW(w_fp, buf, (DWORD)(need_len + 2));
+    DWORD read_len = d_k32->GetEnvironmentVariableW(w_fp, buf, (DWORD)(need_len));
     OMG_FREE(this->mem, w_fp);
     if (read_len == 0)
         return *omg_dummy_string_create();
