@@ -940,7 +940,7 @@ OMG_String* omg_dummy_string_create(void) {
         .len = 0,
         .ptr = "\0",
         .size = 1,
-        .type = OMG_STRING_STATIC
+        .type = -1
     };
     return &dummy_str;
 }

@@ -333,13 +333,13 @@ void app_init(App* this, OMG_EntryData* data) {
     if (this->win->type == OMG_WIN_TYPE_WIN && 0)
         this->win->ren_type = OMG_REN_TYPE_WIN;
     OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_SOFTWARE_RENDERER"));
-    if (temp_env.len > 1)
-        this->ren->driver = OMG_REN_DRIVER_SOFTWARE;
+    int force_ren_driver = OMG_REN_DRIVER_AUTO;
+    if (temp_env.type >= 0)
+        force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
     omg_string_destroy(&temp_env);
     if (
         this->win->renderer_alloc(this->win) ||
-        // !(this->win->ren->driver = OMG_REN_DRIVER_SOFTWARE) ||
-        // !(this->win->ren->driver = OMG_REN_DRIVER_OPENGL) ||
+        !(this->win->ren->driver = force_ren_driver) ||
         this->win->ren->init(this->win->ren)
     ) {
         OMG_ERROR(this->omg, "OMG Renderer Init Fail");
