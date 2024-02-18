@@ -332,6 +332,10 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     if (this->win->type == OMG_WIN_TYPE_WIN && 0)
         this->win->ren_type = OMG_REN_TYPE_WIN;
+    OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_SOFTWARE_RENDERER"));
+    if (temp_env.len > 1)
+        this->ren->driver = OMG_REN_DRIVER_SOFTWARE;
+    omg_string_destroy(&temp_env);
     if (
         this->win->renderer_alloc(this->win) ||
         // !(this->win->ren->driver = OMG_REN_DRIVER_SOFTWARE) ||
@@ -362,6 +366,9 @@ void app_init(App* this, OMG_EntryData* data) {
     this->offset_cache.x = this->offset_cache.y = 0.0f;
     this->scale_cache.x = this->scale_cache.y = 1.0f;
     this->ren->soft_offset = true;
+    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("PATH"));
+    OMG_INFO(this->omg, "PATH: ", &temp_env);
+    omg_string_destroy(&temp_env);
     OMG_INFO(this->omg, "Font is file: ", this->omg->fs_is_file_or_dir(this->omg, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), 0)); // 0 - file, 1 - dir, 2 - any of
     this->ren->aa = !OMG_IS_EMSCRIPTEN; // NOTE: Someties it's pretty slow (for example, SDL2)
     // I'm lazy for doing fail checks here, but you shouldn't :)
@@ -416,9 +423,6 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/music.mp3"), OMG_FILE_MODE_RB
     );
     this->mus = this->audio->mus_from_file(this->audio, NULL, this->file, false, OMG_AUDIO_FORMAT_MP3);
-    OMG_String path_str = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("PATH"));
-    OMG_INFO(this->omg, "PATH: ", &path_str);
-    omg_string_destroy(&path_str);
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;

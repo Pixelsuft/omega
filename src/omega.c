@@ -905,13 +905,16 @@ OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
     int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, key_name->ptr, (int)key_name->len, w_fp, (int)count);
     if (out_len > 0)
         w_fp[out_len] = L'\0';
-    DWORD need_len = d_k32->GetEnvironmentVariableW(w_fp, NULL, 0);
-    wchar_t* buf;
-    if ((need_len <= 1) || OMG_ISNULL(buf = OMG_MALLOC(this->mem, need_len + 5))) {
-        OMG_FREE(this->mem, w_fp);
+    // Fuck Microsoft
+    // size_t need_len = (size_t)d_k32->GetEnvironmentVariableW(w_fp, buf123, 1);
+    size_t need_len = 1024 * 10;
+    wchar_t* buf = OMG_MALLOC(this->mem, need_len + 5);
+    if ((need_len <= 1) || OMG_ISNULL(buf)) {
+        if (OMG_ISNOTNULL(buf))
+            OMG_FREE(this->mem, w_fp);
         return *omg_dummy_string_create();
     }
-    DWORD read_len = d_k32->GetEnvironmentVariableW(w_fp, buf, need_len + 2);
+    DWORD read_len = d_k32->GetEnvironmentVariableW(w_fp, buf, (DWORD)(need_len + 2));
     OMG_FREE(this->mem, w_fp);
     if (read_len == 0)
         return *omg_dummy_string_create();
