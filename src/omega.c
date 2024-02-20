@@ -13,6 +13,7 @@
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
 #define d_k32 ((OMG_Kernel32*)this->k32)
+#define d_u32 ((OMG_User32*)this->u32)
 #define d_libc ((OMG_Libc*)this->libc)
 
 static OMG_Omega* omg_def_omega = NULL;
@@ -986,8 +987,39 @@ bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* 
 
 bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags) {
 #if OMG_IS_WIN
-    OMG_UNUSED(this, text, title, flags);
-    return true;
+    size_t count1;
+    size_t count2;
+    char* title_ptr;
+    _OMG_MSGBOX_DEF_FILL_TITLE(title, title_ptr);
+    size_t title_ptr_len = OMG_ISNULL(title) ? this->std->strlen(title_ptr) : title->len;
+    _OMG_WIN_GET_ENCODE_SIZE(count1, text, d_k32);
+    count2 = title_ptr_len * 2;
+    if (count1 == 0) {
+        return true;
+    }
+    wchar_t* w_o_fp = OMG_MALLOC(this->mem, (size_t)(count1 + count2) * 2 + 4);
+    if (OMG_ISNULL(w_o_fp))
+        return true;
+    wchar_t* w_n_fp = (wchar_t*)((size_t)w_o_fp + ((size_t)(count1) * 2) + 2);
+    int out_len_o = d_k32->MultiByteToWideChar(CP_UTF8, 0, text->ptr, (int)text->len, w_o_fp, (int)count1);
+    if (out_len_o > 0)
+        w_o_fp[out_len_o] = L'\0';
+    int out_len_n = d_k32->MultiByteToWideChar(CP_UTF8, 0, title_ptr, (int)title_ptr_len, w_n_fp, (int)count2);
+    if (out_len_n > 0)
+        w_n_fp[out_len_n] = L'\0';
+    UINT win_flags = 0;
+    if (flags & OMG_MESSAGEBOX_INFO)
+        win_flags |= MB_ICONINFORMATION;
+    if (flags & OMG_MESSAGEBOX_WARN)
+        win_flags |= MB_ICONWARNING;
+    if (flags & OMG_MESSAGEBOX_ERROR)
+        win_flags |= MB_ICONERROR;
+    bool res = false;
+    if (d_u32->MessageBoxW(NULL, w_o_fp, w_n_fp, win_flags) == 0) {
+        res = true;
+    }
+    OMG_FREE(this->mem, w_o_fp);
+    return res;
 #else
     OMG_UNUSED(this, text, title, flags);
     return true;
