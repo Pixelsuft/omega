@@ -25,6 +25,7 @@ OMG_API void omg_sdl2_poll_events(OMG_OmegaSdl2* this);
 #include <omega/window_sdl2.h>
 #include <omega/filesystem_sdl2.h>
 
+OMG_API OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size);
 OMG_API bool omg_sdl2_message_box(OMG_OmegaSdl2* this, const OMG_String* text, const OMG_String* title, int flags);
 OMG_API bool omg_sdl2_alloc_winmgr(OMG_OmegaSdl2* this);
 OMG_API bool omg_sdl2_app_init(OMG_OmegaSdl2* this);

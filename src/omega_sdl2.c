@@ -689,6 +689,20 @@ bool omg_sdl2_message_box(OMG_OmegaSdl2* this, const OMG_String* text, const OMG
     return false;
 }
 
+OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size) {
+    if (omg_string_ensure_null((OMG_String*)name))
+        return NULL;
+    SDL_Thread* result;
+    if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
+        result = this->sdl2->SDL_CreateThreadWithStackSize((SDL_ThreadFunction)func, name->ptr, stack_size, data);
+    else
+        result = this->sdl2->SDL_CreateThread((SDL_ThreadFunction)func, name->ptr, data);
+    if (OMG_ISNULL(result)) {
+        _OMG_LOG_ERROR(base, "Failed to create thread (", this->sdl2->SDL_GetError(), ")");
+    }
+    return (OMG_Thread*)result;
+}
+
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->inited = false;
     if (OMG_ISNULL(this->sdl2)) {
@@ -753,6 +767,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->env_get = omg_sdl2_env_get;
     base->env_set = omg_sdl2_env_set;
     base->message_box = omg_sdl2_message_box;
+    base->thread_create = omg_sdl2_thread_create;
     OMG_END_POINTER_CAST();
     base->inited = true;
 #if OMG_SUPPORT_LIBC

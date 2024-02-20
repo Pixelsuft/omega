@@ -1026,7 +1026,7 @@ bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* 
 #endif
 }
 
-OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, int stack_size) {
+OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size) {
 #if OMG_IS_WIN
     OMG_UNUSED(this, func, name, data, stack_size);
     return NULL;

@@ -917,6 +917,8 @@ bool omg_string_add(OMG_String* this, const OMG_String* new_str) {
 }
 
 bool omg_string_ensure_null(OMG_String* this) {
+    if (OMG_ISNULL(this))
+        return false;
     if (this->type < OMG_STRING_STATIC)
         return true;
     if (this->size > this->len && this->ptr[this->len] == '\0')
