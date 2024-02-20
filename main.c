@@ -136,6 +136,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
             );
         else if (event->code == OMG_SCANCODE_Y)
             this->win->mouse_warp(this->win, &OMG_FPOINT_MAKE(100.0f, 100.0f));
+        else if (event->code == OMG_SCANCODE_N)
+            this->omg->message_box(this->omg, &OMG_STRING_MAKE_STATIC("Hello, world!"), NULL, OMG_MESSAGEBOX_INFO);
     }
     if (!event->is_repeated) {
         if (event->code == OMG_SCANCODE_F) {

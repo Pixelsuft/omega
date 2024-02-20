@@ -49,6 +49,10 @@
 #define OMG_MBUTTON_X3MASK   OMG_MBUTTON(OMG_MBUTTON_X3)
 #define OMG_MBUTTON_X4MASK   OMG_MBUTTON(OMG_MBUTTON_X4)
 
+#define OMG_MESSAGEBOX_ERROR 0x00000010
+#define OMG_MESSAGEBOX_WARNING 0x00000020
+#define OMG_MESSAGEBOX_INFO 0x00000040
+
 #define _OMG_CHECK_DARK_MODE_INTERNAL() do { \
     if (OMG_ISNOTNULL(d_uxtheme->AllowDarkModeForApp)) \
         d_uxtheme->AllowDarkModeForApp((base->app_theme == OMG_THEME_DARK) || (base->app_theme == OMG_THEME_AUTO)); \
@@ -111,6 +115,7 @@ typedef struct OMG_Omega {
     bool (*env_set)(struct OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
     OMG_File* (*file_from_fp)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
+    bool (*message_box)(struct OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
     void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
@@ -206,6 +211,7 @@ OMG_API bool omg_libc_destroy(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
+OMG_API bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
 OMG_API OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name);
 OMG_API bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
 OMG_API bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);

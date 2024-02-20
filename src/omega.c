@@ -984,6 +984,16 @@ bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* 
 #endif
 }
 
+bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags) {
+#if OMG_IS_WIN
+    OMG_UNUSED(this, text, title, flags);
+    return true;
+#else
+    OMG_UNUSED(this, text, title, flags);
+    return true;
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -1031,6 +1041,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->fs_move = omg_fs_move;
     this->env_get = omg_env_get;
     this->env_set = omg_env_set;
+    this->message_box = omg_message_box;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
