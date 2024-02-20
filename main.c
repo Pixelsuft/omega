@@ -55,7 +55,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 }
 
 int app_thread(void* data) {
-    App* this = (App*)this;
+    App* this = (App*)data;
     while (this->thread_counter < 0)
         this->thread_counter++;
     return 0;
