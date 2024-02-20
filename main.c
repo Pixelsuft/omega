@@ -137,7 +137,7 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
         else if (event->code == OMG_SCANCODE_Y)
             this->win->mouse_warp(this->win, &OMG_FPOINT_MAKE(100.0f, 100.0f));
         else if (event->code == OMG_SCANCODE_N)
-            this->omg->message_box(this->omg, &OMG_STRING_MAKE_STATIC("Hello, world!"), NULL, OMG_MESSAGEBOX_INFO);
+            this->win->message_box(this->win, &OMG_STRING_MAKE_STATIC("Hello, world!"), NULL, OMG_MESSAGEBOX_INFO);
     }
     if (!event->is_repeated) {
         if (event->code == OMG_SCANCODE_F) {
@@ -298,8 +298,6 @@ void app_init(App* this, OMG_EntryData* data) {
 #if 0
 #elif OMG_SUPPORT_SDL2
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_SDL2);
-#elif OMG_SUPPORT_WIN
-    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_RAYLIB
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_RAYLIB);
 #endif

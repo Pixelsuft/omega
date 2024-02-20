@@ -4,6 +4,8 @@
 #define omg_base ((OMG_Omega*)this->omg)
 #define d_uxtheme ((OMG_Uxtheme*)omg_base->uxtheme)
 #define d_dwm ((OMG_Dwmapi*)omg_base->dwm)
+#define d_u32 ((OMG_User32*)omg_base->u32)
+#define d_k32 ((OMG_Kernel32*)omg_base->k32)
 
 void omg_window_fill_on_create(OMG_Window* this) {
     this->type = OMG_WIN_TYPE_NONE;
@@ -232,6 +234,47 @@ void omg_window_win_check_dark_mode(OMG_Window* this) {
 #endif
 }
 
+bool omg_window_message_box(OMG_Window* this, const OMG_String* text, const OMG_String* title, int flags) {
+#if OMG_IS_WIN
+    size_t count1;
+    size_t count2;
+    char* title_ptr;
+    _OMG_MSGBOX_DEF_FILL_TITLE(title, title_ptr);
+    size_t title_ptr_len = OMG_ISNULL(title) ? omg_base->std->strlen(title_ptr) : title->len;
+    _OMG_WIN_GET_ENCODE_SIZE(count1, text, d_k32);
+    count2 = title_ptr_len * 2;
+    if (count1 == 0) {
+        return true;
+    }
+    wchar_t* w_o_fp = OMG_MALLOC(omg_base->mem, (size_t)(count1 + count2) * 2 + 4);
+    if (OMG_ISNULL(w_o_fp))
+        return true;
+    wchar_t* w_n_fp = (wchar_t*)((size_t)w_o_fp + ((size_t)(count1) * 2) + 2);
+    int out_len_o = d_k32->MultiByteToWideChar(CP_UTF8, 0, text->ptr, (int)text->len, w_o_fp, (int)count1);
+    if (out_len_o > 0)
+        w_o_fp[out_len_o] = L'\0';
+    int out_len_n = d_k32->MultiByteToWideChar(CP_UTF8, 0, title_ptr, (int)title_ptr_len, w_n_fp, (int)count2);
+    if (out_len_n > 0)
+        w_n_fp[out_len_n] = L'\0';
+    UINT win_flags = 0;
+    if (flags & OMG_MESSAGEBOX_INFO)
+        win_flags |= MB_ICONINFORMATION;
+    if (flags & OMG_MESSAGEBOX_WARN)
+        win_flags |= MB_ICONWARNING;
+    if (flags & OMG_MESSAGEBOX_ERROR)
+        win_flags |= MB_ICONERROR;
+    bool res = false;
+    if (d_u32->MessageBoxW((HWND)this->win32_handle, w_o_fp, w_n_fp, win_flags) == 0) {
+        res = true;
+    }
+    OMG_FREE(omg_base->mem, w_o_fp);
+    return res;
+#else
+    OMG_UNUSED(this, text, title, flags);
+    return true;
+#endif
+}
+
 bool omg_window_init(OMG_Window* this) {
     if (this->sys_buttons < 0) {
         this->sys_buttons = OMG_WIN_SYS_BUTTON_CLOSE | OMG_WIN_SYS_BUTTON_MINIMIZE | (this->resizable ? OMG_WIN_SYS_BUTTON_MAXIMIZE : 0);
@@ -276,6 +319,7 @@ bool omg_window_init(OMG_Window* this) {
     this->get_brightness = omg_window_get_brightness;
     this->set_opacity = omg_window_set_opacity;
     this->get_opacity = omg_window_get_opacity;
+    this->message_box = omg_window_message_box;
     for (size_t i = 0; i < OMG_MAX_WINDOWS; i++) {
         if (OMG_ISNULL(omg_base->winmgr->cache[i])) {
             omg_base->winmgr->cache[i] = this;

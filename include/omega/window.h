@@ -56,6 +56,7 @@ typedef struct OMG_Window {
     float (*get_brightness)(struct OMG_Window* this);
     bool (*set_opacity)(struct OMG_Window* this, float opacity);
     float (*get_opacity)(struct OMG_Window* this);
+    bool (*message_box)(struct OMG_Window* this, const OMG_String* text, const OMG_String* title, int flags);
     OMG_Renderer* ren;
     void* extra1;
     void* extra2;
@@ -109,6 +110,7 @@ OMG_API float omg_window_get_brightness(OMG_Window* this);
 OMG_API void omg_window_win_check_dark_mode(OMG_Window* this);
 OMG_API int omg_window_display_get_index(OMG_Window* this);
 #if OMG_EXPORT_SHIT
+OMG_API bool omg_window_message_box(OMG_Window* this, const OMG_String* text, const OMG_String* title, int flags);
 OMG_API bool omg_window_set_state(OMG_Window* this, int state);
 OMG_API bool omg_window_set_window_mode(OMG_Window* this, int mode);
 OMG_API bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled);
