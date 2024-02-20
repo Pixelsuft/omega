@@ -9,17 +9,6 @@
 #include <omega/audio_sdl2.h>
 #include <omega/audio_fmod.h>
 #include <omega/api_win.h>
-#if OMG_IS_WIN && OMG_SUPPORT_THREADING
-#include <process.h>
-// uintptr_t _beginthreadex(void *_Security, unsigned int _StackSize, unsigned int (*_StartAddress)(void *), void *_ArgList, unsigned int _InitFlag, unsigned int *_ThrdAddr);
-// void _endthreadex(unsigned int _Retval);
-#ifndef SDL_beginthread
-#define SDL_beginthread _beginthreadex
-#endif
-#ifndef SDL_endthread
-#define SDL_endthread _endthreadex
-#endif
-#endif
 #if OMG_IS_EMSCRIPTEN
 #include <emscripten.h>
 #endif
@@ -709,12 +698,12 @@ OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func,
     if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
         result = this->sdl2->SDL_CreateThreadWithStackSize(
             (SDL_ThreadFunction)func, name->ptr, stack_size, data,
-            (pfnSDL_CurrentBeginThread)SDL_beginthread, (pfnSDL_CurrentEndThread)SDL_endthread
+            (pfnSDL_CurrentBeginThread)OMG_beginthread, (pfnSDL_CurrentEndThread)OMG_endthread
         );
     else
         result = this->sdl2->SDL_CreateThread(
             (SDL_ThreadFunction)func, name->ptr, data,
-            (pfnSDL_CurrentBeginThread)SDL_beginthread, (pfnSDL_CurrentEndThread)SDL_endthread
+            (pfnSDL_CurrentBeginThread)OMG_beginthread, (pfnSDL_CurrentEndThread)OMG_endthread
         );
 #else
     if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
