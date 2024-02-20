@@ -132,7 +132,7 @@ typedef struct OMG_Omega {
     OMG_File* (*file_from_fp)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
     bool (*message_box)(struct OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
-    OMG_Thread* (*thread_create)(struct OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size);
+    OMG_Thread* (*thread_create)(struct OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
     void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
@@ -228,7 +228,7 @@ OMG_API bool omg_libc_destroy(OMG_Omega* this);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
-OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size);
+OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
 OMG_API bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
 OMG_API OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name);
 OMG_API bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);

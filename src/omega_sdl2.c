@@ -690,22 +690,25 @@ bool omg_sdl2_message_box(OMG_OmegaSdl2* this, const OMG_String* text, const OMG
 }
 
 #if OMG_SUPPORT_THREADING
-OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size) {
+OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2) {
     if (omg_string_ensure_null((OMG_String*)name))
         return NULL;
     SDL_Thread* result;
 #if OMG_IS_WIN
+    OMG_BEGIN_POINTER_CAST();
     if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
         result = this->sdl2->SDL_CreateThreadWithStackSize(
             (SDL_ThreadFunction)func, name->ptr, stack_size, data,
-            (pfnSDL_CurrentBeginThread)OMG_beginthread, (pfnSDL_CurrentEndThread)OMG_endthread
+            (pfnSDL_CurrentBeginThread)reserved1, (pfnSDL_CurrentEndThread)reserved2
         );
     else
         result = this->sdl2->SDL_CreateThread(
             (SDL_ThreadFunction)func, name->ptr, data,
-            (pfnSDL_CurrentBeginThread)OMG_beginthread, (pfnSDL_CurrentEndThread)OMG_endthread
+            (pfnSDL_CurrentBeginThread)reserved1, (pfnSDL_CurrentEndThread)reserved2
         );
+    OMG_END_POINTER_CAST();
 #else
+    OMG_UNUSED(reserved1, reserved2);
     if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
         result = this->sdl2->SDL_CreateThreadWithStackSize((SDL_ThreadFunction)func, name->ptr, stack_size, data);
     else

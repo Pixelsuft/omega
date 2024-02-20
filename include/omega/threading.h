@@ -10,6 +10,11 @@
 #ifndef OMG_endthread
 #define OMG_endthread _endthreadex
 #endif
+#define OMG_THREAD_RESERVED1 ((void*)((size_t)OMG_beginthread))
+#define OMG_THREAD_RESERVED2 ((void*)((size_t)OMG_endthread))
+#else
+#define OMG_THREAD_RESERVED1 NULL
+#define OMG_THREAD_RESERVED2 NULL
 #endif
 
 typedef int (*OMG_ThreadFunction)(void* data);
