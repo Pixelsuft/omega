@@ -1026,6 +1026,16 @@ bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* 
 #endif
 }
 
+OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data) {
+#if OMG_IS_WIN
+    OMG_UNUSED(this, func, name, data);
+    return NULL;
+#else
+    OMG_UNUSED(this, func, name, data);
+    return NULL;
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -1074,6 +1084,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->env_get = omg_env_get;
     this->env_set = omg_env_set;
     this->message_box = omg_message_box;
+    this->thread_create = omg_thread_create;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
