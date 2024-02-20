@@ -909,9 +909,9 @@ OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
         w_fp[out_len] = L'\0';
     // Fuck Microsoft
     // size_t need_len = (size_t)d_k32->GetEnvironmentVariableW(w_fp, buf123, 1);
-    size_t need_len = 1024 * 10;
+    const size_t need_len = 1024 * 10;
     // TODO: Where does leak peace of microsoft's shit here when I alloc with OMG_MALLOC???!!!
-    wchar_t buf[need_len];
+    wchar_t buf[1024 * 10];
     if ((need_len <= 1) || OMG_ISNULL(buf)) {
         if (OMG_ISNOTNULL(buf))
             OMG_FREE(this->mem, buf);
