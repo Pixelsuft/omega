@@ -10,6 +10,7 @@
 #include <omega/input.h>
 #include <omega/filesystem.h>
 #include <omega/audio.h>
+#include <omega/threading.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
@@ -84,9 +85,6 @@
     else \
         title_ptr = title->ptr; \
 } while (0)
-
-typedef void OMG_Thread;
-typedef int (*OMG_ThreadFunction)(void* data);
 
 typedef struct OMG_Omega {
     OMG_Memory* mem;
