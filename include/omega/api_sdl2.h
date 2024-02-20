@@ -181,6 +181,9 @@ typedef enum {
 #define RW_SEEK_CUR 1
 #define RW_SEEK_END 2
 
+typedef uintptr_t (__cdecl* pfnSDL_CurrentBeginThread) (void*, unsigned, unsigned (__stdcall*)(void*), void*, unsigned, unsigned*);
+typedef void (__cdecl* pfnSDL_CurrentEndThread) (unsigned);
+
 typedef struct SDL_RWops {
     int64_t (OMG_SDL2_STD_PREFIX* size) (struct SDL_RWops*);
     int64_t (OMG_SDL2_STD_PREFIX* seek) (struct SDL_RWops*, int64_t, int);
@@ -1601,8 +1604,13 @@ typedef struct {
     SDL_TouchDeviceType OMG_SDL2_STD_PREFIX (*SDL_GetTouchDeviceType)(SDL_TouchID);
     int OMG_SDL2_STD_PREFIX (*SDL_GetNumTouchFingers)(SDL_TouchID);
     SDL_Finger* OMG_SDL2_STD_PREFIX (*SDL_GetTouchFinger)(SDL_TouchID, int);
+#if OMG_IS_WIN
+    SDL_Thread* OMG_SDL2_STD_PREFIX (*SDL_CreateThread)(SDL_ThreadFunction, const char*, void*, pfnSDL_CurrentBeginThread, pfnSDL_CurrentEndThread);
+    SDL_Thread* OMG_SDL2_STD_PREFIX (*SDL_CreateThreadWithStackSize)(SDL_ThreadFunction, const char*, const size_t, void*, pfnSDL_CurrentBeginThread, pfnSDL_CurrentEndThread);
+#else
     SDL_Thread* OMG_SDL2_STD_PREFIX (*SDL_CreateThread)(SDL_ThreadFunction, const char*, void*);
     SDL_Thread* OMG_SDL2_STD_PREFIX (*SDL_CreateThreadWithStackSize)(SDL_ThreadFunction, const char*, const size_t, void*);
+#endif
     SDL_threadID OMG_SDL2_STD_PREFIX (*SDL_ThreadID)(void);
     SDL_threadID OMG_SDL2_STD_PREFIX (*SDL_GetThreadID)(SDL_Thread*);
     int OMG_SDL2_STD_PREFIX (*SDL_SetThreadPriority)(SDL_ThreadPriority);

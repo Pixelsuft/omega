@@ -370,8 +370,6 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
-    this->thread_counter = -1337;
-    this->omg->thread_create(this->omg, app_thread, &OMG_STRING_MAKE_STATIC("xddd"), this, 0);
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
@@ -486,6 +484,8 @@ void app_init(App* this, OMG_EntryData* data) {
     this->audio->snd_set_volume(this->audio, this->sound, 0.2f);
     OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     // this->clock->set_fps_limit(this->clock, 5.0);
+    this->thread_counter = -1337;
+    this->omg->thread_create(this->omg, app_thread, &OMG_STRING_MAKE_STATIC("appthread"), this, 0);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);
     this->exit_code = 0;

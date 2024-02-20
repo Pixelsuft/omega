@@ -105,6 +105,10 @@
 #define OMG_FMOD_DYNAMIC 1
 #endif
 
+#ifndef OMG_SUPPORT_THREADING
+#define OMG_SUPPORT_THREADING 1
+#endif
+
 #ifndef OMG_USE_LIBMATH
 #define OMG_USE_LIBMATH 1
 #endif

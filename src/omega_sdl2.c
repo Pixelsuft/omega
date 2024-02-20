@@ -9,6 +9,17 @@
 #include <omega/audio_sdl2.h>
 #include <omega/audio_fmod.h>
 #include <omega/api_win.h>
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
+#include <process.h>
+// uintptr_t _beginthreadex(void *_Security, unsigned int _StackSize, unsigned int (*_StartAddress)(void *), void *_ArgList, unsigned int _InitFlag, unsigned int *_ThrdAddr);
+// void _endthreadex(unsigned int _Retval);
+#ifndef SDL_beginthread
+#define SDL_beginthread _beginthreadex
+#endif
+#ifndef SDL_endthread
+#define SDL_endthread _endthreadex
+#endif
+#endif
 #if OMG_IS_EMSCRIPTEN
 #include <emscripten.h>
 #endif
@@ -689,19 +700,34 @@ bool omg_sdl2_message_box(OMG_OmegaSdl2* this, const OMG_String* text, const OMG
     return false;
 }
 
+#if OMG_SUPPORT_THREADING
 OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size) {
     if (omg_string_ensure_null((OMG_String*)name))
         return NULL;
     SDL_Thread* result;
+#if OMG_IS_WIN
+    if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
+        result = this->sdl2->SDL_CreateThreadWithStackSize(
+            (SDL_ThreadFunction)func, name->ptr, stack_size, data,
+            (pfnSDL_CurrentBeginThread)SDL_beginthread, (pfnSDL_CurrentEndThread)SDL_endthread
+        );
+    else
+        result = this->sdl2->SDL_CreateThread(
+            (SDL_ThreadFunction)func, name->ptr, data,
+            (pfnSDL_CurrentBeginThread)SDL_beginthread, (pfnSDL_CurrentEndThread)SDL_endthread
+        );
+#else
     if ((stack_size > 0) && OMG_ISNOTNULL(this->sdl2->SDL_CreateThreadWithStackSize))
         result = this->sdl2->SDL_CreateThreadWithStackSize((SDL_ThreadFunction)func, name->ptr, stack_size, data);
     else
         result = this->sdl2->SDL_CreateThread((SDL_ThreadFunction)func, name->ptr, data);
+#endif
     if (OMG_ISNULL(result)) {
         _OMG_LOG_ERROR(base, "Failed to create thread (", this->sdl2->SDL_GetError(), ")");
     }
     return (OMG_Thread*)result;
 }
+#endif
 
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->inited = false;
@@ -767,7 +793,9 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->env_get = omg_sdl2_env_get;
     base->env_set = omg_sdl2_env_set;
     base->message_box = omg_sdl2_message_box;
+#if OMG_SUPPORT_THREADING
     base->thread_create = omg_sdl2_thread_create;
+#endif
     OMG_END_POINTER_CAST();
     base->inited = true;
 #if OMG_SUPPORT_LIBC
