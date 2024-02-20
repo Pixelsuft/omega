@@ -27,6 +27,7 @@ typedef struct {
     double rot_timer;
     omg_color_t bg_col;
     bool bg_fow;
+    int thread_counter;
     int exit_code;
 } App;
 
@@ -51,6 +52,13 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     );
     this->omg->destroy(this->omg);
     this->exit_code = 0;
+}
+
+int app_thread(void* data) {
+    App* this = (App*)this;
+    while (this->thread_counter < 0)
+        this->thread_counter++;
+    return 0;
 }
 
 void app_on_state_changing(OMG_EventStateChanging* event) {
@@ -477,6 +485,8 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     // this->clock->set_fps_limit(this->clock, 5.0);
     this->clock->reset(this->clock);
+    this->thread_counter = -1337;
+    // this->omg->thread_create(this->omg, app_thread, &OMG_STRING_MAKE_STATIC("appth"), this, 0);
     this->win->show(this->win, true);
     this->exit_code = 0;
 }
