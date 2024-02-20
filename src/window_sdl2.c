@@ -326,6 +326,18 @@ float omg_window_sdl2_get_opacity(OMG_WindowSdl2* this) {
     return res;
 }
 
+bool omg_window_sdl2_message_box(OMG_WindowSdl2* this, const OMG_String* text, const OMG_String* title, int flags) {
+    if (omg_string_ensure_null((OMG_String*)text) || (OMG_ISNOTNULL(title) && omg_string_ensure_null((OMG_String*)title)))
+        return true;
+    char* title_ptr;
+    _OMG_MSGBOX_DEF_FILL_TITLE(title, title_ptr);
+    if (this->sdl2->SDL_ShowSimpleMessageBox((uint32_t)flags, title_ptr, text->ptr, this->win) < 0) {
+        _OMG_LOG_ERROR(omg_base, "Failed to show message box for window (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     omg_window_init(base);
     base->type = OMG_WIN_TYPE_SDL2;
@@ -399,6 +411,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
     base->get_brightness = omg_window_sdl2_get_brightness;
     base->set_opacity = omg_window_sdl2_set_opacity;
     base->get_opacity = omg_window_sdl2_get_opacity;
+    base->message_box = omg_window_sdl2_message_box;
     base->destroy = omg_window_sdl2_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;
