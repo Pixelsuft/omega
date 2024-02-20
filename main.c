@@ -202,6 +202,8 @@ void app_on_update(OMG_EventUpdate* event) {
         this->omg->enable_paint = false;
         return;
     }
+    if (this->clock->dt > 1.0)
+        this->clock->dt = 1.0; // I don't think u have so slow pc
     this->omg->enable_paint = true;
     this->audio->update(this->audio);
     if (this->bg_fow) {

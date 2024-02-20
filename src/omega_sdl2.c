@@ -677,6 +677,18 @@ bool omg_sdl2_env_set(OMG_OmegaSdl2* this, const OMG_String* key_name, const OMG
     return this->sdl2->SDL_setenv(key_name->ptr, key_value->ptr, overwrite ? 1 : 0) < 0;
 }
 
+bool omg_sdl2_message_box(OMG_OmegaSdl2* this, const OMG_String* text, const OMG_String* title, int flags) {
+    if (omg_string_ensure_null((OMG_String*)text) || (OMG_ISNOTNULL(title) && omg_string_ensure_null((OMG_String*)title)))
+        return true;
+    char* title_ptr;
+    _OMG_MSGBOX_DEF_FILL_TITLE(title, title_ptr);
+    if (this->sdl2->SDL_ShowSimpleMessageBox((uint32_t)flags, title_ptr, text->ptr, NULL) < 0) {
+        _OMG_LOG_ERROR(base, "Failed to show message box (", this->sdl2->SDL_GetError(), ")");
+        return true;
+    }
+    return false;
+}
+
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->inited = false;
     if (OMG_ISNULL(this->sdl2)) {
@@ -740,6 +752,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->file_from_fp = omg_sdl2_file_from_fp;
     base->env_get = omg_sdl2_env_get;
     base->env_set = omg_sdl2_env_set;
+    base->message_box = omg_sdl2_message_box;
     OMG_END_POINTER_CAST();
     base->inited = true;
 #if OMG_SUPPORT_LIBC

@@ -50,7 +50,7 @@
 #define OMG_MBUTTON_X4MASK   OMG_MBUTTON(OMG_MBUTTON_X4)
 
 #define OMG_MESSAGEBOX_ERROR 0x00000010
-#define OMG_MESSAGEBOX_WARNING 0x00000020
+#define OMG_MESSAGEBOX_WARN 0x00000020
 #define OMG_MESSAGEBOX_INFO 0x00000040
 
 #define _OMG_CHECK_DARK_MODE_INTERNAL() do { \
@@ -68,6 +68,21 @@
     } \
     if (OMG_ISNOTNULL(d_uxtheme->ShouldSystemUseDarkMode)) \
         base->theme = d_uxtheme->ShouldSystemUseDarkMode() ? OMG_THEME_DARK : OMG_THEME_LIGHT; \
+} while (0)
+
+#define _OMG_MSGBOX_DEF_FILL_TITLE(title, title_ptr) do { \
+    if (OMG_ISNULL(title)) { \
+        if (flags & OMG_MESSAGEBOX_INFO) \
+            title_ptr = "Information!"; \
+        else if (flags & OMG_MESSAGEBOX_WARN) \
+            title_ptr = "Warning!"; \
+        else if (flags & OMG_MESSAGEBOX_ERROR) \
+            title_ptr = "Error!"; \
+        else \
+            title_ptr = "Alert!"; \
+    } \
+    else \
+        title_ptr = title->ptr; \
 } while (0)
 
 typedef struct OMG_Omega {
