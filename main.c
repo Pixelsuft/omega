@@ -486,10 +486,8 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     // this->clock->set_fps_limit(this->clock, 5.0);
     this->thread_counter = -1337;
-    OMG_Thread* test_thread = this->omg->thread_create(
-        this->omg, app_thread, &OMG_STRING_MAKE_STATIC("appthread"), this, 0,
-        OMG_THREAD_RESERVED1, OMG_THREAD_RESERVED2
-    );
+    OMG_Thread* test_thread;
+    OMG_THREAD_CREATE(test_thread, this->omg, app_thread, &OMG_STRING_MAKE_STATIC("appthread"), this, 0);
     this->omg->thread_wait(this->omg, test_thread, NULL);
     // this->omg->thread_detach(this->omg, test_thread);
     this->clock->reset(this->clock);
