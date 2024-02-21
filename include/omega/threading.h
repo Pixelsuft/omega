@@ -18,7 +18,7 @@
 
 #define OMG_THREAD_CREATE_DEF(thread, omg, func, name, data, stack_size) do { \
     thread = omg->thread_create( \
-        omg, func, name, data, stack_size, \
+        omg, (OMG_ThreadFunction)(func), name, data, stack_size, \
         OMG_THREAD_RESERVED1(omg), OMG_THREAD_RESERVED2(omg) \
     ); \
 } while (0)
