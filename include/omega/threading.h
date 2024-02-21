@@ -1,6 +1,6 @@
 #pragma once
 #include <omega/config.h>
-#if OMG_IS_WIN && OMG_SUPPORT_THREADING && OMG_HAS_STD
+#if OMG_SUPPORT_BEGIN_END_THREAD
 #include <process.h>
 // uintptr_t _beginthreadex(void *_Security, unsigned int _StackSize, unsigned int (*_StartAddress)(void *), void *_ArgList, unsigned int _InitFlag, unsigned int *_ThrdAddr);
 // void _endthreadex(unsigned int _Retval);
