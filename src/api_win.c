@@ -376,3 +376,31 @@ bool omg_winapi_uxtheme_free(OMG_Uxtheme* this) {
 #endif
 }
 #endif
+
+bool omg_winapi_msvcrt_load(OMG_Msvcrt* this) {
+#if OMG_ALLOW_C_RUNTIME
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT
+    this->handle = LOAD_SYSTEM_LIBRARY(L"msvcrt.dll");
+#endif
+    OMG_BEGIN_POINTER_CAST();
+    LOAD_REQUIRED_COMPAT(_beginthreadex);
+    LOAD_REQUIRED_COMPAT(_endthreadex);
+    OMG_END_POINTER_CAST();
+    return (OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT) && OMG_ISNULL(this->handle);
+#else
+    this->_beginthreadex = NULL;
+    this->_endthreadex = NULL;
+    return false;
+#endif
+}
+
+bool omg_winapi_msvcrt_free(OMG_Msvcrt* this) {
+#if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT && OMG_ALLOW_C_RUNTIME
+    if (OMG_ISNULL(this->handle))
+        return true;
+    return (bool)FreeLibrary(this->handle);
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}

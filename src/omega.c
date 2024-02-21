@@ -598,6 +598,11 @@ bool omg_audio_free(OMG_Omega* this) {
 bool omg_win_destroy_clean1(OMG_Omega* this) {
 #if OMG_IS_WIN
     bool result = false;
+    if (this->should_free_msvcrt && OMG_ISNOTNULL(this->msvcrt)) {
+        result = omg_winapi_msvcrt_free(this->msvcrt) || result;
+        result = OMG_FREE(this->mem, this->msvcrt) || result;
+        this->msvcrt = NULL;
+    }
     if (this->should_free_g32 && OMG_ISNOTNULL(this->g32)) {
         result = omg_winapi_gdi32_free(this->g32) || result;
         result = OMG_FREE(this->mem, this->g32) || result;
@@ -727,6 +732,17 @@ bool omg_win_loads_libs3(OMG_Omega* this) {
             return true;
         }
         this->should_free_g32 = true;
+    }
+    if (OMG_ISNULL(this->msvcrt)) {
+        this->msvcrt = OMG_MALLOC(this->mem, sizeof(OMG_Msvcrt));
+        if (OMG_ISNULL(this->msvcrt)) {
+            return true;
+        }
+        if (omg_winapi_msvcrt_load(this->msvcrt)) {
+            OMG_FREE(this->mem, this->msvcrt);
+            return true;
+        }
+        this->should_free_msvcrt = true;
     }
     return false;
 #else
@@ -1079,7 +1095,7 @@ bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread) {
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
-    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = false;
+    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = this->should_free_msvcrt = false;
 #endif
 #if OMG_SUPPORT_LIBC
     this->should_free_libc = false;

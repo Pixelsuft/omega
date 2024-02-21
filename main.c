@@ -58,7 +58,7 @@ int app_thread(void* data) {
     App* this = (App*)data;
     while (this->thread_counter < 0)
         this->thread_counter++;
-    // OMG_INFO(this->omg, "App thread end");
+    OMG_INFO(this->omg, "Hello from test thread!");
     return 0;
 }
 
