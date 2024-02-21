@@ -133,6 +133,10 @@ typedef struct OMG_Omega {
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
     bool (*message_box)(struct OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
     OMG_Thread* (*thread_create)(struct OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
+    uint32_t (*thread_get_id)(struct OMG_Omega* this, OMG_Thread* thread);
+    bool (*thread_set_priority)(struct OMG_Omega* this, OMG_Thread* thread, int priority);
+    bool (*thread_wait)(struct OMG_Omega* this, OMG_Thread* thread, int* status);
+    bool (*thread_detach)(struct OMG_Omega* this, OMG_Thread* thread);
     void (*reset_event_handlers)(struct OMG_Omega* this);
     void (*on_quit)(OMG_EventQuit* event);
     void (*on_update)(OMG_EventUpdate* event);
@@ -229,6 +233,10 @@ OMG_API bool omg_libc_destroy(OMG_Omega* this);
 #include <omega/filesystem.h>
 
 OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
+OMG_API uint32_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread);
+OMG_API bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority);
+OMG_API bool omg_thread_wait(OMG_Omega* this, OMG_Thread* thread, int* status);
+OMG_API bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread);
 OMG_API bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
 OMG_API OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name);
 OMG_API bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);

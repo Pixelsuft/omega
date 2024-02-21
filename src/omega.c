@@ -1036,6 +1036,46 @@ OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OM
 #endif
 }
 
+uint32_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread) {
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
+    OMG_UNUSED(this, thread);
+    return 0;
+#else
+    OMG_UNUSED(this, thread);
+    return 0;
+#endif
+}
+
+bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority) {
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
+    OMG_UNUSED(this, thread, priority);
+    return true;
+#else
+    OMG_UNUSED(this, thread, priority);
+    return true;
+#endif
+}
+
+bool omg_thread_wait(OMG_Omega* this, OMG_Thread* thread, int* status) {
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
+    OMG_UNUSED(this, thread, status);
+    return true;
+#else
+    OMG_UNUSED(this, thread, status);
+    return true;
+#endif
+}
+
+bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread) {
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
+    OMG_UNUSED(this, thread);
+    return true;
+#else
+    OMG_UNUSED(this, thread);
+    return true;
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -1085,6 +1125,10 @@ bool omg_omg_init(OMG_Omega* this) {
     this->env_set = omg_env_set;
     this->message_box = omg_message_box;
     this->thread_create = omg_thread_create;
+    this->thread_get_id = omg_thread_get_id;
+    this->thread_set_priority = omg_thread_set_priority;
+    this->thread_detach = omg_thread_detach;
+    this->thread_wait = omg_thread_wait;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
