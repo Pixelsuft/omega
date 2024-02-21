@@ -31,7 +31,7 @@
 
 #define OMG_THREAD_CREATE(thread, omg, func, name, data, stack_size) OMG_THREAD_CREATE_DEF(thread, omg, func, name, data, stack_size)
 
-typedef int (*OMG_ThreadFunction)(void* data);
+typedef int (__stdcall *OMG_ThreadFunction)(void* data);
 
 typedef struct {
     int dummy;
