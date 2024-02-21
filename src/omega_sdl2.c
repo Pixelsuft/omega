@@ -719,6 +719,35 @@ OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func,
     }
     return (OMG_Thread*)result;
 }
+
+uint32_t omg_sdl2_thread_get_id(OMG_OmegaSdl2* this, OMG_Thread* thread) {
+    if (OMG_ISNULL(thread))
+        return (uint32_t)this->sdl2->SDL_ThreadID();
+    return (uint32_t)this->sdl2->SDL_GetThreadID((SDL_Thread*)thread);
+}
+
+bool omg_sdl2_thread_set_priority(OMG_OmegaSdl2* this, OMG_Thread* thread, int priority) {
+    if (OMG_ISNULL(thread) || (omg_sdl2_thread_get_id(this, thread) == omg_sdl2_thread_get_id(this, NULL))) {
+        if (this->sdl2->SDL_SetThreadPriority((SDL_ThreadPriority)priority) < 0) {
+            // _OMG_LOG_ERROR(base, "Failed to set thread priority (", this->sdl2->SDL_GetError(), ")");
+            return true;
+        }
+        return false;
+    }
+    return true;
+}
+
+bool omg_sdl2_thread_wait(OMG_OmegaSdl2* this, OMG_Thread* thread, int* status) {
+    this->sdl2->SDL_WaitThread((SDL_Thread*)thread, status);
+    return false;
+}
+
+bool omg_sdl2_thread_detach(OMG_OmegaSdl2* this, OMG_Thread* thread) {
+    if (OMG_ISNULL(this->sdl2->SDL_DetachThread))
+        return true;
+    this->sdl2->SDL_DetachThread((SDL_Thread*)thread);
+    return false;
+}
 #endif
 
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
@@ -787,6 +816,10 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->message_box = omg_sdl2_message_box;
 #if OMG_SUPPORT_THREADING
     base->thread_create = omg_sdl2_thread_create;
+    base->thread_get_id = omg_sdl2_thread_get_id;
+    base->thread_set_priority = omg_sdl2_thread_set_priority;
+    base->thread_detach = omg_sdl2_thread_detach;
+    base->thread_wait = omg_sdl2_thread_wait;
 #endif
     OMG_END_POINTER_CAST();
     base->inited = true;
