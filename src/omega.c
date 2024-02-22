@@ -1042,9 +1042,16 @@ bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* 
 #endif
 }
 
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
+typedef struct {
+    HANDLE handle;
+} OMG_ThreadWin;
+#endif
+
 OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2) {
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
     OMG_UNUSED(this, func, name, data, stack_size, reserved1, reserved2);
+    const DWORD flags = (stack_size > 0) ? STACK_SIZE_PARAM_IS_A_RESERVATION : 0;
     return NULL;
 #else
     OMG_UNUSED(this, func, name, data, stack_size, reserved1, reserved2);

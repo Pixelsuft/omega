@@ -67,6 +67,19 @@
 #define OMG_C_EXPORT
 #endif
 
+#if defined(__clang__)
+#define OMG_HAVE_FORCE_ALIGN_ARG_POINTER 1
+#elif defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 2))
+#define OMG_HAVE_FORCE_ALIGN_ARG_POINTER 1
+#else
+#define OMG_HAVE_FORCE_ALIGN_ARG_POINTER 0
+#endif
+#if defined(__GNUC__) && defined(__i386__) && OMG_HAVE_FORCE_ALIGN_ARG_POINTER
+#define OMG_MINGW32_FORCEALIGN __attribute__((force_align_arg_pointer))
+#else
+#define OMG_MINGW32_FORCEALIGN
+#endif
+
 #ifndef OMG_SKIP_STD_DETECTION
 #define OMG_HAVE_WCSLEN 0
 #define OMG_HAVE__STRREV 0
