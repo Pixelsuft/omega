@@ -15,6 +15,7 @@
 #define d_k32 ((OMG_Kernel32*)this->k32)
 #define d_u32 ((OMG_User32*)this->u32)
 #define d_libc ((OMG_Libc*)this->libc)
+#define d_msvcrt ((OMG_Msvcrt*)this->msvcrt)
 
 static OMG_Omega* omg_def_omega = NULL;
 
@@ -1046,13 +1047,49 @@ bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* 
 typedef struct {
     HANDLE handle;
 } OMG_ThreadWin;
+
+typedef struct {
+    OMG_Omega* omg;
+    OMG_ThreadFunction func;
+    void* user_data;
+} OMG_ThreadWinEntry;
+
+static DWORD WINAPI OMG_MINGW32_FORCEALIGN omg_thread_run_with_create_thread(LPVOID data) {
+    OMG_ThreadWinEntry* entry = (OMG_ThreadWinEntry*)data;
+    entry->func(entry->user_data);
+    return 0;
+}
+
+static unsigned __stdcall OMG_MINGW32_FORCEALIGN omg_thread_run_with_begin_thread_ex(void* data) {
+    OMG_ThreadWinEntry* entry = (OMG_ThreadWinEntry*)data;
+    entry->func(entry->user_data);
+    OMG_Omega* this = entry->omg;
+    d_msvcrt->_endthreadex(0);
+    return 0;
+}
 #endif
 
 OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2) {
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
     OMG_UNUSED(this, func, name, data, stack_size, reserved1, reserved2);
     const DWORD flags = (stack_size > 0) ? STACK_SIZE_PARAM_IS_A_RESERVATION : 0;
-    return NULL;
+    HANDLE handle = NULL;
+    OMG_ThreadWinEntry entry;
+    entry.omg = this;
+    entry.func = func;
+    entry.user_data = data;
+    if (OMG_ISNULL(d_msvcrt)) {
+        DWORD threadid = 0;
+        handle = d_k32->CreateThread(NULL, stack_size, omg_thread_run_with_create_thread, &entry, flags, &threadid);
+    } else {
+        unsigned threadid = 0;
+        handle = (HANDLE)((size_t)d_msvcrt->_beginthreadex(NULL, (unsigned int)stack_size, omg_thread_run_with_begin_thread_ex, &entry, flags, &threadid));
+    }
+    if (OMG_ISNULL(handle)) {
+        // _OMG_LOG_ERROR(this, "Failed to create Win32 thread");
+        return NULL;
+    }
+    return (OMG_Thread*)handle;
 #else
     OMG_UNUSED(this, func, name, data, stack_size, reserved1, reserved2);
     return NULL;
