@@ -98,6 +98,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(SetPriorityClass);
     LOAD_REQUIRED(SetThreadPriority);
     LOAD_REQUIRED(WaitForSingleObjectEx);
+    LOAD_REQUIRED(GetCurrentThreadId);
     LOAD_REQUIRED_COMPAT(AttachConsole);
     LOAD_REQUIRED_COMPAT(GetTickCount64);
     LOAD_REQUIRED_COMPAT(GetFileSizeEx);
@@ -397,7 +398,7 @@ bool omg_winapi_msvcrt_load(OMG_Msvcrt* this) {
 bool omg_winapi_msvcrt_free(OMG_Msvcrt* this) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_COMPAT && OMG_ALLOW_C_RUNTIME
     if (OMG_ISNULL(this->handle))
-        return true;
+        return false;
     return (bool)FreeLibrary(this->handle);
 #else
     OMG_UNUSED(this);

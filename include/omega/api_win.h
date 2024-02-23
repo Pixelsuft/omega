@@ -512,6 +512,27 @@
 #ifndef MB_ICONERROR
 #define MB_ICONERROR 0x00000010
 #endif
+#ifndef THREAD_PRIORITY_NORMAL
+#define THREAD_PRIORITY_NORMAL 0
+#endif
+#ifndef THREAD_PRIORITY_LOWEST
+#define THREAD_PRIORITY_LOWEST (-2)
+#endif
+#ifndef THREAD_PRIORITY_HIGHEST
+#define THREAD_PRIORITY_HIGHEST 2
+#endif
+#ifndef THREAD_PRIORITY_TIME_CRITICAL
+#define THREAD_PRIORITY_TIME_CRITICAL 15
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+#ifndef TRUE
+#define TRUE 1
+#endif
+#ifndef INFINITE
+#define INFINITE 0xffffffff
+#endif
 #ifndef WM_NCCREATE
 #define WM_NCCREATE 0x0081
 #endif
@@ -974,6 +995,7 @@ typedef struct {
     BOOL OMG_WIN_STD_PREFIX (*SetPriorityClass)(HANDLE, DWORD);
     BOOL OMG_WIN_STD_PREFIX (*SetThreadPriority)(HANDLE, int);
     DWORD OMG_WIN_STD_PREFIX (*WaitForSingleObjectEx)(HANDLE, DWORD, bool);
+    DWORD OMG_WIN_STD_PREFIX (*GetCurrentThreadId)(void);
     // TODO: SHFileOperationW
     uint64_t _tick64_emu;
 } OMG_Kernel32;
