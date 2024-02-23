@@ -23,39 +23,61 @@
 #define OMG_WIN_STATE_CLOSED (1 << 4)
 
 typedef struct OMG_Window {
+    /* Init window */
     bool (*default_init)(struct OMG_Window* this);
+    /* Destroy window */
     bool (*destroy)(struct OMG_Window* this);
+    /* Set window shown */
     bool (*show)(struct OMG_Window* this, bool show);
     bool (*set_title)(struct OMG_Window* this, const OMG_String* new_title);
     bool (*set_size)(struct OMG_Window* this, const OMG_FPoint* new_size);
     bool (*set_min_size)(struct OMG_Window* this, const OMG_FPoint* new_min_size);
     bool (*set_max_size)(struct OMG_Window* this, const OMG_FPoint* new_max_size);
+    /* Alloc renderer for window */
     bool (*renderer_alloc)(struct OMG_Window* this);
+    /* Free allocated renderer */
     bool (*renderer_free)(struct OMG_Window* this);
+    /* Minimize, maximize or restore window */
     bool (*set_state)(struct OMG_Window* this, int state);
+    /* Set the first Z-order */
     bool (*raise)(struct OMG_Window* this);
+    /* Go fullscreen or windowed */
     bool (*set_window_mode)(struct OMG_Window* this, int mode);
     bool (*set_sys_button)(struct OMG_Window* this, int id, bool enabled);
     bool (*set_resizable)(struct OMG_Window* this, bool enabled);
+    /* Set window border enabled */
     bool (*set_bordered)(struct OMG_Window* this, bool enabled);
-    bool (*set_thick)(struct OMG_Window* this, bool enabled);
     bool (*set_always_on_top)(struct OMG_Window* this, bool enabled);
     bool (*set_icon)(struct OMG_Window* this, OMG_Surface* icon);
+    /* Set mouse pos */
     bool (*mouse_warp)(struct OMG_Window* this, const OMG_FPoint* pos);
+    /* Set mouse relative mode. 0 - off, 1 - on, 2 - toggle */
     bool (*mouse_set_rel)(struct OMG_Window* this, int rel_mode);
+    /* Set cursor shown. 0 - off, 1 - on, 2 - toggle */
     bool (*cursor_set_shown)(struct OMG_Window* this, int show_mode);
+    /* Set cursor from system cursors */
     bool (*mouse_set_system_cursor)(struct OMG_Window* this, int cursor_id);
+    /* Set cursor rect */
     bool (*mouse_set_rect)(struct OMG_Window* this, const OMG_FRect* rect);
+    /* Set grabbed. 0 - off, 1 - on, 2 - toggle */
     bool (*set_grab)(struct OMG_Window* this, int grab_mode);
+    /* Get cursor pos */
     bool (*get_pos)(struct OMG_Window* this, OMG_FRect* pos);
+    /* Set cursor pos */
     bool (*set_pos)(struct OMG_Window* this, const OMG_FRect* pos);
+    /* Get window display mode */
     bool (*display_get_mode)(struct OMG_Window* this, OMG_VideoMode* mode);
+    /* Set window display mode */
     bool (*display_set_mode)(struct OMG_Window* this, const OMG_VideoMode* mode);
+    /* Get window display index */
     int (*display_get_index)(struct OMG_Window* this);
     bool (*set_brightness)(struct OMG_Window* this, float brightness);
     float (*get_brightness)(struct OMG_Window* this);
+    /* Set alpha blend value */
     bool (*set_opacity)(struct OMG_Window* this, float opacity);
+    /* Get alpha blend value */
     float (*get_opacity)(struct OMG_Window* this);
+    /* Show simple message box for window */
     bool (*message_box)(struct OMG_Window* this, const OMG_String* text, const OMG_String* title, int flags);
     OMG_Renderer* ren;
     void* extra1;
@@ -116,7 +138,6 @@ OMG_API bool omg_window_set_window_mode(OMG_Window* this, int mode);
 OMG_API bool omg_window_set_sys_button(OMG_Window* this, int id, bool enabled);
 OMG_API bool omg_window_set_resizable(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_bordered(OMG_Window* this, bool enabled);
-OMG_API bool omg_window_set_thick(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_always_on_top(OMG_Window* this, bool enabled);
 OMG_API bool omg_window_set_title(OMG_Window* this, const OMG_String* new_title);
 OMG_API bool omg_window_set_icon(OMG_Window* this, OMG_Surface* icon);

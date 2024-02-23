@@ -37,14 +37,23 @@
 
 typedef struct OMG_Renderer {
     void (*_on_update_window_size)(struct OMG_Renderer* this);
+    /* Init renderer */
     bool (*init)(struct OMG_Renderer* this);
+    /* Close renderer */
     bool (*destroy)(struct OMG_Renderer* this);
+    /* Get supported backends */
     int (*get_supported_drivers)(struct OMG_Renderer* this);
+    /* Clear background of the current target */
     bool (*clear)(struct OMG_Renderer* this, const OMG_Color* col);
+    /* Begin renderering frame */
     bool (*begin)(struct OMG_Renderer* this);
+    /* End renderering frame */
     bool (*flip)(struct OMG_Renderer* this);
+    /* Set vsync enabled */
     bool (*set_vsync)(struct OMG_Renderer* this, bool enabled);
+    /* Set scale */
     bool (*set_scale)(struct OMG_Renderer* this, const OMG_FPoint* offset, const OMG_FPoint* scale);
+    /* Set target (NULL means main target) */
     bool (*set_target)(struct OMG_Renderer* this, OMG_Texture* tex);
     bool (*draw_point)(struct OMG_Renderer* this, const OMG_FPoint* pos, const OMG_Color* col);
     bool (*draw_line)(struct OMG_Renderer* this, const OMG_FRect* start_end, const OMG_Color* col);
@@ -57,17 +66,29 @@ typedef struct OMG_Renderer {
     bool (*fill_circle)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rad, const OMG_Color* col);
     bool (*draw_ellipse)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
     bool (*fill_ellipse)(struct OMG_Renderer* this, const OMG_FPoint* pos, float rx, float ry, const OMG_Color* col);
+    /* Create texture from surface (textures are stored in GPU) */
     OMG_Texture* (*tex_from_surf)(struct OMG_Renderer* this, OMG_Texture* tex, OMG_Surface* surf, bool destroy_surf);
+    /* Create texture (textures are stored in GPU) */
     OMG_Texture* (*tex_create)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* size, int access, bool has_alpha);
+    /* Close texture */
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
+    /* Blit texture to target */
     bool (*copy)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
+    /* Blit texture to target */
     bool (*copy_ex)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
+    /* Set texture scale mode */
     bool (*tex_set_scale_mode)(struct OMG_Renderer* this, OMG_Texture* tex, int scale_mode);
+    /* Set texture blend mode */
     bool (*tex_set_blend_mode)(struct OMG_Renderer* this, OMG_Texture* tex, int blend_mode);
+    /* Set texture color mul */
     bool (*tex_set_color_mod)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_Color* col);
+    /* Set renderer blend mode */
     bool (*set_blend_mode)(struct OMG_Renderer* this, int blend_mode);
+    /* Set renderer draw rect */
     bool (*set_clip_rect)(struct OMG_Renderer* this, const OMG_FRect* clip_rect);
+    /* Render ttf as a texture */
     OMG_Texture* (*font_render)(struct OMG_Renderer* this, OMG_Texture* tex, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect);
+    /* Render ttf into a target */
     bool (*font_render_to)(struct OMG_Renderer* this, const OMG_FPoint* pos, OMG_Font* font, const OMG_String* text, const OMG_Color* bg, const OMG_Color* fg, const OMG_FRect* rect);
     void* omg;
     void* win;

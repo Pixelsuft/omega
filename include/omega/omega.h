@@ -110,57 +110,107 @@ typedef struct OMG_Omega {
     void* extra5;
     void* event_arg;
     size_t sz_file;
+    /* Main init */
     bool (*omg_init)(struct OMG_Omega* this);
+    /* Second init */
     bool (*app_init)(struct OMG_Omega* this);
+    /* Second init cleanup */
     bool (*app_quit)(struct OMG_Omega* this);
+    /* Main init cleanup */
     bool (*destroy)(struct OMG_Omega* this);
+    /* Free window manager */
     bool (*winmgr_free)(struct OMG_Omega* this);
+    /* Allocate window manager */
     bool (*winmgr_alloc)(struct OMG_Omega* this);
+    /* Sleep seconds */
     void (*delay)(struct OMG_Omega* this, double seconds);
+    /* Set log level */
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
+    /* Log string */
     bool (*log_str_type)(struct OMG_Omega* this, const OMG_String* data, int type);
+    /* Run simple main loop */
     void (*auto_loop_run)(struct OMG_Omega* this);
+    /* Stop simple main loop */
     void (*auto_loop_stop)(struct OMG_Omega* this);
+    /* Set/query text input enabled. OMG_TEXT_INPUT_ENABLED - enable, OMG_TEXT_INPUT_DISABLED - disable, other - query */
     int (*set_text_input_state)(struct OMG_Omega* this, int state);
+    /* Allocate audio manager */
     bool (*audio_alloc)(struct OMG_Omega* this);
+    /* Free audio manager */
     bool (*audio_free)(struct OMG_Omega* this);
+    /* Is file/dir. type 0 - file, 1 - dir, 2 - any of */
     bool (*fs_is_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
+    /* Remove file/dir. type 0 - file, 1 - dir, 2 - recursive dir (unsupported) */
     bool (*fs_remove_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
+    /* Rename/move dir/file */
     bool (*fs_move)(struct OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
     bool (*fs_create_dir)(struct OMG_Omega* this, const OMG_String* path);
+    /* Get environment variable */
     OMG_String (*env_get)(struct OMG_Omega* this, const OMG_String* key_name);
+    /* Set environment variable */
     bool (*env_set)(struct OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
+    /* Create file object by file path */
     OMG_File* (*file_from_fp)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
+    /* Create file object by data from memory */
     OMG_File* (*file_from_mem)(struct OMG_Omega* this, OMG_File* file, const void* mem, size_t size, bool read_only);
+    /* Show simple message box */
     bool (*message_box)(struct OMG_Omega* this, const OMG_String* text, const OMG_String* title, int flags);
+    /* Create thread. Use OMG_THREAD_CREATE macro please */
     OMG_Thread* (*thread_create)(struct OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
+    /* Get thread id. NULL thread means current */
     uint32_t (*thread_get_id)(struct OMG_Omega* this, OMG_Thread* thread);
     bool (*thread_set_priority)(struct OMG_Omega* this, OMG_Thread* thread, int priority);
+    /* Wait until thread finishes. Status pointer may be NULL */
     bool (*thread_wait)(struct OMG_Omega* this, OMG_Thread* thread, int* status);
+    /* Cleanup thread before or after it's finished, if you don't need to use omg thread functions */
     bool (*thread_detach)(struct OMG_Omega* this, OMG_Thread* thread);
+    /* Set default event handlers */
     void (*reset_event_handlers)(struct OMG_Omega* this);
+    /* Quit event */
     void (*on_quit)(OMG_EventQuit* event);
+    /* Update event */
     void (*on_update)(OMG_EventUpdate* event);
+    /* Loop stop event */
     void (*on_loop_stop)(OMG_EventLoopStop* event);
+    /* Paint event */
     void (*on_paint)(OMG_EventPaint* event);
+    /* Expose event (you can do redraw here) */
     void (*on_expose)(OMG_EventExpose* event);
+    /* Close event */
     void (*on_close)(OMG_EventClose* event);
+    /* Resize event */
     void (*on_resize)(OMG_EventResize* event);
+    /* Size change event (including resizing from code) */
     void (*on_size_change)(OMG_EventResize* event);
+    /* State change event */
     void (*on_state_change)(OMG_EventStateChange* event);
+    /* State changing event */
     void (*on_state_changing)(OMG_EventStateChanging* event);
+    /* Focus change event */
     void (*on_focus_change)(OMG_EventFocusChange* event);
+    /* Mouse move event */
     void (*on_mouse_move)(OMG_EventMouseMove* event);
+    /* Mouse button down event */
     void (*on_mouse_down)(OMG_EventMouseButton* event);
+    /* Mouse button up event */
     void (*on_mouse_up)(OMG_EventMouseButton* event);
+    /* Mouse wheel event */
     void (*on_mouse_wheel)(OMG_EventMouseWheel* event);
+    /* Mouse enter event */
     void (*on_mouse_enter)(OMG_EventMouseFocus* event);
+    /* Mouse leave event */
     void (*on_mouse_leave)(OMG_EventMouseFocus* event);
+    /* Key down event */
     void (*on_key_down)(OMG_EventKeyboard* event);
+    /* Key up event */
     void (*on_key_up)(OMG_EventKeyboard* event);
+    /* Text input event */
     void (*on_text_input)(OMG_EventTextInput* event);
+    /* Touch down event */
     void (*on_touch_down)(OMG_EventTouch* event);
+    /* Touch up event */
     void (*on_touch_up)(OMG_EventTouch* event);
+    /* Touch move event */
     void (*on_touch_move)(OMG_EventTouch* event);
 #if OMG_IS_WIN
     uint64_t k32_stk[64];

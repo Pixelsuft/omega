@@ -21,8 +21,7 @@
 #define OMGK_SCANCODE_MASK (1 << 30)
 #define OMG_SCANCODE_TO_KEYCODE(X)  (X | OMGK_SCANCODE_MASK)
 
-typedef enum
-{
+typedef enum {
     OMG_SCANCODE_UNKNOWN = 0,
     OMG_SCANCODE_A = 4,
     OMG_SCANCODE_B = 5,

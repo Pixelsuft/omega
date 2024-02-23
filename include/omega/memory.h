@@ -27,10 +27,15 @@ typedef size_t OMG_MemoryExtra;
 typedef struct OMG_Memory {
     size_t alloc_count;
     size_t alloc_size;
+    /* Destroy memory mgr object */
     bool (*destroy)(struct OMG_Memory* this);
+    /* Allocate memory (allocated memory must be freed!). Please use OMG_MALLOC macro */
     void* (*alloc)(struct OMG_Memory* this, OMG_MemoryExtra extra);
+    /* Re-allocate memory */
     void* (*realloc)(struct OMG_Memory* this, void* ptr, size_t size);
+    /* Free memory */
     bool (*free)(struct OMG_Memory* this, void* ptr);
+    /* Get allocations count (if supported) */
     size_t (*get_alloc_count)(struct OMG_Memory* this);
     bool is_allocated;
 } OMG_Memory;

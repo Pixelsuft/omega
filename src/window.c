@@ -88,11 +88,6 @@ bool omg_window_set_bordered(OMG_Window* this, bool enabled) {
     return false;
 }
 
-bool omg_window_set_thick(OMG_Window* this, bool enabled) {
-    this->thick = enabled;
-    return false;
-}
-
 bool omg_window_set_always_on_top(OMG_Window* this, bool enabled) {
     this->always_on_top = enabled;
     return false;
@@ -297,7 +292,6 @@ bool omg_window_init(OMG_Window* this) {
     this->set_sys_button = omg_window_set_sys_button;
     this->set_resizable = omg_window_set_resizable;
     this->set_bordered = omg_window_set_bordered;
-    this->set_thick = omg_window_set_thick;
     this->set_always_on_top = omg_window_set_always_on_top;
     this->show = omg_window_show;
     this->set_title = omg_window_set_title;

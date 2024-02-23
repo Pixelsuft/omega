@@ -37,13 +37,21 @@ typedef struct {
 typedef struct OMG_Audio {
     void* omg;
     void* extra1;
+    /* Init audio system */
     bool (*init)(struct OMG_Audio* this);
+    /* Destroy audio system */
     bool (*destroy)(struct OMG_Audio* this);
+    /* Update audio system */
     bool (*update)(struct OMG_Audio* this);
+    /* Music from file path */
     OMG_Music* (*mus_from_fp)(struct OMG_Audio* this, OMG_Music* mus, const OMG_String* path, int format);
+    /* Music from memory */
     OMG_Music* (*mus_from_mem)(struct OMG_Audio* this, OMG_Music* mus, const void* data, size_t size, int format);
+    /* Music from file object */
     OMG_Music* (*mus_from_file)(struct OMG_Audio* this, OMG_Music* mus, const OMG_File*, bool destroy_file, int format);
+    /* Close music */
     bool (*mus_destroy)(struct OMG_Audio* this, OMG_Music* mus);
+    /* Play music. Set loops to -1 for infinite playing */
     bool (*mus_play)(struct OMG_Audio* this, OMG_Music* mus, int loops, double pos, double fade_in);
     bool (*mus_stop)(struct OMG_Audio* this, OMG_Music* mus);
     bool (*mus_set_volume)(struct OMG_Audio* this, OMG_Music* mus, float volume);
@@ -52,9 +60,13 @@ typedef struct OMG_Audio {
     bool (*mus_set_speed)(struct OMG_Audio* this, OMG_Music* mus, float speed);
     bool (*mus_pause)(struct OMG_Audio* this, OMG_Music* mus, bool paused);
     bool (*mus_set_panning)(struct OMG_Audio* this, OMG_Music* mus, float left, float right);
+    /* Sound from file path */
     OMG_Sound* (*snd_from_fp)(struct OMG_Audio* this, OMG_Sound* snd, const OMG_String* path, int format);
+    /* Sound from memory */
     OMG_Sound* (*snd_from_mem)(struct OMG_Audio* this, OMG_Sound* snd, const void* data, size_t size, int format);
+    /* Sound from file object */
     OMG_Sound* (*snd_from_file)(struct OMG_Audio* this, OMG_Sound* snd, const OMG_File* file, bool destroy_file, int format);
+    /* Close sound */
     bool (*snd_destroy)(struct OMG_Audio* this, OMG_Sound* snd);
     bool (*snd_play)(struct OMG_Audio* this, OMG_Sound* snd, int loops, double pos, double fade_in);
     bool (*snd_stop)(struct OMG_Audio* this, OMG_Sound* snd);

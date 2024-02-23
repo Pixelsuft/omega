@@ -5,9 +5,13 @@ typedef struct OMG_Clock {
     uint64_t last_tick;
     uint64_t last_tick2;
     void* omg;
+    /* Init clock. high_perf means precision higer than 1ms */
     bool (*init)(struct OMG_Clock* this, bool high_perf);
+    /* Destroy clock */
     bool (*destroy)(struct OMG_Clock* this);
+    /* Reset clock timer */
     bool (*reset)(struct OMG_Clock* this);
+    /* Update clock */
     bool (*update)(struct OMG_Clock* this);
     bool (*set_fps_limit)(struct OMG_Clock* this, double fps_limit);
     int (*get_fps)(struct OMG_Clock* this);
