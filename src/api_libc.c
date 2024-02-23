@@ -30,6 +30,14 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(remove);
     LOAD_REQUIRED(rmdir);
     LOAD_REQUIRED(rename);
+    LOAD_REQUIRED(pthread_attr_init);
+    LOAD_REQUIRED(pthread_attr_setdetachstate);
+    LOAD_REQUIRED(pthread_attr_setstacksize);
+    LOAD_REQUIRED(pthread_create);
+    LOAD_REQUIRED(pthread_setcanceltype);
+    LOAD_REQUIRED(pthread_self);
+    LOAD_REQUIRED(pthread_getschedparam);
+    LOAD_REQUIRED(pthread_setschedparam);
     OMG_END_POINTER_CAST();
     this->loaded = true;
     return false;

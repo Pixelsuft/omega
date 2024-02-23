@@ -9,6 +9,7 @@ typedef void FILE;
 #define OMG_LIBC_STD_PREFIX
 #include <stdio.h>
 #include <sys/stat.h>
+#include <pthread.h>
 #if OMG_IS_UNIX
 #include <unistd.h>
 #endif
@@ -16,6 +17,12 @@ typedef void FILE;
 
 #ifndef S_ISDIR
 #define S_ISDIR(mode) ((((mode)) & 0170000) == (0040000))
+#endif
+#ifndef PTHREAD_CREATE_JOINABLE
+#define PTHREAD_CREATE_JOINABLE 0x00000000
+#endif
+#ifndef PTHREAD_CANCEL_ASYNCHRONOUS
+#define PTHREAD_CANCEL_ASYNCHRONOUS 1
 #endif
 
 typedef struct {
@@ -32,6 +39,14 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*remove)(const char*);
     int OMG_LIBC_STD_PREFIX (*rmdir)(const char*);
     int OMG_LIBC_STD_PREFIX (*rename)(const char*, const char*);
+    int OMG_LIBC_STD_PREFIX (*pthread_attr_init)(pthread_attr_t*);
+    int OMG_LIBC_STD_PREFIX (*pthread_attr_setdetachstate)(pthread_attr_t*, int);
+    int OMG_LIBC_STD_PREFIX (*pthread_attr_setstacksize)(pthread_attr_t*, size_t);
+    int OMG_LIBC_STD_PREFIX (*pthread_create)(pthread_t*, const pthread_attr_t*, void *(*)(void *), void*);
+    int OMG_LIBC_STD_PREFIX (*pthread_setcanceltype)(int, int*);
+    pthread_t OMG_LIBC_STD_PREFIX (*pthread_self)(void);
+    int OMG_LIBC_STD_PREFIX (*pthread_getschedparam)(pthread_t, int*, struct sched_param*);
+    int OMG_LIBC_STD_PREFIX (*pthread_setschedparam)(pthread_t, int, const struct sched_param*);
     bool loaded;
 } OMG_Libc;
 
