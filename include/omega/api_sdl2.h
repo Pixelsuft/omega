@@ -181,8 +181,10 @@ typedef enum {
 #define RW_SEEK_CUR 1
 #define RW_SEEK_END 2
 
+#if OMG_IS_WIN
 typedef uintptr_t (__cdecl* pfnSDL_CurrentBeginThread) (void*, unsigned, unsigned (__stdcall*)(void*), void*, unsigned, unsigned*);
 typedef void (__cdecl* pfnSDL_CurrentEndThread) (unsigned);
+#endif
 
 typedef struct SDL_RWops {
     int64_t (OMG_SDL2_STD_PREFIX* size) (struct SDL_RWops*);

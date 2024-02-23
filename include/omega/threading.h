@@ -25,7 +25,11 @@
 
 #define OMG_THREAD_CREATE(thread, omg, func, name, data, stack_size) OMG_THREAD_CREATE_DEF(thread, omg, func, name, data, stack_size)
 
+#if OMG_IS_WIN
 typedef int (__stdcall *OMG_ThreadFunction)(void* data);
+#else
+typedef int (*OMG_ThreadFunction)(void* data);
+#endif
 
 typedef struct {
     int dummy;

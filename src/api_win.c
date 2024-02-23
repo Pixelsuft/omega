@@ -377,7 +377,6 @@ bool omg_winapi_uxtheme_free(OMG_Uxtheme* this) {
     return false;
 #endif
 }
-#endif
 
 bool omg_winapi_msvcrt_load(OMG_Msvcrt* this) {
 #if OMG_ALLOW_C_RUNTIME
@@ -406,3 +405,4 @@ bool omg_winapi_msvcrt_free(OMG_Msvcrt* this) {
     return false;
 #endif
 }
+#endif
