@@ -47,6 +47,8 @@ typedef struct {
     pthread_t OMG_LIBC_STD_PREFIX (*pthread_self)(void);
     int OMG_LIBC_STD_PREFIX (*pthread_getschedparam)(pthread_t, int*, struct sched_param*);
     int OMG_LIBC_STD_PREFIX (*pthread_setschedparam)(pthread_t, int, const struct sched_param*);
+    int OMG_LIBC_STD_PREFIX (*pthread_join)(pthread_t, void**);
+    int OMG_LIBC_STD_PREFIX (*pthread_detach)(pthread_t);
     bool loaded;
 } OMG_Libc;
 
