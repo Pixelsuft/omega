@@ -54,8 +54,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->exit_code = 0;
 }
 
-int app_thread(void* data) {
-    App* this = (App*)data;
+int app_thread(App* this) {
     while (this->thread_counter < 0)
         this->thread_counter++;
     OMG_INFO(this->omg, "Hello from test thread!");
