@@ -1105,9 +1105,35 @@ static unsigned __stdcall OMG_MINGW32_FORCEALIGN omg_thread_run_with_begin_threa
 }
 #endif
 
+#if OMG_SUPPORT_LIBC && OMG_SUPPORT_THREADING
+typedef struct {
+    pthread_t handle;
+    OMG_Omega* omg;
+    void* user_data;
+    OMG_ThreadFunction func;
+    uint32_t id;
+    int status;
+    bool running;
+    bool should_free;
+} OMG_ThreadLibc;
+
+static void* omg_thread_run_with_phread(void* data) {
+    OMG_ThreadLibc* thread = (OMG_ThreadLibc*)data;
+    OMG_Omega* this = thread->omg;
+    thread->id = (uint32_t)d_libc->pthread_self();
+    thread->running = true;
+    thread->status = thread->func(thread->user_data);
+    thread->running = false;
+    if (thread->should_free)
+        OMG_FREE(this->mem, thread);
+    return NULL;
+}
+#endif
+
 OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2) {
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
-    OMG_UNUSED(this, func, name, data, stack_size, reserved1, reserved2);
+    // TODO: Do something with win32 thread libc problem
+    OMG_UNUSED(reserved1, reserved2);
     OMG_ThreadWin* thread = OMG_MALLOC(this->mem, sizeof(OMG_ThreadWin));
     if (OMG_ISNULL(thread))
         return NULL;
@@ -1133,6 +1159,31 @@ OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OM
         return NULL;
     }
     return (OMG_Thread*)thread;
+#elif OMG_SUPPORT_LIBC
+    OMG_UNUSED(reserved1, reserved2);
+    OMG_ThreadLibc* thread = OMG_MALLOC(this->mem, sizeof(OMG_ThreadLibc));
+    if (OMG_ISNULL(thread))
+        return NULL;
+    pthread_attr_t type;
+    if (d_libc->pthread_attr_init(&type) != 0) {
+        OMG_FREE(this->mem, thread);
+        return NULL;
+    }
+    d_libc->pthread_attr_setdetachstate(&type, PTHREAD_CREATE_JOINABLE);
+    thread->func = func;
+    thread->omg = this;
+    thread->running = true;
+    thread->should_free = false;
+    thread->status = -1;
+    thread->user_data = data;
+    if (stack_size > 0) {
+        d_libc->pthread_attr_setstacksize(&type, stack_size);
+    }
+    if (d_libc->pthread_create(&thread->handle, &type, omg_thread_run_with_phread, thread) != 0) {
+        OMG_FREE(this->mem, thread);
+        return NULL;
+    }
+    return NULL;
 #else
     OMG_UNUSED(this, func, name, data, stack_size, reserved1, reserved2);
     return NULL;
@@ -1144,6 +1195,10 @@ uint32_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread) {
     if (OMG_ISNULL(thread))
         return (uint32_t)d_k32->GetCurrentThreadId();
     return ((OMG_ThreadWin*)thread)->id;
+#elif OMG_SUPPORT_LIBC
+    if (OMG_ISNULL(thread))
+        return (uint32_t)d_libc->pthread_self();
+    return ((OMG_ThreadLibc*)thread)->id;
 #else
     OMG_UNUSED(this, thread);
     return 0;
@@ -1172,12 +1227,12 @@ bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority) 
 }
 
 bool omg_thread_wait(OMG_Omega* this, OMG_Thread* thread, int* status) {
-#if OMG_IS_WIN && OMG_SUPPORT_THREADING
     if (OMG_ISNULL(thread)) {
         if (OMG_ISNOTNULL(status))
             *status = -1;
         return true;
     }
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
     HANDLE handle = ((OMG_ThreadWin*)thread)->handle;
     d_k32->WaitForSingleObjectEx(handle, INFINITE, FALSE);
     if (OMG_ISNOTNULL(status)) {
@@ -1186,16 +1241,24 @@ bool omg_thread_wait(OMG_Omega* this, OMG_Thread* thread, int* status) {
     OMG_FREE(this->mem, thread);
     d_k32->CloseHandle(handle);
     return false;
+#elif OMG_SUPPORT_LIBC
+    pthread_t handle = ((OMG_ThreadLibc*)thread)->handle;
+    bool res = d_libc->pthread_join(handle, NULL) != 0;
+    if (OMG_ISNOTNULL(status)) {
+        *status = ((OMG_ThreadLibc*)thread)->status;
+    }
+    OMG_FREE(this->mem, thread);
+    return res;
 #else
-    OMG_UNUSED(this, thread, status);
+    OMG_UNUSED(this);
     return true;
 #endif
 }
 
 bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread) {
-#if OMG_IS_WIN && OMG_SUPPORT_THREADING
     if (OMG_ISNULL(thread))
         return false;
+#if OMG_IS_WIN && OMG_SUPPORT_THREADING
     OMG_ThreadWin* thread_win = (OMG_ThreadWin*)thread;
     HANDLE handle = thread_win->handle;
     if (thread_win->running) {
@@ -1206,8 +1269,18 @@ bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread) {
     }
     bool res = !d_k32->CloseHandle(handle);
     return res;
+#elif OMG_SUPPORT_LIBC
+    OMG_ThreadLibc* thread_libc = (OMG_ThreadLibc*)thread;
+    pthread_t handle = thread_libc->handle;
+    if (thread_libc->running) {
+        thread_libc->should_free = true;
+    }
+    else {
+        OMG_FREE(this->mem, thread);
+    }
+    return d_libc->pthread_detach(handle) != 0;
 #else
-    OMG_UNUSED(this, thread);
+    OMG_UNUSED(this);
     return true;
 #endif
 }
