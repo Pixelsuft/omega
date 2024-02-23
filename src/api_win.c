@@ -99,6 +99,7 @@ bool omg_winapi_kernel32_load(OMG_Kernel32* this) {
     LOAD_REQUIRED(SetThreadPriority);
     LOAD_REQUIRED(WaitForSingleObjectEx);
     LOAD_REQUIRED(GetCurrentThreadId);
+    LOAD_REQUIRED_COMPAT(CreateDirectoryW);
     LOAD_REQUIRED_COMPAT(AttachConsole);
     LOAD_REQUIRED_COMPAT(GetTickCount64);
     LOAD_REQUIRED_COMPAT(GetFileSizeEx);

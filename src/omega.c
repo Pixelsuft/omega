@@ -1046,6 +1046,29 @@ bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* 
 #endif
 }
 
+bool omg_fs_create_dir(OMG_Omega* this, const OMG_String* path) {
+#if OMG_IS_WIN
+    if (OMG_ISNULL(d_k32->CreateDirectoryW))
+        return false;
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
+    if (count == 0)
+        return true;
+    wchar_t* w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(w_fp))
+        return true;
+    int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, w_fp, (int)count);
+    if (out_len > 0)
+        w_fp[out_len] = L'\0';
+    bool res = !d_k32->CreateDirectoryW(w_fp, NULL);
+    OMG_FREE(this->mem, w_fp);
+    return res;
+#else
+    OMG_UNUSED(this, path);
+    return true;
+#endif
+}
+
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
 typedef struct {
     HANDLE handle;
@@ -1234,6 +1257,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->fs_is_file_or_dir = omg_fs_is_file_or_dir;
     this->fs_remove_file_or_dir = omg_fs_remove_file_or_dir;
     this->fs_move = omg_fs_move;
+    this->fs_create_dir = omg_fs_create_dir;
     this->env_get = omg_env_get;
     this->env_set = omg_env_set;
     this->message_box = omg_message_box;

@@ -15,6 +15,7 @@ Debug
 x86
 x64
 x32
+test_dir
 push.bat
 omgapp
 src/spng.c

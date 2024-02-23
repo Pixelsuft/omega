@@ -127,6 +127,7 @@ typedef struct OMG_Omega {
     bool (*fs_is_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
     bool (*fs_remove_file_or_dir)(struct OMG_Omega* this, const OMG_String* path, int type);
     bool (*fs_move)(struct OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
+    bool (*fs_create_dir)(struct OMG_Omega* this, const OMG_String* path);
     OMG_String (*env_get)(struct OMG_Omega* this, const OMG_String* key_name);
     bool (*env_set)(struct OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
     OMG_File* (*file_from_fp)(struct OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
@@ -162,7 +163,7 @@ typedef struct OMG_Omega {
     void (*on_touch_up)(OMG_EventTouch* event);
     void (*on_touch_move)(OMG_EventTouch* event);
 #if OMG_IS_WIN
-    uint64_t k32_stk[50];
+    uint64_t k32_stk[64];
     void* k32;
     void* nt;
     void* dwm;
@@ -245,6 +246,7 @@ OMG_API bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_
 OMG_API bool omg_fs_move(OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
 OMG_API bool omg_fs_is_file_or_dir(OMG_Omega* this, const OMG_String* path, int type);
 OMG_API bool omg_fs_remove_file_or_dir(OMG_Omega* this, const OMG_String* path, int type);
+OMG_API bool omg_fs_create_dir(OMG_Omega* this, const OMG_String* path);
 OMG_API int64_t omg_file_get_size(OMG_File* file);
 OMG_API int64_t omg_file_seek(OMG_File* file, int64_t offset, int whence);
 OMG_API int64_t omg_file_tell(OMG_File* file);

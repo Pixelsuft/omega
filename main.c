@@ -493,6 +493,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->thread_detach(this->omg, test_thread);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);
+    // this->omg->fs_create_dir(this->omg, &OMG_STRING_MAKE_STATIC("test_dir"));
     this->exit_code = 0;
 }
 
