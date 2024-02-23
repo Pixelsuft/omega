@@ -13,28 +13,51 @@ typedef struct OMG_Winmgr {
     OMG_FontMgr* fnt;
     void* _img_init_ptr;
     size_t sz_image_loader;
+    /* Init window manager */
     bool (*init)(struct OMG_Winmgr* this);
+    /* Destroy window manager */
     bool (*destroy)(struct OMG_Winmgr* this);
+    /* Allocate window */
     OMG_Window* (*window_alloc)(struct OMG_Winmgr* this);
+    /* Free window */
     bool (*window_free)(struct OMG_Winmgr* this, OMG_Window* window);
+    /* Create surface (surfaces are stored in CPU) */
     OMG_Surface* (*surf_create)(struct OMG_Winmgr* this, OMG_Surface* surf, const OMG_FPoint* size, bool has_alpha);
+    /* Create surface from file path (surfaces are stored in CPU) */
     OMG_Surface* (*surf_from_fp)(struct OMG_Winmgr* this, OMG_Surface* surf, const OMG_String* path, int format);
+    /* Create surface from memory (surfaces are stored in CPU) */
     OMG_Surface* (*surf_from_mem)(struct OMG_Winmgr* this, OMG_Surface* surf, const void* mem, size_t size, int format);
+    /* Create surface from file object (surfaces are stored in CPU) */
     OMG_Surface* (*surf_from_file)(struct OMG_Winmgr* this, OMG_Surface* surf, const OMG_File* file, bool destroy_file, int format);
+    /* Close surface */
     bool (*surf_destroy)(struct OMG_Winmgr* this, OMG_Surface* surf);
+    /* Lock/unlock surface */
     bool (*surf_set_locked)(struct OMG_Winmgr* this, OMG_Surface* surf, bool locked);
+    /* Allocate image loader */
     bool (*image_loader_alloc)(struct OMG_Winmgr* this);
+    /* Free image loader */
     bool (*image_loader_free)(struct OMG_Winmgr* this);
+    /* Allocate font manager */
     bool (*fontmgr_alloc)(struct OMG_Winmgr* this);
+    /* Free font manager */
     bool (*fontmgr_free)(struct OMG_Winmgr* this);
+    /* Get number of displays */
     int (*display_get_count)(struct OMG_Winmgr* this);
+    /* Get display orientation */
     int (*display_get_orientation)(struct OMG_Winmgr* this, int display_id);
+    /* Get display name. The returned string must be freed */
     OMG_String (*display_get_name)(struct OMG_Winmgr* this, int display_id);
+    /* Get bounds of the display */
     bool (*display_get_bounds)(struct OMG_Winmgr* this, int display_id, OMG_FRect* rect, bool only_usable);
+    /* Get display scale */
     bool (*display_get_scale)(struct OMG_Winmgr* this, int display_id, OMG_FRect* scale);
+    /* Get number of video modes of the display */
     int (*display_get_num_modes)(struct OMG_Winmgr* this, int display_id);
+    /* Get video mode info of the display by id */
     bool (*display_get_mode)(struct OMG_Winmgr* this, int display_id, int mode_id, OMG_VideoMode* mode);
+    /* Get current video mode info of the display */
     bool (*display_get_current_mode)(struct OMG_Winmgr* this, int display_id, OMG_VideoMode* mode);
+    /* Get desktop video mode info of the display */
     bool (*display_get_desktop_mode)(struct OMG_Winmgr* this, int display_id, OMG_VideoMode* mode);
     int surf_depth;
     int image_formats;

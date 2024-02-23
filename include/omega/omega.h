@@ -145,7 +145,7 @@ typedef struct OMG_Omega {
     /* Rename/move dir/file */
     bool (*fs_move)(struct OMG_Omega* this, const OMG_String* old_path, const OMG_String* new_path);
     bool (*fs_create_dir)(struct OMG_Omega* this, const OMG_String* path);
-    /* Get environment variable */
+    /* Get environment variable. The returned string must be freed */
     OMG_String (*env_get)(struct OMG_Omega* this, const OMG_String* key_name);
     /* Set environment variable */
     bool (*env_set)(struct OMG_Omega* this, const OMG_String* key_name, const OMG_String* key_value, bool overwrite);
