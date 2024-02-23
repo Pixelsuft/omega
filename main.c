@@ -490,8 +490,8 @@ void app_init(App* this, OMG_EntryData* data) {
     this->thread_counter = -1337;
     OMG_Thread* test_thread;
     OMG_THREAD_CREATE(test_thread, this->omg, app_thread, &OMG_STRING_MAKE_STATIC("appthread"), this, 0);
-    this->omg->thread_wait(this->omg, test_thread, NULL);
-    // this->omg->thread_detach(this->omg, test_thread);
+    // this->omg->thread_wait(this->omg, test_thread, NULL);
+    this->omg->thread_detach(this->omg, test_thread);
     this->clock->reset(this->clock);
     this->win->show(this->win, true);
     this->exit_code = 0;

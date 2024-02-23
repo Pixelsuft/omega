@@ -1050,24 +1050,34 @@ bool omg_message_box(OMG_Omega* this, const OMG_String* text, const OMG_String* 
 typedef struct {
     HANDLE handle;
     OMG_Omega* omg;
+    void* user_data;
     OMG_ThreadFunction func;
     uint32_t id;
     int status;
-    void* user_data;
+    bool running;
+    bool should_free;
 } OMG_ThreadWin;
 
 static DWORD WINAPI OMG_MINGW32_FORCEALIGN omg_thread_run_with_create_thread(LPVOID data) {
     OMG_ThreadWin* thread = (OMG_ThreadWin*)data;
+    OMG_Omega* this = thread->omg;
+    thread->running = true;
     thread->status = thread->func(thread->user_data);
+    thread->running = false;
+    if (thread->should_free)
+        OMG_FREE(this->mem, thread);
     return 0;
 }
 
 static unsigned __stdcall OMG_MINGW32_FORCEALIGN omg_thread_run_with_begin_thread_ex(void* data) {
     OMG_ThreadWin* thread = (OMG_ThreadWin*)data;
     OMG_Omega* this = thread->omg;
+    thread->running = true;
     thread->status = thread->func(thread->user_data);
+    thread->running = false;
+    if (thread->should_free)
+        OMG_FREE(this->mem, thread);
     d_msvcrt->_endthreadex(0);
-    printf("Thread End!!!!\n");
     return 0;
 }
 #endif
@@ -1083,6 +1093,8 @@ OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OM
     thread->omg = this;
     thread->func = func;
     thread->user_data = data;
+    thread->running = true;
+    thread->should_free = false;
     if (OMG_ISNULL(d_msvcrt->_beginthreadex)) {
         DWORD threadid = 0;
         thread->handle = d_k32->CreateThread(NULL, stack_size, omg_thread_run_with_create_thread, thread, flags, &threadid);
@@ -1143,11 +1155,13 @@ bool omg_thread_wait(OMG_Omega* this, OMG_Thread* thread, int* status) {
             *status = -1;
         return true;
     }
-    d_k32->WaitForSingleObjectEx(((OMG_ThreadWin*)thread)->handle, INFINITE, FALSE);
+    HANDLE handle = ((OMG_ThreadWin*)thread)->handle;
+    d_k32->WaitForSingleObjectEx(handle, INFINITE, FALSE);
     if (OMG_ISNOTNULL(status)) {
         *status = ((OMG_ThreadWin*)thread)->status;
     }
-    d_k32->CloseHandle(((OMG_ThreadWin*)thread)->handle);
+    OMG_FREE(this->mem, thread);
+    d_k32->CloseHandle(handle);
     return false;
 #else
     OMG_UNUSED(this, thread, status);
@@ -1159,7 +1173,16 @@ bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread) {
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
     if (OMG_ISNULL(thread))
         return false;
-    return !d_k32->CloseHandle(((OMG_ThreadWin*)thread)->handle);
+    OMG_ThreadWin* thread_win = (OMG_ThreadWin*)thread;
+    HANDLE handle = thread_win->handle;
+    if (thread_win->running) {
+        thread_win->should_free = true;
+    }
+    else {
+        OMG_FREE(this->mem, thread);
+    }
+    bool res = !d_k32->CloseHandle(handle);
+    return res;
 #else
     OMG_UNUSED(this, thread);
     return true;
