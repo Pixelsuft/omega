@@ -954,8 +954,12 @@ OMG_String omg_env_get(OMG_Omega* this, const OMG_String* key_name) {
     }
     return res;
 #elif OMG_SUPPORT_LIBC
-    OMG_UNUSED(this, key_name);
-    return *omg_dummy_string_create();
+    if (omg_string_ensure_null((OMG_String*)key_name))
+        return *omg_dummy_string_create();
+    char* res = d_libc->getenv(key_name->ptr);
+    if (OMG_ISNULL(res))
+        return *omg_dummy_string_create();
+    return OMG_STRING_MAKE_STATIC(res);
 #else
     OMG_UNUSED(this, key_name);
     return *omg_dummy_string_create();
@@ -997,8 +1001,13 @@ bool omg_env_set(OMG_Omega* this, const OMG_String* key_name, const OMG_String* 
     OMG_FREE(this->mem, w_o_fp);
     return res;
 #elif OMG_SUPPORT_LIBC
-    OMG_UNUSED(this, key_name, key_value, overwrite);
-    return true;
+    if (omg_string_ensure_null((OMG_String*)key_name) || (OMG_ISNOTNULL(key_value) && omg_string_ensure_null((OMG_String*)key_value)))
+        return true;
+    if (OMG_ISNULL(key_value)) {
+        d_libc->unsetenv(key_name->ptr);
+        return false;
+    }
+    return d_libc->setenv(key_name->ptr, key_value->ptr, overwrite ? 1 : 0) != 0;
 #else
     OMG_UNUSED(this, key_name, key_value, overwrite);
     return true;
@@ -1063,6 +1072,10 @@ bool omg_fs_create_dir(OMG_Omega* this, const OMG_String* path) {
     bool res = !d_k32->CreateDirectoryW(w_fp, NULL);
     OMG_FREE(this->mem, w_fp);
     return res;
+#elif OMG_SUPPORT_LIBC
+    if (omg_string_ensure_null((OMG_String*)path))
+        return true;
+    return d_libc->mkdir(path->ptr, 0777) != 0;
 #else
     OMG_UNUSED(this, path);
     return true;
@@ -1133,7 +1146,7 @@ static void* omg_thread_run_with_phread(void* data) {
 OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2) {
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
     // TODO: Do something with win32 thread libc problem
-    OMG_UNUSED(reserved1, reserved2);
+    OMG_UNUSED(name, reserved1, reserved2);
     OMG_ThreadWin* thread = OMG_MALLOC(this->mem, sizeof(OMG_ThreadWin));
     if (OMG_ISNULL(thread))
         return NULL;
@@ -1160,7 +1173,7 @@ OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OM
     }
     return (OMG_Thread*)thread;
 #elif OMG_SUPPORT_LIBC
-    OMG_UNUSED(reserved1, reserved2);
+    OMG_UNUSED(name, reserved1, reserved2);
     OMG_ThreadLibc* thread = OMG_MALLOC(this->mem, sizeof(OMG_ThreadLibc));
     if (OMG_ISNULL(thread))
         return NULL;

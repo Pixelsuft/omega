@@ -49,6 +49,10 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*pthread_setschedparam)(pthread_t, int, const struct sched_param*);
     int OMG_LIBC_STD_PREFIX (*pthread_join)(pthread_t, void**);
     int OMG_LIBC_STD_PREFIX (*pthread_detach)(pthread_t);
+    char* OMG_LIBC_STD_PREFIX (*getenv)(const char*);
+    int OMG_LIBC_STD_PREFIX (*setenv)(const char*, const char*, int);
+    void OMG_LIBC_STD_PREFIX (*unsetenv)(const char*);
+    int OMG_LIBC_STD_PREFIX (*mkdir)(const char*, mode_t);
     bool loaded;
 } OMG_Libc;
 

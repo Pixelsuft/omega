@@ -40,6 +40,10 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(pthread_setschedparam);
     LOAD_REQUIRED(pthread_join);
     LOAD_REQUIRED(pthread_detach);
+    LOAD_REQUIRED(getenv);
+    LOAD_REQUIRED(setenv);
+    LOAD_REQUIRED(unsetenv);
+    LOAD_REQUIRED(mkdir);
     OMG_END_POINTER_CAST();
     this->loaded = true;
     return false;
