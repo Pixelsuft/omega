@@ -160,14 +160,8 @@ void app_init(App* this, OMG_EntryData* data) {
     temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("PATH"));
     OMG_INFO(this->omg, "PATH: ", &temp_env);
     omg_string_destroy(&temp_env);
-    OMG_INFO(this->omg, "Font is file: ", this->omg->fs_is_file_or_dir(this->omg, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), 0)); // 0 - file, 1 - dir, 2 - any of
     this->ren->aa = !OMG_IS_EMSCRIPTEN;
-    if (this->omg->type == OMG_OMEGA_TYPE_WIN)
-        this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
-    else
-        this->fps_font = this->fnt->font_from_file(this->fnt, NULL, this->omg->file_from_fp(
-            this->omg, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), OMG_FILE_MODE_RB
-        ), true, -1, 32.0f);
+    this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;

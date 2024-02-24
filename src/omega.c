@@ -103,6 +103,7 @@ bool omg_log_str_type(OMG_Omega* this, const OMG_String* data, int type) {
 
 bool omg_destroy(OMG_Omega* this) {
     omg_free_omega_internal(this);
+    omg_std_set_default_handle(NULL);
     omg_def_omega = NULL;
     return false;
 }

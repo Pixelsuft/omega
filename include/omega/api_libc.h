@@ -9,7 +9,9 @@ typedef void FILE;
 #define OMG_LIBC_STD_PREFIX
 #include <stdio.h>
 #include <sys/stat.h>
+#if !OMG_IS_WIN
 #include <pthread.h>
+#endif
 #if OMG_IS_UNIX
 #include <unistd.h>
 #endif
@@ -39,6 +41,7 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*remove)(const char*);
     int OMG_LIBC_STD_PREFIX (*rmdir)(const char*);
     int OMG_LIBC_STD_PREFIX (*rename)(const char*, const char*);
+#if !OMG_IS_WIN
     int OMG_LIBC_STD_PREFIX (*pthread_attr_init)(pthread_attr_t*);
     int OMG_LIBC_STD_PREFIX (*pthread_attr_setdetachstate)(pthread_attr_t*, int);
     int OMG_LIBC_STD_PREFIX (*pthread_attr_setstacksize)(pthread_attr_t*, size_t);
@@ -53,6 +56,7 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*setenv)(const char*, const char*, int);
     void OMG_LIBC_STD_PREFIX (*unsetenv)(const char*);
     int OMG_LIBC_STD_PREFIX (*mkdir)(const char*, mode_t);
+#endif
     bool loaded;
 } OMG_Libc;
 
