@@ -1,6 +1,6 @@
 #pragma once
 #include <omega/config.h>
-#if OMG_SUPPORT_SPNG
+#if OMG_SUPPORT_LIBC
 #include <omega/ostd.h>
 #if !OMG_LIBC_DYNAMIC
 #define OMG_LIBC_STD_PREFIX
