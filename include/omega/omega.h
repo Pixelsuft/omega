@@ -178,12 +178,6 @@ typedef struct OMG_Omega {
     void (*on_expose)(OMG_EventExpose* event);
     /* Size change event (including resizing from code) */
     void (*on_size_change)(OMG_EventResize* event);
-    /* State change event */
-    void (*on_state_change)(OMG_EventStateChange* event);
-    /* State changing event */
-    void (*on_state_changing)(OMG_EventStateChanging* event);
-    /* Focus change event */
-    void (*on_focus_change)(OMG_EventFocusChange* event);
     /* Mouse move event */
     void (*on_mouse_move)(OMG_EventMouseMove* event);
     /* Mouse button down event */
@@ -208,10 +202,16 @@ typedef struct OMG_Omega {
     void (*on_touch_up)(OMG_EventTouch* event);
     /* Touch move event */
     void (*on_touch_move)(OMG_EventTouch* event);
-    /* Resize event */
-    void (*on_resize)(OMG_EventResize* event);
     /* Close event */
     void (*on_close)(OMG_EventClose* event);
+    /* Resize event */
+    void (*on_resize)(OMG_EventResize* event);
+    /* State change event */
+    void (*on_state_change)(OMG_EventStateChange* event);
+    /* State changing event */
+    void (*on_state_changing)(OMG_EventStateChanging* event);
+    /* Focus change event */
+    void (*on_focus_change)(OMG_EventFocusChange* event);
 #if OMG_IS_WIN
     uint64_t k32_stk[64];
     void* k32;
