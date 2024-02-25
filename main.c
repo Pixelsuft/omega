@@ -5,6 +5,11 @@
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
+#define scene_base ((OMG_Scene*)this->sc)
+
+typedef struct {
+    OMG_Scene parent;
+} TestScene;
 
 typedef struct {
     OMG_Omega* omg;
@@ -15,6 +20,7 @@ typedef struct {
     OMG_FontMgr* fnt;
     OMG_Font* fps_font;
     OMG_SceneMgr* sm;
+    TestScene* sc;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -26,7 +32,11 @@ OMG_MAIN_MAKE(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->fnt->font_destroy(this->fnt, this->fps_font);
+    OMG_BEGIN_POINTER_CAST();
+    omg_scenemgr_scene_destroy(this->sm, this->sc);
+    OMG_END_POINTER_CAST();
     omg_scenemgr_destroy(this->sm);
+    OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -181,7 +191,11 @@ void app_init(App* this, OMG_EntryData* data) {
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
+    this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));
     omg_scenemgr_init(this->sm, this->ren);
+    OMG_BEGIN_POINTER_CAST();
+    omg_scenemgr_scene_init(this->sm, this->sc);
+    OMG_END_POINTER_CAST();
     OMG_INFO(this->omg, "Hello world ", 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
     this->clock->reset(this->clock);

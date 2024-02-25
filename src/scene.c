@@ -8,6 +8,14 @@
 #define omg_base ((OMG_Omega*)this->omg_omg)
 #define SET_EVENT_ARG() ((OMG_Event*)event)->data = this->event_arg
 
+bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_Scene* scene) {
+    return false;
+}
+
+bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_Scene* scene) {
+    return false;    
+}
+
 void omg_scenemgr_event_on_update(OMG_EventUpdate* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();

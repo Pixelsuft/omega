@@ -6,9 +6,13 @@
 
 typedef struct {
     int dummy;
-} OMG_Scene;
+} OMG_Object;
 
 typedef struct {
+    int dummy;
+} OMG_Scene;
+
+typedef struct OMG_SceneMgr {
     void* omg_ren;
     OMG_Omega* omg_omg;
     void* event_arg;
@@ -33,4 +37,8 @@ typedef struct {
 
 OMG_API bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren);
 OMG_API bool omg_scenemgr_destroy(OMG_SceneMgr* this);
+OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_Scene* scene);
+OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_Scene* scene);
+#if OMG_EXPORT_SHIT
+#endif
 #endif
