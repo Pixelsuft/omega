@@ -26,6 +26,7 @@ OMG_MAIN_MAKE(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->fnt->font_destroy(this->fnt, this->fps_font);
+    omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sm);
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -180,6 +181,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
+    omg_scenemgr_init(this->sm, this->ren);
     OMG_INFO(this->omg, "Hello world ", 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
     this->clock->reset(this->clock);
