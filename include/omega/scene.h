@@ -11,6 +11,7 @@ typedef struct {
 typedef struct {
     void* omg_ren;
     OMG_Omega* omg_omg;
+    void* event_arg;
     void (*on_update)(OMG_EventUpdate* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
     void (*on_paint)(OMG_EventPaint* event);
