@@ -10,13 +10,14 @@
 
 bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
-    OMG_UNUSED(this, scene);
+    if (OMG_ISNULL(this->cur_scene) || (OMG_ISNOTNULL(scene) && (scene != this->cur_scene)))
+        return false;
     return false;
 }
 
 bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
-    OMG_UNUSED(this, scene);
+    omg_scenemgr_scene_stop(this, this->cur_scene);
     return false;
 }
 
@@ -163,7 +164,7 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     omg_base->on_touch_move = omg_scenemgr_event_on_touch_move;
     this->event_arg = omg_base->event_arg;
     omg_base->event_arg = this;
-    this->current_scene = NULL;
+    this->cur_scene = NULL;
     _OMG_LOG_INFO(omg_base, "Omega scenes successfully inited");
     return false;
 }

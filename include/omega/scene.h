@@ -6,10 +6,11 @@
 #define OMG_SceneFuncArg void
 
 typedef struct {
-    int dummy;
+    OMG_FRect rect;
 } OMG_Object;
 
 typedef struct {
+    OMG_Object parent;
     int dummy;
 } OMG_Scene;
 
@@ -17,7 +18,7 @@ typedef struct OMG_SceneMgr {
     void* omg_ren;
     void* omg_win;
     OMG_Omega* omg_omg;
-    OMG_Scene* current_scene;
+    OMG_Scene* cur_scene;
     void* event_arg;
     void (*on_update)(OMG_EventUpdate* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
