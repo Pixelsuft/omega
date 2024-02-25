@@ -12,6 +12,7 @@ typedef struct {
 typedef struct {
     OMG_Object parent;
     int dummy;
+    bool inited;
 } OMG_Scene;
 
 typedef struct OMG_SceneMgr {
@@ -37,6 +38,7 @@ typedef struct OMG_SceneMgr {
     void (*on_touch_down)(OMG_EventTouch* event);
     void (*on_touch_up)(OMG_EventTouch* event);
     void (*on_touch_move)(OMG_EventTouch* event);
+    bool is_mouse_entered;
 } OMG_SceneMgr;
 
 OMG_API bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren);

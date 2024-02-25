@@ -12,24 +12,30 @@ bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
     if (OMG_ISNULL(this->cur_scene) || (OMG_ISNOTNULL(scene) && (scene != this->cur_scene)))
         return false;
+    this->cur_scene = NULL;
     return false;
 }
 
 bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
-    omg_scenemgr_scene_stop(this, this->cur_scene);
+    omg_scenemgr_scene_stop(this, NULL);
+    if (!scene->inited)
+        omg_scenemgr_scene_init(this, _scene);
+    this->cur_scene = scene;
     return false;
 }
 
 bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
-    OMG_UNUSED(this, scene);
+    scene->inited = true;
+    OMG_UNUSED(this);
     return false;
 }
 
 bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
-    OMG_UNUSED(this, scene);
+    scene->inited = false;
+    OMG_UNUSED(this);
     return false;    
 }
 
@@ -42,18 +48,27 @@ void omg_scenemgr_event_on_update(OMG_EventUpdate* event) {
 void omg_scenemgr_event_on_paint(OMG_EventPaint* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+
+    }
     this->on_paint(event);
 }
 
 void omg_scenemgr_event_on_expose(OMG_EventExpose* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_expose(event);
 }
 
 void omg_scenemgr_event_on_size_change(OMG_EventResize* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_size_change(event);
 }
 
@@ -66,72 +81,108 @@ void omg_scenemgr_event_on_loop_stop(OMG_EventLoopStop* event) {
 void omg_scenemgr_event_on_mouse_wheel(OMG_EventMouseWheel* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_mouse_wheel(event);
 }
 
 void omg_scenemgr_event_on_mouse_move(OMG_EventMouseMove* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        this->is_mouse_entered = true;        
+    }
     this->on_mouse_move(event);
 }
 
 void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_mouse_down(event);
 }
 
 void omg_scenemgr_event_on_mouse_up(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_mouse_up(event);
 }
 
 void omg_scenemgr_event_on_mouse_enter(OMG_EventMouseFocus* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        this->is_mouse_entered = true;
+    }
     this->on_mouse_enter(event);
 }
 
 void omg_scenemgr_event_on_mouse_leave(OMG_EventMouseFocus* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        this->is_mouse_entered = false;
+    }
     this->on_mouse_leave(event);
 }
 
 void omg_scenemgr_event_on_key_down(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_key_down(event);
 }
 
 void omg_scenemgr_event_on_key_up(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_key_up(event);
 }
 
 void omg_scenemgr_event_on_text_input(OMG_EventTextInput* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_text_input(event);
 }
 
 void omg_scenemgr_event_on_touch_down(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_touch_down(event);
 }
 
 void omg_scenemgr_event_on_touch_up(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_touch_up(event);
 }
 
 void omg_scenemgr_event_on_touch_move(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (event->win == this->omg_win) {
+        
+    }
     this->on_touch_move(event);
 }
 
@@ -139,6 +190,7 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     this->omg_ren = omg_ren;
     this->omg_omg = ren->omg;
     this->omg_win = ren->win;
+    this->is_mouse_entered = true;
     // omg_base->std->memset((void*)((size_t)this->on_update), 0, (size_t)this->on_touch_move - (size_t)this->on_update);
     omg_base->std->memcpy(
         (void*)((size_t)(&this->on_update)),
