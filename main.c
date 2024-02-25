@@ -1,6 +1,7 @@
 #include <omega/omega.h>
 #include <omega/entry.h>
 #include <omega/api_win.h>
+#include <omega/scene.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
@@ -13,6 +14,7 @@ typedef struct {
     OMG_Clock* clock;
     OMG_FontMgr* fnt;
     OMG_Font* fps_font;
+    OMG_SceneMgr* sm;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -24,7 +26,7 @@ OMG_MAIN_MAKE(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->fnt->font_destroy(this->fnt, this->fps_font);
-    // everything other will be cleaned up automaticly
+    OMG_FREE(this->omg->mem, this->sm);
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
@@ -157,16 +159,13 @@ void app_init(App* this, OMG_EntryData* data) {
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
     this->ren->soft_offset = true;
-    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("PATH"));
-    OMG_INFO(this->omg, "PATH: ", &temp_env);
-    omg_string_destroy(&temp_env);
     this->ren->aa = !OMG_IS_EMSCRIPTEN;
     this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;
-    // this->fps_font->wrapping = false; // We render only one line
-    this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT; // We don't need UTF-8 support for drawing FPS
+    this->fps_font->wrapping = false;
+    this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT;
     this->win->allow_alt = false;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;
@@ -180,6 +179,7 @@ void app_init(App* this, OMG_EntryData* data) {
     omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
+    this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
     OMG_INFO(this->omg, "Hello world ", 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
     this->clock->reset(this->clock);

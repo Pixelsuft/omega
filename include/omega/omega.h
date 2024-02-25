@@ -282,6 +282,23 @@ OMG_API bool omg_win_loads_libs2(OMG_Omega* this);
 OMG_API bool omg_win_loads_libs3(OMG_Omega* this);
 OMG_API bool omg_libc_init(OMG_Omega* this);
 OMG_API bool omg_libc_destroy(OMG_Omega* this);
+OMG_API void omg_event_on_quit(OMG_EventQuit* event);
+OMG_API void omg_event_on_update(OMG_EventUpdate* event);
+OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
+OMG_API void omg_event_on_paint(OMG_EventPaint* event);
+OMG_API void omg_event_on_expose(OMG_EventExpose* event);
+OMG_API void omg_event_on_close(OMG_EventClose* event);
+OMG_API void omg_event_on_resize(OMG_EventResize* event);
+OMG_API void omg_event_on_state_change(OMG_EventStateChange* event);
+OMG_API void omg_event_on_state_changing(OMG_EventStateChanging* event);
+OMG_API void omg_event_on_focus_change(OMG_EventFocusChange* event);
+OMG_API void omg_event_on_mouse_move(OMG_EventMouseMove* event);
+OMG_API void omg_event_on_mouse_button(OMG_EventMouseButton* event);
+OMG_API void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event);
+OMG_API void omg_event_on_mouse_focus(OMG_EventMouseFocus* event);
+OMG_API void omg_event_on_keyboard(OMG_EventKeyboard* event);
+OMG_API void omg_event_on_text_input(OMG_EventTextInput* event);
+OMG_API void omg_event_on_touch(OMG_EventTouch* event);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
@@ -317,24 +334,6 @@ OMG_API int64_t omg_file_std_tell(OMG_FileStd* file);
 OMG_API size_t omg_file_std_read(OMG_FileStd* file, void* buf, size_t size, size_t maxnum);
 OMG_API size_t omg_file_std_write(OMG_FileStd* file, const void* buf, size_t size, size_t num);
 #endif
-// Should I always export events?
-OMG_API void omg_event_on_quit(OMG_EventQuit* event);
-OMG_API void omg_event_on_update(OMG_EventUpdate* event);
-OMG_API void omg_event_on_loop_stop(OMG_EventLoopStop* event);
-OMG_API void omg_event_on_paint(OMG_EventPaint* event);
-OMG_API void omg_event_on_expose(OMG_EventExpose* event);
-OMG_API void omg_event_on_close(OMG_EventClose* event);
-OMG_API void omg_event_on_resize(OMG_EventResize* event);
-OMG_API void omg_event_on_state_change(OMG_EventStateChange* event);
-OMG_API void omg_event_on_state_changing(OMG_EventStateChanging* event);
-OMG_API void omg_event_on_focus_change(OMG_EventFocusChange* event);
-OMG_API void omg_event_on_mouse_move(OMG_EventMouseMove* event);
-OMG_API void omg_event_on_mouse_button(OMG_EventMouseButton* event);
-OMG_API void omg_event_on_mouse_wheel(OMG_EventMouseWheel* event);
-OMG_API void omg_event_on_mouse_focus(OMG_EventMouseFocus* event);
-OMG_API void omg_event_on_keyboard(OMG_EventKeyboard* event);
-OMG_API void omg_event_on_text_input(OMG_EventTextInput* event);
-OMG_API void omg_event_on_touch(OMG_EventTouch* event);
 OMG_API int omg_set_text_input_state(OMG_Omega* this, int state);
 OMG_API bool omg_free_winmgr(OMG_Omega* this);
 OMG_API bool omg_audio_free(OMG_Omega* this);
