@@ -28,7 +28,8 @@ bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
 bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
     scene->inited = true;
-    OMG_UNUSED(this);
+    scene->unused1 = scene->unused2 = scene->unused3 = NULL;
+    scene->omg_scenemgr = this;
     return false;
 }
 

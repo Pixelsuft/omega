@@ -11,6 +11,10 @@ typedef struct {
 
 typedef struct {
     OMG_Object parent;
+    void* unused1;
+    void* unused2;
+    void* unused3;
+    void* omg_scenemgr;
     int dummy;
     bool inited;
 } OMG_Scene;
