@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_SCENES
 #include <omega/ostd.h>
 #include <omega/omega.h>
+#define OMG_SceneFuncArg void
 
 typedef struct {
     int dummy;
@@ -14,7 +15,9 @@ typedef struct {
 
 typedef struct OMG_SceneMgr {
     void* omg_ren;
+    void* omg_win;
     OMG_Omega* omg_omg;
+    OMG_Scene* current_scene;
     void* event_arg;
     void (*on_update)(OMG_EventUpdate* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
@@ -37,8 +40,11 @@ typedef struct OMG_SceneMgr {
 
 OMG_API bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren);
 OMG_API bool omg_scenemgr_destroy(OMG_SceneMgr* this);
-OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_Scene* scene);
-OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_Scene* scene);
+// TODO: maybe use void* pointers to avoid type warnings?
+OMG_API bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
+OMG_API bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
+OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
+OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
 #if OMG_EXPORT_SHIT
 #endif
 #endif

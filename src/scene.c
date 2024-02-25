@@ -8,11 +8,27 @@
 #define omg_base ((OMG_Omega*)this->omg_omg)
 #define SET_EVENT_ARG() ((OMG_Event*)event)->data = this->event_arg
 
-bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_Scene* scene) {
+bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    OMG_Scene* scene = (OMG_Scene*)_scene;
+    OMG_UNUSED(this, scene);
     return false;
 }
 
-bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_Scene* scene) {
+bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    OMG_Scene* scene = (OMG_Scene*)_scene;
+    OMG_UNUSED(this, scene);
+    return false;
+}
+
+bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    OMG_Scene* scene = (OMG_Scene*)_scene;
+    OMG_UNUSED(this, scene);
+    return false;
+}
+
+bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    OMG_Scene* scene = (OMG_Scene*)_scene;
+    OMG_UNUSED(this, scene);
     return false;    
 }
 
@@ -121,8 +137,8 @@ void omg_scenemgr_event_on_touch_move(OMG_EventTouch* event) {
 bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     this->omg_ren = omg_ren;
     this->omg_omg = ren->omg;
+    this->omg_win = ren->win;
     // omg_base->std->memset((void*)((size_t)this->on_update), 0, (size_t)this->on_touch_move - (size_t)this->on_update);
-    this->event_arg = omg_base->event_arg;
     omg_base->std->memcpy(
         (void*)((size_t)(&this->on_update)),
         (void*)((size_t)(&omg_base->on_update)),
@@ -145,7 +161,9 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     omg_base->on_touch_down = omg_scenemgr_event_on_touch_down;
     omg_base->on_touch_up = omg_scenemgr_event_on_touch_up;
     omg_base->on_touch_move = omg_scenemgr_event_on_touch_move;
+    this->event_arg = omg_base->event_arg;
     omg_base->event_arg = this;
+    this->current_scene = NULL;
     _OMG_LOG_INFO(omg_base, "Omega scenes successfully inited");
     return false;
 }
