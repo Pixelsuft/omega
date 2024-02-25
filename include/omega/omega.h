@@ -176,10 +176,6 @@ typedef struct OMG_Omega {
     void (*on_paint)(OMG_EventPaint* event);
     /* Expose event (you can do redraw here) */
     void (*on_expose)(OMG_EventExpose* event);
-    /* Close event */
-    void (*on_close)(OMG_EventClose* event);
-    /* Resize event */
-    void (*on_resize)(OMG_EventResize* event);
     /* Size change event (including resizing from code) */
     void (*on_size_change)(OMG_EventResize* event);
     /* State change event */
@@ -212,6 +208,10 @@ typedef struct OMG_Omega {
     void (*on_touch_up)(OMG_EventTouch* event);
     /* Touch move event */
     void (*on_touch_move)(OMG_EventTouch* event);
+    /* Resize event */
+    void (*on_resize)(OMG_EventResize* event);
+    /* Close event */
+    void (*on_close)(OMG_EventClose* event);
 #if OMG_IS_WIN
     uint64_t k32_stk[64];
     void* k32;
