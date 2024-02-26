@@ -20,20 +20,48 @@ bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
     omg_scenemgr_scene_stop(this, NULL);
     if (!scene->inited)
-        omg_scenemgr_scene_init(this, _scene);
+        omg_scenemgr_scene_init(this, _scene, scene->data);
     this->cur_scene = scene;
     return false;
 }
 
-bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    if (OMG_ISNULL(_scene)) {
+        _OMG_LOG_WARN(omg_base, "Null pointer passed to omg_scenemgr_scene_fill");
+        return false;
+    }
     OMG_Scene* scene = (OMG_Scene*)_scene;
-    scene->inited = true;
+    scene->inited = false;
     scene->unused1 = scene->unused2 = scene->unused3 = NULL;
     scene->omg_scenemgr = this;
+    scene->on_init = NULL;
+    scene->on_destroy = NULL;
+    return false;
+}
+
+bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene, void* data) {
+    if (OMG_ISNULL(_scene)) {
+        _OMG_LOG_WARN(omg_base, "Null pointer passed to omg_scenemgr_scene_init");
+        return false;
+    }
+    OMG_Scene* scene = (OMG_Scene*)_scene;
+    scene->inited = true;
+    scene->data = data;
+    if (OMG_ISNOTNULL(scene->on_init)) {
+        if (scene->on_init(scene)) {
+            // ?
+            _OMG_LOG_INFO(omg_base, "Lol scene init failed");
+            return true;
+        }
+    }
     return false;
 }
 
 bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    if (OMG_ISNULL(_scene)) {
+        _OMG_LOG_WARN(omg_base, "Null pointer passed to omg_scenemgr_scene_destroy");
+        return false;
+    }
     OMG_Scene* scene = (OMG_Scene*)_scene;
     scene->inited = false;
     OMG_UNUSED(this);
@@ -223,6 +251,9 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
 }
 
 bool omg_scenemgr_destroy(OMG_SceneMgr* this) {
+    if (OMG_ISNOTNULL(this->cur_scene)) {
+        omg_scenemgr_scene_destroy(this, this->cur_scene);
+    }
     omg_base->std->memcpy(
         (void*)((size_t)(&omg_base->on_update)),
         (void*)((size_t)(&this->on_update)),

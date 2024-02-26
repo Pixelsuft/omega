@@ -9,12 +9,15 @@ typedef struct {
     OMG_FRect rect;
 } OMG_Object;
 
-typedef struct {
+typedef struct OMG_Scene {
     OMG_Object parent;
     void* unused1;
     void* unused2;
     void* unused3;
     void* omg_scenemgr;
+    void* data;
+    bool (*on_init)(struct OMG_Scene* this);
+    bool (*on_destroy)(struct OMG_Scene* this);
     int dummy;
     bool inited;
 } OMG_Scene;
@@ -46,11 +49,11 @@ typedef struct OMG_SceneMgr {
 } OMG_SceneMgr;
 
 OMG_API bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren);
+OMG_API bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene);
 OMG_API bool omg_scenemgr_destroy(OMG_SceneMgr* this);
-// TODO: maybe use void* pointers to avoid type warnings?
 OMG_API bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
 OMG_API bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
-OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
+OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* scene, void* data);
 OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
 #if OMG_EXPORT_SHIT
 #endif

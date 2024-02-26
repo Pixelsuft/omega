@@ -191,7 +191,8 @@ void app_init(App* this, OMG_EntryData* data) {
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
     this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));
     omg_scenemgr_init(this->sm, this->ren);
-    omg_scenemgr_scene_init(this->sm, this->sc);
+    omg_scenemgr_scene_fill(this->sm, this->sc);
+    omg_scenemgr_scene_init(this->sm, this->sc, this);
     OMG_INFO(this->omg, "Hello world ", 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
     this->win->mouse_set_system_cursor(this->win, OMG_SYSTEM_CURSOR_DEFAULT);
