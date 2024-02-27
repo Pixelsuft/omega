@@ -232,6 +232,10 @@ void omg_scenemgr_event_on_mouse_move(OMG_EventMouseMove* event) {
 void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if (event->button <= 7)
+        this->mouse_states[event->button] = true;
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_down)) {
             this->cur_scene->on_mouse_down(this->cur_scene, event);
@@ -243,6 +247,10 @@ void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
 void omg_scenemgr_event_on_mouse_up(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if (event->button <= 7)
+        this->mouse_states[event->button] = false;
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_up)) {
             this->cur_scene->on_mouse_up(this->cur_scene, event);
@@ -356,6 +364,7 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     this->is_mouse_entered = true;
 #if OMG_SCENES_ADV_INPUT
     omg_base->std->memset(this->key_states, 0, sizeof(this->key_states));
+    omg_base->std->memset(this->mouse_states, 0, sizeof(this->mouse_states));
 #endif
     // omg_base->std->memset((void*)((size_t)this->on_update), 0, (size_t)this->on_touch_move - (size_t)this->on_update);
     omg_base->std->memcpy(
