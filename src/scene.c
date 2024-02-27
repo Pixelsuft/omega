@@ -34,7 +34,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
         }
     if (((should_on && OMG_ISNOTNULL(scene->on_mouse_down)) || (!should_on && OMG_ISNOTNULL(scene->on_mouse_up))))
         for (size_t i = 0; i < 7; i++) {
-            if (this->mouse_states[i]) {
+            if (this->mouse_states[i].w > 0.0f) {
                 OMG_EventMouseButton event;
                 event.parent.data = omg_base->event_arg;
                 event.parent.omg = omg_base;
@@ -45,8 +45,8 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 event.is_emulated = false; // ?
                 event.is_pressed = should_on;
                 // TODO: use array of positions to keep them
-                event.pos.x = 0.0f;
-                event.pos.y = 0.0f;
+                event.pos.x = this->mouse_states[i].x;
+                event.pos.y = this->mouse_states[i].y;
                 event.win = win_base;
                 event.state = 0;
                 (should_on ? scene->on_mouse_down : scene->on_mouse_up)(scene, &event);
@@ -257,8 +257,11 @@ void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
 #if OMG_SCENES_ADV_INPUT
-    if (event->button <= 7)
-        this->mouse_states[event->button] = true;
+    if (event->button <= 7) {
+        this->mouse_states[event->button].x = event->pos.x;
+        this->mouse_states[event->button].y = event->pos.y;
+        this->mouse_states[event->button].w = 1337.0f;
+    }
 #endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_down)) {
@@ -272,8 +275,11 @@ void omg_scenemgr_event_on_mouse_up(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
 #if OMG_SCENES_ADV_INPUT
-    if (event->button <= 7)
-        this->mouse_states[event->button] = false;
+    if (event->button <= 7) {
+        this->mouse_states[event->button].x = event->pos.x;
+        this->mouse_states[event->button].y = event->pos.y;
+        this->mouse_states[event->button].w = 0.0f;
+    }
 #endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_up)) {
