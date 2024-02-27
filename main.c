@@ -61,7 +61,8 @@ bool scene_on_update(TestScene* scene) {
 
 bool scene_on_paint(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
-    OMG_UNUSED(this);
+    this->ren->begin(this->ren);
+    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(0, 0, 0));
     // OMG_INFO(this->omg, "Scene paint");
     return false;
 }
@@ -102,8 +103,6 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_on_paint(OMG_EventPaint* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    this->ren->begin(this->ren);
-    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(0, 0, 0));
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
     this->ren->flip(this->ren);
 }
