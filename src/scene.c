@@ -5,6 +5,7 @@
 #include <omega/window.h>
 #include <omega/renderer.h>
 #define ren ((OMG_Renderer*)this->omg_ren)
+#define win_base ((OMG_Window*)this->omg_win)
 #define omg_base ((OMG_Omega*)this->omg_omg)
 #define SET_EVENT_ARG() ((OMG_Event*)event)->data = this->event_arg
 #define CUR_SCENE_CHECK_NULL_VAL(val_name) (OMG_ISNOTNULL(this->cur_scene) && OMG_ISNOTNULL(this->cur_scene->val_name))
@@ -15,23 +16,42 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
 #if OMG_SCENES_ADV_INPUT
     if (OMG_ISNULL(scene) || !scene->inited)
         return;
-    if ((should_on && OMG_ISNULL(scene->on_key_down)) || (!should_on && OMG_ISNULL(scene->on_key_up)))
-        return;
-    for (size_t i = 0; i < 512; i++) {
-        if (this->key_states[i] > 0) {
-            OMG_EventKeyboard event;
-            event.parent.data = omg_base->event_arg;
-            event.parent.omg = omg_base;
-            event.parent.time = 0; // Why we need this???
-            event.code = this->key_states[i];
-            event.is_repeated = false;
-            event.sym = i;
-            event.win = this->omg_win;
-            event.mod = 0; // TODO maybe?
-            event.is_pressed = should_on;
-            (should_on ? scene->on_key_down : scene->on_key_up)(scene, &event);
+    if (((should_on && OMG_ISNOTNULL(scene->on_key_down)) || (!should_on && OMG_ISNOTNULL(scene->on_key_up))))
+        for (size_t i = 0; i < 512; i++) {
+            if (this->key_states[i] > 0) {
+                OMG_EventKeyboard event;
+                event.parent.data = omg_base->event_arg;
+                event.parent.omg = omg_base;
+                event.parent.time = 0; // Why we need this???
+                event.code = this->key_states[i];
+                event.is_repeated = false;
+                event.sym = i;
+                event.win = this->omg_win;
+                event.mod = 0; // TODO maybe?
+                event.is_pressed = should_on;
+                (should_on ? scene->on_key_down : scene->on_key_up)(scene, &event);
+            }
         }
-    }
+    if (((should_on && OMG_ISNOTNULL(scene->on_mouse_down)) || (!should_on && OMG_ISNOTNULL(scene->on_mouse_up))))
+        for (size_t i = 0; i < 7; i++) {
+            if (this->mouse_states[i]) {
+                OMG_EventMouseButton event;
+                event.parent.data = omg_base->event_arg;
+                event.parent.omg = omg_base;
+                event.parent.time = 0;
+                event.button = i;
+                event.clicks = 1;
+                event.id = 0; // ?
+                event.is_emulated = false; // ?
+                event.is_pressed = should_on;
+                // TODO: use array of positions to keep them
+                event.pos.x = 0.0f;
+                event.pos.y = 0.0f;
+                event.win = win_base;
+                event.state = 0;
+                (should_on ? scene->on_mouse_down : scene->on_mouse_up)(scene, &event);
+            }
+        }
 #else
     OMG_UNUSED(this, scene, should_on);
 #endif
