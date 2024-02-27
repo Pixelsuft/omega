@@ -60,5 +60,7 @@ OMG_API bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* scene
 OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* scene, void* data);
 OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
 #if OMG_EXPORT_SHIT
+OMG_API void omg_scenemgr_scene_do_paint(OMG_SceneMgr* this);
+OMG_API void omg_scenemgr_scene_do_update(OMG_SceneMgr* this);
 #endif
 #endif
