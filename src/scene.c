@@ -224,9 +224,9 @@ void omg_scenemgr_event_on_size_change(OMG_EventResize* event) {
 void omg_scenemgr_event_on_loop_stop(OMG_EventLoopStop* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
-    if (OMG_ISNOTNULL(this->cur_scene) && this->cur_scene->inited) {
+    /*if (OMG_ISNOTNULL(this->cur_scene) && this->cur_scene->inited) {
         omg_scenemgr_scene_stop(this, this->cur_scene);
-    }
+    }*/
     this->on_loop_stop(event);
 }
 
@@ -459,7 +459,7 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
 }
 
 bool omg_scenemgr_destroy(OMG_SceneMgr* this) {
-    if (OMG_ISNOTNULL(this->cur_scene)) {
+    if (OMG_ISNOTNULL(this->cur_scene) && this->cur_scene->inited) {
         omg_scenemgr_scene_destroy(this, this->cur_scene);
     }
     omg_base->std->memcpy(

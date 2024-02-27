@@ -32,7 +32,7 @@ OMG_MAIN_MAKE(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->fnt->font_destroy(this->fnt, this->fps_font);
-    // omg_scenemgr_scene_destroy(this->sm, this->sc);
+    omg_scenemgr_scene_destroy(this->sm, this->sc);
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
