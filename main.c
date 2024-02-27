@@ -46,17 +46,35 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->exit_code = 0;
 }
 
-void scene_on_destroy(TestScene* scene) {
+bool scene_on_destroy(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     OMG_INFO(this->omg, "Scene destroy");
+    return false;
 }
 
-void scene_on_init(TestScene* scene) {
+bool scene_on_update(TestScene* scene) {
+    App* this = (App*)((OMG_Scene*)scene)->data;
+    OMG_UNUSED(this);
+    // OMG_INFO(this->omg, "Scene update");
+    return false;
+}
+
+bool scene_on_paint(TestScene* scene) {
+    App* this = (App*)((OMG_Scene*)scene)->data;
+    OMG_UNUSED(this);
+    // OMG_INFO(this->omg, "Scene paint");
+    return false;
+}
+
+bool scene_on_init(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     OMG_BEGIN_POINTER_CAST();
     scene_base->on_destroy = scene_on_destroy;
+    scene_base->on_update = scene_on_update;
+    scene_base->on_paint = scene_on_paint;
     OMG_END_POINTER_CAST();
     OMG_INFO(this->omg, "Scene init");
+    return false;
 }
 
 void app_on_update(OMG_EventUpdate* event) {
@@ -66,10 +84,10 @@ void app_on_update(OMG_EventUpdate* event) {
         this->omg->enable_paint = false;
         return;
     }
+    this->audio->update(this->audio);
     if (this->clock->dt > 1.0)
         this->clock->dt = 1.0; // I don't think u have so slow pc
     this->omg->enable_paint = true;
-    this->audio->update(this->audio);
     this->fps_str.len = 5;
     omg_string_add_int(&this->fps_str, this->clock->get_fps(this->clock));
 }

@@ -18,6 +18,8 @@ typedef struct OMG_Scene {
     void* data;
     bool (*on_init)(struct OMG_Scene* this);
     bool (*on_destroy)(struct OMG_Scene* this);
+    bool (*on_update)(struct OMG_Scene* this);
+    bool (*on_paint)(struct OMG_Scene* this);
     int dummy;
     bool inited;
 } OMG_Scene;

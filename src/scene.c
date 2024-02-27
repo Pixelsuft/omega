@@ -36,6 +36,8 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->omg_scenemgr = this;
     scene->on_init = NULL;
     scene->on_destroy = NULL;
+    scene->on_update = NULL;
+    scene->on_paint = NULL;
     return false;
 }
 
@@ -75,14 +77,34 @@ bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
 void omg_scenemgr_event_on_update(OMG_EventUpdate* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (OMG_ISNOTNULL(this->cur_scene) && OMG_ISNOTNULL(this->cur_scene->on_update)) {
+        OMG_Scene* temp_scene = this->cur_scene;
+        if (temp_scene->on_update(this->cur_scene)) {
+            // Failed? Let's stop drawing current scene
+            if (this->cur_scene == temp_scene) {
+                omg_scenemgr_scene_stop(this, temp_scene);
+            }
+        }
+    }
     this->on_update(event);
+}
+
+void omg_scenemgr_scene_do_paint(OMG_SceneMgr* this) {
+    if (OMG_ISNOTNULL(this->cur_scene) && OMG_ISNOTNULL(this->cur_scene->on_paint)) {
+        OMG_Scene* temp_scene = this->cur_scene;
+        if (temp_scene->on_paint(temp_scene)) {
+            if (this->cur_scene == temp_scene) {
+                omg_scenemgr_scene_stop(this, temp_scene);
+            }
+        }
+    }
 }
 
 void omg_scenemgr_event_on_paint(OMG_EventPaint* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-
+        omg_scenemgr_scene_do_paint(this);
     }
     this->on_paint(event);
 }
@@ -91,7 +113,8 @@ void omg_scenemgr_event_on_expose(OMG_EventExpose* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        // TODO: configure with bool
+        // omg_scenemgr_scene_do_paint(this);
     }
     this->on_expose(event);
 }
