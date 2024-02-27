@@ -13,6 +13,10 @@
 
 void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool should_on) {
 #if OMG_SCENES_ADV_INPUT
+    if (OMG_ISNULL(scene) || !scene->inited)
+        return;
+    if ((should_on && OMG_ISNULL(scene->on_key_down)) || (!should_on && OMG_ISNULL(scene->on_key_up)))
+        return;
     for (size_t i = 0; i < 512; i++) {
         if (this->key_states[i] > 0) {
             OMG_EventKeyboard event;
