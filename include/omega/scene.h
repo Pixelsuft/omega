@@ -47,7 +47,7 @@ typedef struct OMG_SceneMgr {
     OMG_Omega* omg_omg;
     OMG_Scene* cur_scene;
 #if OMG_SCENES_ADV_INPUT
-    bool key_states[524];
+    uint32_t key_states[524];
 #endif
     void* event_arg;
     void (*on_update)(OMG_EventUpdate* event);
@@ -78,6 +78,7 @@ OMG_API bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* scene
 OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* scene, void* data);
 OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
 #if OMG_EXPORT_SHIT
+OMG_API void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool should_on);
 OMG_API void omg_scenemgr_scene_do_paint(OMG_SceneMgr* this);
 OMG_API void omg_scenemgr_scene_do_update(OMG_SceneMgr* this);
 #endif

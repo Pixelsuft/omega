@@ -11,6 +11,28 @@
 
 // TODO: handle if scene is stopped while updating, painting, etc
 
+void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool should_on) {
+#if OMG_SCENES_ADV_INPUT
+    for (size_t i = 0; i < 512; i++) {
+        if (this->key_states[i] > 0) {
+            OMG_EventKeyboard event;
+            event.parent.data = omg_base->event_arg;
+            event.parent.omg = omg_base;
+            event.parent.time = 0; // Why we need this???
+            event.code = this->key_states[i];
+            event.is_repeated = false;
+            event.sym = i;
+            event.win = this->omg_win;
+            event.mod = 0; // TODO maybe?
+            event.is_pressed = should_on;
+            (should_on ? scene->on_key_down : scene->on_key_up)(scene, &event);
+        }
+    }
+#else
+    OMG_UNUSED(this, scene, should_on);
+#endif
+}
+
 bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
     if (OMG_ISNULL(this->cur_scene) || (OMG_ISNOTNULL(scene) && (scene != this->cur_scene)))
@@ -256,7 +278,7 @@ void omg_scenemgr_event_on_key_down(OMG_EventKeyboard* event) {
     SET_EVENT_ARG();
 #if OMG_SCENES_ADV_INPUT
     if (event->sym < 520)
-        this->key_states[event->sym] = true;
+        this->key_states[event->sym] = event->code;
 #endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_key_down)) {
@@ -271,7 +293,7 @@ void omg_scenemgr_event_on_key_up(OMG_EventKeyboard* event) {
     SET_EVENT_ARG();
 #if OMG_SCENES_ADV_INPUT
     if (event->sym < 520)
-        this->key_states[event->sym] = false;
+        this->key_states[event->sym] = 0;
 #endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_key_up)) {
