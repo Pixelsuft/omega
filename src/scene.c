@@ -7,6 +7,7 @@
 #define ren ((OMG_Renderer*)this->omg_ren)
 #define omg_base ((OMG_Omega*)this->omg_omg)
 #define SET_EVENT_ARG() ((OMG_Event*)event)->data = this->event_arg
+#define CUR_SCENE_CHECK_NULL_VAL(val_name) (OMG_ISNOTNULL(this->cur_scene) && OMG_ISNOTNULL(this->cur_scene->val_name))
 
 // TODO: handle if scene is stopped while updating, painting, etc
 
@@ -165,7 +166,9 @@ void omg_scenemgr_event_on_size_change(OMG_EventResize* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_resize)) {
+            this->cur_scene->on_resize(this->cur_scene, event);
+        }
     }
     this->on_size_change(event);
 }
@@ -173,6 +176,9 @@ void omg_scenemgr_event_on_size_change(OMG_EventResize* event) {
 void omg_scenemgr_event_on_loop_stop(OMG_EventLoopStop* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    if (OMG_ISNOTNULL(this->cur_scene) && this->cur_scene->inited) {
+        omg_scenemgr_scene_stop(this, this->cur_scene);
+    }
     this->on_loop_stop(event);
 }
 
@@ -180,7 +186,9 @@ void omg_scenemgr_event_on_mouse_wheel(OMG_EventMouseWheel* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_wheel)) {
+            this->cur_scene->on_mouse_wheel(this->cur_scene, event);
+        }
     }
     this->on_mouse_wheel(event);
 }
@@ -189,7 +197,10 @@ void omg_scenemgr_event_on_mouse_move(OMG_EventMouseMove* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        this->is_mouse_entered = true;        
+        this->is_mouse_entered = true;
+        if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_move)) {
+            this->cur_scene->on_mouse_move(this->cur_scene, event);
+        }
     }
     this->on_mouse_move(event);
 }
