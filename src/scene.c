@@ -38,6 +38,7 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->on_destroy = NULL;
     scene->on_update = NULL;
     scene->on_paint = NULL;
+    scene->paint_on_expose = true;
     return false;
 }
 
@@ -90,7 +91,7 @@ void omg_scenemgr_event_on_update(OMG_EventUpdate* event) {
 }
 
 void omg_scenemgr_scene_do_paint(OMG_SceneMgr* this) {
-    if (OMG_ISNOTNULL(this->cur_scene) && OMG_ISNOTNULL(this->cur_scene->on_paint)) {
+    if (OMG_ISNOTNULL(this->cur_scene->on_paint)) {
         OMG_Scene* temp_scene = this->cur_scene;
         if (temp_scene->on_paint(temp_scene)) {
             if (this->cur_scene == temp_scene) {
@@ -104,7 +105,8 @@ void omg_scenemgr_event_on_paint(OMG_EventPaint* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        omg_scenemgr_scene_do_paint(this);
+        if (OMG_ISNOTNULL(this->cur_scene))
+            omg_scenemgr_scene_do_paint(this);
     }
     this->on_paint(event);
 }
@@ -113,8 +115,8 @@ void omg_scenemgr_event_on_expose(OMG_EventExpose* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        // TODO: configure with bool
-        // omg_scenemgr_scene_do_paint(this);
+        if (OMG_ISNOTNULL(this->cur_scene) && this->cur_scene->paint_on_expose)
+            omg_scenemgr_scene_do_paint(this);
     }
     this->on_expose(event);
 }
