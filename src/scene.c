@@ -63,6 +63,10 @@ bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
         return false;
     }
     OMG_Scene* scene = (OMG_Scene*)_scene;
+    if (!scene->inited)
+        return false;
+    if (OMG_ISNOTNULL(scene->on_destroy))
+        scene->on_destroy(scene);
     scene->inited = false;
     OMG_UNUSED(this);
     return false;    

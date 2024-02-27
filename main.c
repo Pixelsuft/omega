@@ -32,7 +32,7 @@ OMG_MAIN_MAKE(omega_main)
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     this->fnt->font_destroy(this->fnt, this->fps_font);
-    omg_scenemgr_scene_destroy(this->sm, this->sc);
+    // omg_scenemgr_scene_destroy(this->sm, this->sc);
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
@@ -44,6 +44,19 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     );
     this->omg->destroy(this->omg);
     this->exit_code = 0;
+}
+
+void scene_on_destroy(TestScene* scene) {
+    App* this = (App*)((OMG_Scene*)scene)->data;
+    OMG_INFO(this->omg, "Scene destroy");
+}
+
+void scene_on_init(TestScene* scene) {
+    App* this = (App*)((OMG_Scene*)scene)->data;
+    OMG_BEGIN_POINTER_CAST();
+    scene_base->on_destroy = scene_on_destroy;
+    OMG_END_POINTER_CAST();
+    OMG_INFO(this->omg, "Scene init");
 }
 
 void app_on_update(OMG_EventUpdate* event) {
@@ -192,6 +205,9 @@ void app_init(App* this, OMG_EntryData* data) {
     this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));
     omg_scenemgr_init(this->sm, this->ren);
     omg_scenemgr_scene_fill(this->sm, this->sc);
+    OMG_BEGIN_POINTER_CAST();
+    scene_base->on_init = scene_on_init;
+    OMG_END_POINTER_CAST();
     omg_scenemgr_scene_init(this->sm, this->sc, this);
     OMG_INFO(this->omg, "Hello world ", 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
