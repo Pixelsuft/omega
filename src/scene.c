@@ -209,7 +209,9 @@ void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_down)) {
+            this->cur_scene->on_mouse_down(this->cur_scene, event);
+        }
     }
     this->on_mouse_down(event);
 }
@@ -218,7 +220,9 @@ void omg_scenemgr_event_on_mouse_up(OMG_EventMouseButton* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_up)) {
+            this->cur_scene->on_mouse_up(this->cur_scene, event);
+        }
     }
     this->on_mouse_up(event);
 }
@@ -228,6 +232,9 @@ void omg_scenemgr_event_on_mouse_enter(OMG_EventMouseFocus* event) {
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
         this->is_mouse_entered = true;
+        if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_enter)) {
+            this->cur_scene->on_mouse_enter(this->cur_scene, event);
+        }
     }
     this->on_mouse_enter(event);
 }
@@ -237,6 +244,9 @@ void omg_scenemgr_event_on_mouse_leave(OMG_EventMouseFocus* event) {
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
         this->is_mouse_entered = false;
+        if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_leave)) {
+            this->cur_scene->on_mouse_leave(this->cur_scene, event);
+        }
     }
     this->on_mouse_leave(event);
 }
@@ -245,7 +255,9 @@ void omg_scenemgr_event_on_key_down(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_key_down)) {
+            this->cur_scene->on_key_down(this->cur_scene, event);
+        }
     }
     this->on_key_down(event);
 }
@@ -254,7 +266,9 @@ void omg_scenemgr_event_on_key_up(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_key_up)) {
+            this->cur_scene->on_key_up(this->cur_scene, event);
+        }
     }
     this->on_key_up(event);
 }
@@ -263,7 +277,9 @@ void omg_scenemgr_event_on_text_input(OMG_EventTextInput* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_text_input)) {
+            this->cur_scene->on_text_input(this->cur_scene, event);
+        }
     }
     this->on_text_input(event);
 }
@@ -272,7 +288,9 @@ void omg_scenemgr_event_on_touch_down(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_touch_down)) {
+            this->cur_scene->on_touch_down(this->cur_scene, event);
+        }
     }
     this->on_touch_down(event);
 }
@@ -281,7 +299,9 @@ void omg_scenemgr_event_on_touch_up(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_touch_up)) {
+            this->cur_scene->on_touch_up(this->cur_scene, event);
+        }
     }
     this->on_touch_up(event);
 }
@@ -290,7 +310,9 @@ void omg_scenemgr_event_on_touch_move(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
     if (event->win == this->omg_win) {
-        
+        if (CUR_SCENE_CHECK_NULL_VAL(on_touch_move)) {
+            this->cur_scene->on_touch_move(this->cur_scene, event);
+        }
     }
     this->on_touch_move(event);
 }
