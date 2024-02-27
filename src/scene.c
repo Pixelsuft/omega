@@ -44,12 +44,28 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 event.id = 0; // ?
                 event.is_emulated = false; // ?
                 event.is_pressed = should_on;
-                // TODO: use array of positions to keep them
                 event.pos.x = this->mouse_states[i].x;
                 event.pos.y = this->mouse_states[i].y;
                 event.win = win_base;
                 event.state = 0;
                 (should_on ? scene->on_mouse_down : scene->on_mouse_up)(scene, &event);
+            }
+        }
+    if (((should_on && OMG_ISNOTNULL(scene->on_touch_down)) || (!should_on && OMG_ISNOTNULL(scene->on_touch_up))))
+        for (size_t i = 0; i < 64; i++) {
+            if (this->finger_states[i].w > 0.0f) {
+                OMG_EventTouch event;
+                event.parent.data = omg_base->event_arg;
+                event.parent.omg = omg_base;
+                event.parent.time = 0;
+                event.win = win_base;
+                event.finger_id = (int64_t)i - 1;
+                event.pos.x = this->finger_states[i].x;
+                event.pos.y = this->finger_states[i].y;
+                event.pressure = 1.0f;
+                event.rel.x = event.rel.y = 0.0f;
+                event.touch_id = (int64_t)this->finger_states[i].h;
+                (should_on ? scene->on_touch_down : scene->on_touch_up)(scene, &event);
             }
         }
 #else
@@ -373,6 +389,7 @@ void omg_scenemgr_event_on_touch_down(OMG_EventTouch* event) {
         this->mouse_states[event->finger_id + 1].x = event->pos.x;
         this->mouse_states[event->finger_id + 1].y = event->pos.y;
         this->mouse_states[event->finger_id + 1].w = 1337.0f;
+        this->mouse_states[event->finger_id + 1].h = (float)event->touch_id;
     }
 #endif
     if (event->win == this->omg_win) {
