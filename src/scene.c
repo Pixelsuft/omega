@@ -8,19 +8,36 @@
 #define omg_base ((OMG_Omega*)this->omg_omg)
 #define SET_EVENT_ARG() ((OMG_Event*)event)->data = this->event_arg
 
+// TODO: handle if scene is stopped while updating, painting, etc
+
 bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     OMG_Scene* scene = (OMG_Scene*)_scene;
     if (OMG_ISNULL(this->cur_scene) || (OMG_ISNOTNULL(scene) && (scene != this->cur_scene)))
         return false;
+    if (OMG_ISNOTNULL(this->cur_scene->on_stop)) {
+        if (scene->on_stop(scene)) {
+            _OMG_LOG_ERROR(omg_base, "Failed to stop scene");
+        }
+    }
     this->cur_scene = NULL;
     return false;
 }
 
 bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
+    if (OMG_ISNULL(_scene)) {
+        _OMG_LOG_WARN(omg_base, "Null pointer passed to omg_scenemgr_scene_run");
+        return false;
+    }
     OMG_Scene* scene = (OMG_Scene*)_scene;
     omg_scenemgr_scene_stop(this, NULL);
     if (!scene->inited)
         omg_scenemgr_scene_init(this, _scene, scene->data);
+    if (OMG_ISNOTNULL(scene->on_run)) {
+        if (scene->on_run(scene)) {
+            // Lol WTF???
+            _OMG_LOG_ERROR(omg_base, "Failed to run scene");
+        }
+    }
     this->cur_scene = scene;
     return false;
 }
@@ -38,6 +55,8 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->on_destroy = NULL;
     scene->on_update = NULL;
     scene->on_paint = NULL;
+    scene->on_run = NULL;
+    scene->on_stop = NULL;
     scene->update_on_expose = true;
     scene->paint_on_expose = true;
     return false;

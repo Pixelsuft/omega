@@ -20,6 +20,8 @@ typedef struct OMG_Scene {
     bool (*on_destroy)(struct OMG_Scene* this);
     bool (*on_update)(struct OMG_Scene* this);
     bool (*on_paint)(struct OMG_Scene* this);
+    bool (*on_run)(struct OMG_Scene* this);
+    bool (*on_stop)(struct OMG_Scene* this);
     int dummy;
     bool update_on_expose;
     bool paint_on_expose;

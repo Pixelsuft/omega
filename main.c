@@ -66,12 +66,20 @@ bool scene_on_paint(TestScene* scene) {
     return false;
 }
 
+bool scene_on_run(TestScene* scene) {
+    App* this = (App*)((OMG_Scene*)scene)->data;
+    this->omg->clock->reset(this->omg->clock);
+    OMG_INFO(this->omg, "Scene run");
+    return false;
+}
+
 bool scene_on_init(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     OMG_BEGIN_POINTER_CAST();
     scene_base->on_destroy = scene_on_destroy;
     scene_base->on_update = scene_on_update;
     scene_base->on_paint = scene_on_paint;
+    scene_base->on_run = scene_on_run;
     OMG_END_POINTER_CAST();
     OMG_INFO(this->omg, "Scene init");
     return false;
@@ -231,7 +239,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->show(this->win, true);
     this->win->mouse_set_system_cursor(this->win, OMG_SYSTEM_CURSOR_DEFAULT);
     omg_scenemgr_scene_run(this->sm, this->sc);
-    this->clock->reset(this->clock);
+    // this->clock->reset(this->clock);
     this->exit_code = 0;
 }
 
