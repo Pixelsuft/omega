@@ -202,6 +202,10 @@
 #define OMG_USE_RADIANS 1
 #endif
 
+#ifndef OMG_NULL_STR
+#define OMG_NULL_STR "NULL"
+#endif
+
 #ifndef OMG_MAX_COLOR
 #define OMG_MAX_COLOR ((omg_color_t)255)
 #endif

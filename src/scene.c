@@ -86,7 +86,7 @@ bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene, void*
     if (OMG_ISNOTNULL(scene->on_init)) {
         if (scene->on_init(scene)) {
             // ?
-            _OMG_LOG_INFO(omg_base, "Lol scene init failed");
+            _OMG_LOG_INFO(omg_base, "OMG scene init failed");
             return true;
         }
     }
