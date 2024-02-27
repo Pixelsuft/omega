@@ -49,6 +49,7 @@ typedef struct OMG_SceneMgr {
 #if OMG_SCENES_ADV_INPUT
     uint32_t key_states[524];
     OMG_FRect mouse_states[8];
+    OMG_FRect finger_states[64];
 #endif
     void* event_arg;
     void (*on_update)(OMG_EventUpdate* event);

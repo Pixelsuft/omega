@@ -244,6 +244,17 @@ void omg_scenemgr_event_on_mouse_wheel(OMG_EventMouseWheel* event) {
 void omg_scenemgr_event_on_mouse_move(OMG_EventMouseMove* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    // How?
+    /* if (event->button <= 7) {
+        this->mouse_states[event->button].x = event->pos.x;
+        this->mouse_states[event->button].y = event->pos.y;
+    } */
+    for (size_t i = 0; i < 8; i++) {
+        this->mouse_states[i].x = event->pos.x;
+        this->mouse_states[i].y = event->pos.y;
+    }
+#endif
     if (event->win == this->omg_win) {
         this->is_mouse_entered = true;
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_move)) {
@@ -357,6 +368,13 @@ void omg_scenemgr_event_on_text_input(OMG_EventTextInput* event) {
 void omg_scenemgr_event_on_touch_down(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if ((event->finger_id < 63) && (event->finger_id >= -1)) {
+        this->mouse_states[event->finger_id + 1].x = event->pos.x;
+        this->mouse_states[event->finger_id + 1].y = event->pos.y;
+        this->mouse_states[event->finger_id + 1].w = 1337.0f;
+    }
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_touch_down)) {
             this->cur_scene->on_touch_down(this->cur_scene, event);
@@ -368,6 +386,13 @@ void omg_scenemgr_event_on_touch_down(OMG_EventTouch* event) {
 void omg_scenemgr_event_on_touch_up(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if ((event->finger_id < 63) && (event->finger_id >= -1)) {
+        this->mouse_states[event->finger_id + 1].x = event->pos.x;
+        this->mouse_states[event->finger_id + 1].y = event->pos.y;
+        this->mouse_states[event->finger_id + 1].w = 0.0f;
+    }
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_touch_up)) {
             this->cur_scene->on_touch_up(this->cur_scene, event);
@@ -379,6 +404,12 @@ void omg_scenemgr_event_on_touch_up(OMG_EventTouch* event) {
 void omg_scenemgr_event_on_touch_move(OMG_EventTouch* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if ((event->finger_id < 63) && (event->finger_id >= -1)) {
+        this->mouse_states[event->finger_id + 1].x = event->pos.x;
+        this->mouse_states[event->finger_id + 1].y = event->pos.y;
+    }
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_touch_move)) {
             this->cur_scene->on_touch_move(this->cur_scene, event);
@@ -395,6 +426,7 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
 #if OMG_SCENES_ADV_INPUT
     omg_base->std->memset(this->key_states, 0, sizeof(this->key_states));
     omg_base->std->memset(this->mouse_states, 0, sizeof(this->mouse_states));
+    omg_base->std->memset(this->finger_states, 0, sizeof(this->finger_states));
 #endif
     // omg_base->std->memset((void*)((size_t)this->on_update), 0, (size_t)this->on_touch_move - (size_t)this->on_update);
     omg_base->std->memcpy(
