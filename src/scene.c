@@ -254,6 +254,10 @@ void omg_scenemgr_event_on_mouse_leave(OMG_EventMouseFocus* event) {
 void omg_scenemgr_event_on_key_down(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if (event->sym < 520)
+        this->key_states[event->sym] = true;
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_key_down)) {
             this->cur_scene->on_key_down(this->cur_scene, event);
@@ -265,6 +269,10 @@ void omg_scenemgr_event_on_key_down(OMG_EventKeyboard* event) {
 void omg_scenemgr_event_on_key_up(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+#if OMG_SCENES_ADV_INPUT
+    if (event->sym < 520)
+        this->key_states[event->sym] = false;
+#endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_key_up)) {
             this->cur_scene->on_key_up(this->cur_scene, event);
@@ -322,6 +330,9 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     this->omg_omg = ren->omg;
     this->omg_win = ren->win;
     this->is_mouse_entered = true;
+#if OMG_SCENES_ADV_INPUT
+    omg_base->std->memset(this->key_states, 0, sizeof(this->key_states));
+#endif
     // omg_base->std->memset((void*)((size_t)this->on_update), 0, (size_t)this->on_touch_move - (size_t)this->on_update);
     omg_base->std->memcpy(
         (void*)((size_t)(&this->on_update)),

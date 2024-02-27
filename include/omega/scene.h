@@ -46,6 +46,9 @@ typedef struct OMG_SceneMgr {
     void* omg_win;
     OMG_Omega* omg_omg;
     OMG_Scene* cur_scene;
+#if OMG_SCENES_ADV_INPUT
+    bool key_states[524];
+#endif
     void* event_arg;
     void (*on_update)(OMG_EventUpdate* event);
     void (*on_loop_stop)(OMG_EventLoopStop* event);
