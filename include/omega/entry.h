@@ -2,7 +2,6 @@
 #include <omega/config.h>
 #include <omega/ostd.h>
 
-#if OMG_ENTRY
 #if OMG_IS_WIN
 typedef struct HINSTANCE__ OMG_WIN_ENTRY_HINST;
 #else
@@ -17,8 +16,19 @@ typedef struct {
     int argc;
 } OMG_EntryData;
 
+#if OMG_SUPPORT_ENTRY
+#if OMG_IS_UWP
+#define OMG_MAIN_MAKE(main_func) int main(int argc, char* argv[]) { \
+    OMG_EntryData entry_data; \
+    entry_data.hInst = NULL; \
+    entry_data.cmdline = NULL; \
+    entry_data.cmdline_s = NULL; \
+    entry_data.argc = argc; \
+    entry_data.argv = argv; \
+    return main_func(&entry_data); \
+}
+#elif OMG_IS_WIN && !(OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORT_SDL2_MAIN && OMG_IS_VC)
 // Somewhy SDL2_main doesn't work for me on shitdows with mingw :(
-#if OMG_IS_WIN && !(OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC && OMG_SUPPORT_SDL2_MAIN && OMG_IS_VC)
 // #include <omega/api_win.h>
 
 #define _OMG_ENTRY_DATA_TYPE 2

@@ -11,8 +11,8 @@
 #define OMG_DEBUG_MEM OMG_DEBUG && 1
 #endif
 
-#ifndef OMG_ENTRY
-#define OMG_ENTRY !OMG_IS_UWP
+#ifndef OMG_SUPPORT_ENTRY
+#define OMG_SUPPORT_ENTRY 1
 #endif
 
 #ifndef OMG_SUPPORT_LIBC

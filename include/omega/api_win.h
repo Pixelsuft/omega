@@ -947,11 +947,52 @@ double OMG_WIN_STD_PREFIX pow(double, double);
 #endif
 
 #if OMG_IS_UWP
-typedef struct {
-    int dummy;
-} WNDCLASSEXW;
-typedef void PAINTSTRUCT;
-typedef PAINTSTRUCT* LPPAINTSTRUCT;
+typedef void* WNDPROC;
+typedef struct tagWNDCLASSEXW {
+    UINT      cbSize;
+    UINT      style;
+    WNDPROC   lpfnWndProc;
+    int       cbClsExtra;
+    int       cbWndExtra;
+    HINSTANCE hInstance;
+    HICON     hIcon;
+    HCURSOR   hCursor;
+    HBRUSH    hbrBackground;
+    LPCWSTR   lpszMenuName;
+    LPCWSTR   lpszClassName;
+    HICON     hIconSm;
+} WNDCLASSEXW, *PWNDCLASSEXW, *NPWNDCLASSEXW, *LPWNDCLASSEXW;
+typedef struct tagCREATESTRUCTW {
+    LPVOID    lpCreateParams;
+    HINSTANCE hInstance;
+    HMENU     hMenu;
+    HWND      hwndParent;
+    int       cy;
+    int       cx;
+    int       y;
+    int       x;
+    LONG      style;
+    LPCWSTR   lpszName;
+    LPCWSTR   lpszClass;
+    DWORD     dwExStyle;
+} CREATESTRUCTW, *LPCREATESTRUCTW;
+typedef struct tagWINDOWPOS {
+    HWND hwnd;
+    HWND hwndInsertAfter;
+    int  x;
+    int  y;
+    int  cx;
+    int  cy;
+    UINT flags;
+} WINDOWPOS, *LPWINDOWPOS, *PWINDOWPOS;
+typedef struct tagPAINTSTRUCT {
+    HDC  hdc;
+    BOOL fErase;
+    RECT rcPaint;
+    BOOL fRestore;
+    BOOL fIncUpdate;
+    BYTE rgbReserved[32];
+} PAINTSTRUCT, *PPAINTSTRUCT, *NPPAINTSTRUCT, *LPPAINTSTRUCT;
 typedef void* MONITORENUMPROC;
 #endif
 

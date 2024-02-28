@@ -739,7 +739,7 @@ OMG_TextureSdl2* omg_renderer_sdl2_font_render(OMG_RendererSdl2* this, OMG_Textu
     }
     return tex;
 #else
-    return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, bg, fg, rect);
+    return (OMG_TextureSdl2*)omg_renderer_font_render(base, tex_base, font, text, bg, fg, rect);
 #endif
 }
 
