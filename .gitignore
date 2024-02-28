@@ -18,6 +18,7 @@ x32
 test_dir
 push.bat
 omgapp
+omgapp_uwp
 src/spng.c
 src/miniz.c
 src/lodepng.c
