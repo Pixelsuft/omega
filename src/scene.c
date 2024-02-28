@@ -25,7 +25,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 event.parent.time = 0; // Why we need this???
                 event.code = this->key_states[i];
                 event.is_repeated = false;
-                event.sym = i;
+                event.sym = (uint32_t)i;
                 event.win = this->omg_win;
                 event.mod = 0; // TODO maybe?
                 event.is_pressed = should_on;
@@ -39,7 +39,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 event.parent.data = omg_base->event_arg;
                 event.parent.omg = omg_base;
                 event.parent.time = 0;
-                event.button = i;
+                event.button = (uint8_t)i;
                 event.clicks = 1;
                 event.id = 0; // ?
                 event.is_emulated = false; // ?
