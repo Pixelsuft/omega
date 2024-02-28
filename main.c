@@ -2,6 +2,7 @@
 #include <omega/entry.h>
 #include <omega/api_win.h>
 #include <omega/scene.h>
+#include <omega/api_sdl2.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
