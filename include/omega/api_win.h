@@ -947,7 +947,9 @@ double OMG_WIN_STD_PREFIX pow(double, double);
 #endif
 
 #if OMG_IS_UWP
-typedef void WNDCLASSEXW;
+typedef struct {
+    int dummy;
+} WNDCLASSEXW;
 typedef void PAINTSTRUCT;
 typedef PAINTSTRUCT* LPPAINTSTRUCT;
 typedef void* MONITORENUMPROC;

@@ -93,14 +93,14 @@
 #endif
 
 #ifndef OMG_SUPPORT_RAYLIB
-#define OMG_SUPPORT_RAYLIB 1
+#define OMG_SUPPORT_RAYLIB !OMG_IS_UWP
 #endif
 #ifndef OMG_RAYLIB_DYNAMIC
 #define OMG_RAYLIB_DYNAMIC 1
 #endif
 
 #ifndef OMG_SUPPORT_FMOD
-#define OMG_SUPPORT_FMOD 1
+#define OMG_SUPPORT_FMOD !OMG_IS_UWP
 #endif
 #ifndef OMG_FMOD_DYNAMIC
 #define OMG_FMOD_DYNAMIC 1
