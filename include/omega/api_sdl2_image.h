@@ -29,7 +29,7 @@ typedef struct {
 	int* delays;
 } IMG_Animation;
 #else
-#define OMG_SDL2_IMAGE_STD_PREFIX SDLCALL
+#define OMG_SDL2_IMAGE_STD_PREFIX OMG_SDL2_STD_PREFIX
 #endif
 
 typedef struct {

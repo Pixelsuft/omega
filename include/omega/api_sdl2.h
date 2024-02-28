@@ -1382,7 +1382,13 @@ typedef struct {
     void* driverdata;
 } SDL_DisplayMode;
 #else
+#if OMG_IS_UWP
+#define OMG_SDL2_STD_PREFIX
+typedef void* pfnSDL_CurrentBeginThread;
+typedef void* pfnSDL_CurrentEndThread;
+#else
 #define OMG_SDL2_STD_PREFIX SDLCALL
+#endif
 #endif
 
 typedef struct {
@@ -1640,7 +1646,9 @@ typedef struct {
     int OMG_SDL2_STD_PREFIX (*SDL_CondWait)(SDL_cond*, SDL_mutex*);
     int OMG_SDL2_STD_PREFIX (*SDL_CondWaitTimeout)(SDL_cond*, SDL_mutex*, uint32_t);
     int OMG_SDL2_STD_PREFIX (*SDL_ShowSimpleMessageBox)(uint32_t, const char*, const char*, SDL_Window*);
+#if !OMG_IS_UWP
     SDL_bool OMG_SDL2_STD_PREFIX (*SDL_GetWindowWMInfo)(SDL_Window*, SDL_SysWMinfo*);
+#endif
     char* OMG_SDL2_STD_PREFIX (*SDL_getenv)(const char*);
     int OMG_SDL2_STD_PREFIX (*SDL_setenv)(const char*, const char*, int);
     char* (*SDL_iconv_string)(const char*, const char*, const char*, size_t);

@@ -367,7 +367,7 @@ bool omg_window_sdl2_init(OMG_WindowSdl2* this) {
         this->id = 1;
     }
     this->sdl2->SDL_SetWindowData(this->win, "a", this);
-#if OMG_IS_WIN
+#if OMG_IS_WIN && !OMG_IS_UWP
     SDL_SysWMinfo wm_info;
     wm_info.version.major = 2;
     wm_info.version.minor = 31;

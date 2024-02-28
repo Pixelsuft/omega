@@ -25,6 +25,8 @@ src/lodepng.c
 include/omega_libs/*.h
 .editorconfig
 pch.*
+SDL_mixer.h
+SDL_image.h
 *.stackdump
 *.zip
 *.tar

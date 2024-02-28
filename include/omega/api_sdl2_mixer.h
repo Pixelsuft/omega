@@ -64,7 +64,7 @@ typedef struct _Mix_Music Mix_Music;
 #define MIX_MAX_VOLUME          SDL_MIX_MAXVOLUME 
 
 #else
-#define OMG_SDL2_MIXER_STD_PREFIX SDLCALL
+#define OMG_SDL2_MIXER_STD_PREFIX OMG_SDL2_STD_PREFIX
 #endif
 
 typedef struct {
