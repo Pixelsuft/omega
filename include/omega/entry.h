@@ -18,7 +18,7 @@ typedef struct {
 
 #if OMG_SUPPORT_ENTRY
 #if OMG_IS_UWP
-#define OMG_MAIN_MAKE(main_func) int main(int argc, char* argv[]) { \
+#define OMG_MAIN_MAKE(main_func) int SDL_main(int argc, char* argv[]) { \
     OMG_EntryData entry_data; \
     entry_data.hInst = NULL; \
     entry_data.cmdline = NULL; \
