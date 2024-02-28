@@ -6,6 +6,8 @@
 #include <stdio.h>
 #endif
 #define scene_base ((OMG_Scene*)this->sc)
+// SDL_ttf doesn't compile on UWP (((
+#define SUPPORT_FONT !OMG_IS_UWP
 
 typedef struct {
     OMG_Scene parent;
@@ -62,7 +64,7 @@ bool scene_on_update(TestScene* scene) {
 bool scene_on_paint(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     this->ren->begin(this->ren);
-    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(0, 0, 0));
+    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(50, 50, 50));
     // OMG_INFO(this->omg, "Scene paint");
     return false;
 }
@@ -103,7 +105,9 @@ void app_on_update(OMG_EventUpdate* event) {
 
 void app_on_paint(OMG_EventPaint* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
+#if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
+#endif
     this->ren->flip(this->ren);
 }
 
@@ -207,12 +211,14 @@ void app_init(App* this, OMG_EntryData* data) {
     this->ren = this->win->ren;
     this->ren->soft_offset = true;
     this->ren->aa = !OMG_IS_EMSCRIPTEN;
+#if SUPPORT_FONT
     this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
+    this->fps_font->wrapping = false;
+    this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT;
+#endif
     this->omg->std->memcpy(this->fps_buf, "FPS:               \0", 20);
     this->fps_str = OMG_STRING_MAKE_BUFFER_A(this->fps_buf);
     this->clock = this->omg->clock;
-    this->fps_font->wrapping = false;
-    this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT;
     this->win->allow_alt = false;
     this->omg->event_arg = this;
     this->omg->on_update = app_on_update;

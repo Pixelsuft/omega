@@ -946,6 +946,13 @@ double OMG_WIN_STD_PREFIX fabs(double n);
 double OMG_WIN_STD_PREFIX pow(double, double);
 #endif
 
+#if OMG_IS_UWP
+typedef void WNDCLASSEXW;
+typedef void PAINTSTRUCT;
+typedef PAINTSTRUCT* LPPAINTSTRUCT;
+typedef void* MONITORENUMPROC;
+#endif
+
 typedef struct {
     HMODULE handle;
     HMODULE OMG_WIN_STD_PREFIX (*LoadLibraryExW)(LPCWSTR, HANDLE, DWORD);

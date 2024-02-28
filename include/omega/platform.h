@@ -80,6 +80,22 @@
 #define OMG_MINGW32_FORCEALIGN
 #endif
 
+#if defined(_MSC_VER) && defined(__has_include)
+#if __has_include(<winapifamily.h>)
+#include <winapifamily.h>
+#define OMG_WIN_FAMILY (!WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP) && WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_APP))
+#else
+#define OMG_WIN_FAMILY 0
+#endif
+#else
+#define OMG_WIN_FAMILY 0
+#endif
+#if OMG_WIN_FAMILY > 0
+#define OMG_IS_UWP 1
+#else
+#define OMG_IS_UWP 0
+#endif
+
 #ifndef OMG_SKIP_STD_DETECTION
 #define OMG_HAVE_WCSLEN 0
 #define OMG_HAVE__STRREV 0
