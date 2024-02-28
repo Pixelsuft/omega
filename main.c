@@ -136,6 +136,20 @@ void app_on_key_down(OMG_EventKeyboard* event) {
             this->win,
             (this->win->window_mode != OMG_WIN_MODE_WINDOW) ? OMG_WIN_MODE_WINDOW : OMG_WIN_MODE_DESKTOP_FULLSCREEN
         );
+    else if (event->code == OMG_SCANCODE_P)
+        this->win->mouse_set_system_cursor(this->win, OMG_SYSTEM_CURSOR_CROSSHAIR);
+    else if (event->code == OMG_SCANCODE_LEFTBRACKET)
+        this->win->mouse_set_system_cursor(this->win, OMG_SYSTEM_CURSOR_ARROW);
+    else if (event->is_pressed) {
+        if (event->code == OMG_SCANCODE_U)
+            this->win->mouse_set_rel(this->win, 2); // 0 - Off, 1 - On, 2 - Toggle, Other - Query
+        else if (event->code == OMG_SCANCODE_I)
+            this->win->set_grab(this->win, 2);
+        else if (event->code == OMG_SCANCODE_O)
+            this->win->cursor_set_shown(this->win, 2);
+        else if (event->code == OMG_SCANCODE_B)
+            this->win->set_opacity(this->win, this->win->get_opacity(this->win) > 0.5f ? 0.5f : 1.0f);
+    }
 }
 
 void app_init(App* this, OMG_EntryData* data) {
