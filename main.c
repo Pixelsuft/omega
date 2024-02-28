@@ -34,11 +34,13 @@ OMG_MAIN_MAKE(omega_main)
 
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    this->fnt->font_destroy(this->fnt, this->fps_font);
     omg_scenemgr_scene_destroy(this->sm, this->sc);
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
+#if SUPPORT_FONT
+    this->fnt->font_destroy(this->fnt, this->fps_font);
+#endif
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
@@ -65,7 +67,7 @@ bool scene_on_update(TestScene* scene) {
 bool scene_on_paint(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     this->ren->begin(this->ren);
-    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(50, 50, 50));
+    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(100, 50, 50));
     // OMG_INFO(this->omg, "Scene paint");
     return false;
 }
@@ -166,14 +168,6 @@ void app_init(App* this, OMG_EntryData* data) {
 #endif
     if (this->win->default_init(this->win)) {
         OMG_ERROR(this->omg, "OMG Window Init Fail");
-        this->omg->destroy(this->omg);
-        return;
-    }
-    if (
-        this->omg->winmgr->image_loader_alloc(this->omg->winmgr) ||
-        this->omg->winmgr->img->init(this->omg->winmgr->img)
-    ) {
-        OMG_ERROR(this->omg, "OMG Image Loader Init Fail");
         this->omg->destroy(this->omg);
         return;
     }
