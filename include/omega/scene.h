@@ -16,11 +16,17 @@ typedef struct OMG_Scene {
     void* unused3;
     void* omg_scenemgr;
     void* data;
+    // Scene init event
     bool (*on_init)(struct OMG_Scene* this);
+    // Scene destroy event
     bool (*on_destroy)(struct OMG_Scene* this);
+    // Scene update event
     bool (*on_update)(struct OMG_Scene* this);
+    // Scene paint event
     bool (*on_paint)(struct OMG_Scene* this);
+    // Scene run event
     bool (*on_run)(struct OMG_Scene* this);
+    // Scene stop event
     bool (*on_stop)(struct OMG_Scene* this);
     void (*on_resize)(struct OMG_Scene* this, OMG_EventResize* event);
     void (*on_mouse_move)(struct OMG_Scene* this, OMG_EventMouseMove* event);
@@ -72,12 +78,19 @@ typedef struct OMG_SceneMgr {
     bool is_mouse_entered;
 } OMG_SceneMgr;
 
+// Init scene manager (fill it before doing init)
 OMG_API bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren);
+// Fill scene manager (before init)
 OMG_API bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene);
+// Destroy scene manager
 OMG_API bool omg_scenemgr_destroy(OMG_SceneMgr* this);
+// Run scene
 OMG_API bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
+// Stop scene
 OMG_API bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
+// Init scene
 OMG_API bool omg_scenemgr_scene_init(OMG_SceneMgr* this, OMG_SceneFuncArg* scene, void* data);
+// Destroy scene
 OMG_API bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* scene);
 #if OMG_EXPORT_SHIT
 OMG_API void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool should_on);
