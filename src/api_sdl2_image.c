@@ -24,6 +24,7 @@ bool omg_sdl2_image_dll_load(OMG_Sdl2Image* this, const OMG_String* dll_path) {
     OMG_UNUSED(dll_path);
 #endif
     OMG_BEGIN_POINTER_CAST();
+#include <SDL_image.h>
     LOAD_REQUIRED(IMG_Init);
     LOAD_REQUIRED(IMG_Quit);
     LOAD_REQUIRED(IMG_LoadTyped_RW);
