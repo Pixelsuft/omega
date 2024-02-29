@@ -42,9 +42,11 @@ typedef struct OMG_Scene {
     void (*on_touch_down)(struct OMG_Scene* this, OMG_EventTouch* event);
     void (*on_touch_up)(struct OMG_Scene* this, OMG_EventTouch* event);
     void (*on_touch_move)(struct OMG_Scene* this, OMG_EventTouch* event);
+    double dt;
     int dummy;
     bool update_on_expose;
     bool paint_on_expose;
+    bool enable_paint;
     bool inited;
 } OMG_Scene;
 

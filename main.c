@@ -61,7 +61,18 @@ bool scene_on_destroy(TestScene* scene) {
 
 bool scene_on_update(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
-    OMG_UNUSED(this);
+    if (this->clock->update(this->clock)) {
+        this->omg->enable_paint = false;
+        scene_base->enable_paint = false;
+        return false;
+    }
+    if (this->clock->dt > 1.0)
+        this->clock->dt = 1.0;
+    this->omg->enable_paint = true;
+    scene_base->enable_paint = true;
+    this->fps_str.len = 5;
+    omg_string_add_int(&this->fps_str, this->clock->get_fps(this->clock));
+    scene_base->dt = this->clock->dt;
     for (size_t i = 0; i < MAX_OBJECTS; i++) {
         OMG_Object* obj = scene->objects[i];
         if (OMG_ISNULL(obj))
@@ -75,6 +86,10 @@ bool scene_on_paint(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(100, 50, 50));
+#if SUPPORT_FONT
+    this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
+#endif
+    this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");
     return false;
 }
@@ -101,29 +116,16 @@ bool scene_on_init(TestScene* scene) {
 
 void app_on_update(OMG_EventUpdate* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    if (this->clock->update(this->clock)) {
-        // FPS limit, so let's check events again
-        this->omg->enable_paint = false;
-        return;
-    }
     this->audio->update(this->audio);
-    if (this->clock->dt > 1.0)
-        this->clock->dt = 1.0; // I don't think u have so slow pc
-    this->omg->enable_paint = true;
-    this->fps_str.len = 5;
-    omg_string_add_int(&this->fps_str, this->clock->get_fps(this->clock));
 }
 
 void app_on_paint(OMG_EventPaint* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-#if SUPPORT_FONT
-    this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
-#endif
-    this->ren->flip(this->ren);
+    OMG_UNUSED(this);
 }
 
 void app_on_expose(OMG_EventExpose* event) {
-    app_on_update((OMG_EventUpdate*)event);
+    // app_on_update((OMG_EventUpdate*)event);
     app_on_paint((OMG_EventPaint*)event);
 }
 

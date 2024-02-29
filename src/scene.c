@@ -103,6 +103,7 @@ bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
         }
     }
     omg_scenemgr_scene_reset_input(this, this->cur_scene, true);
+    scene->dt = 0.0;
     this->cur_scene = scene;
     return false;
 }
@@ -135,8 +136,10 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->on_touch_down = NULL;
     scene->on_touch_up = NULL;
     scene->on_touch_move = NULL;
+    scene->dt = 0.0;
     scene->update_on_expose = true;
     scene->paint_on_expose = true;
+    scene->enable_paint = true;
     return false;
 }
 
@@ -196,7 +199,7 @@ void omg_scenemgr_event_on_update(OMG_EventUpdate* event) {
 void omg_scenemgr_scene_do_paint(OMG_SceneMgr* this) {
     if (OMG_ISNOTNULL(this->cur_scene->on_paint)) {
         OMG_Scene* temp_scene = this->cur_scene;
-        if (temp_scene->on_paint(temp_scene)) {
+        if (temp_scene->enable_paint && temp_scene->on_paint(temp_scene)) {
             if (this->cur_scene == temp_scene) {
                 omg_scenemgr_scene_stop(this, temp_scene);
             }
