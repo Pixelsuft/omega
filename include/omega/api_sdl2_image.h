@@ -1,7 +1,6 @@
 #pragma once
 #include <omega/config.h>
 #if OMG_SUPPORT_SDL2_IMAGE
-#include <stdio.h>
 #include <omega/api_sdl2.h>
 #if !OMG_SDL2_IMAGE_DYNAMIC
 #if OMG_IS_VC || OMG_IS_UNIX || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID
