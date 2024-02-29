@@ -2,3 +2,6 @@
 [-] Track memory allocations
 [-] Vulkan renderer
 [-] Android test
+[-] Tiled map import (or any other)
+[-] Bitmap fonts
+[-] Scenes basic objects
