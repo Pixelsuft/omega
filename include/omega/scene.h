@@ -7,6 +7,7 @@
 
 typedef struct {
     OMG_FRect rect;
+    // TODO: events
 } OMG_Object;
 
 typedef struct OMG_Scene {

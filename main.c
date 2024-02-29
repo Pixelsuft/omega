@@ -9,9 +9,11 @@
 #define scene_base ((OMG_Scene*)this->sc)
 // SDL_ttf doesn't compile on UWP (((
 #define SUPPORT_FONT !OMG_IS_UWP
+#define MAX_OBJECTS 20
 
 typedef struct {
     OMG_Scene parent;
+    OMG_Object* objects[MAX_OBJECTS];
 } TestScene;
 
 typedef struct {
@@ -60,6 +62,11 @@ bool scene_on_destroy(TestScene* scene) {
 bool scene_on_update(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     OMG_UNUSED(this);
+    for (size_t i = 0; i < MAX_OBJECTS; i++) {
+        OMG_Object* obj = scene->objects[i];
+        if (OMG_ISNULL(obj))
+            continue;
+    }
     // OMG_INFO(this->omg, "Scene update");
     return false;
 }
@@ -87,6 +94,7 @@ bool scene_on_init(TestScene* scene) {
     scene_base->on_paint = scene_on_paint;
     scene_base->on_run = scene_on_run;
     OMG_END_POINTER_CAST();
+    this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
