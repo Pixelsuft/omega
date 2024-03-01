@@ -5,6 +5,8 @@
 #include <omega/omega.h>
 #define OMG_SceneFuncArg void
 
+struct OMG_SceneMgr;
+
 typedef struct {
     OMG_FRect rect;
     // TODO: events
