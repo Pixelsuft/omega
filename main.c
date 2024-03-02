@@ -13,6 +13,7 @@
 
 typedef struct {
     OMG_Scene parent;
+    OMG_Color circle_color;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectTimer* timer;
     OMG_ObjectAnimTimer* sin_timer;
@@ -89,7 +90,14 @@ bool scene_on_update(TestScene* scene) {
     }
     if (scene->timer->triggered > 0) {
         scene->timer->triggered--;
-        // OMG_INFO(this->omg, "Timer triggered! ", (int)this->clock->last_tick);
+        if (scene->circle_color.b >= 255.0f) {
+            scene->circle_color.b = 0.0f;
+            scene->circle_color.g = 255.0f;
+        }
+        else {
+            scene->circle_color.b = 255.0f;
+            scene->circle_color.g = 0.0f;
+        }
     }
     // OMG_INFO(this->omg, "Scene update");
     return false;
@@ -98,7 +106,7 @@ bool scene_on_update(TestScene* scene) {
 bool scene_on_paint(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     this->ren->begin(this->ren);
-    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(100, 50, 50));
+    this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(25, 25, 25));
     for (size_t i = 0; i < MAX_OBJECTS; i++) {
         OMG_Object* obj = scene->objects[i];
         if (OMG_ISNULL(obj))
@@ -112,7 +120,7 @@ bool scene_on_paint(TestScene* scene) {
         circle_pos.x = 100.0f + 500.0f - (float)(scene->x_timer->time - 5.0) * 100.0f;
     else
         circle_pos.x = 100.0f + (float)scene->x_timer->time * 100.0f;
-    this->ren->fill_circle(this->ren, &circle_pos, 50.0f, &OMG_COLOR_MAKE_RGB(0, 0, 255));
+    this->ren->fill_circle(this->ren, &circle_pos, 50.0f, &scene->circle_color);
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
@@ -154,6 +162,7 @@ bool scene_on_init(TestScene* scene) {
     scene->objects[1] = scene->sin_timer;
     scene->objects[2] = scene->x_timer;
     OMG_END_POINTER_CAST();
+    scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
