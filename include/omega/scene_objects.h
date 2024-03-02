@@ -9,6 +9,8 @@ typedef struct {
     OMG_Clock* clock;
     double counter;
     double duration;
+    bool repeat;
+    bool running;
 } OMG_ObjectTimer;
 
 OMG_API bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg);

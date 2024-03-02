@@ -123,6 +123,9 @@ bool scene_on_init(TestScene* scene) {
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     scene->timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectTimer));
     omg_obj_timer_init(scene->timer, this->omg);
+    OMG_BEGIN_POINTER_CAST();
+    scene->objects[0] = scene->timer;
+    OMG_END_POINTER_CAST();
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
