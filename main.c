@@ -101,6 +101,7 @@ bool scene_on_paint(TestScene* scene) {
         if (OMG_ISNOTNULL(obj->on_paint))
             obj->on_paint(obj, this->sm->cur_scene);
     }
+    this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(100, 100), 50.0f, &OMG_COLOR_MAKE_RGB(0, 0, 255));
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
