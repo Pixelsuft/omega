@@ -6,10 +6,12 @@
 #define OMG_SceneFuncArg void
 
 struct OMG_SceneMgr;
+struct OMG_Scene;
 
-typedef struct {
+typedef struct OMG_Object {
     OMG_FRect rect;
-    // TODO: events
+    bool (*on_update)(struct OMG_Scene* scene, struct OMG_Object* obj);
+    bool (*on_paint)(struct OMG_Scene* scene, struct OMG_Object* obj);
 } OMG_Object;
 
 typedef struct OMG_Scene {
