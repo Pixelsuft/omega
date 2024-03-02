@@ -9,6 +9,8 @@ typedef struct {
     OMG_Clock* clock;
     double counter;
     double duration;
+    int triggered;
+    bool soft;
     bool repeat;
     bool running;
 } OMG_ObjectTimer;

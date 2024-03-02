@@ -82,6 +82,10 @@ bool scene_on_update(TestScene* scene) {
         if (OMG_ISNOTNULL(obj->on_update))
             obj->on_update(obj, this->sm->cur_scene);
     }
+    if (scene->timer->triggered > 0) {
+        scene->timer->triggered--;
+        // OMG_INFO(this->omg, "Timer triggered! ", (int)this->clock->last_tick);
+    }
     // OMG_INFO(this->omg, "Scene update");
     return false;
 }
@@ -123,6 +127,8 @@ bool scene_on_init(TestScene* scene) {
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     scene->timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectTimer));
     omg_obj_timer_init(scene->timer, this->omg);
+    scene->timer->duration = 1.0;
+    scene->timer->running = true;
     OMG_BEGIN_POINTER_CAST();
     scene->objects[0] = scene->timer;
     OMG_END_POINTER_CAST();
