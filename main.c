@@ -15,6 +15,8 @@ typedef struct {
     OMG_Scene parent;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectTimer* timer;
+    OMG_ObjectAnimTimer* sin_timer;
+    OMG_ObjectAnimTimer* x_timer;
 } TestScene;
 
 typedef struct {
@@ -56,7 +58,10 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 
 bool scene_on_destroy(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
-    OMG_FREE(this->omg->mem, scene->timer);
+    for (size_t i = 0; i < MAX_OBJECTS; i++) {
+        if (OMG_ISNOTNULL(scene->objects[i]))
+            OMG_FREE(this->omg->mem, scene->objects[i]);
+    }
     OMG_INFO(this->omg, "Scene destroy");
     return false;
 }
@@ -101,7 +106,13 @@ bool scene_on_paint(TestScene* scene) {
         if (OMG_ISNOTNULL(obj->on_paint))
             obj->on_paint(obj, this->sm->cur_scene);
     }
-    this->ren->fill_circle(this->ren, &OMG_FPOINT_MAKE(100, 100), 50.0f, &OMG_COLOR_MAKE_RGB(0, 0, 255));
+    OMG_FPoint circle_pos;
+    circle_pos.y = 200.0f + this->omg->std->sinf((float)(scene->sin_timer->time * 4.0)) * 100.0f;
+    if (scene->x_timer->time >= 5.0)
+        circle_pos.x = 100.0f + 500.0f - (float)(scene->x_timer->time - 5.0) * 100.0f;
+    else
+        circle_pos.x = 100.0f + (float)scene->x_timer->time * 100.0f;
+    this->ren->fill_circle(this->ren, &circle_pos, 50.0f, &OMG_COLOR_MAKE_RGB(0, 0, 255));
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
@@ -130,8 +141,18 @@ bool scene_on_init(TestScene* scene) {
     omg_obj_timer_init(scene->timer, this->omg);
     scene->timer->duration = 1.0;
     scene->timer->running = true;
+    scene->sin_timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectAnimTimer));
+    omg_obj_anim_timer_init(scene->sin_timer, this->omg);
+    scene->sin_timer->duration = OMG_M_PI2;
+    scene->sin_timer->running = true;
+    scene->x_timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectAnimTimer));
+    omg_obj_anim_timer_init(scene->x_timer, this->omg);
+    scene->x_timer->duration = 10.0;
+    scene->x_timer->running = true;
     OMG_BEGIN_POINTER_CAST();
     scene->objects[0] = scene->timer;
+    scene->objects[1] = scene->sin_timer;
+    scene->objects[2] = scene->x_timer;
     OMG_END_POINTER_CAST();
     OMG_INFO(this->omg, "Scene init");
     return false;

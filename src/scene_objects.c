@@ -45,19 +45,20 @@ bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg) {
 }
 
 bool omg_obj_anim_timer_on_update(OMG_ObjectAnimTimer* this, OMG_Scene* scene) {
+    OMG_UNUSED(scene);
     if (!this->running)
         return false;
-    this->counter += this->clock->dt;
+    this->time += this->clock->dt;
     if (this->soft) {
-        if (this->counter >= this->duration) {
-            this->counter -= this->duration;
+        if (this->time >= this->duration) {
+            this->time -= this->duration;
             if (!this->repeat)
                 this->running = false;
         }
     }
     else {
-        while (this->counter >= this->duration) {
-            this->counter -= this->duration;
+        while (this->time >= this->duration) {
+            this->time -= this->duration;
             if (!this->repeat) {
                 this->running = false;
                 break;
@@ -70,7 +71,7 @@ bool omg_obj_anim_timer_on_update(OMG_ObjectAnimTimer* this, OMG_Scene* scene) {
 bool omg_obj_anim_timer_init(OMG_ObjectAnimTimer* this, OMG_Omega* omg) {
     this->clock = omg->clock;
     this->duration = 0.0;
-    this->counter = 0.0;
+    this->time = 0.0;
     this->repeat = true;
     this->running = false;
     this->soft = false;

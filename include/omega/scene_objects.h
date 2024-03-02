@@ -18,7 +18,7 @@ typedef struct {
 typedef struct {
     OMG_Object base;
     OMG_Clock* clock;
-    double counter;
+    double time;
     double duration;
     bool soft;
     bool running;
