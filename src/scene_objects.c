@@ -4,7 +4,9 @@
 #define obj_base ((OMG_Object*)this)
 
 bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene) {
-    OMG_UNUSED(this, scene);
+    if (!this->running)
+        return false;
+    OMG_UNUSED(scene);
     return false;
 }
 
