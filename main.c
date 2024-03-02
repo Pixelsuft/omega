@@ -80,7 +80,7 @@ bool scene_on_update(TestScene* scene) {
         if (OMG_ISNULL(obj))
             continue;
         if (OMG_ISNOTNULL(obj->on_update))
-            obj->on_update(this->sm->cur_scene, obj);
+            obj->on_update(obj, this->sm->cur_scene);
     }
     // OMG_INFO(this->omg, "Scene update");
     return false;
@@ -95,7 +95,7 @@ bool scene_on_paint(TestScene* scene) {
         if (OMG_ISNULL(obj))
             continue;
         if (OMG_ISNOTNULL(obj->on_paint))
-            obj->on_paint(this->sm->cur_scene, obj);
+            obj->on_paint(obj, this->sm->cur_scene);
     }
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);

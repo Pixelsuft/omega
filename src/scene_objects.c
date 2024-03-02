@@ -3,7 +3,7 @@
 #if OMG_SUPPORT_SCENES
 #define obj_base ((OMG_Object*)this)
 
-bool omg_obj_timer_on_update(OMG_Scene* scene, OMG_ObjectTimer* this) {
+bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene) {
     OMG_UNUSED(this, scene);
     return false;
 }

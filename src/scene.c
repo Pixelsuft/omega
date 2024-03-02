@@ -140,6 +140,7 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->update_on_expose = true;
     scene->paint_on_expose = true;
     scene->enable_paint = true;
+    scene->id = 0;
     return false;
 }
 

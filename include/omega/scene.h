@@ -12,8 +12,8 @@ struct OMG_Scene;
 
 typedef struct OMG_Object {
     OMG_FRect rect;
-    bool (*on_update)(struct OMG_Scene* scene, struct OMG_Object* obj);
-    bool (*on_paint)(struct OMG_Scene* scene, struct OMG_Object* obj);
+    bool (*on_update)(struct OMG_Object* this, struct OMG_Scene* scene);
+    bool (*on_paint)(struct OMG_Object* this, struct OMG_Scene* scene);
 } OMG_Object;
 
 typedef struct OMG_Scene {
@@ -49,7 +49,7 @@ typedef struct OMG_Scene {
     void (*on_touch_up)(struct OMG_Scene* this, OMG_EventTouch* event);
     void (*on_touch_move)(struct OMG_Scene* this, OMG_EventTouch* event);
     double dt;
-    int dummy;
+    int id;
     bool update_on_expose;
     bool paint_on_expose;
     bool enable_paint;

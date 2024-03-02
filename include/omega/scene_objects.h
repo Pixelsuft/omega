@@ -14,4 +14,7 @@ typedef struct {
 } OMG_ObjectTimer;
 
 OMG_API bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg);
+#if OMG_EXPORT_SHIT
+OMG_API bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene);
+#endif
 #endif
