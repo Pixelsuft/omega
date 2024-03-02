@@ -5,6 +5,8 @@
 #include <omega/omega.h>
 #define OMG_SceneFuncArg void
 
+#define OMG_SCENEMGR_FROM_SCENE(scene) ((OMG_SceneMgr*)(((OMG_Scene*)scene)->omg_scenemgr))
+
 struct OMG_SceneMgr;
 struct OMG_Scene;
 
