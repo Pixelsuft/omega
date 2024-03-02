@@ -2,7 +2,7 @@
 #include <omega/entry.h>
 #include <omega/api_win.h>
 #include <omega/scene.h>
-#include <omega/api_sdl2.h>
+#include <omega/scene_objects.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
@@ -14,6 +14,7 @@
 typedef struct {
     OMG_Scene parent;
     OMG_Object* objects[MAX_OBJECTS];
+    OMG_ObjectTimer* timer;
 } TestScene;
 
 typedef struct {
@@ -55,6 +56,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 
 bool scene_on_destroy(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
+    OMG_FREE(this->omg->mem, scene->timer);
     OMG_INFO(this->omg, "Scene destroy");
     return false;
 }
@@ -119,6 +121,8 @@ bool scene_on_init(TestScene* scene) {
     scene_base->on_run = scene_on_run;
     OMG_END_POINTER_CAST();
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
+    scene->timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectTimer));
+    omg_obj_timer_init(scene->timer, this->omg);
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
