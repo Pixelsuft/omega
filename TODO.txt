@@ -4,4 +4,3 @@
 [-] Android test
 [-] Tiled map import (or any other)
 [-] Bitmap fonts
-[-] Scenes basic objects (timers?, animations?)
