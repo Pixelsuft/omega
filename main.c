@@ -138,12 +138,12 @@ bool scene_on_run(TestScene* scene) {
 
 bool scene_on_init(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
-    OMG_BEGIN_POINTER_CAST();
+    OMG_BPO();
     scene_base->on_destroy = scene_on_destroy;
     scene_base->on_update = scene_on_update;
     scene_base->on_paint = scene_on_paint;
     scene_base->on_run = scene_on_run;
-    OMG_END_POINTER_CAST();
+    OMG_EPO();
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     scene->timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectTimer));
     omg_obj_timer_init(scene->timer, this->omg);
@@ -157,11 +157,11 @@ bool scene_on_init(TestScene* scene) {
     omg_obj_anim_timer_init(scene->x_timer, this->omg);
     scene->x_timer->duration = 10.0;
     scene->x_timer->running = true;
-    OMG_BEGIN_POINTER_CAST();
+    OMG_BPO();
     scene->objects[0] = scene->timer;
     scene->objects[1] = scene->sin_timer;
     scene->objects[2] = scene->x_timer;
-    OMG_END_POINTER_CAST();
+    OMG_EPO();
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
     OMG_INFO(this->omg, "Scene init");
     return false;
@@ -258,7 +258,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     if (this->win->type == OMG_WIN_TYPE_WIN && 0)
         this->win->ren_type = OMG_REN_TYPE_WIN;
-    OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_SOFTWARE_RENDERER"));
+    OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_SOFTWARE_RENDERER"));
     int force_ren_driver = OMG_REN_DRIVER_AUTO;
     if (temp_env.type >= 0)
         force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
@@ -292,7 +292,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->ren->soft_offset = true;
     this->ren->aa = !OMG_IS_EMSCRIPTEN;
 #if SUPPORT_FONT
-    this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STRING_MAKE_STATIC("assets/segoeuib.ttf"), -1, 32.0f);
+    this->fps_font = this->fnt->font_from_fp(this->fnt, NULL, &OMG_STR("assets/segoeuib.ttf"), -1, 32.0f);
     this->fps_font->wrapping = false;
     this->fps_font->text_type = OMG_FONT_TEXT_TYPE_TEXT;
 #endif
@@ -306,19 +306,19 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_expose = app_on_expose;
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_key_down;
-    this->win->set_min_size(this->win, &OMG_FPOINT_MAKE(320, 200));
-    temp_env = this->omg->env_get(this->omg, &OMG_STRING_MAKE_STATIC("OMG_MS_CLOCK"));
+    this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
+    temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_MS_CLOCK"));
     this->clock->init(this->clock, temp_env.type >= 0);
     omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
-    this->win->set_title(this->win, &OMG_STRING_MAKE_STATIC("Test Window"));
+    this->win->set_title(this->win, &OMG_STR("Test Window"));
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
     this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));
     omg_scenemgr_init(this->sm, this->ren);
     omg_scenemgr_scene_fill(this->sm, this->sc);
-    OMG_BEGIN_POINTER_CAST();
+    OMG_BPO();
     scene_base->on_init = scene_on_init;
-    OMG_END_POINTER_CAST();
+    OMG_EPO();
     omg_scenemgr_scene_init(this->sm, this->sc, this);
     OMG_INFO(this->omg, "Hello world ", 1337.228f, " ", 228.1337, " 1", 228, "1 0x", (void*)this->omg);
     this->win->show(this->win, true);
