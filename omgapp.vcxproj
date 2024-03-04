@@ -160,6 +160,7 @@
     <ClCompile Include="src\api_spng.c" />
     <ClCompile Include="src\api_static.c" />
     <ClCompile Include="src\api_win.c" />
+    <ClCompile Include="src\array.c" />
     <ClCompile Include="src\audio.c" />
     <ClCompile Include="src\audio_emscripten.c" />
     <ClCompile Include="src\audio_fmod.c" />
@@ -192,6 +193,7 @@
     <ClCompile Include="src\renderer_sdl2.c" />
     <ClCompile Include="src\renderer_win.c" />
     <ClCompile Include="src\scene.c" />
+    <ClCompile Include="src\scene_objects.c" />
     <ClCompile Include="src\window.c" />
     <ClCompile Include="src\window_raylib.c" />
     <ClCompile Include="src\window_sdl2.c" />

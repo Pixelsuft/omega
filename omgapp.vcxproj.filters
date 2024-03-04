@@ -168,5 +168,11 @@
     <ClCompile Include="src\scene.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\array.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene_objects.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

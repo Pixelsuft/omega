@@ -3,6 +3,7 @@
 #include <omega/api_win.h>
 #include <omega/scene.h>
 #include <omega/scene_objects.h>
+#include <omega/array.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
@@ -164,6 +165,7 @@ bool scene_on_init(TestScene* scene) {
     OMG_EPO();
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
     OMG_INFO(this->omg, "Scene init");
+    OMG_Array(int) test_array;
     return false;
 }
 
