@@ -17,17 +17,17 @@ bool omg_array_destroy(OMG_ArrayBase* this) {
 
 bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, int chunk_size) {
     if (chunk_size <= 0)
-        chunk_size = 1;
+        chunk_size = (int)elem_size;
     this->chunk_size = chunk_size;
     this->len = initial_len;
-    this->size = initial_len;
+    this->size = initial_len * elem_size;
     if (this->size % (size_t)chunk_size) {
         this->size /= (size_t)chunk_size;
         this->size *= (size_t)chunk_size;
         this->size++;
     }
     omg_mem = omg_get_default_omega()->mem;
-    this->data = OMG_MALLOC(omg_mem, elem_size * this->size);
+    this->data = OMG_MALLOC(omg_mem, this->size);
     if (OMG_ISNULL(this->data)) {
         this->chunk_size = 0;
         this->size = 0;

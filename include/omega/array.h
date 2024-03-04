@@ -18,7 +18,7 @@ typedef struct {
     size_t size; \
     /* Length */ \
     size_t len; \
-    /* Chunk size (in elements) */ \
+    /* Chunk size (in bytes) */ \
     int chunk_size; \
     /* Data pointer */ \
     array_type* data; \
