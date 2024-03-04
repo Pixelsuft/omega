@@ -433,5 +433,6 @@ OMG_API bool omg_string_add_dpoint(OMG_String* this, const OMG_DPoint* dpoint_to
 OMG_API bool omg_string_add_rect(OMG_String* this, const OMG_Rect* rect_to_add);
 OMG_API bool omg_string_add_frect(OMG_String* this, const OMG_FRect* frect_to_add);
 OMG_API bool omg_string_add_drect(OMG_String* this, const OMG_DRect* drect_to_add);
+OMG_API bool omg_string_equal(const OMG_String* this, const OMG_String* other_string);
 OMG_API OMG_String* omg_dummy_string_create(void);
 OMG_API OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str);

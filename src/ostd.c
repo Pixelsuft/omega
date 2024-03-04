@@ -966,6 +966,18 @@ bool omg_string_ensure_free_len(OMG_String* this, size_t need_len) {
     return false;
 }
 
+bool omg_string_equal(const OMG_String* this, const OMG_String* other_string) {
+    if (this == other_string)
+        return true;
+    if (OMG_ISNULL(this) || OMG_ISNULL(other_string))
+        return false;
+    if (this->len != other_string->len)
+        return false;
+    if (this->ptr == other_string->ptr)
+        return true;
+    return !omg_def_std->memcmp(this->ptr, other_string->ptr, this->len);
+}
+
 bool omg_string_destroy(OMG_String* this) {
     bool res = false;
     if (this->type == OMG_STRING_DYNAMIC && OMG_ISNOTNULL(this->ptr)) {
