@@ -1,9 +1,10 @@
 #pragma once
 #include <stdint.h>
 #include <stdbool.h>
-#include <omega/platform.h>
 #include <stddef.h>
 #include <stdarg.h>
+#include <omega/platform.h>
+#include <omega/config.h>
 
 #define OMG_ISNULL(ptr) ((ptr) == NULL)
 #define OMG_ISNOTNULL(ptr) ((ptr) != NULL)
@@ -41,6 +42,18 @@
 #define OMG_COLOR_MAKE_RGBA(c_r, c_g, c_b, c_a) ((OMG_Color){ .r = (omg_color_t)(c_r), .g = (omg_color_t)(c_g), .b = (omg_color_t)(c_b), .a = (omg_color_t)(c_a) })
 
 #define OMG_B64_ENCODED_LEN(input_len) (4 * (((size_t)(input_len) + 2) / 3))
+
+#if OMG_SHORTCUTS
+#define OMG_POINT OMG_POINT_MAKE
+#define OMG_FPOINT OMG_FPOINT_MAKE
+#define OMG_DPOINT OMG_FPOINT_MAKE
+#define OMG_RECT OMG_RECT_MAKE
+#define OMG_FRECT OMG_FRECT_MAKE
+#define OMG_DRECT OMG_DRECT_MAKE
+#define OMG_STR OMG_STRING_MAKE_STATIC
+#define OMG_RGB OMG_COLOR_MAKE_RGB
+#define OMG_RGBA OMG_COLOR_MAKE_RGBA
+#endif
 
 #define _OMG_STRING_GET_ADD_FUNC(X) _Generic((X), \
     const char*: omg_string_add_char_p, \

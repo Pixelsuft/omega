@@ -22,6 +22,10 @@
 #define OMG_LIBC_DYNAMIC 1
 #endif
 
+#ifndef OMG_SHORTCUTS
+#define OMG_SHORTCUTS 1
+#endif
+
 #ifndef OMG_SUPPORT_WIN
 #define OMG_SUPPORT_WIN OMG_IS_WIN
 #endif
