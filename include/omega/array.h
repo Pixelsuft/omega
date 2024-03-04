@@ -3,16 +3,24 @@
 #include <omega/ostd.h>
 
 typedef struct {
+    /* Allocated size (not length!) */
     size_t size;
+    /* Length */
     size_t len;
+    /* Chunk size (in elements) */
     int chunk_size;
+    /* Data pointer */
     void* data;
 } OMG_ArrayBase;
 
 #define OMG_Array(array_type) struct { \
+    /* Allocated size (not length!) */ \
     size_t size; \
+    /* Length */ \
     size_t len; \
+    /* Chunk size (in elements) */ \
     int chunk_size; \
+    /* Data pointer */ \
     array_type* data; \
 }
 

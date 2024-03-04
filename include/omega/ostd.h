@@ -199,10 +199,14 @@
 #endif
 
 typedef struct {
+    /* Allocated size (not length!) */
     size_t size;
     // Technically, we should also include utf-8 size for things like utf-16 convertion, but Microsoft sucks
+    /* Length */
     size_t len;
+    /* Type */
     int type;
+    /* Array pointer */
     char* ptr;
     // char buf[];
 } OMG_String;
