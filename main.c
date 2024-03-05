@@ -4,6 +4,7 @@
 #include <omega/scene.h>
 #include <omega/scene_objects.h>
 #include <omega/array.h>
+#include <omega/bmfont.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
@@ -14,6 +15,7 @@
 
 typedef struct {
     OMG_Scene parent;
+    OMG_Bmfont bmfont;
     OMG_Color circle_color;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectTimer* timer;
@@ -66,6 +68,7 @@ bool scene_on_destroy(TestScene* scene) {
         if (OMG_ISNOTNULL(scene->objects[i]))
             OMG_FREE(this->omg->mem, scene->objects[i]);
     }
+    omg_bmfont_destroy(&scene->bmfont);
     OMG_INFO(this->omg, "Scene destroy");
     return false;
 }
@@ -181,7 +184,14 @@ bool scene_on_init(TestScene* scene) {
         OMG_INFO(this->omg, test_arr.data[i]);
     } */
     OMG_ARRAY_DESTROY(&test_arr);
-    
+    OMG_File* file = this->omg->file_from_fp(this->omg, NULL, &OMG_STR("assets/goldFont-uhd.fnt"), OMG_FILE_MODE_RT);
+    size_t data_size = file->get_size(file);
+    char* data = OMG_MALLOC(this->omg->mem, data_size + 10);
+    this->omg->std->memset(&data[data_size], 0, 8);
+    file->read(file, data, 1, data_size);
+    omg_bmfont_init(&scene->bmfont, this->font_tex, this->ren);
+    OMG_FREE(this->omg->mem, data);
+    file->destroy(file);
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
