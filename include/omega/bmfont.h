@@ -17,6 +17,7 @@ typedef struct {
 
 typedef struct {
     OMG_Renderer* ren;
+    OMG_Omega* omg;
     OMG_Texture* page;
     size_t ch_count;
     size_t k_count;

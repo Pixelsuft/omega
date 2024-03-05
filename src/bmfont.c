@@ -9,6 +9,7 @@ bool omg_bmfont_destroy(OMG_Bmfont* this) {
 
 bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, char* data, size_t data_len) {
     this->ren = ren;
+    this->omg = (OMG_Omega*)ren->omg;
     this->page = page;
     this->ch_count = 0;
     this->k_count = 0;
@@ -22,6 +23,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
     this->unicode = false;
     this->smooth = false;
     this->aa = false;
+    // https://gist.github.com/viperscape/5812ee4cf63f02c1fcba8c5982295179
     // 13 = '\n'
     // 10 = '\0'
     for (size_t i = 0; i < data_len; ) {
@@ -33,14 +35,19 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         if (data[i] == 'i') {
             // Info
         }
-        else if (data[i] == 'c') {
+        else if ((data[i] == 'c') && (data[i + 1] == 'o')) {
             // Common
         }
         else if (data[i] == 'p') {
             // Page
         }
         else if ((data[i] == 'c') && (data[i + 4] == 's')) {
-            // Chars
+            int ch_count = 32;
+            if (this->omg->std->sscanf(&data[i], "chars count=%i", &ch_count) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse chars");
+                return true;
+            }
+            this->ch_count = (size_t)ch_count;
         }
         else if (data[i] == 'c') {
             // Char
