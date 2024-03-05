@@ -43,6 +43,17 @@ bool omg_array_set_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size, b
     return false;
 }
 
+bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem) {
+    if (((this->len + 1) * elem_size) > this->size) {
+        if (omg_array_add_chunk(this))
+            return true;
+    }
+    // HOW???
+    // this->data[this->len] = need_elem;
+    this->len++;
+    return false;
+}
+
 bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, int chunk_size) {
     if (chunk_size <= 0)
         chunk_size = (int)elem_size;

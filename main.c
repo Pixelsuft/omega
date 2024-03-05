@@ -167,7 +167,7 @@ bool scene_on_init(TestScene* scene) {
     OMG_INFO(this->omg, "Scene init");
     OMG_Array(int) test_arr;
     OMG_ARRAY_INIT(&test_arr, 10, 0);
-    OMG_ARRAY_SET_LEN(&test_arr, 100, true);
+    OMG_ARRAY_SET_LEN(&test_arr, 5, true);
     for (int i = 0; i < (int)test_arr.len; i++) {
         test_arr.data[i] = i;
     }

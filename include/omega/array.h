@@ -28,8 +28,10 @@ typedef struct {
 #define OMG_ARRAY_DESTROY(this) omg_array_destroy((OMG_ArrayBase*)(this))
 #define OMG_ARRAY_ADD_CHUNK(this) omg_array_add_chunk((OMG_ArrayBase*)(this))
 #define OMG_ARRAY_SET_LEN(this, need_len, trim) omg_array_set_len((OMG_ArrayBase*)(this), need_len, (size_t)sizeof(*(this)->data), trim)
+#define OMG_ARRAY_PUSH(this, new_elem) omg_array_push((OMG_ArrayBase*)(this), new_elem, (size_t)sizeof(*(this)->data))
 
 OMG_API bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, int chunk_size);
 OMG_API bool omg_array_set_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size, bool trim);
+OMG_API bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem);
 OMG_API bool omg_array_add_chunk(OMG_ArrayBase* this);
 OMG_API bool omg_array_destroy(OMG_ArrayBase* this);
