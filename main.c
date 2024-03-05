@@ -31,6 +31,7 @@ typedef struct {
     OMG_Font* fps_font;
     OMG_SceneMgr* sm;
     TestScene* sc;
+    OMG_Texture* font_tex;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -45,6 +46,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
+    this->ren->tex_destroy(this->ren, this->font_tex);
 #if SUPPORT_FONT
     this->fnt->font_destroy(this->fnt, this->fps_font);
 #endif
@@ -122,6 +124,7 @@ bool scene_on_paint(TestScene* scene) {
     else
         circle_pos.x = 100.0f + (float)scene->x_timer->time * 100.0f;
     this->ren->fill_circle(this->ren, &circle_pos, 50.0f, &scene->circle_color);
+    this->ren->copy(this->ren, this->font_tex, &OMG_FPOINT(200, 200));
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
@@ -178,6 +181,7 @@ bool scene_on_init(TestScene* scene) {
         OMG_INFO(this->omg, test_arr.data[i]);
     } */
     OMG_ARRAY_DESTROY(&test_arr);
+    
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
@@ -321,6 +325,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_expose = app_on_expose;
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_key_down;
+    this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
     temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_MS_CLOCK"));
     this->clock->init(this->clock, temp_env.type >= 0);
