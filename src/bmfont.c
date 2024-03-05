@@ -11,6 +11,8 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
     this->ren = ren;
     this->omg = (OMG_Omega*)ren->omg;
     this->page = page;
+    this->pad[0] = this->pad[1] = this->pad[2] = this->pad[3] = 0;
+    this->spac[0] = this->spac[1] = 0;
     this->ch_count = 0;
     this->k_count = 0;
     this->size = 0;
@@ -33,7 +35,47 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         }
         data[i + cur_len] = '\0';
         if (data[i] == 'i') {
-            // Info
+            int bd = 0;
+            int it = 0;
+            int sm = 0;
+            int aa = 0;
+            while (data[i] != 's' || data[i + 1] != 'i' || data[i + 2] != 'z') {
+                if (data[i + 2] == '\0') {
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                    return true;
+                }
+                i++;
+            }
+            if (this->omg->std->sscanf(
+                &data[i], "size=%i bold=%i italic=%i", &this->size, &bd, &it //, &sm, &aa, &this->pad[0], &this->pad[1], &this->pad[2], &this->pad[3], &this->spac[0], &this->spac[1]
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                return true;
+            }
+            while (data[i] != 's' || data[i + 1] != 'i' || data[i + 2] != 'z' || data[i + 3] != 'e') {
+                if (data[i + 2] == '\0') {
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                    return true;
+                }
+                i++;
+            }
+            while (data[i] != 's' || data[i + 1] != 'm' || data[i + 2] != 'o' || data[i + 3] != 'o' || data[i + 4] != 't') {
+                if (data[i + 2] == '\0') {
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                    return true;
+                }
+                i++;
+            }
+            if (this->omg->std->sscanf(
+                &data[i], "smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i", &sm, &aa, &this->pad[0], &this->pad[1], &this->pad[2], &this->pad[3], &this->spac[0], &this->spac[1]
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                return true;
+            }
+            this->bold = bd != 0;
+            this->italic = it != 0;
+            this->smooth = sm != 0;
+            this->aa = aa != 0;
         }
         else if ((data[i] == 'c') && (data[i + 1] == 'o')) {
             // Common

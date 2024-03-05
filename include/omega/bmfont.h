@@ -21,6 +21,8 @@ typedef struct {
     OMG_Texture* page;
     size_t ch_count;
     size_t k_count;
+    int pad[4];
+    int spac[2];
     int size;
     int line_height;
     int base;
