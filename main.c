@@ -168,15 +168,15 @@ bool scene_on_init(TestScene* scene) {
     OMG_ARRAY_INIT(&test_arr, 0, 0);
     // OMG_ARRAY_SET_LEN(&test_arr, 5, true);
     OMG_ARRAY_RESERVE_LEN(&test_arr, 100);
-    /* for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 100; i++) {
         OMG_ARRAY_PUSH(&test_arr, i);
-    } */
+    }
     OMG_ARRAY_REMOVE(&test_arr, 5, true);
     OMG_ARRAY_REMOVE(&test_arr, 6, true);
     OMG_ARRAY_REMOVE(&test_arr, 7, true);
-    for (int i = 0; i < (int)test_arr.len; i++) {
+    /* for (int i = 0; i < (int)test_arr.len; i++) {
         OMG_INFO(this->omg, test_arr.data[i]);
-    }
+    } */
     OMG_ARRAY_DESTROY(&test_arr);
     OMG_INFO(this->omg, "Scene init");
     return false;
