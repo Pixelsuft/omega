@@ -49,6 +49,7 @@ bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem
             return true;
     }
     // HOW???
+    // TODO: use memcpy
     // this->data[this->len] = need_elem;
     this->len++;
     return false;
