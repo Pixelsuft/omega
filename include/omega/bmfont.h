@@ -18,7 +18,8 @@ typedef struct {
 typedef struct {
     OMG_Renderer* ren;
     OMG_Texture* page;
-    size_t chars_count;
+    size_t ch_count;
+    size_t k_count;
     int size;
     int line_height;
     int base;
