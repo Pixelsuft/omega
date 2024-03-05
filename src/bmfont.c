@@ -35,6 +35,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         while ((i + cur_len) < data_len && data[i + cur_len] != '\n') {
             cur_len++;
         }
+        size_t temp_id = i;
         data[i + cur_len] = '\0';
         if (data[i] == 'i') {
             // Info
@@ -44,7 +45,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
             int aa = 0;
             while (data[i] != 's' || data[i + 1] != 'i' || data[i + 2] != 'z') {
                 if (data[i + 2] == '\0') {
-                    _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse info 1");
                     return true;
                 }
                 i++;
@@ -52,19 +53,19 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
             if (this->omg->std->sscanf(
                 &data[i], "size=%i bold=%i italic=%i", &this->size, &bd, &it
             ) < 1) {
-                _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                _OMG_LOG_ERROR(this->omg, "Failed to parse info 2");
                 return true;
             }
             while (data[i] != 's' || data[i + 1] != 'i' || data[i + 2] != 'z' || data[i + 3] != 'e') {
                 if (data[i + 2] == '\0') {
-                    _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse info 3");
                     return true;
                 }
                 i++;
             }
             while (data[i] != 's' || data[i + 1] != 'm' || data[i + 2] != 'o' || data[i + 3] != 'o' || data[i + 4] != 't') {
                 if (data[i + 2] == '\0') {
-                    _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse info 4");
                     return true;
                 }
                 i++;
@@ -72,7 +73,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
             if (this->omg->std->sscanf(
                 &data[i], "smooth=%i aa=%i padding=%i,%i,%i,%i spacing=%i,%i", &sm, &aa, &this->pad[0], &this->pad[1], &this->pad[2], &this->pad[3], &this->spac[0], &this->spac[1]
             ) < 1) {
-                _OMG_LOG_ERROR(this->omg, "Failed to parse info");
+                _OMG_LOG_ERROR(this->omg, "Failed to parse info 5");
                 return true;
             }
             this->bold = bd != 0;
@@ -108,15 +109,34 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         }
         else if (data[i] == 'c') {
             // Char
+            if (OMG_ISNULL(this->chars.data)) {
+                _OMG_LOG_ERROR(this->omg, "Chars array is not allocated");
+                return true;
+            }
+            int buf[10];
+            if (this->omg->std->sscanf(
+                &data[i], "char id=%i   x=%i    y=%i     width=%i     height=%i    xoffset=%i     yoffset=%i     xadvance=%i     page=%i  chnl=%i",
+                &buf[0], &buf[1], &buf[2], &buf[3], &buf[4], &buf[5], &buf[6], &buf[7], &buf[8], &buf[9]
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse char");
+                omg_bmfont_destroy(this);
+                return true;
+            }
         }
         else if ((data[i] == 'k') && (data[i + 7] == 's')) {
             // Kernings
+            int k_count = 32;
+            if (this->omg->std->sscanf(&data[i], "kernings count=%i", &k_count) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse kernings");
+                omg_bmfont_destroy(this);
+                return true;
+            }
         }
         else if (data[i] == 'k') {
             // Kerning
         }
-        data[i + cur_len] = '\n';
-        i += cur_len + 1;
+        data[temp_id + cur_len] = '\n';
+        i = temp_id + cur_len + 1;
     }
     return false;
 }
