@@ -37,6 +37,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         }
         data[i + cur_len] = '\0';
         if (data[i] == 'i') {
+            // Info
             int bd = 0;
             int it = 0;
             int sm = 0;
@@ -49,7 +50,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 i++;
             }
             if (this->omg->std->sscanf(
-                &data[i], "size=%i bold=%i italic=%i", &this->size, &bd, &it //, &sm, &aa, &this->pad[0], &this->pad[1], &this->pad[2], &this->pad[3], &this->spac[0], &this->spac[1]
+                &data[i], "size=%i bold=%i italic=%i", &this->size, &bd, &it
             ) < 1) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse info");
                 return true;
@@ -81,11 +82,19 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         }
         else if ((data[i] == 'c') && (data[i + 1] == 'o')) {
             // Common
+            int tmp = 0;
+            if (this->omg->std->sscanf(
+                &data[i], "common lineHeight=%i base=%i scaleW=%i scaleH=%i pages=%i packed=%i", &this->line_height, &this->base, &this->scale_w, &this->scale_h, &tmp, &tmp
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to common bmfont info");
+                return true;
+            }
         }
         else if (data[i] == 'p') {
             // Page
         }
         else if ((data[i] == 'c') && (data[i + 4] == 's')) {
+            // Chars
             int ch_count = 32;
             if (this->omg->std->sscanf(&data[i], "chars count=%i", &ch_count) < 1) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse chars");
