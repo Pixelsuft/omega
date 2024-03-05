@@ -2,7 +2,8 @@
 #include <omega/memory.h>
 #include <omega/omega.h>
 
-static OMG_Memory* omg_mem;
+static OMG_Memory* omg_mem = NULL;
+static OMG_Std* omg_std = NULL;
 
 bool omg_array_destroy(OMG_ArrayBase* this) {
     if (OMG_ISNULL(this->data))
@@ -19,6 +20,7 @@ bool omg_array_add_chunk(OMG_ArrayBase* this) {
     void* new_ptr = OMG_REALLOC(omg_mem, this->data, this->size + (size_t)this->chunk_size);
     if (OMG_ISNULL(new_ptr))
         return true;
+    this->size += (size_t)this->chunk_size;
     this->data = new_ptr;
     return false;
 }
@@ -48,9 +50,7 @@ bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem
         if (omg_array_add_chunk(this))
             return true;
     }
-    // HOW???
-    // TODO: use memcpy
-    // this->data[this->len] = need_elem;
+    // omg_std->memcpy((void*)((size_t)(this->data) + (this->len * elem_size)), need_elem, elem_size);
     this->len++;
     return false;
 }
@@ -67,6 +67,7 @@ bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, i
         this->size++;
     }
     omg_mem = omg_get_default_omega()->mem;
+    omg_std = omg_get_default_omega()->std;
     this->data = OMG_MALLOC(omg_mem, this->size);
     if (OMG_ISNULL(this->data)) {
         this->chunk_size = 0;
