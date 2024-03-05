@@ -7,7 +7,7 @@ bool omg_bmfont_destroy(OMG_Bmfont* this) {
     return false;
 }
 
-bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren) {
+bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, char* data, size_t data_len) {
     this->ren = ren;
     this->page = page;
     this->chars_count = 0;
@@ -21,6 +21,11 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren) {
     this->unicode = false;
     this->smooth = false;
     this->aa = false;
+    // 13 = '\n'
+    // 10 = '\0'
+    for (size_t i = 0; i < data_len; i++) {
+        
+    }
     return false;
 }
 #endif

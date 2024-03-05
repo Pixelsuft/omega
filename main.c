@@ -189,7 +189,7 @@ bool scene_on_init(TestScene* scene) {
     char* data = OMG_MALLOC(this->omg->mem, data_size + 10);
     this->omg->std->memset(&data[data_size], 0, 8);
     file->read(file, data, 1, data_size);
-    omg_bmfont_init(&scene->bmfont, this->font_tex, this->ren);
+    omg_bmfont_init(&scene->bmfont, this->font_tex, this->ren, data, data_size);
     OMG_FREE(this->omg->mem, data);
     file->destroy(file);
     OMG_INFO(this->omg, "Scene init");

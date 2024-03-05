@@ -6,6 +6,16 @@
 #include <omega/renderer.h>
 
 typedef struct {
+    int x;
+    int y;
+    int w;
+    int h;
+    int xo;
+    int yo;
+    int xa;
+} OMG_Bmchar;
+
+typedef struct {
     OMG_Renderer* ren;
     OMG_Texture* page;
     size_t chars_count;
@@ -21,6 +31,6 @@ typedef struct {
     bool aa;
 } OMG_Bmfont;
 
-OMG_API bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren);
+OMG_API bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, char* data, size_t data_len);
 OMG_API bool omg_bmfont_destroy(OMG_Bmfont* this);
 #endif
