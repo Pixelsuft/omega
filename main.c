@@ -165,14 +165,15 @@ bool scene_on_init(TestScene* scene) {
     OMG_EPO();
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
     OMG_Array(int) test_arr;
-    OMG_ARRAY_INIT(&test_arr, 1, 0);
+    OMG_ARRAY_INIT(&test_arr, 0, 0);
     // OMG_ARRAY_SET_LEN(&test_arr, 5, true);
     for (int i = 0; i < 100; i++) {
         OMG_ARRAY_PUSH(&test_arr, i);
     }
-    for (int i = 0; i < (int)test_arr.len; i++) {
+    OMG_INFO(this->omg, (int)test_arr.size, " ", (int)test_arr.len);
+    /* for (int i = 0; i < (int)test_arr.len; i++) {
         OMG_INFO(this->omg, test_arr.data[i]);
-    }
+    } */
     OMG_ARRAY_DESTROY(&test_arr);
     OMG_INFO(this->omg, "Scene init");
     return false;
