@@ -55,6 +55,41 @@ bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem
     return false;
 }
 
+bool omg_array_remove(OMG_ArrayBase* this, size_t elem_id, size_t elem_size, bool trim) {
+    if ((elem_id + 1) >= this->len) {
+        this->len--;
+        if (trim)
+            return omg_array_clean(this, elem_size);
+        return false;
+    }
+    omg_std->memmove(
+        (void*)((size_t)(this->data) + (elem_id * elem_size)),
+        (void*)((size_t)(this->data) + ((elem_id + 1) * elem_size)),
+        (this->len - elem_id - 1) * elem_size
+    );
+    this->len--;
+    if (trim)
+        return omg_array_clean(this, elem_size);
+    return false;
+}
+
+bool omg_array_clean(OMG_ArrayBase* this, size_t elem_size) {
+    size_t need_size = this->len * elem_size;
+    if (need_size % (size_t)this->chunk_size) {
+        need_size /= (size_t)this->chunk_size;
+        need_size *= (size_t)this->chunk_size;
+        need_size++;
+    }
+    if (this->size >= need_size) {
+        void* new_ptr = OMG_REALLOC(omg_mem, this->data, need_size);
+        if (OMG_ISNULL(new_ptr))
+            return true;
+        this->data = new_ptr;
+        this->size = need_size;
+    }
+    return false;
+}
+
 bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, int chunk_size) {
     if (chunk_size <= 0)
         chunk_size = (int)elem_size;
