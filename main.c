@@ -166,7 +166,8 @@ bool scene_on_init(TestScene* scene) {
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
     OMG_INFO(this->omg, "Scene init");
     OMG_Array(int) test_arr;
-    OMG_ARRAY_INIT(&test_arr, 100, 0);
+    OMG_ARRAY_INIT(&test_arr, 10, 0);
+    OMG_ARRAY_SET_LEN(&test_arr, 100, true);
     for (int i = 0; i < (int)test_arr.len; i++) {
         test_arr.data[i] = i;
     }

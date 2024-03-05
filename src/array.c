@@ -15,6 +15,34 @@ bool omg_array_destroy(OMG_ArrayBase* this) {
     return false;
 }
 
+bool omg_array_add_chunk(OMG_ArrayBase* this) {
+    void* new_ptr = OMG_REALLOC(omg_mem, this->data, this->size + (size_t)this->chunk_size);
+    if (OMG_ISNULL(new_ptr))
+        return true;
+    this->data = new_ptr;
+    return false;
+}
+
+bool omg_array_set_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size, bool trim) {
+    size_t need_size = need_len * elem_size;
+    if (need_size % (size_t)this->chunk_size) {
+        need_size /= (size_t)this->chunk_size;
+        need_size *= (size_t)this->chunk_size;
+        need_size++;
+    }
+    if ((need_size < this->size) && !trim) {
+        this->len = need_len;
+        return false;
+    }
+    void* new_ptr = OMG_REALLOC(omg_mem, this->data, need_size);
+    if (OMG_ISNULL(new_ptr)) {
+        return true;
+    }
+    this->data = new_ptr;
+    this->len = need_len;
+    return false;
+}
+
 bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, int chunk_size) {
     if (chunk_size <= 0)
         chunk_size = (int)elem_size;
