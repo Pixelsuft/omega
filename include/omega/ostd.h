@@ -410,6 +410,7 @@ typedef struct {
     float (*fabsf)(float n);
     double (*pow)(double base, double exponent);
     float (*powf)(float base, float exponent);
+    int (*sscanf)(const char* src, const char* fmt, ...);
     unsigned int (*sleep)(unsigned int);
     void* memory_allocator;
     void* extra;

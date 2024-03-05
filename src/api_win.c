@@ -152,6 +152,7 @@ bool omg_winapi_ntdll_load(OMG_Ntdll* this) {
     LOAD_REQUIRED_UGLY(abs);
     LOAD_REQUIRED_UGLY(fabs);
     LOAD_REQUIRED_UGLY(pow);
+    LOAD_REQUIRED_UGLY(sscanf_s);
     OMG_END_POINTER_CAST();
     return false;
 }

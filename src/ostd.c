@@ -12,6 +12,7 @@
 #if OMG_HAS_STD
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #endif
 #include <math.h>
 #define mem ((OMG_Memory*)omg_def_std->memory_allocator)
@@ -461,6 +462,15 @@ void omg_std_fill_defaults(OMG_Std* this) {
     this->fabsf = omg_std_fabsf;
     this->pow = omg_std_pow;
     this->powf = omg_std_powf;
+#endif
+#if OMG_HAS_STD
+#if OMG_IS_VC
+    this->sscanf = sscanf_s;
+#else
+    this->sscanf = sscanf;
+#endif
+#else
+    this->sscanf = NULL;
 #endif
 #if OMG_HAVE_QSORT
     this->qsort = qsort;

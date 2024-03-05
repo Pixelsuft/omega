@@ -944,6 +944,7 @@ void OMG_WIN_STD_PREFIX qsort(void*, size_t, size_t, int (*) (const void*, const
 int OMG_WIN_STD_PREFIX abs(int n);
 double OMG_WIN_STD_PREFIX fabs(double n);
 double OMG_WIN_STD_PREFIX pow(double, double);
+int OMG_WIN_STD_PREFIX sscanf_s(const char*, const char*, ...);
 #endif
 
 #if OMG_IS_UWP
@@ -1066,6 +1067,7 @@ typedef struct {
     int OMG_WIN_STD_PREFIX (*abs)(int);
     double OMG_WIN_STD_PREFIX (*fabs)(double);
     double OMG_WIN_STD_PREFIX (*pow)(double, double);
+    int OMG_WIN_STD_PREFIX (*sscanf_s)(const char* src, const char* fmt, ...);
 } OMG_Ntdll;
 
 #ifdef SetWindowLongW

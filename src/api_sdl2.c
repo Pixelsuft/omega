@@ -157,6 +157,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_fabsf);
     LOAD_REQUIRED(SDL_pow);
     LOAD_REQUIRED(SDL_powf);
+    LOAD_REQUIRED(SDL_sscanf);
     LOAD_REQUIRED(SDL_malloc);
     LOAD_REQUIRED(SDL_realloc);
     LOAD_REQUIRED(SDL_free);

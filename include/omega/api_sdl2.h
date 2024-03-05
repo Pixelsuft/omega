@@ -1443,6 +1443,7 @@ typedef struct {
     float OMG_SDL2_STD_PREFIX (*SDL_fabsf)(float);
     double OMG_SDL2_STD_PREFIX (*SDL_pow)(double, double);
     float OMG_SDL2_STD_PREFIX (*SDL_powf)(float, float);
+    int OMG_SDL2_STD_PREFIX (*SDL_sscanf)(const char*, const char *fmt, ...);
     int OMG_SDL2_STD_PREFIX (*SDL_GetNumAllocations)(void);
     void* OMG_SDL2_STD_PREFIX (*SDL_malloc)(size_t);
     void* OMG_SDL2_STD_PREFIX (*SDL_realloc)(void*, size_t);

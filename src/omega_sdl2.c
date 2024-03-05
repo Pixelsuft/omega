@@ -103,6 +103,7 @@ void omg_sdl2_fill_std(OMG_OmegaSdl2* this) {
     base->std->fabsf = this->sdl2->SDL_fabsf;
     base->std->pow = this->sdl2->SDL_pow;
     base->std->powf = this->sdl2->SDL_powf;
+    base->std->sscanf = this->sdl2->SDL_sscanf;
 }
 
 bool omg_sdl2_log_str_type(OMG_OmegaSdl2* this, const OMG_String* data, int type) {

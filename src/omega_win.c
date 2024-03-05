@@ -248,6 +248,7 @@ void omg_win_fill_std(OMG_OmegaWin* this) {
     base->std->abs = d_nt->abs;
     base->std->fabs = d_nt->fabs;
     base->std->pow = d_nt->pow;
+    base->std->sscanf = d_nt->sscanf_s;
     OMG_END_POINTER_CAST();
 }
 
