@@ -4,6 +4,7 @@
 bool omg_bmfont_destroy(OMG_Bmfont* this) {
     this->page = NULL;
     this->ch_count = 0;
+    OMG_ARRAY_DESTROY(&this->chars);
     return false;
 }
 
@@ -11,6 +12,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
     this->ren = ren;
     this->omg = (OMG_Omega*)ren->omg;
     this->page = page;
+    this->chars.data = NULL;
     this->pad[0] = this->pad[1] = this->pad[2] = this->pad[3] = 0;
     this->spac[0] = this->spac[1] = 0;
     this->ch_count = 0;
@@ -90,6 +92,10 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 return true;
             }
             this->ch_count = (size_t)ch_count;
+            if (OMG_ARRAY_INIT(&this->chars, this->ch_count, 1)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to allocate chars array");
+                return true;
+            }
         }
         else if (data[i] == 'c') {
             // Char

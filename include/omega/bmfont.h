@@ -4,6 +4,7 @@
 #if OMG_SUPPORT_BMFONT
 #include <omega/omega.h>
 #include <omega/renderer.h>
+#include <omega/array.h>
 
 typedef struct {
     int x;
@@ -18,6 +19,7 @@ typedef struct {
 typedef struct {
     OMG_Renderer* ren;
     OMG_Omega* omg;
+    OMG_Array(OMG_Bmchar) chars;
     OMG_Texture* page;
     size_t ch_count;
     size_t k_count;
