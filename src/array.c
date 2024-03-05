@@ -50,7 +50,7 @@ bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem
         if (omg_array_add_chunk(this))
             return true;
     }
-    // omg_std->memcpy((void*)((size_t)(this->data) + (this->len * elem_size)), need_elem, elem_size);
+    omg_std->memcpy((void*)((size_t)(this->data) + (this->len * elem_size)), need_elem, elem_size);
     this->len++;
     return false;
 }
