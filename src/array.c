@@ -73,6 +73,23 @@ bool omg_array_remove(OMG_ArrayBase* this, size_t elem_id, size_t elem_size, boo
     return false;
 }
 
+bool omg_array_reserve_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size) {
+    size_t need_size = need_len * elem_size;
+    if (need_size % (size_t)this->chunk_size) {
+        need_size /= (size_t)this->chunk_size;
+        need_size *= (size_t)this->chunk_size;
+        need_size++;
+    }
+    if (this->size >= need_size)
+        return false;
+    void* new_ptr = OMG_REALLOC(omg_mem, this->data, need_size);
+    if (OMG_ISNULL(new_ptr))
+        return true;
+    this->data = new_ptr;
+    this->size = need_size;
+    return false;
+}
+
 bool omg_array_clean(OMG_ArrayBase* this, size_t elem_size) {
     size_t need_size = this->len * elem_size;
     if (need_size % (size_t)this->chunk_size) {
