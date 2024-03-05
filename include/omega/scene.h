@@ -23,6 +23,7 @@ typedef struct OMG_Scene {
     void* unused3;
     void* omg_scenemgr;
     void* data;
+    // TODO: where is OMG_EventPaint or I don't need it?
     // Scene init event
     bool (*on_init)(struct OMG_Scene* this);
     // Scene destroy event
