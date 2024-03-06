@@ -171,20 +171,20 @@ bool scene_on_init(TestScene* scene) {
     scene->objects[2] = scene->x_timer;
     OMG_EPO();
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
-    OMG_Array(int) test_arr;
+    /* OMG_Array(int) test_arr;
     OMG_ARRAY_INIT(&test_arr, 0, 0);
     // OMG_ARRAY_SET_LEN(&test_arr, 5, true);
     OMG_ARRAY_RESERVE_LEN(&test_arr, 100);
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 10000; i++) {
         OMG_ARRAY_PUSH(&test_arr, i);
     }
     OMG_ARRAY_REMOVE(&test_arr, 5, true);
     OMG_ARRAY_REMOVE(&test_arr, 6, true);
     OMG_ARRAY_REMOVE(&test_arr, 7, true);
-    /* for (int i = 0; i < (int)test_arr.len; i++) {
+    for (int i = 0; i < (int)test_arr.len; i++) {
         OMG_INFO(this->omg, test_arr.data[i]);
-    } */
-    OMG_ARRAY_DESTROY(&test_arr);
+    }
+    OMG_ARRAY_DESTROY(&test_arr); */
     OMG_File* file = this->omg->file_from_fp(this->omg, NULL, &OMG_STR("assets/goldFont-uhd.fnt"), OMG_FILE_MODE_RT);
     size_t data_size = file->get_size(file);
     char* data = OMG_MALLOC(this->omg->mem, data_size + 10);
