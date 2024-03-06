@@ -8,6 +8,18 @@ bool omg_bmfont_destroy(OMG_Bmfont* this) {
     return false;
 }
 
+bool omg_bmfont_calc_size(OMG_Bmfont* this, const OMG_String* text, OMG_FPoint* size_buf) {
+    size_buf->x = 0.0f;
+    size_buf->y = (float)this->line_height;
+    for (size_t i = 0; i < text->len; i++) {
+        size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
+        if ((chr > this->chars.len) || (this->chars.data[chr].w <= 0))
+            continue;
+        size_buf->x += (float)this->chars.data[chr].xa;
+    }
+    return false;
+}
+
 bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoint* pos) {
     float cur_x = OMG_ISNULL(pos) ? 0.0f : pos->x;
     float cur_y = OMG_ISNULL(pos) ? 0.0f : pos->y;
