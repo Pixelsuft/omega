@@ -3,8 +3,10 @@
 #if OMG_SUPPORT_LIBC
 #include <omega/ostd.h>
 #if !OMG_LIBC_DYNAMIC
+#include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
 #define OMG_LIBC_STD_PREFIX
-typedef void FILE;
 #else
 #define OMG_LIBC_STD_PREFIX
 #include <stdio.h>
@@ -42,6 +44,7 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*rmdir)(const char*);
     int OMG_LIBC_STD_PREFIX (*rename)(const char*, const char*);
 #if !OMG_IS_WIN
+#if OMG_SUPPORT_THREADING
     int OMG_LIBC_STD_PREFIX (*pthread_attr_init)(pthread_attr_t*);
     int OMG_LIBC_STD_PREFIX (*pthread_attr_setdetachstate)(pthread_attr_t*, int);
     int OMG_LIBC_STD_PREFIX (*pthread_attr_setstacksize)(pthread_attr_t*, size_t);
@@ -52,6 +55,7 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*pthread_setschedparam)(pthread_t, int, const struct sched_param*);
     int OMG_LIBC_STD_PREFIX (*pthread_join)(pthread_t, void**);
     int OMG_LIBC_STD_PREFIX (*pthread_detach)(pthread_t);
+#endif
     char* OMG_LIBC_STD_PREFIX (*getenv)(const char*);
     int OMG_LIBC_STD_PREFIX (*setenv)(const char*, const char*, int);
     void OMG_LIBC_STD_PREFIX (*unsetenv)(const char*);

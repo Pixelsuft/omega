@@ -288,6 +288,7 @@ void app_init(App* this, OMG_EntryData* data) {
     }
     if (this->win->type == OMG_WIN_TYPE_WIN && 0)
         this->win->ren_type = OMG_REN_TYPE_WIN;
+    OMG_INFO(this->omg, "Scene init");
     OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_SOFTWARE_RENDERER"));
     int force_ren_driver = OMG_REN_DRIVER_AUTO;
     if (temp_env.type >= 0)
@@ -316,6 +317,7 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return;
     }
+    OMG_INFO(this->omg, "Scene init");
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;

@@ -15,7 +15,7 @@ bool omg_bmfont_calc_size(OMG_Bmfont* this, const OMG_String* text, OMG_FPoint* 
     size_buf->y = (float)this->line_height;
     for (size_t i = 0; i < text->len; i++) {
         size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
-        if ((chr > this->chars.len) || (this->chars.data[chr].w <= 0))
+        if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa <= 0)))
             continue;
         size_buf->x += (float)this->chars.data[chr].xa;
     }
@@ -31,7 +31,7 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
     dst_rect.w = dst_rect.h = 0.0f;
     for (size_t i = 0; i < text->len; i++) {
         size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
-        if ((chr > this->chars.len) || (this->chars.data[chr].w <= 0))
+        if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa <= 0)))
             continue;
         bm_char = &this->chars.data[chr];
         src_rect.x = (float)bm_char->x;

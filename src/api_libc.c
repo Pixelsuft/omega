@@ -31,6 +31,7 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(rmdir);
     LOAD_REQUIRED(rename);
 #if !OMG_IS_WIN
+#if OMG_SUPPORT_THREADING
     LOAD_REQUIRED(pthread_attr_init);
     LOAD_REQUIRED(pthread_attr_setdetachstate);
     LOAD_REQUIRED(pthread_attr_setstacksize);
@@ -41,9 +42,12 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(pthread_setschedparam);
     LOAD_REQUIRED(pthread_join);
     LOAD_REQUIRED(pthread_detach);
+#endif
+#if !OMG_IS_EMSCRIPTEN
     LOAD_REQUIRED(getenv);
     LOAD_REQUIRED(setenv);
     LOAD_REQUIRED(unsetenv);
+#endif
     LOAD_REQUIRED(mkdir);
 #endif
     OMG_END_POINTER_CAST();
