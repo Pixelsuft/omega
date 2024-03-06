@@ -1,6 +1,8 @@
 #include <omega/bmfont.h>
 
 #if OMG_SUPPORT_BMFONT
+// TODO: make a lot of stuff
+
 bool omg_bmfont_destroy(OMG_Bmfont* this) {
     this->page = NULL;
     this->ch_count = 0;
