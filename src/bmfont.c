@@ -107,7 +107,8 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 return true;
             }
             this->ch_count = (size_t)ch_count;
-            if (OMG_ARRAY_INIT(&this->chars, this->ch_count, sizeof(void*) * 128)) {
+            // DO NOT TOUCH, it works somehow
+            if (OMG_ARRAY_INIT(&this->chars, this->ch_count * 8, sizeof(void*) * 8)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to allocate chars array");
                 return true;
             }
@@ -129,8 +130,8 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 return true;
             }
             size_t prev_len = this->chars.len;
-            if (prev_len <= ((size_t)buf[0] + 2)) {
-                if (OMG_ARRAY_SET_LEN(&this->chars, (size_t)(buf[0] + 2), true)) {
+            if (prev_len <= (size_t)buf[0]) {
+                if (OMG_ARRAY_SET_LEN(&this->chars, (size_t)(buf[0]), true)) {
                     _OMG_LOG_ERROR(this->omg, "Failed to realloc chars array");
                     omg_bmfont_destroy(this);
                     return true;

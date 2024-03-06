@@ -37,6 +37,9 @@ bool omg_array_set_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size, b
         return false;
     }
     void* new_ptr = OMG_REALLOC(omg_mem, this->data, need_size);
+    /* if (new_ptr != this->data) {
+        printf("NEW POINTER GUYS: %p %p\n", new_ptr, this->data);
+    } */
     if (OMG_ISNULL(new_ptr)) {
         return true;
     }

@@ -79,6 +79,7 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
     if (!real_ptr->is_allocated)
         return NULL;
     size_t size_before = real_ptr->size;
+    OMG_MemoryExtra old_data = *real_ptr;
     OMG_MemoryExtra* new_ptr = this->k32->HeapReAlloc(this->heap, 0, real_ptr, size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(new_ptr)) {
         if (omg_base->type == OMG_OMEGA_TYPE_WIN && OMG_ISNOTNULL(real_ptr->func)) {
@@ -97,6 +98,13 @@ void* omg_memory_win_realloc(OMG_MemoryWin* this, void* ptr, size_t size) {
             _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(real_ptr));
         }
         return NULL;
+    }
+    if (new_ptr != real_ptr) {
+        new_ptr->filename = old_data.filename;
+        new_ptr->func = old_data.func;
+        new_ptr->is_allocated = old_data.is_allocated;
+        new_ptr->line = old_data.line;
+        new_ptr->size = old_data.size;
     }
     base->alloc_size = base->alloc_size + size - size_before;
     new_ptr->size = size;
