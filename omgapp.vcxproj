@@ -166,6 +166,7 @@
     <ClCompile Include="src\audio_fmod.c" />
     <ClCompile Include="src\audio_raylib.c" />
     <ClCompile Include="src\audio_sdl2.c" />
+    <ClCompile Include="src\bmfont.c" />
     <ClCompile Include="src\clock.c" />
     <ClCompile Include="src\clock_raylib.c" />
     <ClCompile Include="src\clock_sdl2.c" />

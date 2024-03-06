@@ -174,5 +174,8 @@
     <ClCompile Include="src\scene_objects.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\bmfont.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
