@@ -8,6 +8,38 @@ bool omg_bmfont_destroy(OMG_Bmfont* this) {
     return false;
 }
 
+bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoint* pos) {
+    float cur_x = OMG_ISNULL(pos) ? 0.0f : pos->x;
+    float cur_y = OMG_ISNULL(pos) ? 0.0f : pos->y;
+    OMG_Bmchar* bm_char;
+    bool res = false;
+    OMG_FRect src_rect, dst_rect;
+    dst_rect.w = dst_rect.h = 0.0f;
+    for (size_t i = 0; i < text->len; i++) {
+        size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
+        if ((chr > this->chars.len) || (this->chars.data[chr].w <= 0))
+            continue;
+        bm_char = &this->chars.data[chr];
+        src_rect.x = (float)bm_char->x;
+        src_rect.y = (float)bm_char->y;
+        src_rect.w = (float)bm_char->w;
+        src_rect.h = (float)bm_char->h;
+        dst_rect.x = cur_x + (float)bm_char->xo;
+        dst_rect.y = cur_y + (float)bm_char->yo;
+        dst_rect.w = (float)bm_char->w;
+        dst_rect.h = (float)bm_char->h;
+        res = this->ren->copy_ex(
+            this->ren,
+            this->page,
+            &src_rect,
+            &dst_rect,
+            NULL, 0.0
+        ) || res;
+        cur_x += (float)bm_char->xa;
+    }
+    return res;
+}
+
 bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, char* data, size_t data_len) {
     this->ren = ren;
     this->omg = (OMG_Omega*)ren->omg;

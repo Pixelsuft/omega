@@ -37,6 +37,10 @@ typedef struct {
     bool aa;
 } OMG_Bmfont;
 
+// Init a bitmap font
 OMG_API bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, char* data, size_t data_len);
+// Destroy a bitmap font
 OMG_API bool omg_bmfont_destroy(OMG_Bmfont* this);
+// Render a line
+OMG_API bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoint* pos);
 #endif

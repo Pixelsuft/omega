@@ -129,8 +129,9 @@ bool scene_on_paint(TestScene* scene) {
     this->ren->fill_circle(this->ren, &circle_pos, 50.0f, &scene->circle_color);
     this->ren->copy(this->ren, this->font_tex, &OMG_FPOINT(200, 200));
 #if SUPPORT_FONT
-    this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
+    // this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
+    omg_bmfont_render(&scene->bmfont, &this->fps_str, NULL);
     this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");
     return false;
@@ -247,10 +248,10 @@ void app_on_key_down(OMG_EventKeyboard* event) {
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if 0
-#elif OMG_SUPPORT_WIN
-    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_SDL2
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_SDL2);
+#elif OMG_SUPPORT_WIN
+    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_RAYLIB
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_RAYLIB);
 #endif
