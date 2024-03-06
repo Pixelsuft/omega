@@ -247,12 +247,12 @@ void app_on_key_down(OMG_EventKeyboard* event) {
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if 0
+#elif OMG_SUPPORT_WIN
+    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_SDL2
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_SDL2);
 #elif OMG_SUPPORT_RAYLIB
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_RAYLIB);
-#elif OMG_SUPPORT_WIN
-    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;

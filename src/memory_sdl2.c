@@ -58,7 +58,7 @@ void* omg_memory_sdl2_realloc(OMG_MemorySdl2* this, void* ptr, size_t size) {
     OMG_MemoryExtra* new_ptr = this->sdl2->SDL_realloc(real_ptr, size + sizeof(OMG_MemoryExtra));
     if (OMG_ISNULL(new_ptr)) {
         if (OMG_ISNOTNULL(real_ptr->func)) {
-            _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory");
+            _OMG_LOG_ERROR(omg_base, "Failed to reallocate ", (uint32_t)real_ptr->size, " bytes of memory into ", (uint32_t)size);
             _OMG_LOG_ERROR(omg_base, _OMG_MEMORY_ALLOC_INFO(real_ptr));
         }
         return NULL;

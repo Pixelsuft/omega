@@ -4,11 +4,6 @@
 bool omg_bmfont_destroy(OMG_Bmfont* this) {
     this->page = NULL;
     this->ch_count = 0;
-    if (OMG_ISNOTNULL(this->chars.data))
-        for (size_t i = 0; i < this->chars.len; i++) {
-            if (OMG_ISNOTNULL(this->chars.data[i]))
-                OMG_FREE(this->omg->mem, this->chars.data[i]);
-        }
     OMG_ARRAY_DESTROY(&this->chars);
     return false;
 }
@@ -108,7 +103,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
             }
             this->ch_count = (size_t)ch_count;
             // DO NOT TOUCH, it works somehow
-            if (OMG_ARRAY_INIT(&this->chars, this->ch_count * 8, sizeof(void*) * 8)) {
+            if (OMG_ARRAY_INIT(&this->chars, this->ch_count * 2, sizeof(OMG_Bmchar) * 8)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to allocate chars array");
                 return true;
             }
@@ -137,23 +132,14 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                     return true;
                 }
             }
-            for (size_t j = prev_len; j < this->chars.len; j++) {
-                this->chars.data[j] = NULL;
-            }
             size_t ch_id = (size_t)buf[0];
-            this->chars.data[ch_id] = OMG_MALLOC(this->omg->mem, sizeof(OMG_Bmchar));
-            if (OMG_ISNULL(this->chars.data[ch_id])) {
-                _OMG_LOG_ERROR(this->omg, "Failed to alloc chars array data");
-                omg_bmfont_destroy(this);
-                return true;
-            }
-            this->chars.data[ch_id]->x = buf[1];
-            this->chars.data[ch_id]->y = buf[2];
-            this->chars.data[ch_id]->w = buf[3];
-            this->chars.data[ch_id]->h = buf[4];
-            this->chars.data[ch_id]->xo = buf[5];
-            this->chars.data[ch_id]->yo = buf[6];
-            this->chars.data[ch_id]->xa = buf[7];
+            this->chars.data[ch_id].x = buf[1];
+            this->chars.data[ch_id].y = buf[2];
+            this->chars.data[ch_id].w = buf[3];
+            this->chars.data[ch_id].h = buf[4];
+            this->chars.data[ch_id].xo = buf[5];
+            this->chars.data[ch_id].yo = buf[6];
+            this->chars.data[ch_id].xa = buf[7];
         }
         else if ((data[i] == 'k') && (data[i + 7] == 's')) {
             // Kernings
