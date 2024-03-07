@@ -2,6 +2,4 @@
 [-] Track memory allocations
 [-] Vulkan renderer
 [-] Android test
-[-] Arrays
 [-] Tiled map import (or any other)
-[-] Bitmap fonts
