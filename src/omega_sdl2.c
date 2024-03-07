@@ -517,6 +517,9 @@ bool omg_sdl2_app_init(OMG_OmegaSdl2* this) {
     _OMG_CHECK_DARK_MODE_INTERNAL();
 #endif
     _OMG_LOG_INFO(base, "Omega successfully inited with SDL2 backend");
+#if OMG_IS_UWP
+    _OMG_LOG_INFO(base, "Running at ", this->sdl2->SDL_GetBasePath());
+#endif
     base->inited = true;
     return false;
 }

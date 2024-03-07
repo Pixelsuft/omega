@@ -13,6 +13,8 @@
 #define SUPPORT_FONT !OMG_IS_UWP
 #define MAX_OBJECTS 20
 
+// TODO: SDL_GetBasePath alternative
+
 typedef struct {
     OMG_Scene parent;
     OMG_Bmfont bmfont;
@@ -121,7 +123,7 @@ bool scene_on_paint(TestScene* scene) {
             obj->on_paint(obj, this->sm->cur_scene);
     }
     OMG_FPoint circle_pos;
-    circle_pos.y = 200.0f + this->omg->std->sinf((float)(scene->sin_timer->time * 4.0)) * 100.0f;
+    circle_pos.y = 400.0f + this->omg->std->sinf((float)(scene->sin_timer->time * 4.0)) * 100.0f;
     if (scene->x_timer->time >= 5.0)
         circle_pos.x = 100.0f + 500.0f - (float)(scene->x_timer->time - 5.0) * 100.0f;
     else
@@ -131,7 +133,7 @@ bool scene_on_paint(TestScene* scene) {
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
-    omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT(300, 300));
+    omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT(0, 0));
     this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");
     return false;
@@ -248,10 +250,10 @@ void app_on_key_down(OMG_EventKeyboard* event) {
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if 0
-#elif OMG_SUPPORT_WIN && !OMG_IS_UWP
-    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_SDL2
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_SDL2);
+#elif OMG_SUPPORT_WIN && !OMG_IS_UWP
+    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_RAYLIB
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_RAYLIB);
 #endif
