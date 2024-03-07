@@ -1420,15 +1420,26 @@ OMG_FileWin* omg_win_file_from_fp(OMG_Omega* this, OMG_FileWin* file, const OMG_
         create_mode = OPEN_ALWAYS;
     DWORD shared_ops = 0;
     shared_ops |= FILE_SHARE_READ;
-    file->handle = d_k32->CreateFileW(
-        file->w_fp,
-        need_access,
-        shared_ops,
-        NULL,
-        create_mode,
-        FILE_ATTRIBUTE_NORMAL,
-        NULL
-    );
+    if (OMG_ISNULL(d_k32->CreateFileW)) {
+        file->handle = d_k32->CreateFile2(
+            file->w_fp,
+            need_access,
+            shared_ops,
+            create_mode,
+            NULL
+        );
+    }
+    else {
+        file->handle = d_k32->CreateFileW(
+            file->w_fp,
+            need_access,
+            shared_ops,
+            NULL,
+            create_mode,
+            FILE_ATTRIBUTE_NORMAL,
+            NULL
+        );
+    }
     if ((file->handle == INVALID_HANDLE_VALUE)/* || OMG_ISNULL(file->handle)*/) {
         _OMG_LOG_ERROR(this, "Failed to open Win32 file ", path->ptr);
         omg_file_destroy((OMG_File*)file);
