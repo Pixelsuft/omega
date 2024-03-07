@@ -10,6 +10,11 @@
 #include <omega/audio_sdl2.h>
 #include <omega/audio_emscripten.h>
 #include <omega/api_libc.h>
+#if OMG_IS_WIN
+#include <omega/filesystem_win.h>
+#define f_omg_k32 ((OMG_Kernel32*)(file_omg_base->k32))
+#define file_omg_base ((OMG_Omega*)file_base->omg)
+#endif
 #define file_base ((OMG_File*)file)
 #define file_omg ((OMG_Omega*)file_base->omg)
 #define d_k32 ((OMG_Kernel32*)this->k32)
@@ -1299,6 +1304,147 @@ bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread) {
 #endif
 }
 
+#if OMG_IS_WIN
+
+bool omg_win_file_destroy(OMG_FileWin* file) {
+    bool res = false;
+    if (OMG_ISNOTNULL(file->handle)) {
+        if (!f_omg_k32->CloseHandle(file->handle))
+            res = true;
+        file->handle = NULL;
+    }
+    if (OMG_ISNOTNULL(file->w_fp)) {
+        OMG_FREE(file_omg_base->mem, file->w_fp);
+        file->w_fp = NULL;
+    }
+    omg_file_destroy((OMG_File*)file);
+    return res;
+}
+
+int64_t omg_win_file_get_size(OMG_FileWin* file) {
+    if (OMG_ISNULL(f_omg_k32->GetFileSize)) {
+        DWORD size_high = 0;
+        DWORD size_low = f_omg_k32->GetFileSize(file->handle, &size_high);
+        if ((size_low == INVALID_FILE_SIZE) && (size_high == 0) && (f_omg_k32->GetLastError() != NO_ERROR)) {
+            _OMG_LOG_WARN(file_omg_base, "Failed to get size for Win32 file ", file_base->fp.ptr);
+            return -2;
+        }
+        return ((int64_t)size_high << 32) | (int64_t)size_low;
+    }
+    LARGE_INTEGER size_buf;
+    if (!f_omg_k32->GetFileSizeEx(file->handle, &size_buf)) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to get size for Win32 file ", file_base->fp.ptr);
+        return -2;
+    }
+    return (int64_t)size_buf.QuadPart;
+}
+
+int64_t omg_win_file_seek(OMG_FileWin* file, int64_t offset, int whence) {
+    if (OMG_ISNULL(f_omg_k32->SetFilePointerEx)) {
+        _OMG_LOG_WARN(file_omg_base, "Seek in not supported for Win32 file ", file_base->fp.ptr);
+        return -1;
+    }
+    LARGE_INTEGER res_buf;
+    LARGE_INTEGER inp_val;
+    inp_val.QuadPart = (LONGLONG)offset;
+    if (!f_omg_k32->SetFilePointerEx(file->handle, inp_val, &res_buf, (
+        (whence == OMG_FILE_SEEK_END) ? FILE_END : ((whence == OMG_FILE_SEEK_CUR) ? FILE_CURRENT : FILE_BEGIN)
+    ))) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to seek Win32 file ", file_base->fp.ptr);
+        return -2;
+    }
+    return (int64_t)res_buf.QuadPart;
+}
+
+size_t omg_win_file_read(OMG_FileWin* file, void* buf, size_t size, size_t maxnum) {
+    if (OMG_ISNULL(f_omg_k32->ReadFile)) {
+        _OMG_LOG_WARN(file_omg_base, "Reading in not supported for Win32 file ", file_base->fp.ptr);
+        return 0;
+    }
+    DWORD bytes_read;
+    if (!f_omg_k32->ReadFile(file->handle, buf, (DWORD)(size * maxnum), &bytes_read, NULL)) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to read Win32 file ", file_base->fp.ptr);
+        return 0;
+    }
+    return (size_t)bytes_read;
+}
+
+size_t omg_win_file_write(OMG_FileWin* file, const void* buf, size_t size, size_t num) {
+    if (OMG_ISNULL(f_omg_k32->WriteFile)) {
+        _OMG_LOG_WARN(file_omg_base, "Writing in not supported for Win32 file ", file_base->fp.ptr);
+        return 0;
+    }
+    DWORD written;
+    if (!f_omg_k32->WriteFile(file->handle, buf, (DWORD)(size * num), &written, NULL)) {
+        _OMG_LOG_WARN(file_omg_base, "Failed to write Win32 file ", file_base->fp.ptr);
+        return 0;
+    }
+    return (size_t)written;
+}
+
+// TODO: Append Mode
+OMG_FileWin* omg_win_file_from_fp(OMG_Omega* this, OMG_FileWin* file, const OMG_String* path, int mode) {
+    OMG_BEGIN_POINTER_CAST();
+    if (omg_string_ensure_null((OMG_String*)path))
+        return NULL;
+    file = omg_file_from_fp(this, file, path, mode);
+    if (OMG_ISNULL(file))
+        return NULL;
+    size_t count;
+    _OMG_WIN_GET_ENCODE_SIZE(count, path, d_k32);
+    if (count == 0) {
+        _OMG_LOG_ERROR(this, "Failed to open Win32 file ", path->ptr);
+        omg_file_destroy((OMG_File*)file);
+        return NULL;
+    }
+    file->w_fp = OMG_MALLOC(this->mem, (size_t)count * 2 + 2);
+    if (OMG_ISNULL(file->w_fp)) {
+        _OMG_LOG_ERROR(this, "Failed to open Win32 file ", path->ptr);
+        omg_file_destroy((OMG_File*)file);
+        return NULL;
+    }
+    int out_len = d_k32->MultiByteToWideChar(CP_UTF8, 0, path->ptr, (int)path->len, file->w_fp, (int)count);
+    if (out_len > 0)
+        file->w_fp[out_len] = L'\0';
+    DWORD need_access = 0;
+    if ((mode % 6) != OMG_FILE_MODE_W)
+        need_access |= GENERIC_READ;
+    if ((mode % 6) != OMG_FILE_MODE_R)
+        need_access |= GENERIC_WRITE;
+    DWORD create_mode = 0;
+    if (((mode % 3) == OMG_FILE_MODE_R) || ((mode % 6) == OMG_FILE_MODE_A))
+        create_mode = OPEN_EXISTING;
+    else if ((mode % 3) == OMG_FILE_MODE_W)
+        create_mode = CREATE_ALWAYS;
+    else if ((mode % 3) == OMG_FILE_MODE_A)
+        create_mode = OPEN_ALWAYS;
+    DWORD shared_ops = 0;
+    shared_ops |= FILE_SHARE_READ;
+    file->handle = d_k32->CreateFileW(
+        file->w_fp,
+        need_access,
+        shared_ops,
+        NULL,
+        create_mode,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if ((file->handle == INVALID_HANDLE_VALUE)/* || OMG_ISNULL(file->handle)*/) {
+        _OMG_LOG_ERROR(this, "Failed to open Win32 file ", path->ptr);
+        omg_file_destroy((OMG_File*)file);
+        return NULL;
+    }
+    file_base->type = OMG_FILE_TYPE_WINFILE;
+    file_base->destroy = omg_win_file_destroy;
+    file_base->get_size = omg_win_file_get_size;
+    file_base->seek = omg_win_file_seek;
+    file_base->read = omg_win_file_read;
+    file_base->write = omg_win_file_write;
+    OMG_END_POINTER_CAST();
+    return file;
+}
+#endif
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -1354,7 +1500,10 @@ bool omg_omg_init(OMG_Omega* this) {
     this->thread_detach = omg_thread_detach;
     this->thread_wait = omg_thread_wait;
     OMG_BEGIN_POINTER_CAST();
-#if OMG_HAS_STD
+#if OMG_IS_WIN
+    this->sz_file = sizeof(OMG_FileWin);
+    this->file_from_fp = omg_win_file_from_fp;
+#elif OMG_HAS_STD
     this->file_from_fp = omg_file_std_from_path;
     this->sz_file = sizeof(OMG_FileStd);
 #else

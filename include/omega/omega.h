@@ -342,4 +342,14 @@ OMG_API void omg_log_set_level(OMG_Omega* this, const int log_level, const int o
 OMG_API bool omg_log_str_type(OMG_Omega* this, const OMG_String* data, int type);
 OMG_API void omg_auto_loop_run(OMG_Omega* this);
 OMG_API void omg_auto_loop_stop(OMG_Omega* this);
+#if OMG_IS_WIN
+#include <omega/filesystem_win.h>
+
+OMG_API OMG_FileWin* omg_win_file_from_fp(OMG_Omega* this, OMG_FileWin* file, const OMG_String* path, int mode);
+OMG_API bool omg_win_file_destroy(OMG_FileWin* file);
+OMG_API int64_t omg_win_file_get_size(OMG_FileWin* file);
+OMG_API int64_t omg_win_file_seek(OMG_FileWin* file, int64_t offset, int whence);
+OMG_API size_t omg_win_file_read(OMG_FileWin* file, void* buf, size_t size, size_t maxnum);
+OMG_API size_t omg_win_file_write(OMG_FileWin* file, const void* buf, size_t size, size_t num);
+#endif
 #endif
