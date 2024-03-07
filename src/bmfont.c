@@ -149,7 +149,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
             }
             this->ch_count = (size_t)ch_count;
             // DO NOT TOUCH, it works somehow
-            if (OMG_ARRAY_INIT(&this->chars, this->ch_count * 2, sizeof(OMG_Bmchar) * 8)) {
+            if (OMG_ARRAY_INIT(&this->chars, this->ch_count, sizeof(OMG_Bmchar))) {
                 _OMG_LOG_ERROR(this->omg, "Failed to allocate chars array");
                 return true;
             }
