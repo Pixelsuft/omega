@@ -27,6 +27,7 @@ include/omega_libs/*.h
 pch.*
 SDL_mixer.h
 SDL_image.h
+test_map.txt
 *.stackdump
 *.zip
 *.tar
