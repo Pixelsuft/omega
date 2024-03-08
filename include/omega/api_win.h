@@ -1050,6 +1050,7 @@ typedef struct {
     DWORD OMG_WIN_STD_PREFIX (*GetCurrentThreadId)(void);
     BOOL OMG_WIN_STD_PREFIX (*CreateDirectoryW)(LPCWSTR, LPSECURITY_ATTRIBUTES);
     DWORD OMG_WIN_STD_PREFIX (*GetCurrentDirectoryW)(DWORD, LPWSTR);
+    DWORD OMG_WIN_STD_PREFIX (*GetModuleFileNameW)(HMODULE, LPWSTR, DWORD);
     // TODO: SHFileOperationW
     uint64_t _tick64_emu;
 } OMG_Kernel32;

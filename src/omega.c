@@ -1460,7 +1460,35 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
 #if OMG_IS_WIN
     wchar_t* buf;
     if (base_dir) {
-        // TODO
+        wchar_t* temp_buf = OMG_MALLOC(this->mem, 10);
+        if (OMG_ISNULL(temp_buf))
+            return *omg_dummy_string_create();
+        DWORD buf_len = d_k32->GetModuleFileNameW(NULL, temp_buf, 5);
+        if (buf_len < 2) {
+            OMG_FREE(this->mem, temp_buf);
+            return *omg_dummy_string_create();
+        }
+        bool is_long = (temp_buf[0] == L'\\') && (temp_buf[1] == L'\\');
+        OMG_FREE(this->mem, temp_buf);
+        buf = OMG_MALLOC(this->mem, (is_long ? 32777 : 270) * 2);
+        if (OMG_ISNULL(buf))
+            return *omg_dummy_string_create();
+        DWORD len_read = d_k32->GetModuleFileNameW(NULL, buf, is_long ? 32776 : 269);
+        if (len_read < 2) {
+            OMG_FREE(this->mem, buf);
+            return *omg_dummy_string_create();
+        }
+        size_t counter = (size_t)len_read;
+        while (counter > 0) {
+            counter--;
+            if (buf[counter] == L'\\') {
+                buf[counter] = L'\0';
+                break;
+            }
+        }
+        if ((counter == 0) && (buf[0] != L'\0')) {
+            buf[len_read] = L'\0';
+        }
     }
     else {
         DWORD buf_len = d_k32->GetCurrentDirectoryW(0, NULL);
