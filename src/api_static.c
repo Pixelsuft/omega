@@ -56,8 +56,13 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 #elif OMG_IS_UNIX && OMG_HAS_STD
     OMG_UNUSED(adv_fn);
     char* fn_ptr;
-    if (OMG_ISNULL(fn))
+    if (OMG_ISNULL(fn)) {
+#ifdef LIBC_SO
         fn_ptr = LIBC_SO;
+#else
+        fn_ptr = "libc.so";
+#endif
+    }
     else {
         omg_string_ensure_null((OMG_String*)fn);
         fn_ptr = fn->ptr;
