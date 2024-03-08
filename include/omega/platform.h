@@ -30,7 +30,7 @@
 #define OMG_IS_CPP 0
 #endif
 
-#if OMG_IS_WIN || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID
+#if OMG_IS_WIN || OMG_IS_EMSCRIPTEN || OMG_IS_ANDROID || !defined(__linux__)
 #define OMG_IS_MUSL 0
 #else
 #define _GNU_SOURCE
