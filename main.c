@@ -133,7 +133,9 @@ bool scene_on_paint(TestScene* scene) {
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
-    omg_bmfont_render(&scene->bmfont, &this->fps_str, NULL);
+    this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(0.5, 0.5));
+    omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT_MAKE(0, 200));
+    this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(1, 1));
     this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");
     return false;
@@ -340,6 +342,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_key_down;
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
+    this->ren->tex_set_scale_mode(this->ren, this->font_tex, OMG_SCALE_MODE_LINEAR);
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
     temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_MS_CLOCK"));
     this->clock->init(this->clock, !(temp_env.type >= 0));
