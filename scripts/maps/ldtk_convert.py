@@ -15,13 +15,22 @@ out.write('PIXELSUFT_LDTK_TXT\n')
 out.write(f'INFO,{inp["worldGridWidth"]},{inp["worldGridHeight"]},')
 out.write(f'{hex_to_str(inp["bgColor"])}\n')
 
+# TODO: tags support
+
+for ent in inp['defs']['entities']:
+    out.write(f'F,{ent["uid"]},"{ent["identifier"]}",{ent["width"]},{ent["height"]}\n')
+
+for ts in inp['defs']['tilesets']:
+    out.write(f'S,{ts["uid"]},"{ts["identifier"]}","{ts["relPath"]}",{ts["pxWid"]},')
+    out.write(f'{ts["pxHei"]},{ts["tileGridSize"]},{ts["spacing"]},{ts["padding"]}\n')
+
 for lvl in inp['levels']:
-    out.write(f'LEVEL,{lvl["uid"]},{lvl["identifier"]},{lvl["worldDepth"]},{lvl["worldX"]},{lvl["worldY"]},{lvl["pxWid"]},')
+    out.write(f'LEVEL,{lvl["uid"]},"{lvl["identifier"]}",{lvl["worldDepth"]},{lvl["worldX"]},{lvl["worldY"]},{lvl["pxWid"]},')
     out.write(f'{lvl["pxHei"]},{hex_to_str(lvl["bgColor"] or lvl["__bgColor"])}\n')
     for lay in lvl['layerInstances']:
         is_ent = lay['__type'] == 'Entities'
-        out.write(f'LAYER,{lay["__identifier"]},{lay["levelId"]},{lay["layerDefUid"]},')
-        out.write(f'{lay["__tilesetDefUid"] or -1},{int(is_ent)},')
+        out.write(f'LAYER,"{lay["__identifier"]}",{lay["levelId"]},{lay["layerDefUid"]},')
+        out.write(f'{lay["overrideTilesetUid"] or lay["__tilesetDefUid"] or -1},{int(is_ent)},')
         out.write(f'{lay["__cWid"]},{lay["__cHei"]},{lay["layerDefUid"]},{lay["__gridSize"]},{lay["__pxTotalOffsetX"]},')
         out.write(f'{lay["__pxTotalOffsetY"]},{lay["pxOffsetX"]},{lay["pxOffsetY"]},{int(lay["visible"])}\n')
         for ent in lay['entityInstances']:
