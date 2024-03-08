@@ -1519,6 +1519,7 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
 #elif OMG_SUPPORT_LIBC
     // if (base_dir)
     //     return *omg_dummy_string_create();
+    OMG_UNUSED(base_dir);
     char* std_res = d_libc->getcwd(NULL, 0);
     if (OMG_ISNULL(std_res))
         return *omg_dummy_string_create();
