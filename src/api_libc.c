@@ -31,6 +31,7 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(rmdir);
     LOAD_REQUIRED(rename);
     LOAD_REQUIRED(getcwd);
+    LOAD_REQUIRED(free);
 #if !OMG_IS_WIN
 #if OMG_SUPPORT_THREADING
     LOAD_REQUIRED(pthread_attr_init);

@@ -44,6 +44,7 @@ typedef struct {
     int OMG_LIBC_STD_PREFIX (*rmdir)(const char*);
     int OMG_LIBC_STD_PREFIX (*rename)(const char*, const char*);
     char* OMG_LIBC_STD_PREFIX (*getcwd)(char*, size_t);
+    void OMG_LIBC_STD_PREFIX (*free)(void*);
 #if !OMG_IS_WIN
 #if OMG_SUPPORT_THREADING
     int OMG_LIBC_STD_PREFIX (*pthread_attr_init)(pthread_attr_t*);

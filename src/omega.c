@@ -1517,8 +1517,20 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
     OMG_FREE(this->mem, buf);
     return result;
 #else
-    OMG_UNUSED(this, base_dir);
-    return *omg_dummy_string_create();
+    char* std_res = d_libc->getcwd(NULL, 0);
+    if (OMG_ISNULL(std_res))
+        return *omg_dummy_string_create();
+    OMG_String res;
+    if (omg_string_init_dynamic(&res, NULL)) {
+        d_libc->free(std_res);
+        return *omg_dummy_string_create();
+    }
+    if (omg_string_add_char_p(&res, std_res)) {
+        omg_string_destroy(&res);
+        d_libc->free(std_res);
+        return *omg_dummy_string_create();
+    }
+    return res;
 #endif
 }
 
