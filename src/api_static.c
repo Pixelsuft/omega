@@ -4,7 +4,9 @@
 #elif OMG_IS_WIN
 #include <omega/api_win.h>
 #elif OMG_IS_UNIX && OMG_HAS_STD
+#if defined(__linux__)
 #include <gnu/lib-names.h>
+#endif
 #include <dlfcn.h>
 #endif
 

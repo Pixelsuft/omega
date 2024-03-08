@@ -724,10 +724,10 @@ OMG_Thread* omg_sdl2_thread_create(OMG_OmegaSdl2* this, OMG_ThreadFunction func,
     return (OMG_Thread*)result;
 }
 
-uint32_t omg_sdl2_thread_get_id(OMG_OmegaSdl2* this, OMG_Thread* thread) {
+size_t omg_sdl2_thread_get_id(OMG_OmegaSdl2* this, OMG_Thread* thread) {
     if (OMG_ISNULL(thread))
-        return (uint32_t)this->sdl2->SDL_ThreadID();
-    return (uint32_t)this->sdl2->SDL_GetThreadID((SDL_Thread*)thread);
+        return (size_t)this->sdl2->SDL_ThreadID();
+    return (size_t)this->sdl2->SDL_GetThreadID((SDL_Thread*)thread);
 }
 
 bool omg_sdl2_thread_set_priority(OMG_OmegaSdl2* this, OMG_Thread* thread, int priority) {

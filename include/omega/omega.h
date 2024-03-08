@@ -158,7 +158,7 @@ typedef struct OMG_Omega {
     /* Create thread. Use OMG_THREAD_CREATE macro please */
     OMG_Thread* (*thread_create)(struct OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
     /* Get thread id. NULL thread means current */
-    uint32_t (*thread_get_id)(struct OMG_Omega* this, OMG_Thread* thread);
+    size_t (*thread_get_id)(struct OMG_Omega* this, OMG_Thread* thread);
     bool (*thread_set_priority)(struct OMG_Omega* this, OMG_Thread* thread, int priority);
     /* Wait until thread finishes. Status pointer may be NULL */
     bool (*thread_wait)(struct OMG_Omega* this, OMG_Thread* thread, int* status);
@@ -303,7 +303,7 @@ OMG_API void omg_event_on_touch(OMG_EventTouch* event);
 #include <omega/filesystem.h>
 
 OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
-OMG_API uint32_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread);
+OMG_API size_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread);
 OMG_API bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority);
 OMG_API bool omg_thread_wait(OMG_Omega* this, OMG_Thread* thread, int* status);
 OMG_API bool omg_thread_detach(OMG_Omega* this, OMG_Thread* thread);

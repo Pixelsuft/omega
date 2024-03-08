@@ -1209,15 +1209,15 @@ OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OM
 #endif
 }
 
-uint32_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread) {
+size_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread) {
 #if OMG_IS_WIN && OMG_SUPPORT_THREADING
     if (OMG_ISNULL(thread))
         return (uint32_t)d_k32->GetCurrentThreadId();
-    return ((OMG_ThreadWin*)thread)->id;
+    return (size_t)(((OMG_ThreadWin*)thread)->id);
 #elif OMG_SUPPORT_LIBC && OMG_SUPPORT_THREADING
     if (OMG_ISNULL(thread))
-        return (uint32_t)d_libc->pthread_self();
-    return ((OMG_ThreadLibc*)thread)->id;
+        return (size_t)d_libc->pthread_self();
+    return (size_t)(((OMG_ThreadLibc*)thread)->id);
 #else
     OMG_UNUSED(this, thread);
     return 0;
