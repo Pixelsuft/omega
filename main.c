@@ -342,9 +342,10 @@ void app_init(App* this, OMG_EntryData* data) {
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
     temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_MS_CLOCK"));
-    this->clock->init(this->clock, temp_env.type >= 0);
+    this->clock->init(this->clock, !(temp_env.type >= 0));
     omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
+    // this->clock->set_fps_limit(this->clock, 400.0);
     this->win->set_title(this->win, &OMG_STR("Test Window"));
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
     this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));
