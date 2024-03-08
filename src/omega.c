@@ -1460,7 +1460,7 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
 #if OMG_IS_WIN
     wchar_t* buf;
     if (base_dir) {
-        wchar_t* temp_buf = OMG_MALLOC(this->mem, 10);
+        wchar_t* temp_buf = OMG_MALLOC(this->mem, 3);
         if (OMG_ISNULL(temp_buf))
             return *omg_dummy_string_create();
         DWORD buf_len = d_k32->GetModuleFileNameW(NULL, temp_buf, 5);
@@ -1516,7 +1516,9 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
     }
     OMG_FREE(this->mem, buf);
     return result;
-#else
+#elif OMG_SUPPORT_LIBC
+    // if (base_dir)
+    //     return *omg_dummy_string_create();
     char* std_res = d_libc->getcwd(NULL, 0);
     if (OMG_ISNULL(std_res))
         return *omg_dummy_string_create();
@@ -1531,6 +1533,9 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
         return *omg_dummy_string_create();
     }
     return res;
+#else
+    OMG_UNUSED(this, base_dir);
+    return *omg_dummy_string_create();
 #endif
 }
 

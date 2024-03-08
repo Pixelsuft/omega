@@ -7,6 +7,7 @@
 #else
 #define LOAD_REQUIRED(func_name) this->func_name = func_name
 #endif
+#include <stdlib.h>
 
 bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     this->loaded = false;
