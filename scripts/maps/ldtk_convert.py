@@ -25,9 +25,11 @@ for lvl in inp['levels']:
         out.write(f'{lay["__cWid"]},{lay["__cHei"]},{lay["layerDefUid"]},{lay["__gridSize"]},{lay["__pxTotalOffsetX"]},')
         out.write(f'{lay["__pxTotalOffsetY"]},{lay["pxOffsetX"]},{lay["pxOffsetY"]},{int(lay["visible"])}\n')
         for ent in lay['entityInstances']:
-            out.write('E,\n')
+            out.write(f'E,{ent["defUid"]},{ent["px"][0]},{ent["px"][1]},{ent["__grid"][0]},{ent["__grid"][1]}')
+            out.write(f',{ent["width"]},{ent["height"]}\n')
         for tile in (lay['autoLayerTiles'] or lay['gridTiles']):
-            out.write('T,\n')
+            out.write(f'T,{tile["src"][0]},{tile["src"][1]},{tile["px"][0]},{tile["px"][1]}')
+            out.write(f',{tile["f"]},{tile["t"]},{tile["a"]}\n')
 
 out.write('EOF!!!\n')
 out.close()
