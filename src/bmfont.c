@@ -34,21 +34,23 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
         if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa <= 0)))
             continue;
         bm_char = &this->chars.data[chr];
-        src_rect.x = (float)bm_char->x;
-        src_rect.y = (float)bm_char->y;
-        src_rect.w = (float)bm_char->w;
-        src_rect.h = (float)bm_char->h;
-        dst_rect.x = cur_x + (float)bm_char->xo;
-        dst_rect.y = cur_y + (float)bm_char->yo;
-        dst_rect.w = (float)bm_char->w;
-        dst_rect.h = (float)bm_char->h;
-        res = this->ren->copy_ex(
-            this->ren,
-            this->page,
-            &src_rect,
-            &dst_rect,
-            NULL, 0.0
-        ) || res;
+        if (bm_char->w > 0) {
+            src_rect.x = (float)bm_char->x;
+            src_rect.y = (float)bm_char->y;
+            src_rect.w = (float)bm_char->w;
+            src_rect.h = (float)bm_char->h;
+            dst_rect.x = cur_x + (float)bm_char->xo;
+            dst_rect.y = cur_y + (float)bm_char->yo;
+            dst_rect.w = (float)bm_char->w;
+            dst_rect.h = (float)bm_char->h;
+            res = this->ren->copy_ex(
+                this->ren,
+                this->page,
+                &src_rect,
+                &dst_rect,
+                NULL, 0.0
+            ) || res;
+        }
         cur_x += (float)bm_char->xa;
     }
     return res;

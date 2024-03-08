@@ -372,6 +372,9 @@ bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* te
     if (OMG_ISNULL(origin)) {
         origin_vec.x = dst_rect.width / 2.0f;
         origin_vec.y = dst_rect.height / 2.0f;
+        // TODO: WTF
+        dst_rect.x += origin_vec.x;
+        dst_rect.y += origin_vec.y;
     }
     else {
         origin_vec.x = origin->x * this->ss.x;

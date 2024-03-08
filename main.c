@@ -133,7 +133,7 @@ bool scene_on_paint(TestScene* scene) {
 #if SUPPORT_FONT
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
-    omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT(0, 0));
+    omg_bmfont_render(&scene->bmfont, &this->fps_str, NULL);
     this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");
     return false;
