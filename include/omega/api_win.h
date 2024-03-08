@@ -1049,6 +1049,7 @@ typedef struct {
     DWORD OMG_WIN_STD_PREFIX (*WaitForSingleObjectEx)(HANDLE, DWORD, bool);
     DWORD OMG_WIN_STD_PREFIX (*GetCurrentThreadId)(void);
     BOOL OMG_WIN_STD_PREFIX (*CreateDirectoryW)(LPCWSTR, LPSECURITY_ATTRIBUTES);
+    DWORD OMG_WIN_STD_PREFIX (*GetCurrentDirectoryW)(DWORD, LPWSTR);
     // TODO: SHFileOperationW
     uint64_t _tick64_emu;
 } OMG_Kernel32;

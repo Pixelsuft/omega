@@ -1456,6 +1456,44 @@ OMG_FileWin* omg_win_file_from_fp(OMG_Omega* this, OMG_FileWin* file, const OMG_
 }
 #endif
 
+OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
+#if OMG_IS_WIN
+    wchar_t* buf;
+    if (base_dir) {
+        // TODO
+    }
+    else {
+        DWORD buf_len = d_k32->GetCurrentDirectoryW(0, NULL);
+        if (buf_len == 0)
+            return *omg_dummy_string_create();
+        buf = OMG_MALLOC(this->mem, buf_len + 2);
+        if (OMG_ISNULL(buf))
+            return *omg_dummy_string_create();
+        DWORD len_read = d_k32->GetCurrentDirectoryW(buf_len + 1, buf);
+        if (len_read == 0) {
+            OMG_FREE(this->mem, buf);
+            return *omg_dummy_string_create();
+        }
+        buf[len_read] = L'\0';
+    }
+    OMG_String result;
+    if (omg_string_init_dynamic(&result, NULL)) {
+        OMG_FREE(this->mem, buf);
+        return *omg_dummy_string_create();
+    }
+    if (omg_string_add_wchar_p(&result, buf) || omg_string_add_char(&result, '\\')) {
+        omg_string_destroy(&result);
+        OMG_FREE(this->mem, buf);
+        return *omg_dummy_string_create();
+    }
+    OMG_FREE(this->mem, buf);
+    return result;
+#else
+    OMG_UNUSED(this, base_dir);
+    return *omg_dummy_string_create();
+#endif
+}
+
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
@@ -1510,6 +1548,7 @@ bool omg_omg_init(OMG_Omega* this) {
     this->thread_set_priority = omg_thread_set_priority;
     this->thread_detach = omg_thread_detach;
     this->thread_wait = omg_thread_wait;
+    this->get_cwd = omg_get_cwd;
     OMG_BEGIN_POINTER_CAST();
 #if OMG_IS_WIN
     this->sz_file = sizeof(OMG_FileWin);

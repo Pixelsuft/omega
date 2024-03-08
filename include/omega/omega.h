@@ -166,6 +166,8 @@ typedef struct OMG_Omega {
     bool (*thread_detach)(struct OMG_Omega* this, OMG_Thread* thread);
     /* Set default event handlers */
     void (*reset_event_handlers)(struct OMG_Omega* this);
+    /* Get current working directory or app executable dir */
+    OMG_String (*get_cwd)(struct OMG_Omega* this, bool base_dir);
     /* Quit event */
     void (*on_quit)(OMG_EventQuit* event);
     /* Update event */
@@ -302,6 +304,7 @@ OMG_API void omg_event_on_touch(OMG_EventTouch* event);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
+OMG_API OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir);
 OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
 OMG_API size_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread);
 OMG_API bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority);
