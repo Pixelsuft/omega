@@ -276,6 +276,7 @@ OMG_API bool omg_app_init(OMG_Omega* this);
 OMG_API bool omg_app_quit(OMG_Omega* this);
 OMG_API bool omg_dummy_audio_alloc(OMG_Omega* this);
 OMG_API OMG_File* omg_file_from_fp(OMG_Omega* this, OMG_File* file, const OMG_String* path, int mode);
+OMG_API OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir);
 OMG_API bool omg_file_destroy(OMG_File* file);
 OMG_API bool omg_win_destroy_clean1(OMG_Omega* this);
 OMG_API bool omg_win_destroy_clean2(OMG_Omega* this);
@@ -304,7 +305,6 @@ OMG_API void omg_event_on_touch(OMG_EventTouch* event);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
-OMG_API OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir);
 OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
 OMG_API size_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread);
 OMG_API bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority);

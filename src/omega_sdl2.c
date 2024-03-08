@@ -754,6 +754,25 @@ bool omg_sdl2_thread_detach(OMG_OmegaSdl2* this, OMG_Thread* thread) {
 }
 #endif
 
+OMG_String omg_sdl2_get_cwd(OMG_OmegaSdl2* this, bool base_dir) {
+    if (!base_dir)
+        return omg_get_cwd(base, base_dir);
+    char* sdl_res = this->sdl2->SDL_GetBasePath();
+    if (OMG_ISNULL(sdl_res))
+        return *omg_dummy_string_create();
+    OMG_String res;
+    if (omg_string_init_dynamic(&res, NULL)) {
+        this->sdl2->SDL_free(sdl_res);
+        return *omg_dummy_string_create();
+    }
+    if (omg_string_add_char_p(&res, sdl_res)) {
+        omg_string_destroy(&res);
+        this->sdl2->SDL_free(sdl_res);
+        return *omg_dummy_string_create();
+    }
+    return res;
+}
+
 bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->inited = false;
     if (OMG_ISNULL(this->sdl2)) {
@@ -818,6 +837,7 @@ bool omg_sdl2_init(OMG_OmegaSdl2* this) {
     base->env_get = omg_sdl2_env_get;
     base->env_set = omg_sdl2_env_set;
     base->message_box = omg_sdl2_message_box;
+    base->get_cwd = omg_sdl2_get_cwd;
 #if OMG_SUPPORT_THREADING
     base->thread_create = omg_sdl2_thread_create;
     base->thread_get_id = omg_sdl2_thread_get_id;
