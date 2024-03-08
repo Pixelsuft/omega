@@ -1130,7 +1130,7 @@ typedef struct {
     OMG_Omega* omg;
     void* user_data;
     OMG_ThreadFunction func;
-    uint32_t id;
+    size_t id;
     int status;
     bool running;
     bool should_free;
@@ -1139,7 +1139,7 @@ typedef struct {
 static void* omg_thread_run_with_phread(void* data) {
     OMG_ThreadLibc* thread = (OMG_ThreadLibc*)data;
     OMG_Omega* this = thread->omg;
-    thread->id = (uint32_t)d_libc->pthread_self();
+    thread->id = (size_t)d_libc->pthread_self();
     thread->running = true;
     thread->status = thread->func(thread->user_data);
     thread->running = false;
