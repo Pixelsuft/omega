@@ -29,7 +29,7 @@ typedef struct {
     OMG_FPoint size;
     float grid_size;
     int id;
-    int layer_id;
+    int level_id;
     int tileset_id;
     bool visible;
     bool is_entity_layer;

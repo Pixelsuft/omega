@@ -11,7 +11,7 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
             }
             if (OMG_ISNOTNULL(this->levels.data[i].layers.data)) {
                 for (size_t j = 0; j < this->levels.data[i].layers.len; j++) {
-                    // TODO
+                    omg_string_destroy(&this->levels.data[i].layers.data[j].name);
                 }
             }
             OMG_ARRAY_DESTROY(&this->levels.data[i].layers);
@@ -144,6 +144,52 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
         }
         else if ((data[i] == 'L') && (data[i + 1] == 'A') && (data[i + 2] == 'Y') && (data[i + 3] == 'E') && (data[i + 4] == 'R')) {
             // Layer definition
+            i += 7;
+            if (OMG_ISNULL(this->levels.data) || (data[i -1] != '\"')) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse layer def");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_LdtkLevel* lev = &this->levels.data[this->levels.len - 1];
+            OMG_LdtkLayer lay;
+            size_t j = i;
+            while (data[j] != '\"')
+                j++;
+            data[j] = '\0';
+            OMG_String base_str = OMG_STRING_MAKE_STATIC(&data[i]);
+            if (omg_string_init_dynamic(&lay.name, &base_str)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse layer def");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            data[j] = '\"';
+            int buf[12];
+            if (this->omg->std->sscanf(
+                &data[j], "\",%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i", &buf[0], &buf[1], &buf[2], &buf[3], &buf[4],
+                &buf[5], &buf[6], &buf[7], &buf[8], &buf[9], &buf[10], &buf[11]
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse level def");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            lay.level_id = buf[0];
+            lay.id = buf[1];
+            lay.tileset_id = buf[2];
+            lay.is_entity_layer = buf[3] > 0;
+            lay.size.w = (float)buf[4];
+            lay.size.h = (float)buf[5];
+            lay.grid_size = (float)buf[6];
+            lay.total_offset.x = (float)buf[7];
+            lay.total_offset.y = (float)buf[8];
+            lay.offset.x = (float)buf[9];
+            lay.offset.y = (float)buf[10];
+            lay.visible = buf[11] > 0;
+            if (OMG_ARRAY_PUSH(&lev->layers, lay)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse layer def");
+                omg_string_destroy(&lay.name);
+                omg_ldtk_destroy(this);
+                return true;
+            }
         }
         else if (data[i] == 'F') {
             // Entity definition

@@ -31,7 +31,7 @@ for lvl in inp['levels']:
         is_ent = lay['__type'] == 'Entities'
         out.write(f'LAYER,"{lay["__identifier"]}",{lay["levelId"]},{lay["layerDefUid"]},')
         out.write(f'{lay["overrideTilesetUid"] or lay["__tilesetDefUid"] or -1},{int(is_ent)},')
-        out.write(f'{lay["__cWid"]},{lay["__cHei"]},{lay["layerDefUid"]},{lay["__gridSize"]},{lay["__pxTotalOffsetX"]},')
+        out.write(f'{lay["__cWid"]},{lay["__cHei"]},{lay["__gridSize"]},{lay["__pxTotalOffsetX"]},')
         out.write(f'{lay["__pxTotalOffsetY"]},{lay["pxOffsetX"]},{lay["pxOffsetY"]},{int(lay["visible"])}\n')
         for ent in lay['entityInstances']:
             out.write(f'E,{ent["defUid"]},{ent["px"][0]},{ent["px"][1]},{ent["__grid"][0]},{ent["__grid"][1]}')
