@@ -124,11 +124,13 @@ bool scene_on_paint(TestScene* scene) {
     OMG_LdtkLevel* level = &scene->map.levels.data[0];
     OMG_FRect src;
     OMG_FRect dst;
+    OMG_Texture* tex;
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
     for (size_t i = 0; i < level->layers.len; i++) {
         OMG_LdtkLayer* lay = &level->layers.data[i];
         if (lay->is_entity_layer)
             continue;
+        tex = this->tilemap1;
         src.w = src.h = dst.w = dst.h = lay->grid_size;
         for (size_t j = 0; j < lay->tiles.len; j++) {
             OMG_LdtkTile* tile = &lay->tiles.data[j];
@@ -142,7 +144,7 @@ bool scene_on_paint(TestScene* scene) {
             if (tile->flip_y)
                 dst.h = -dst.h;
             this->ren->copy_ex(
-                this->ren, this->tilemap1,
+                this->ren, tex,
                 &src, &dst, NULL, 0.0
             );
         }
@@ -167,7 +169,7 @@ bool scene_on_paint(TestScene* scene) {
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(0.5, 0.5));
-    // omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT_MAKE(0, 200));
+    omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT_MAKE(0, 200));
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(1, 1));
     this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");

@@ -763,7 +763,7 @@ LRESULT omg_win_wnd_proc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
             event.win = this;
             omg_base->on_paint(&event);
             // this->u32->EndPaint(this->hwnd, &ps);
-            return RET_DEF_PROC();
+            return 0;
         }
         case WM_MOUSEMOVE: {
             int x_pos = GET_X_LPARAM(lparam);
