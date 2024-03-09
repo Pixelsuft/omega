@@ -1,12 +1,12 @@
 import sys
 import json
+from PIL import ImageColor
 
 def hex_to_str(hexa):
-    if hexa[0] == '#':
-        hexa = hexa[1:]
-    res = tuple(int(hexa[i:i+2], 16) for i in (0, 2, 4))
-    # TODO: RGBA
-    return f'({res[0]},{res[1]},{res[2]}),255'
+    if not hexa[0] == '#':
+        hexa = '#' + hexa
+    res = ImageColor.getcolor(hexa, 'RGBA')
+    return f'({res[0]},{res[1]},{res[2]},{res[3]})'
 
 
 inp = json.loads(open(sys.argv[1], 'r', encoding='utf-8').read())
