@@ -12,6 +12,8 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
             if (OMG_ISNOTNULL(this->levels.data[i].layers.data)) {
                 for (size_t j = 0; j < this->levels.data[i].layers.len; j++) {
                     omg_string_destroy(&this->levels.data[i].layers.data[j].name);
+                    OMG_ARRAY_DESTROY(&this->levels.data[i].layers.data[j].entities);
+                    OMG_ARRAY_DESTROY(&this->levels.data[i].layers.data[j].tiles);
                 }
             }
             OMG_ARRAY_DESTROY(&this->levels.data[i].layers);
@@ -89,6 +91,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             // Level definition
             OMG_LdtkLevel lev;
             lev.layers.data = NULL;
+            lev.name.type = OMG_STRING_NONE;
             if (this->omg->std->sscanf(
                 &data[i], "LEVEL,%i,\"", &lev.id
             ) < 1) {
@@ -152,6 +155,9 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             }
             OMG_LdtkLevel* lev = &this->levels.data[this->levels.len - 1];
             OMG_LdtkLayer lay;
+            lay.entities.data = NULL;
+            lay.tiles.data = NULL;
+            lay.name.type = OMG_STRING_NONE;
             size_t j = i;
             while (data[j] != '\"')
                 j++;
@@ -194,6 +200,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
         else if (data[i] == 'F') {
             // Entity definition
             OMG_LdtkEntityDef ent;
+            ent.name.type = OMG_STRING_NONE;
             if (this->omg->std->sscanf(
                 &data[i], "F,%i,\"", &ent.id
             ) < 1) {
@@ -241,6 +248,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
         else if (data[i] == 'S') {
             // Tilemap definition
             OMG_LdtkTilemapDef tm;
+            tm.name.type = OMG_STRING_NONE;
             if (this->omg->std->sscanf(
                 &data[i], "S,%i,\"", &tm.id
             ) < 1) {

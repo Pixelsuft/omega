@@ -23,6 +23,22 @@ typedef struct {
 } OMG_LdtkTilemapDef;
 
 typedef struct {
+    OMG_FRect rect;
+    OMG_FRect grid_pos;
+    int id;
+} OMG_LdtkEntity;
+
+typedef struct {
+    OMG_FPoint src;
+    OMG_FPoint pos;
+    float a;
+    int flip;
+    int id;
+} OMG_LdtkTile;
+
+typedef struct {
+    OMG_Array(OMG_LdtkEntity) entities;
+    OMG_Array(OMG_LdtkTile) tiles;
     OMG_String name;
     OMG_FPoint total_offset;
     OMG_FPoint offset;
