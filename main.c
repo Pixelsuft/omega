@@ -134,17 +134,18 @@ bool scene_on_paint(TestScene* scene) {
             continue;
         tex = (i == 2) ? this->tilemap2 : this->tilemap1;
         src.w = src.h = dst.w = dst.h = lay->grid_size;
+        dst.w = dst.h = lay->grid_size;
         for (size_t j = 0; j < lay->tiles.len; j++) {
             OMG_LdtkTile* tile = &lay->tiles.data[j];
             src.x = tile->src.x;
             src.y = tile->src.y;
+            src.w = src.h = lay->grid_size;
             dst.x = tile->pos.x;
             dst.y = tile->pos.y;
-            dst.w = dst.h = lay->grid_size;
             if (tile->flip_x)
-                dst.w = -dst.w;
+                src.w = -src.w;
             if (tile->flip_y)
-                dst.h = -dst.h;
+                src.h = -src.h;
             this->ren->copy_ex(
                 this->ren, tex,
                 &src, &dst, NULL, 0.0
