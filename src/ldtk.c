@@ -21,6 +21,7 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
             }
         }
     }
+    OMG_ARRAY_DESTROY(&this->tilemaps);
     OMG_ARRAY_DESTROY(&this->entities);
     return false;
 }
