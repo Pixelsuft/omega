@@ -180,6 +180,7 @@
     <ClCompile Include="src\image_raylib.c" />
     <ClCompile Include="src\image_sdl2.c" />
     <ClCompile Include="src\input.c" />
+    <ClCompile Include="src\ldtk.c" />
     <ClCompile Include="src\memory.c" />
     <ClCompile Include="src\memory_raylib.c" />
     <ClCompile Include="src\memory_sdl2.c" />

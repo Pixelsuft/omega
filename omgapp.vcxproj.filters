@@ -177,5 +177,8 @@
     <ClCompile Include="src\bmfont.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\ldtk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
