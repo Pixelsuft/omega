@@ -13,8 +13,19 @@ typedef struct {
 } OMG_LdtkEntityDef;
 
 typedef struct {
+    OMG_String name;
+    OMG_String path;
+    OMG_FPoint size;
+    float grid_size;
+    float spacing;
+    float padding;
+    int id;
+} OMG_LdtkTilemapDef;
+
+typedef struct {
     OMG_Omega* omg;
     OMG_Array(OMG_LdtkEntityDef) entities;
+    OMG_Array(OMG_LdtkTilemapDef) tilemaps;
     OMG_FPoint world_grid_size;
     OMG_Color bg_color;
 } OMG_Ldtk;
