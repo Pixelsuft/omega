@@ -48,6 +48,7 @@ typedef struct {
     OMG_Omega* omg;
     OMG_Array(OMG_LdtkEntityDef) entities;
     OMG_Array(OMG_LdtkTilemapDef) tilemaps;
+    OMG_Array(OMG_LdtkLevel) levels;
     OMG_FPoint world_grid_size;
     OMG_Color bg_color;
 } OMG_Ldtk;
