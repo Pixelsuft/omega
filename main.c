@@ -237,7 +237,8 @@ bool scene_on_init(TestScene* scene) {
 
 void app_on_update(OMG_EventUpdate* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    this->audio->update(this->audio);
+    OMG_UNUSED(this);
+    // this->audio->update(this->audio);
 }
 
 void app_on_paint(OMG_EventPaint* event) {
@@ -354,16 +355,18 @@ void app_init(App* this, OMG_EntryData* data) {
         this->omg->audio_type = OMG_AUDIO_TYPE_FMOD;
     if (sizeof(void*) == 4 && this->omg->audio_type == OMG_AUDIO_TYPE_FMOD)
         this->omg->audio_type = OMG_AUDIO_TYPE_SDL2;
-    if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
+    /* if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
         this->omg->destroy(this->omg);
         return;
-    }
+    } */
+#if SUPPORT_FONT
     if (this->omg->winmgr->fontmgr_alloc(this->omg->winmgr) || this->omg->winmgr->fnt->init(this->omg->winmgr->fnt)) {
         OMG_ERROR(this->omg, "OMG Font Init Fail");
         this->omg->destroy(this->omg);
         return;
     }
+#endif
     this->fnt = this->omg->winmgr->fnt;
     this->audio = this->omg->audio;
     this->ren = this->win->ren;
