@@ -5,6 +5,7 @@
 #include <omega/scene_objects.h>
 #include <omega/array.h>
 #include <omega/bmfont.h>
+#include <omega/ldtk.h>
 #if OMG_DEBUG && OMG_HAS_STD
 #include <stdio.h>
 #endif
@@ -18,6 +19,7 @@
 typedef struct {
     OMG_Scene parent;
     OMG_Bmfont bmfont;
+    OMG_Ldtk map;
     OMG_Color circle_color;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectTimer* timer;
@@ -36,6 +38,7 @@ typedef struct {
     OMG_SceneMgr* sm;
     TestScene* sc;
     OMG_Texture* font_tex;
+    OMG_Texture* tilemap1;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -50,6 +53,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
+    this->ren->tex_destroy(this->ren, this->tilemap1);
     this->ren->tex_destroy(this->ren, this->font_tex);
 #if SUPPORT_FONT
     this->fnt->font_destroy(this->fnt, this->fps_font);
@@ -70,6 +74,7 @@ bool scene_on_destroy(TestScene* scene) {
         if (OMG_ISNOTNULL(scene->objects[i]))
             OMG_FREE(this->omg->mem, scene->objects[i]);
     }
+    omg_ldtk_destroy(&scene->map);
     omg_bmfont_destroy(&scene->bmfont);
     OMG_INFO(this->omg, "Scene destroy");
     return false;
@@ -175,26 +180,22 @@ bool scene_on_init(TestScene* scene) {
     scene->objects[2] = scene->x_timer;
     OMG_EPO();
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
-    /* OMG_Array(int) test_arr;
-    OMG_ARRAY_INIT(&test_arr, 0, 0);
-    // OMG_ARRAY_SET_LEN(&test_arr, 5, true);
-    OMG_ARRAY_RESERVE_LEN(&test_arr, 100);
-    for (int i = 0; i < 10000; i++) {
-        OMG_ARRAY_PUSH(&test_arr, i);
-    }
-    OMG_ARRAY_REMOVE(&test_arr, 5, true);
-    OMG_ARRAY_REMOVE(&test_arr, 6, true);
-    OMG_ARRAY_REMOVE(&test_arr, 7, true);
-    for (int i = 0; i < (int)test_arr.len; i++) {
-        OMG_INFO(this->omg, test_arr.data[i]);
-    }
-    OMG_ARRAY_DESTROY(&test_arr); */
+    // Load Bitmap Font
     OMG_File* file = this->omg->file_from_fp(this->omg, NULL, &OMG_STR("assets/goldFont-uhd.fnt"), OMG_FILE_MODE_RT);
     size_t data_size = file->get_size(file);
     char* data = OMG_MALLOC(this->omg->mem, data_size + 10);
     this->omg->std->memset(&data[data_size], 0, 8);
     file->read(file, data, 1, data_size);
     omg_bmfont_init(&scene->bmfont, this->font_tex, this->ren, data, data_size);
+    OMG_FREE(this->omg->mem, data);
+    file->destroy(file);
+    // Load Ldtk Map
+    file = this->omg->file_from_fp(this->omg, NULL, &OMG_STR("assets/test_map.txt"), OMG_FILE_MODE_RT);
+    data_size = file->get_size(file);
+    data = OMG_MALLOC(this->omg->mem, data_size + 10);
+    this->omg->std->memset(&data[data_size], 0, 8);
+    file->read(file, data, 1, data_size);
+    omg_ldtk_init(&scene->map, this->omg, data, data_size);
     OMG_FREE(this->omg->mem, data);
     file->destroy(file);
     OMG_INFO(this->omg, "Scene init");
@@ -342,6 +343,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_key_down;
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
+    this->tilemap1 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/Cavernas_by_Adam_Saltsman.png"));
     this->ren->tex_set_scale_mode(this->ren, this->font_tex, OMG_SCALE_MODE_LINEAR);
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
     temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_MS_CLOCK"));
