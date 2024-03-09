@@ -43,6 +43,47 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
     return false;
 }
 
+// TODO: use binary search for this functions
+int omg_ldtk_index_from_level_name(OMG_Ldtk* this, const OMG_String* level_name) {
+    if (OMG_ISNULL(this->levels.data))
+        return -1;
+    for (int i = 0; i < (int)this->levels.len; i++) {
+        if (omg_string_equal(&this->levels.data[i].name, level_name))
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_layer_name(OMG_LdtkLevel* level, const OMG_String* layer_name) {
+    if (OMG_ISNULL(level->layers.data))
+        return -1;
+    for (int i = 0; i < (int)level->layers.len; i++) {
+        if (omg_string_equal(&level->layers.data[i].name, layer_name))
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_entity_name(OMG_Ldtk* this, const OMG_String* entity_name) {
+    if (OMG_ISNULL(this->entities.data))
+        return -1;
+    for (int i = 0; i < (int)this->entities.len; i++) {
+        if (omg_string_equal(&this->entities.data[i].name, entity_name))
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_tilemap_name(OMG_Ldtk* this, const OMG_String* tilemap_name) {
+    if (OMG_ISNULL(this->tilemaps.data))
+        return -1;
+    for (int i = 0; i < (int)this->tilemaps.len; i++) {
+        if (omg_string_equal(&this->tilemaps.data[i].name, tilemap_name))
+            return i;
+    }
+    return -1;
+}
+
 bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
     this->omg = omg;
     this->entities.data = NULL;

@@ -72,4 +72,8 @@ typedef struct {
 
 OMG_API bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len);
 OMG_API bool omg_ldtk_destroy(OMG_Ldtk* this);
+OMG_API int omg_ldtk_index_from_level_name(OMG_Ldtk* this, const OMG_String* level_name);
+OMG_API int omg_ldtk_index_from_layer_name(OMG_LdtkLevel* level, const OMG_String* layer_name);
+OMG_API int omg_ldtk_index_from_entity_name(OMG_Ldtk* this, const OMG_String* entity_name);
+OMG_API int omg_ldtk_index_from_tilemap_name(OMG_Ldtk* this, const OMG_String* tilemap_name);
 #endif
