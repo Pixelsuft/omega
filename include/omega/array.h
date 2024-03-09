@@ -28,7 +28,7 @@ typedef struct {
 #define OMG_ARRAY_DESTROY(this) omg_array_destroy((OMG_ArrayBase*)(this))
 #define OMG_ARRAY_ADD_CHUNK(this) omg_array_add_chunk((OMG_ArrayBase*)(this))
 #define OMG_ARRAY_SET_LEN(this, need_len, trim) omg_array_set_len((OMG_ArrayBase*)(this), need_len, (size_t)sizeof(*(this)->data), trim)
-#define OMG_ARRAY_PUSH(this, new_elem) omg_array_push((OMG_ArrayBase*)(this), (size_t)sizeof(*(this)->data), &new_elem)
+#define OMG_ARRAY_PUSH(this, new_elem) omg_array_push((OMG_ArrayBase*)(this), (size_t)sizeof(*(this)->data), &(new_elem))
 #define OMG_ARRAY_REMOVE(this, elem_id, trim) omg_array_remove((OMG_ArrayBase*)(this), elem_id, (size_t)sizeof(*(this)->data), trim)
 #define OMG_ARRAY_RESERVE_LEN(this, need_len) omg_array_reserve_len((OMG_ArrayBase*)(this), need_len, (size_t)sizeof(*(this)->data))
 #define OMG_ARRAY_CLEAN(this) omg_array_remove((OMG_ArrayBase*)(this), (size_t)sizeof(*(this)->data))
