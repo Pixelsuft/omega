@@ -77,7 +77,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             this->bg_color.b = (omg_color_t)(buf[4]) * OMG_MAX_COLOR / (omg_color_t)255;
             this->bg_color.a = (omg_color_t)(buf[5]) * OMG_MAX_COLOR / (omg_color_t)255;
         }
-        else if ((data[i] == 'E') && (data[i] == 'O') && (data[i] == 'F')) {
+        else if ((data[i] == 'E') && (data[i + 1] == 'O') && (data[i + 2] == 'F')) {
             // End of file
             data[temp_i] = '\n';
             break;
