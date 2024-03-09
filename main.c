@@ -282,6 +282,15 @@ void app_on_key_down(OMG_EventKeyboard* event) {
     }
 }
 
+void app_on_mouse_move(OMG_EventMouseMove* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    if (!(event->state & OMG_MBUTTON_LEFT))
+        return;
+    this->ren->set_scale(this->ren, &OMG_FPOINT_MAKE(
+        this->ren->offset.x + event->rel.x, this->ren->offset.y + event->rel.y
+    ), NULL);
+}
+
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if 0
@@ -374,6 +383,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_expose = app_on_expose;
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_key_down;
+    this->omg->on_mouse_move = app_on_mouse_move;
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->tilemap1 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/Cavernas_by_Adam_Saltsman.png"));
     this->tilemap2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/SunnyLand_by_Ansimuz-extended.png"));
