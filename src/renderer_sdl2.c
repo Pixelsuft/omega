@@ -102,7 +102,7 @@ int omg_renderer_sdl2_driver_from_name(OMG_RendererSdl2* this, const char* name)
     if (!omg_base->std->strcmp(name, "opengles"))
         return OMG_REN_DRIVER_OPENGLES;
     if (!omg_base->std->strcmp(name, "opengles2"))
-        return OMG_REN_DRIVER_OPENGLES;
+        return OMG_REN_DRIVER_OPENGLES2;
     if (!omg_base->std->strcmp(name, "software"))
         return OMG_REN_DRIVER_SOFTWARE;
     return OMG_REN_DRIVER_UNKNOWN;
