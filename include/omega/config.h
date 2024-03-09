@@ -2,7 +2,7 @@
 #include <omega/platform.h>
 
 #ifndef OMG_DEBUG
-#define OMG_DEBUG 1
+#define OMG_DEBUG (!OMG_IS_ANDROID && !OMG_IS_EMSCRIPTEN) && 1
 #endif
 #ifndef OMG_DEBUG_FILL_MEM
 #define OMG_DEBUG_FILL_MEM 1
@@ -52,7 +52,7 @@
 #define OMG_SUPPORT_SDL2 1
 #endif
 #ifndef OMG_SDL2_DYNAMIC
-#define OMG_SDL2_DYNAMIC 1
+#define OMG_SDL2_DYNAMIC !OMG_IS_ANDROID
 #endif
 #ifndef OMG_SDL2_COMPAT_DYNAMIC
 #define OMG_SDL2_COMPAT_DYNAMIC 0
