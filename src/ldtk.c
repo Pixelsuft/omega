@@ -190,6 +190,16 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             lay.offset.x = (float)buf[9];
             lay.offset.y = (float)buf[10];
             lay.visible = buf[11] > 0;
+            if (
+                lay.is_entity_layer ?
+                OMG_ARRAY_INIT(&lay.entities, 0, 4 * sizeof(OMG_LdtkEntity)) :
+                OMG_ARRAY_INIT(&lay.tiles, 0, 4 * sizeof(OMG_LdtkTile))
+            ) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse layer def");
+                omg_string_destroy(&lay.name);
+                omg_ldtk_destroy(this);
+                return true;
+            }
             if (OMG_ARRAY_PUSH(&lev->layers, lay)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse layer def");
                 omg_string_destroy(&lay.name);
