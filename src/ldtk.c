@@ -1,6 +1,7 @@
 #include <omega/ldtk.h>
 
 #if OMG_SUPPORT_LDTK
+#include <omega/renderer.h>
 // TODO: find functions
 
 bool omg_ldtk_destroy(OMG_Ldtk* this) {
@@ -83,9 +84,76 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
         }
         else if (data[i] == 'T') {
             // Tile definition
+            if (OMG_ISNULL(this->levels.data) || OMG_ISNULL(this->levels.data[this->levels.len - 1].layers.data)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse tile");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_LdtkLevel* lev = &this->levels.data[this->levels.len - 1];
+            OMG_LdtkLayer* lay = &lev->layers.data[lev->layers.len - 1];
+            if (lay->is_entity_layer) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse tile");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_LdtkTile tile;
+            int buf[7];
+            if (this->omg->std->sscanf(
+                &data[i], "T,%i,%i,%i,%i,%i,%i,%i", &buf[0], &buf[1], &buf[2], &buf[3], &buf[4], &buf[5], &buf[6]
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse tile");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            tile.src.x = buf[0];
+            tile.src.y = (float)buf[1];
+            tile.pos.x = (float)buf[2];
+            tile.pos.y = (float)buf[3];
+            tile.flip_x = (buf[4] == 1) || (buf[4] == 3);
+            tile.flip_y = (buf[4] == 2) || (buf[4] == 3);
+            tile.id = buf[5];
+            tile.a = (float)buf[6];
+            if (OMG_ARRAY_PUSH(&lay->tiles, tile)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse tile");
+                omg_ldtk_destroy(this);
+                return true;
+            }
         }
         else if (data[i] == 'E') {
             // Entity definition
+            if (OMG_ISNULL(this->levels.data) || OMG_ISNULL(this->levels.data[this->levels.len - 1].layers.data)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_LdtkLevel* lev = &this->levels.data[this->levels.len - 1];
+            OMG_LdtkLayer* lay = &lev->layers.data[lev->layers.len - 1];
+            if (!lay->is_entity_layer) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_LdtkEntity ent;
+            int buf[7];
+            if (this->omg->std->sscanf(
+                &data[i], "E,%i,%i,%i,%i,%i,%i,%i", &buf[0], &buf[1], &buf[2], &buf[3], &buf[4], &buf[5], &buf[6]
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            ent.id = buf[0];
+            ent.rect.x = (float)buf[1];
+            ent.rect.x = (float)buf[2];
+            ent.grid_pos.x = (float)buf[3];
+            ent.grid_pos.x = (float)buf[4];
+            ent.rect.w = (float)buf[5];
+            ent.rect.h = (float)buf[6];
+            if (OMG_ARRAY_PUSH(&lay->entities, ent)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
+                omg_ldtk_destroy(this);
+                return true;
+            }
         }
         else if ((data[i] == 'L') && (data[i + 1] == 'E') && (data[i + 2] == 'V') && (data[i + 3] == 'E') && (data[i + 4] == 'L')) {
             // Level definition
@@ -148,7 +216,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
         else if ((data[i] == 'L') && (data[i + 1] == 'A') && (data[i + 2] == 'Y') && (data[i + 3] == 'E') && (data[i + 4] == 'R')) {
             // Layer definition
             i += 7;
-            if (OMG_ISNULL(this->levels.data) || (data[i -1] != '\"')) {
+            if (OMG_ISNULL(this->levels.data) || (data[i - 1] != '\"')) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse layer def");
                 omg_ldtk_destroy(this);
                 return true;

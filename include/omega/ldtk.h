@@ -32,7 +32,8 @@ typedef struct {
     OMG_FPoint src;
     OMG_FPoint pos;
     float a;
-    int flip;
+    bool flip_x;
+    bool flip_y;
     int id;
 } OMG_LdtkTile;
 
