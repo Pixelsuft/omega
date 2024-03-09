@@ -23,6 +23,28 @@ typedef struct {
 } OMG_LdtkTilemapDef;
 
 typedef struct {
+    OMG_String name;
+    OMG_FPoint total_offset;
+    OMG_FPoint offset;
+    OMG_FPoint size;
+    float grid_size;
+    int id;
+    int layer_id;
+    int tileset_id;
+    bool visible;
+    bool is_entity_layer;
+} OMG_LdtkLayer;
+
+typedef struct {
+    OMG_Array(OMG_LdtkLayer) layers;
+    OMG_String name;
+    OMG_FRect rect;
+    OMG_Color bg_color;
+    float depth;
+    int id;
+} OMG_LdtkLevel;
+
+typedef struct {
     OMG_Omega* omg;
     OMG_Array(OMG_LdtkEntityDef) entities;
     OMG_Array(OMG_LdtkTilemapDef) tilemaps;
