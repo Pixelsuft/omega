@@ -11,7 +11,7 @@
 #endif
 #define scene_base ((OMG_Scene*)this->sc)
 // SDL_ttf doesn't compile on UWP (((
-#define SUPPORT_FONT !OMG_IS_UWP
+#define SUPPORT_FONT !(OMG_IS_UWP || OMG_IS_ANDROID)
 #define MAX_OBJECTS 20
 
 // TODO: SDL_GetBasePath alternative

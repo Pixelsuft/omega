@@ -12,7 +12,7 @@
 #define OMG_IS_EMSCRIPTEN 0
 #endif
 
-#ifdef __android__
+#if defined(__android__) || defined(__ANDROID__)
 #define OMG_IS_ANDROID 1
 #else
 #define OMG_IS_ANDROID 0
