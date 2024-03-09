@@ -225,6 +225,8 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             OMG_LdtkLayer lay;
             lay.entities.data = NULL;
             lay.tiles.data = NULL;
+            lay.entities.len = 0;
+            lay.tiles.len = 0;
             lay.name.type = OMG_STRING_NONE;
             size_t j = i;
             while (data[j] != '\"')

@@ -120,6 +120,34 @@ bool scene_on_paint(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(25, 25, 25));
+    // Render tilemap
+    OMG_LdtkLevel* level = &scene->map.levels.data[0];
+    OMG_FRect src;
+    OMG_FRect dst;
+    this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
+    for (size_t i = 0; i < level->layers.len; i++) {
+        OMG_LdtkLayer* lay = &level->layers.data[i];
+        if (lay->is_entity_layer)
+            continue;
+        src.w = src.h = dst.w = dst.h = lay->grid_size;
+        for (size_t j = 0; j < lay->tiles.len; j++) {
+            OMG_LdtkTile* tile = &lay->tiles.data[j];
+            src.x = tile->src.x;
+            src.y = tile->src.y;
+            dst.x = tile->pos.x;
+            dst.y = tile->pos.y;
+            dst.w = dst.h = lay->grid_size;
+            if (tile->flip_x)
+                dst.w = -dst.w;
+            if (tile->flip_y)
+                dst.h = -dst.h;
+            this->ren->copy_ex(
+                this->ren, this->tilemap1,
+                &src, &dst, NULL, 0.0
+            );
+        }
+    }
+    this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(1, 1));
     for (size_t i = 0; i < MAX_OBJECTS; i++) {
         OMG_Object* obj = scene->objects[i];
         if (OMG_ISNULL(obj))
@@ -139,7 +167,7 @@ bool scene_on_paint(TestScene* scene) {
     this->ren->font_render_to(this->ren, NULL, this->fps_font, &this->fps_str, NULL, &OMG_COLOR_MAKE_RGB(0, 255, 255), NULL);
 #endif
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(0.5, 0.5));
-    omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT_MAKE(0, 200));
+    // omg_bmfont_render(&scene->bmfont, &this->fps_str, &OMG_FPOINT_MAKE(0, 200));
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(1, 1));
     this->ren->flip(this->ren);
     // OMG_INFO(this->omg, "Scene paint");
@@ -253,10 +281,10 @@ void app_on_key_down(OMG_EventKeyboard* event) {
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if 0
-#elif OMG_SUPPORT_WIN && !OMG_IS_UWP
-    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_SDL2
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_SDL2);
+#elif OMG_SUPPORT_WIN && !OMG_IS_UWP
+    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_RAYLIB
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_RAYLIB);
 #endif
@@ -345,6 +373,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->tilemap1 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/Cavernas_by_Adam_Saltsman.png"));
     this->ren->tex_set_scale_mode(this->ren, this->font_tex, OMG_SCALE_MODE_LINEAR);
+    this->ren->tex_set_scale_mode(this->ren, this->tilemap1, OMG_SCALE_MODE_NEAREST);
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
     temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_MS_CLOCK"));
     this->clock->init(this->clock, !(temp_env.type >= 0));

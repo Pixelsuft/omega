@@ -27,7 +27,7 @@ for ts in inp['defs']['tilesets']:
 for lvl in inp['levels']:
     out.write(f'LEVEL,{lvl["uid"]},"{lvl["identifier"]}",{lvl["worldDepth"]},{lvl["worldX"]},{lvl["worldY"]},{lvl["pxWid"]},')
     out.write(f'{lvl["pxHei"]},{hex_to_str(lvl["bgColor"] or lvl["__bgColor"])}\n')
-    for lay in lvl['layerInstances']:
+    for lay in lvl['layerInstances'][::-1]:
         is_ent = lay['__type'] == 'Entities'
         out.write(f'LAYER,"{lay["__identifier"]}",{lay["levelId"]},{lay["layerDefUid"]},')
         out.write(f'{lay["overrideTilesetUid"] or lay["__tilesetDefUid"] or -1},{int(is_ent)},')
