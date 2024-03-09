@@ -39,6 +39,7 @@ typedef struct {
     TestScene* sc;
     OMG_Texture* font_tex;
     OMG_Texture* tilemap1;
+    OMG_Texture* tilemap2;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -53,6 +54,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
+    this->ren->tex_destroy(this->ren, this->tilemap2);
     this->ren->tex_destroy(this->ren, this->tilemap1);
     this->ren->tex_destroy(this->ren, this->font_tex);
 #if SUPPORT_FONT
@@ -130,7 +132,7 @@ bool scene_on_paint(TestScene* scene) {
         OMG_LdtkLayer* lay = &level->layers.data[i];
         if (lay->is_entity_layer)
             continue;
-        tex = this->tilemap1;
+        tex = (i == 2) ? this->tilemap2 : this->tilemap1;
         src.w = src.h = dst.w = dst.h = lay->grid_size;
         for (size_t j = 0; j < lay->tiles.len; j++) {
             OMG_LdtkTile* tile = &lay->tiles.data[j];
@@ -374,6 +376,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->omg->on_key_down = app_on_key_down;
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->tilemap1 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/Cavernas_by_Adam_Saltsman.png"));
+    this->tilemap2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/SunnyLand_by_Ansimuz-extended.png"));
     this->ren->tex_set_scale_mode(this->ren, this->font_tex, OMG_SCALE_MODE_LINEAR);
     this->ren->tex_set_scale_mode(this->ren, this->tilemap1, OMG_SCALE_MODE_NEAREST);
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
