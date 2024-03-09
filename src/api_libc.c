@@ -34,7 +34,7 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(getcwd);
     LOAD_REQUIRED(free);
 #if !OMG_IS_WIN
-#if OMG_SUPPORT_THREADING
+#if OMG_SUPPORT_THREADING && !OMG_IS_ANDROID
     LOAD_REQUIRED(pthread_attr_init);
     LOAD_REQUIRED(pthread_attr_setdetachstate);
     LOAD_REQUIRED(pthread_attr_setstacksize);
@@ -46,7 +46,7 @@ bool omg_libc_dll_load(OMG_Libc* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(pthread_join);
     LOAD_REQUIRED(pthread_detach);
 #endif
-#if !OMG_IS_EMSCRIPTEN
+#if !OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID
     LOAD_REQUIRED(getenv);
     LOAD_REQUIRED(setenv);
     LOAD_REQUIRED(unsetenv);

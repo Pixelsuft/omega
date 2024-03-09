@@ -46,7 +46,7 @@ typedef struct {
     char* OMG_LIBC_STD_PREFIX (*getcwd)(char*, size_t);
     void OMG_LIBC_STD_PREFIX (*free)(void*);
 #if !OMG_IS_WIN
-#if OMG_SUPPORT_THREADING
+#if OMG_SUPPORT_THREADING && !OMG_IS_ANDROID
     int OMG_LIBC_STD_PREFIX (*pthread_attr_init)(pthread_attr_t*);
     int OMG_LIBC_STD_PREFIX (*pthread_attr_setdetachstate)(pthread_attr_t*, int);
     int OMG_LIBC_STD_PREFIX (*pthread_attr_setstacksize)(pthread_attr_t*, size_t);
