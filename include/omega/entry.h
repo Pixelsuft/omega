@@ -95,6 +95,17 @@ typedef struct {
     ); \*/
 }
 #else
+#if OMG_IS_ANDROID
+#define OMG_MAIN_MAKE(main_func) int SDL_main(int argc, char* argv[]) { \
+    OMG_EntryData entry_data; \
+    entry_data.hInst = NULL; \
+    entry_data.cmdline = NULL; \
+    entry_data.cmdline_s = NULL; \
+    entry_data.argc = argc; \
+    entry_data.argv = argv; \
+    return main_func(&entry_data); \
+}
+#else
 #define OMG_MAIN_MAKE(main_func) int main(int argc, char* argv[]) { \
     OMG_EntryData entry_data; \
     entry_data.hInst = NULL; \
@@ -104,6 +115,7 @@ typedef struct {
     entry_data.argv = argv; \
     return main_func(&entry_data); \
 }
+#endif
 #endif
 #endif
 #endif

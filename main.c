@@ -412,9 +412,10 @@ void app_init(App* this, OMG_EntryData* data) {
     this->win->show(this->win, true);
     this->win->mouse_set_system_cursor(this->win, OMG_SYSTEM_CURSOR_DEFAULT);
     omg_scenemgr_scene_run(this->sm, this->sc);
-    OMG_String cwd = this->omg->get_cwd(this->omg, true);
+    // TODO: wtf why this crashes
+    /* OMG_String cwd = this->omg->get_cwd(this->omg, false);
     OMG_INFO(this->omg, "Current path: ", &cwd);
-    omg_string_destroy(&cwd);
+    omg_string_destroy(&cwd); */
     // this->clock->reset(this->clock);
     this->exit_code = 0;
 }

@@ -313,7 +313,7 @@ bool omg_sdl2_dll_load(OMG_Sdl2* this, const OMG_String* dll_path) {
     LOAD_REQUIRED(SDL_CondWait);
     LOAD_REQUIRED(SDL_CondWaitTimeout);
     LOAD_REQUIRED(SDL_ShowSimpleMessageBox);
-#if !OMG_IS_UWP && !OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID
+#if !OMG_IS_UWP && !OMG_IS_EMSCRIPTEN && !OMG_IS_ANDROID && OMG_SDL2_DYNAMIC
     LOAD_REQUIRED(SDL_GetWindowWMInfo);
 #endif
     LOAD_REQUIRED(SDL_getenv);
