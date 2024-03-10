@@ -920,6 +920,20 @@ bool omg_renderer_sdl2_init(OMG_RendererSdl2* this) {
     }
     omg_sdl2_gfx_set_handle(this->sdl2, omg_std_get_default_handle());
     omg_renderer_sdl2_update_scale(this);
+#if OMG_IS_WIN && !OMG_IS_UWP && !OMG_IS_EMSCRIPTEN && OMG_SDL2_DYNAMIC
+    SDL_SysWMinfo wm_info;
+    wm_info.version.major = 2;
+    wm_info.version.minor = 31;
+    wm_info.version.patch = 0;
+    if (this->sdl2->SDL_GetWindowWMInfo(this->win, &wm_info) == SDL_TRUE) {
+        win_base->win32_handle = (void*)wm_info.win.window;
+    }
+    else {
+        win_base->win32_handle = NULL;
+        _OMG_LOG_WARN(omg_base, "Failed to get window manager info (", this->sdl2->SDL_GetError(), ")");
+    }
+    omg_window_win_check_dark_mode(win_base);
+#endif
     base->inited = true;
     return false;
 }
