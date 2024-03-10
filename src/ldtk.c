@@ -84,6 +84,46 @@ int omg_ldtk_index_from_tilemap_name(OMG_Ldtk* this, const OMG_String* tilemap_n
     return -1;
 }
 
+int omg_ldtk_index_from_level_id(OMG_Ldtk* this, int level_id) {
+    if (OMG_ISNULL(this->levels.data))
+        return -1;
+    for (int i = 0; i < (int)this->levels.len; i++) {
+        if (this->levels.data[i].id == level_id)
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_layer_id(OMG_LdtkLevel* level, int layer_id) {
+    if (OMG_ISNULL(level->layers.data))
+        return -1;
+    for (int i = 0; i < (int)level->layers.len; i++) {
+        if (level->layers.data[i].id == layer_id)
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_entity_id(OMG_Ldtk* this, int entity_id) {
+    if (OMG_ISNULL(this->entities.data))
+        return -1;
+    for (int i = 0; i < (int)this->entities.len; i++) {
+        if (this->entities.data[i].id == entity_id)
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_tilemap_id(OMG_Ldtk* this, int tilemap_id) {
+    if (OMG_ISNULL(this->tilemaps.data))
+        return -1;
+    for (int i = 0; i < (int)this->tilemaps.len; i++) {
+        if (this->tilemaps.data[i].id == tilemap_id)
+            return i;
+    }
+    return -1;
+}
+
 bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
     this->omg = omg;
     this->entities.data = NULL;

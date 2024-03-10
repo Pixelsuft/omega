@@ -76,4 +76,8 @@ OMG_API int omg_ldtk_index_from_level_name(OMG_Ldtk* this, const OMG_String* lev
 OMG_API int omg_ldtk_index_from_layer_name(OMG_LdtkLevel* level, const OMG_String* layer_name);
 OMG_API int omg_ldtk_index_from_entity_name(OMG_Ldtk* this, const OMG_String* entity_name);
 OMG_API int omg_ldtk_index_from_tilemap_name(OMG_Ldtk* this, const OMG_String* tilemap_name);
+OMG_API int omg_ldtk_index_from_level_id(OMG_Ldtk* this, int level_id);
+OMG_API int omg_ldtk_index_from_layer_id(OMG_LdtkLevel* level, int layer_id);
+OMG_API int omg_ldtk_index_from_entity_id(OMG_Ldtk* this, int entity_id);
+OMG_API int omg_ldtk_index_from_tilemap_id(OMG_Ldtk* this, int tilemap_id);
 #endif
