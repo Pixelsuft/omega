@@ -21,6 +21,7 @@ typedef struct {
     OMG_Bmfont bmfont;
     OMG_Ldtk map;
     OMG_Color circle_color;
+    OMG_Texture* map_tex;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectTimer* timer;
     OMG_ObjectAnimTimer* sin_timer;
@@ -76,6 +77,7 @@ bool scene_on_destroy(TestScene* scene) {
         if (OMG_ISNOTNULL(scene->objects[i]))
             OMG_FREE(this->omg->mem, scene->objects[i]);
     }
+    this->ren->tex_destroy(this->ren, scene->map_tex);
     omg_ldtk_destroy(&scene->map);
     omg_bmfont_destroy(&scene->bmfont);
     OMG_INFO(this->omg, "Scene destroy");
@@ -123,37 +125,8 @@ bool scene_on_paint(TestScene* scene) {
     this->ren->begin(this->ren);
     this->ren->clear(this->ren, &OMG_COLOR_MAKE_RGB(25, 25, 25));
     // Render tilemap
-    OMG_LdtkLevel* level = &scene->map.levels.data[0];
-    OMG_FRect src;
-    OMG_FRect dst;
-    OMG_Texture* tex;
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
-    for (size_t i = 0; i < level->layers.len; i++) {
-        OMG_LdtkLayer* lay = &level->layers.data[i];
-        if (lay->is_entity_layer)
-            continue;
-        tex = (i == 2) ? this->tilemap2 : this->tilemap1;
-        src.w = src.h = dst.w = dst.h = lay->grid_size;
-        dst.w = dst.h = lay->grid_size;
-        for (size_t j = 0; j < lay->tiles.len; j++) {
-            OMG_LdtkTile* tile = &lay->tiles.data[j];
-            // if ((i != 2) && tile->id <= 0)
-            //     continue;
-            src.x = tile->src.x;
-            src.y = tile->src.y;
-            src.w = src.h = lay->grid_size;
-            dst.x = tile->pos.x;
-            dst.y = tile->pos.y;
-            if (tile->flip_x)
-                src.w = -src.w;
-            if (tile->flip_y)
-                src.h = -src.h;
-            this->ren->copy_ex(
-                this->ren, tex,
-                &src, &dst, NULL, 0.0
-            );
-        }
-    }
+    this->ren->copy(this->ren, scene->map_tex, NULL);
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(1, 1));
     for (size_t i = 0; i < MAX_OBJECTS; i++) {
         OMG_Object* obj = scene->objects[i];
@@ -233,6 +206,41 @@ bool scene_on_init(TestScene* scene) {
     omg_ldtk_init(&scene->map, this->omg, data, data_size);
     OMG_FREE(this->omg->mem, data);
     file->destroy(file);
+    // Pre-render map
+    OMG_LdtkLevel* level = &scene->map.levels.data[0];
+    scene->map_tex = this->ren->tex_create(this->ren, NULL, &OMG_FPOINT(level->rect.w, level->rect.h), OMG_TEXTURE_ACCESS_TARGET, false);
+    this->ren->tex_set_scale_mode(this->ren, scene->map_tex, OMG_SCALE_MODE_NEAREST);
+    this->ren->set_target(this->ren, scene->map_tex);
+    OMG_FRect src;
+    OMG_FRect dst;
+    OMG_Texture* tex;
+    for (size_t i = 0; i < level->layers.len; i++) {
+        OMG_LdtkLayer* lay = &level->layers.data[i];
+        if (lay->is_entity_layer)
+            continue;
+        tex = (i == 2) ? this->tilemap2 : this->tilemap1;
+        src.w = src.h = dst.w = dst.h = lay->grid_size;
+        dst.w = dst.h = lay->grid_size;
+        for (size_t j = 0; j < lay->tiles.len; j++) {
+            OMG_LdtkTile* tile = &lay->tiles.data[j];
+            // if ((i != 2) && tile->id <= 0)
+            //     continue;
+            src.x = tile->src.x;
+            src.y = tile->src.y;
+            src.w = src.h = lay->grid_size;
+            dst.x = tile->pos.x;
+            dst.y = tile->pos.y;
+            if (tile->flip_x)
+                src.w = -src.w;
+            if (tile->flip_y)
+                src.h = -src.h;
+            this->ren->copy_ex(
+                this->ren, tex,
+                &src, &dst, NULL, 0.0
+            );
+        }
+    }
+    this->ren->set_target(this->ren, NULL);
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
