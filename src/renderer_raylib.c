@@ -357,29 +357,29 @@ bool omg_renderer_raylib_copy_ex(OMG_RendererRaylib* this, OMG_TextureRaylib* te
     if (OMG_ISNULL(dst)) {
         dst_rect.x = base->offset.x * this->ss.x;
         dst_rect.y = base->offset.y * this->ss.y;
-        dst_rect.width = tex_base->size.w * this->ss.x;
-        dst_rect.height = tex_base->size.h * this->ss.y;
+        dst_rect.width = src_rect.width * this->ss.x;
+        dst_rect.height = src_rect.height * this->ss.y;
     } {
         dst_rect.x = (dst->x + base->offset.x) * this->ss.x;
         dst_rect.y = (dst->y + base->offset.y) * this->ss.y;
         dst_rect.width = dst->w * this->ss.x;
         dst_rect.height = dst->h * this->ss.y;
         if (dst_rect.width == 0.0f)
-            dst_rect.width = tex_base->size.w * this->ss.x;
+            dst_rect.width = src_rect.width * this->ss.x;
         if (dst_rect.height == 0.0f)
-            dst_rect.height = tex_base->size.h * this->ss.y;
+            dst_rect.height = src_rect.height * this->ss.y;
     }
     if (OMG_ISNULL(origin)) {
         origin_vec.x = dst_rect.width / 2.0f;
         origin_vec.y = dst_rect.height / 2.0f;
-        // TODO: WTF
-        dst_rect.x += origin_vec.x;
-        dst_rect.y += origin_vec.y;
     }
     else {
         origin_vec.x = origin->x * this->ss.x;
         origin_vec.y = origin->y * this->ss.y;
     }
+    // TODO: WTF
+    dst_rect.x += origin_vec.x;
+    dst_rect.y += origin_vec.y;
     this->raylib->DrawTexturePro(
         *tex->tex, src_rect, dst_rect, origin_vec,
 #if OMG_USE_RADIANS

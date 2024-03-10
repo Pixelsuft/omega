@@ -492,6 +492,24 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
     SDL_FRect dst_rect;
     SDL_Rect src_rect;
     SDL_RendererFlip flip = 0;
+    if (OMG_ISNOTNULL(src)) {
+        src_rect.x = (int)src->x;
+        src_rect.y = (int)src->y;
+        src_rect.w = (int)src->w;
+        src_rect.h = (int)src->h;
+        if (src_rect.w == 0.0f)
+            src_rect.w = tex_base->size.w;
+        else if (src_rect.w < 0.0f) {
+            src_rect.w = -src_rect.w;
+            flip |= SDL_FLIP_HORIZONTAL;
+        }
+        if (src_rect.h == 0.0f)
+            src_rect.h = tex_base->size.h;
+        else if (src_rect.h < 0.0f) {
+            src_rect.h = -src_rect.h;
+            flip |= SDL_FLIP_VERTICAL;
+        }
+    }
     if (OMG_ISNULL(dst)) {
         dst_rect.x = base->offset.x;
         dst_rect.y = base->offset.y;
@@ -504,29 +522,15 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
         dst_rect.w = dst->w;
         dst_rect.h = dst->h;
         if (dst_rect.w == 0.0f)
-            dst_rect.w = tex_base->size.w;
+            dst_rect.w = OMG_ISNULL(src) ? tex_base->size.w : src_rect.w;
         else if (dst_rect.w < 0.0f) {
             dst_rect.w = -dst_rect.w;
             flip |= SDL_FLIP_HORIZONTAL;
         }
         if (dst_rect.h == 0.0f)
-            dst_rect.h = tex_base->size.h;
+            dst_rect.h = OMG_ISNULL(src) ? tex_base->size.h : src_rect.h;
         else if (dst_rect.h < 0.0f) {
             dst_rect.h = -dst_rect.h;
-            flip |= SDL_FLIP_VERTICAL;
-        }
-    }
-    if (OMG_ISNOTNULL(src)) {
-        src_rect.x = (int)src->x;
-        src_rect.y = (int)src->y;
-        src_rect.w = (int)src->w;
-        src_rect.h = (int)src->h;
-        if (src_rect.w < 0.0f) {
-            src_rect.w = -src_rect.w;
-            flip |= SDL_FLIP_HORIZONTAL;
-        }
-        if (src_rect.h < 0.0f) {
-            src_rect.h = -src_rect.h;
             flip |= SDL_FLIP_VERTICAL;
         }
     }

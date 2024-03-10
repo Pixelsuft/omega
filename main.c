@@ -137,6 +137,8 @@ bool scene_on_paint(TestScene* scene) {
         dst.w = dst.h = lay->grid_size;
         for (size_t j = 0; j < lay->tiles.len; j++) {
             OMG_LdtkTile* tile = &lay->tiles.data[j];
+            // if ((i != 2) && tile->id <= 0)
+            //     continue;
             src.x = tile->src.x;
             src.y = tile->src.y;
             src.w = src.h = lay->grid_size;
