@@ -1165,11 +1165,13 @@ OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OM
     thread->should_free = false;
     if (OMG_ISNULL(d_msvcrt->_beginthreadex)) {
         DWORD threadid = 0;
-        thread->handle = d_k32->CreateThread(NULL, stack_size, omg_thread_run_with_create_thread, thread, flags, &threadid);
+        thread->handle = d_k32->CreateThread(NULL, stack_size, (LPTHREAD_START_ROUTINE)omg_thread_run_with_create_thread, thread, flags, &threadid);
         thread->id = (uint32_t)threadid;
     } else {
         unsigned threadid = 0;
-        thread->handle = (HANDLE)((size_t)d_msvcrt->_beginthreadex(NULL, (unsigned int)stack_size, omg_thread_run_with_begin_thread_ex, thread, flags, &threadid));
+        thread->handle = (HANDLE)((size_t)d_msvcrt->_beginthreadex(
+            NULL, (unsigned int)stack_size, (unsigned int (*)(void *))omg_thread_run_with_begin_thread_ex, thread, flags, &threadid
+        ));
         thread->id = (uint32_t)threadid;
     }
     if (OMG_ISNULL(thread->handle)) {
