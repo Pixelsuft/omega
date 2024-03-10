@@ -40,6 +40,8 @@ typedef struct {
     OMG_Texture* font_tex;
     OMG_Texture* tilemap1;
     OMG_Texture* tilemap2;
+    OMG_Array(OMG_Texture*) tiles1;
+    OMG_Array(OMG_Texture*) tiles2;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -54,6 +56,14 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
+    for (size_t i = 0; i < this->tiles2.len; i++) {
+        this->ren->tex_destroy(this->ren, this->tiles2.data[i]);
+    }
+    for (size_t i = 0; i < this->tiles1.len; i++) {
+        this->ren->tex_destroy(this->ren, this->tiles1.data[i]);
+    }
+    OMG_ARRAY_DESTROY(&this->tiles2);
+    OMG_ARRAY_DESTROY(&this->tiles1);
     this->ren->tex_destroy(this->ren, this->tilemap2);
     this->ren->tex_destroy(this->ren, this->tilemap1);
     this->ren->tex_destroy(this->ren, this->font_tex);
@@ -126,19 +136,20 @@ bool scene_on_paint(TestScene* scene) {
     OMG_LdtkLevel* level = &scene->map.levels.data[0];
     OMG_FRect src;
     OMG_FRect dst;
-    OMG_Texture* tex;
+    src.x = src.y = 0.0f;
+    OMG_Array(OMG_Texture*)* tm;
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
     for (size_t i = 0; i < level->layers.len; i++) {
         OMG_LdtkLayer* lay = &level->layers.data[i];
         if (lay->is_entity_layer)
             continue;
-        tex = (i == 2) ? this->tilemap2 : this->tilemap1;
+        if (i == 2)
+            tm = (void*)&this->tiles2;
+        else
+            tm = (void*)&this->tiles1;
         src.w = src.h = dst.w = dst.h = lay->grid_size;
-        dst.w = dst.h = lay->grid_size;
         for (size_t j = 0; j < lay->tiles.len; j++) {
             OMG_LdtkTile* tile = &lay->tiles.data[j];
-            src.x = tile->src.x;
-            src.y = tile->src.y;
             src.w = src.h = lay->grid_size;
             dst.x = tile->pos.x;
             dst.y = tile->pos.y;
@@ -147,8 +158,10 @@ bool scene_on_paint(TestScene* scene) {
             if (tile->flip_y)
                 src.h = -src.h;
             this->ren->copy_ex(
-                this->ren, tex,
-                &src, &dst, NULL, 0.0
+                this->ren, tm->data[tile->id],
+                &src,
+                &dst,
+                NULL, 0.0
             );
         }
     }
@@ -391,6 +404,25 @@ void app_init(App* this, OMG_EntryData* data) {
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->tilemap1 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/Cavernas_by_Adam_Saltsman.png"));
     this->tilemap2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/SunnyLand_by_Ansimuz-extended.png"));
+    OMG_ARRAY_INIT(&this->tiles1, 0, sizeof(OMG_Texture*) * 16);
+    OMG_ARRAY_INIT(&this->tiles2, 0, sizeof(OMG_Texture*) * 16);
+    for (size_t i = 0; i < this->tilemap1->size.h; i += 8) {
+        for (size_t j = 0; j < this->tilemap1->size.w; j += 8) {
+            OMG_Texture* tex = this->ren->tex_create(this->ren, NULL, &OMG_FPOINT(8, 8), OMG_TEXTURE_ACCESS_TARGET, true);
+            this->ren->set_target(this->ren, tex);
+            this->ren->copy_ex(this->ren, this->tilemap1, &OMG_FRECT(j, i, 8, 8), &OMG_FRECT(0, 0, 8, 8), NULL, 0.0);
+            OMG_ARRAY_PUSH(&this->tiles1, tex);
+        }
+    }
+    for (size_t i = 0; i < this->tilemap2->size.h; i += 16) {
+        for (size_t j = 0; j < this->tilemap2->size.w; j += 16) {
+            OMG_Texture* tex = this->ren->tex_create(this->ren, NULL, &OMG_FPOINT(16, 16), OMG_TEXTURE_ACCESS_TARGET, true);
+            this->ren->set_target(this->ren, tex);
+            this->ren->copy_ex(this->ren, this->tilemap2, &OMG_FRECT(j, i, 16, 16), &OMG_FRECT(0, 0, 16, 16), NULL, 0.0);
+            OMG_ARRAY_PUSH(&this->tiles2, tex);
+        }
+    }
+    this->ren->set_target(this->ren, NULL);
     this->ren->tex_set_scale_mode(this->ren, this->font_tex, OMG_SCALE_MODE_LINEAR);
     this->ren->tex_set_scale_mode(this->ren, this->tilemap1, OMG_SCALE_MODE_NEAREST);
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
