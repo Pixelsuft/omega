@@ -241,6 +241,7 @@ bool scene_on_init(TestScene* scene) {
         }
     }
     this->ren->set_target(this->ren, NULL);
+    this->omg->set_text_input_state(this->omg, OMG_TEXT_INPUT_ENABLED);
     OMG_INFO(this->omg, "Scene init");
     return false;
 }
