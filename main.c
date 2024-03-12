@@ -135,9 +135,10 @@ bool scene_on_paint(TestScene* scene) {
         OMG_LdtkLayer* lay = &level->layers.data[i];
         if (!lay->is_entity_layer)
             continue;
+        scene->jumper_src.y = 0.0f;
         for (size_t j = 0; j < lay->entities.len; j++) {
             OMG_LdtkEntity* ent = &lay->entities.data[j];
-            OMG_INFO(this->omg, &ent->rect);
+            scene->jumper_src.y = (scene->jumper_src.y == 0.0f) ? 32.0f : 0.0f;
             this->ren->copy_ex(
                 this->ren, this->jumper_anims,
                 &scene->jumper_src, &ent->rect, NULL, 0.0
