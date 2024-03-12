@@ -225,9 +225,9 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             }
             ent.id = buf[0];
             ent.rect.x = (float)buf[1];
-            ent.rect.x = (float)buf[2];
+            ent.rect.y = (float)buf[2];
             ent.grid_pos.x = (float)buf[3];
-            ent.grid_pos.x = (float)buf[4];
+            ent.grid_pos.y = (float)buf[4];
             ent.rect.w = (float)buf[5];
             ent.rect.h = (float)buf[6];
             if (OMG_ARRAY_PUSH(&lay->entities, ent)) {

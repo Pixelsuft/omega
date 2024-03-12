@@ -21,6 +21,7 @@ typedef struct {
     OMG_Bmfont bmfont;
     OMG_Ldtk map;
     OMG_Color circle_color;
+    OMG_FRect jumper_src;
     OMG_Texture* map_tex;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectTimer* timer;
@@ -41,6 +42,7 @@ typedef struct {
     OMG_Texture* font_tex;
     OMG_Texture* tilemap1;
     OMG_Texture* tilemap2;
+    OMG_Texture* jumper_anims;
     OMG_String fps_str;
     char fps_buf[20];
     int exit_code;
@@ -55,6 +57,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     omg_scenemgr_destroy(this->sm);
     OMG_FREE(this->omg->mem, this->sc);
     OMG_FREE(this->omg->mem, this->sm);
+    this->ren->tex_destroy(this->ren, this->jumper_anims);
     this->ren->tex_destroy(this->ren, this->tilemap2);
     this->ren->tex_destroy(this->ren, this->tilemap1);
     this->ren->tex_destroy(this->ren, this->font_tex);
@@ -127,6 +130,20 @@ bool scene_on_paint(TestScene* scene) {
     // Render tilemap
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
     this->ren->copy(this->ren, scene->map_tex, NULL);
+    OMG_LdtkLevel* level = &scene->map.levels.data[0];
+    for (size_t i = 0; i < level->layers.len; i++) {
+        OMG_LdtkLayer* lay = &level->layers.data[i];
+        if (!lay->is_entity_layer)
+            continue;
+        for (size_t j = 0; j < lay->entities.len; j++) {
+            OMG_LdtkEntity* ent = &lay->entities.data[j];
+            OMG_INFO(this->omg, &ent->rect);
+            this->ren->copy_ex(
+                this->ren, this->jumper_anims,
+                &scene->jumper_src, &ent->rect, NULL, 0.0
+            );
+        }
+    }
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(1, 1));
     for (size_t i = 0; i < MAX_OBJECTS; i++) {
         OMG_Object* obj = scene->objects[i];
@@ -240,6 +257,8 @@ bool scene_on_init(TestScene* scene) {
             );
         }
     }
+    scene->jumper_src.x = scene->jumper_src.y = 0.0f;
+    scene->jumper_src.w = scene->jumper_src.h = 32.0f;
     this->ren->set_target(this->ren, NULL);
     this->omg->set_text_input_state(this->omg, OMG_TEXT_INPUT_ENABLED);
     OMG_INFO(this->omg, "Scene init");
@@ -402,6 +421,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->font_tex = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/goldFont-uhd.png"));
     this->tilemap1 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/Cavernas_by_Adam_Saltsman.png"));
     this->tilemap2 = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/SunnyLand_by_Ansimuz-extended.png"));
+    this->jumper_anims = OMG_REN_TEXTURE_FROM_FILE(this->ren, &OMG_STR("assets/jumper.png"));
     this->ren->tex_set_scale_mode(this->ren, this->font_tex, OMG_SCALE_MODE_LINEAR);
     this->ren->tex_set_scale_mode(this->ren, this->tilemap1, OMG_SCALE_MODE_NEAREST);
     this->win->set_min_size(this->win, &OMG_FPOINT(320, 200));
