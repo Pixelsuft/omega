@@ -81,4 +81,26 @@ bool omg_obj_anim_timer_init(OMG_ObjectAnimTimer* this, OMG_Omega* omg) {
     OMG_END_POINTER_CAST();
     return false;
 }
+
+bool omg_anim_sprite_state_destroy(OMG_AnimSpriteState* this, OMG_Omega* omg) {
+    if (OMG_ISNULL(this->durations))
+        return false;
+    OMG_FREE(omg->mem, this->durations);
+    this->durations = NULL;
+    this->base_id = 0;
+    this->num_frames = 0;
+    return false;
+}
+
+bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, double default_duration, int num_frames) {
+    this->base_id = 0;
+    this->num_frames = 0;
+    this->durations = OMG_MALLOC(omg->mem, sizeof(double) * num_frames);
+    if (OMG_ISNULL(this->durations)) {
+        _OMG_LOG_ERROR(omg, "Failed to init durations array");
+        return true;
+    }
+    this->num_frames = num_frames;
+    return false;
+}
 #endif

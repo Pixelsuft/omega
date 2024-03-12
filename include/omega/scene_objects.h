@@ -27,7 +27,7 @@ typedef struct {
 } OMG_ObjectAnimTimer;
 
 typedef struct {
-    OMG_Array(double) durations;
+    double* durations;
     int num_frames;
     int base_id;
 } OMG_AnimSpriteState;
@@ -40,10 +40,12 @@ typedef struct {
     OMG_Object base;
     OMG_AnimSpriteData* data;
     bool paused;
-} OMG_AnimSprite;
+} OMG_ObjectAnimSprite;
 
 OMG_API bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg);
 OMG_API bool omg_obj_anim_timer_init(OMG_ObjectAnimTimer* this, OMG_Omega* omg);
+OMG_API bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, double default_duration, int num_frames);
+OMG_API bool omg_anim_sprite_state_destroy(OMG_AnimSpriteState* this, OMG_Omega* omg);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene);
 OMG_API bool omg_obj_anim_timer_on_update(OMG_ObjectAnimTimer* this, OMG_Scene* scene);
