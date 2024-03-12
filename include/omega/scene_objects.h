@@ -38,8 +38,10 @@ typedef struct {
     OMG_Object parent;
     OMG_AnimSpriteData* data;
     double cur_timer;
+    int cur_duration;
     int cur_state;
     int cur_base_id;
+    int cur_id;
     bool running;
 } OMG_ObjectAnimSprite;
 

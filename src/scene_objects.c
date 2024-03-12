@@ -159,7 +159,8 @@ bool omg_obj_anim_run_state(OMG_ObjectAnimSprite* this, int state_id) {
     if ((state_id < 0) || ((size_t)state_id >= this->data->states.len))
         return false;
     this->cur_state = state_id;
-    this->cur_base_id = this->data->states.data[state_id].base_id;
+    this->cur_base_id = this->cur_id = this->data->states.data[state_id].base_id;
+    this->cur_duration = 0;
     this->cur_timer = 0.0;
     this->running = true;
     return false;
