@@ -14,8 +14,6 @@
 #define SUPPORT_FONT !(OMG_IS_UWP || OMG_IS_ANDROID)
 #define MAX_OBJECTS 20
 
-// TODO: SDL_GetBasePath alternative
-
 typedef struct {
     OMG_Scene parent;
     OMG_Bmfont bmfont;
