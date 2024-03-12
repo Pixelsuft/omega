@@ -49,7 +49,7 @@ OMG_API bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* om
 OMG_API bool omg_anim_sprite_state_destroy(OMG_AnimSpriteState* this, OMG_Omega* omg);
 OMG_API bool omg_anim_sprite_data_init(OMG_AnimSpriteData* this, OMG_Omega* omg);
 OMG_API bool omg_anim_sprite_data_destroy(OMG_AnimSpriteData* this);
-OMG_API bool omg_obj_anim_sprite_fill(OMG_ObjectAnimSprite* this);
+OMG_API bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene);
 OMG_API bool omg_obj_anim_timer_on_update(OMG_ObjectAnimTimer* this, OMG_Scene* scene);

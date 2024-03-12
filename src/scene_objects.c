@@ -107,7 +107,11 @@ bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, doubl
     return false;
 }
 
-bool omg_obj_anim_sprite_fill(OMG_ObjectAnimSprite* this) {
+bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
+    if (OMG_ISNULL(this->data)) {
+        // _OMG_LOG_ERROR(omg_base, "Passed NULL data for omg_obj_anim_sprite_init");
+        return true;
+    }
     this->parent.on_paint = NULL;
     this->parent.on_update = NULL;
     this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
