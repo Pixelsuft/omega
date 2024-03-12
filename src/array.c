@@ -59,6 +59,15 @@ bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem
     return false;
 }
 
+bool omg_array_push_dummy(OMG_ArrayBase* this, size_t elem_size) {
+    if (((this->len + 1) * elem_size) > this->size) {
+        if (omg_array_add_chunk(this))
+            return true;
+    }
+    this->len++;
+    return false;
+}
+
 bool omg_array_remove(OMG_ArrayBase* this, size_t elem_id, size_t elem_size, bool trim) {
     if ((elem_id + 1) >= this->len) {
         this->len--;
