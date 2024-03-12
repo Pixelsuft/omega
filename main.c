@@ -172,6 +172,7 @@ bool scene_on_paint(TestScene* scene) {
 
 bool scene_on_run(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
+    omg_obj_anim_run_state(&scene->anim, 0);
     this->omg->clock->reset(this->omg->clock);
     OMG_INFO(this->omg, "Scene run");
     return false;
@@ -373,6 +374,7 @@ void app_init(App* this, OMG_EntryData* data) {
     int force_ren_driver = OMG_REN_DRIVER_AUTO;
     if (temp_env.type >= 0)
         force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
+    // force_ren_driver = OMG_REN_DRIVER_D3D11;
     omg_string_destroy(&temp_env);
     if (
         this->win->renderer_alloc(this->win) ||

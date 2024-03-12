@@ -39,9 +39,10 @@ typedef struct {
 typedef struct {
     OMG_Object parent;
     OMG_AnimSpriteData* data;
+    double cur_timer;
     int cur_state;
+    int cur_base_id;
     bool running;
-    bool soft;
 } OMG_ObjectAnimSprite;
 
 OMG_API bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg);
@@ -51,6 +52,7 @@ OMG_API bool omg_anim_sprite_state_destroy(OMG_AnimSpriteState* this, OMG_Omega*
 OMG_API bool omg_anim_sprite_data_init(OMG_AnimSpriteData* this, OMG_Omega* omg);
 OMG_API bool omg_anim_sprite_data_destroy(OMG_AnimSpriteData* this);
 OMG_API bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this);
+OMG_API bool omg_obj_anim_run_state(OMG_ObjectAnimSprite* this, int state_id);
 #if OMG_EXPORT_SHIT
 OMG_API bool omg_obj_anim_sprite_on_update(OMG_ObjectAnimSprite* this, OMG_Scene* scene);
 OMG_API bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene);

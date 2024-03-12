@@ -7,7 +7,7 @@ bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene) {
     OMG_UNUSED(scene);
     if (!this->running)
         return false;
-    this->counter += this->clock->dt;
+    this->counter += scene->dt;
     if (this->soft) {
         if (this->counter >= this->duration) {
             this->counter -= this->duration;
@@ -48,7 +48,7 @@ bool omg_obj_anim_timer_on_update(OMG_ObjectAnimTimer* this, OMG_Scene* scene) {
     OMG_UNUSED(scene);
     if (!this->running)
         return false;
-    this->time += this->clock->dt;
+    this->time += scene->dt;
     if (this->soft) {
         if (this->time >= this->duration) {
             this->time -= this->duration;
@@ -109,10 +109,9 @@ bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, doubl
 
 bool omg_obj_anim_sprite_on_update(OMG_ObjectAnimSprite* this, OMG_Scene* scene) {
     OMG_UNUSED(scene);
-    if ((this->cur_state < 0) || ((size_t)this->cur_state >= this->data->states.len)) {
-        // wtf
-        return true;
-    }
+    if (!this->running)
+        return false;
+    this->cur_timer += scene->dt;
     return false;
 }
 
@@ -123,7 +122,6 @@ bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
         this->parent.on_update = NULL;
         this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
         this->running = false;
-        this->soft = false;
         this->cur_state = 0;
         this->data = NULL;
         return true;
@@ -134,7 +132,6 @@ bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
     OMG_END_POINTER_CAST();
     this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
     this->running = false;
-    this->soft = false;
     this->cur_state = 0;
     int cur_base_id = 0;
     for (size_t i = 0; i < this->data->states.len; i++) {
@@ -155,6 +152,16 @@ bool omg_anim_sprite_data_init(OMG_AnimSpriteData* this, OMG_Omega* omg) {
         _OMG_LOG_ERROR(omg, "Failed to init sprite data for animation");
         return true;
     }
+    return false;
+}
+
+bool omg_obj_anim_run_state(OMG_ObjectAnimSprite* this, int state_id) {
+    if ((state_id < 0) || ((size_t)state_id >= this->data->states.len))
+        return false;
+    this->cur_state = state_id;
+    this->cur_base_id = this->data->states.data[state_id].base_id;
+    this->cur_timer = 0.0;
+    this->running = true;
     return false;
 }
 #endif
