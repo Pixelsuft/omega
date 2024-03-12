@@ -39,6 +39,7 @@ typedef struct {
 typedef struct {
     OMG_Object parent;
     OMG_AnimSpriteData* data;
+    int cur_state;
     bool running;
     bool soft;
 } OMG_ObjectAnimSprite;

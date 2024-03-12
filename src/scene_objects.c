@@ -108,8 +108,11 @@ bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, doubl
 }
 
 bool omg_obj_anim_sprite_on_update(OMG_ObjectAnimSprite* this, OMG_Scene* scene) {
-    OMG_UNUSED(this, scene);
-    // TODO
+    OMG_UNUSED(scene);
+    if ((this->cur_state < 0) || ((size_t)this->cur_state >= this->data->states.len)) {
+        // wtf
+        return true;
+    }
     return false;
 }
 
@@ -121,6 +124,7 @@ bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
         this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
         this->running = false;
         this->soft = false;
+        this->cur_state = 0;
         this->data = NULL;
         return true;
     }
@@ -131,6 +135,7 @@ bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
     this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
     this->running = false;
     this->soft = false;
+    this->cur_state = 0;
     int cur_base_id = 0;
     for (size_t i = 0; i < this->data->states.len; i++) {
         this->data->states.data[i].base_id = cur_base_id;
