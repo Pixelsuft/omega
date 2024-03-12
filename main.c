@@ -23,9 +23,9 @@ typedef struct {
     OMG_Texture* map_tex;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectAnimSprite anim;
-    OMG_ObjectTimer* timer;
-    OMG_ObjectAnimTimer* sin_timer;
-    OMG_ObjectAnimTimer* x_timer;
+    OMG_ObjectTimer timer;
+    OMG_ObjectAnimTimer sin_timer;
+    OMG_ObjectAnimTimer x_timer;
 } TestScene;
 
 typedef struct {
@@ -75,10 +75,6 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 
 bool scene_on_destroy(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
-    for (size_t i = 0; i < MAX_OBJECTS; i++) {
-        if (OMG_ISNOTNULL(scene->objects[i]))
-            OMG_FREE(this->omg->mem, scene->objects[i]);
-    }
     this->ren->tex_destroy(this->ren, scene->map_tex);
     omg_ldtk_destroy(&scene->map);
     omg_bmfont_destroy(&scene->bmfont);
@@ -107,8 +103,8 @@ bool scene_on_update(TestScene* scene) {
         if (OMG_ISNOTNULL(obj->on_update))
             obj->on_update(obj, this->sm->cur_scene);
     }
-    if (scene->timer->triggered > 0) {
-        scene->timer->triggered--;
+    if (scene->timer.triggered > 0) {
+        scene->timer.triggered--;
         if (scene->circle_color.b >= 255.0f) {
             scene->circle_color.b = 0.0f;
             scene->circle_color.g = 255.0f;
@@ -153,11 +149,11 @@ bool scene_on_paint(TestScene* scene) {
             obj->on_paint(obj, this->sm->cur_scene);
     }
     OMG_FPoint circle_pos;
-    circle_pos.y = 400.0f + this->omg->std->sinf((float)(scene->sin_timer->time * 4.0)) * 100.0f;
-    if (scene->x_timer->time >= 5.0)
-        circle_pos.x = 100.0f + 500.0f - (float)(scene->x_timer->time - 5.0) * 100.0f;
+    circle_pos.y = 400.0f + this->omg->std->sinf((float)(scene->sin_timer.time * 4.0)) * 100.0f;
+    if (scene->x_timer.time >= 5.0)
+        circle_pos.x = 100.0f + 500.0f - (float)(scene->x_timer.time - 5.0) * 100.0f;
     else
-        circle_pos.x = 100.0f + (float)scene->x_timer->time * 100.0f;
+        circle_pos.x = 100.0f + (float)scene->x_timer.time * 100.0f;
     this->ren->fill_circle(this->ren, &circle_pos, 50.0f, &scene->circle_color);
     // this->ren->copy(this->ren, this->font_tex, &OMG_FPOINT(200, 200));
 #if SUPPORT_FONT
@@ -188,22 +184,19 @@ bool scene_on_init(TestScene* scene) {
     OMG_EPO();
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     omg_obj_anim_sprite_fill(&scene->anim);
-    scene->timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectTimer));
-    omg_obj_timer_init(scene->timer, this->omg);
-    scene->timer->duration = 1.0;
-    scene->timer->running = true;
-    scene->sin_timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectAnimTimer));
-    omg_obj_anim_timer_init(scene->sin_timer, this->omg);
-    scene->sin_timer->duration = OMG_M_PI2;
-    scene->sin_timer->running = true;
-    scene->x_timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectAnimTimer));
-    omg_obj_anim_timer_init(scene->x_timer, this->omg);
-    scene->x_timer->duration = 10.0;
-    scene->x_timer->running = true;
+    omg_obj_timer_init(&scene->timer, this->omg);
+    scene->timer.duration = 1.0;
+    scene->timer.running = true;
+    omg_obj_anim_timer_init(&scene->sin_timer, this->omg);
+    scene->sin_timer.duration = OMG_M_PI2;
+    scene->sin_timer.running = true;
+    omg_obj_anim_timer_init(&scene->x_timer, this->omg);
+    scene->x_timer.duration = 10.0;
+    scene->x_timer.running = true;
     OMG_BPO();
-    scene->objects[0] = scene->timer;
-    scene->objects[1] = scene->sin_timer;
-    scene->objects[2] = scene->x_timer;
+    scene->objects[0] = &scene->timer;
+    scene->objects[1] = &scene->sin_timer;
+    scene->objects[2] = &scene->x_timer;
     OMG_EPO();
     scene->circle_color = OMG_COLOR_MAKE_RGB(0, 0, 255);
     // Load Bitmap Font
