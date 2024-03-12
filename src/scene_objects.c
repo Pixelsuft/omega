@@ -106,4 +106,13 @@ bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, doubl
     }
     return false;
 }
+
+bool omg_obj_anim_sprite_fill(OMG_ObjectAnimSprite* this) {
+    this->parent.on_paint = NULL;
+    this->parent.on_update = NULL;
+    this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
+    this->running = false;
+    this->data = NULL;
+    return false;
+}
 #endif

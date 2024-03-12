@@ -22,6 +22,7 @@ typedef struct {
     OMG_FRect jumper_src;
     OMG_Texture* map_tex;
     OMG_Object* objects[MAX_OBJECTS];
+    OMG_ObjectAnimSprite anim;
     OMG_ObjectTimer* timer;
     OMG_ObjectAnimTimer* sin_timer;
     OMG_ObjectAnimTimer* x_timer;
@@ -186,6 +187,7 @@ bool scene_on_init(TestScene* scene) {
     scene_base->on_run = scene_on_run;
     OMG_EPO();
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
+    omg_obj_anim_sprite_fill(&scene->anim);
     scene->timer = OMG_MALLOC(this->omg->mem, sizeof(OMG_ObjectTimer));
     omg_obj_timer_init(scene->timer, this->omg);
     scene->timer->duration = 1.0;
