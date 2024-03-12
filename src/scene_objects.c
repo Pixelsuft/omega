@@ -101,6 +101,9 @@ bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, doubl
         return true;
     }
     this->num_frames = num_frames;
+    for (int i = 0; i < num_frames; i++) {
+        this->durations[i] = default_duration;
+    }
     return false;
 }
 #endif
