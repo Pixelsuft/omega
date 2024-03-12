@@ -131,11 +131,10 @@ bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
     this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
     this->running = false;
     this->soft = false;
-    this->data = NULL;
     int cur_base_id = 0;
     for (size_t i = 0; i < this->data->states.len; i++) {
         this->data->states.data[i].base_id = cur_base_id;
-        //cur_base_id += this->data->states.data[i].num_frames;
+        cur_base_id += this->data->states.data[i].num_frames;
     }
     return false;
 }
