@@ -187,10 +187,10 @@ bool scene_on_init(TestScene* scene) {
     OMG_EPO();
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     scene->anim.data = &scene->anim_data;
-    omg_obj_anim_sprite_init(&scene->anim);
     omg_anim_sprite_data_init(&scene->anim_data, this->omg);
     OMG_ARRAY_PUSH_DUMMY(&scene->anim_data.states);
     omg_anim_sprite_state_init(&scene->anim_data.states.data[0], this->omg, 0.2, 4);
+    omg_obj_anim_sprite_init(&scene->anim);
     omg_obj_timer_init(&scene->timer, this->omg);
     scene->timer.duration = 1.0;
     scene->timer.running = true;
