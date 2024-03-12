@@ -3,6 +3,7 @@
 #if OMG_SUPPORT_SCENES
 #include <omega/ostd.h>
 #include <omega/scene.h>
+#include <omega/array.h>
 
 typedef struct {
     OMG_Object base;
@@ -24,6 +25,22 @@ typedef struct {
     bool running;
     bool repeat;
 } OMG_ObjectAnimTimer;
+
+typedef struct {
+    OMG_Array(double) durations;
+    int num_frames;
+    int base_id;
+} OMG_AnimSpriteState;
+
+typedef struct {
+    OMG_Array(OMG_AnimSpriteState) states;
+} OMG_AnimSpriteData;
+
+typedef struct {
+    OMG_Object base;
+    OMG_AnimSpriteData* data;
+    bool paused;
+} OMG_AnimSprite;
 
 OMG_API bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg);
 OMG_API bool omg_obj_anim_timer_init(OMG_ObjectAnimTimer* this, OMG_Omega* omg);
