@@ -129,6 +129,7 @@ bool scene_on_paint(TestScene* scene) {
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
     this->ren->copy(this->ren, scene->map_tex, NULL);
     OMG_LdtkLevel* level = &scene->map.levels.data[0];
+    scene->jumper_src.x = scene->anim.cur_frame * 32;
     for (size_t i = 0; i < level->layers.len; i++) {
         OMG_LdtkLayer* lay = &level->layers.data[i];
         if (!lay->is_entity_layer)

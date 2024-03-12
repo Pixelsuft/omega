@@ -108,10 +108,16 @@ bool omg_anim_sprite_state_init(OMG_AnimSpriteState* this, OMG_Omega* omg, doubl
 }
 
 bool omg_obj_anim_sprite_on_update(OMG_ObjectAnimSprite* this, OMG_Scene* scene) {
-    OMG_UNUSED(scene);
     if (!this->running)
         return false;
     this->cur_timer += scene->dt;
+    OMG_AnimSpriteState* state = &this->data->states.data[this->cur_state];
+    while (this->cur_timer > state->durations[this->cur_frame]) {
+        this->cur_timer -= state->durations[this->cur_frame];
+        this->cur_frame++;
+        if (this->cur_frame >= state->num_frames)
+            this->cur_frame -= state->num_frames;
+    }
     return false;
 }
 
@@ -160,7 +166,7 @@ bool omg_obj_anim_run_state(OMG_ObjectAnimSprite* this, int state_id) {
         return false;
     this->cur_state = state_id;
     this->cur_base_id = this->cur_id = this->data->states.data[state_id].base_id;
-    this->cur_duration = 0;
+    this->cur_frame = 0;
     this->cur_timer = 0.0;
     this->running = true;
     return false;

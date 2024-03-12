@@ -38,7 +38,7 @@ typedef struct {
     OMG_Object parent;
     OMG_AnimSpriteData* data;
     double cur_timer;
-    int cur_duration;
+    int cur_frame;
     int cur_state;
     int cur_base_id;
     int cur_id;
