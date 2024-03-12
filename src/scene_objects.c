@@ -30,7 +30,7 @@ bool omg_obj_timer_on_update(OMG_ObjectTimer* this, OMG_Scene* scene) {
 }
 
 bool omg_obj_timer_init(OMG_ObjectTimer* this, OMG_Omega* omg) {
-    this->clock = omg->clock;
+    OMG_UNUSED(omg);
     this->duration = 0.0;
     this->counter = 0.0;
     this->triggered = 0;
@@ -69,7 +69,7 @@ bool omg_obj_anim_timer_on_update(OMG_ObjectAnimTimer* this, OMG_Scene* scene) {
 }
 
 bool omg_obj_anim_timer_init(OMG_ObjectAnimTimer* this, OMG_Omega* omg) {
-    this->clock = omg->clock;
+    OMG_UNUSED(omg);
     this->duration = 0.0;
     this->time = 0.0;
     this->repeat = true;

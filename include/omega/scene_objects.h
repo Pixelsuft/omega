@@ -7,7 +7,6 @@
 
 typedef struct {
     OMG_Object parent;
-    OMG_Clock* clock;
     double counter;
     double duration;
     int triggered;
@@ -18,7 +17,6 @@ typedef struct {
 
 typedef struct {
     OMG_Object parent;
-    OMG_Clock* clock;
     double time;
     double duration;
     bool soft;
