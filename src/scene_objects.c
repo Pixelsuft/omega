@@ -112,7 +112,22 @@ bool omg_obj_anim_sprite_fill(OMG_ObjectAnimSprite* this) {
     this->parent.on_update = NULL;
     this->parent.rect.x = this->parent.rect.y = this->parent.rect.w = this->parent.rect.h = 0.0f;
     this->running = false;
+    this->soft = false;
     this->data = NULL;
+    return false;
+}
+
+bool omg_anim_sprite_data_destroy(OMG_AnimSpriteData* this) {
+    if (OMG_ISNULL(this->states.data))
+        return false;
+    return OMG_ARRAY_DESTROY(&this->states);
+}
+
+bool omg_anim_sprite_data_init(OMG_AnimSpriteData* this, OMG_Omega* omg) {
+    if (OMG_ARRAY_INIT(&this->states, 0, 0)) {
+        _OMG_LOG_ERROR(omg, "Failed to init sprite data for animation");
+        return true;
+    }
     return false;
 }
 #endif

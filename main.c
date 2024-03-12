@@ -23,6 +23,7 @@ typedef struct {
     OMG_Texture* map_tex;
     OMG_Object* objects[MAX_OBJECTS];
     OMG_ObjectAnimSprite anim;
+    OMG_AnimSpriteData anim_data;
     OMG_ObjectTimer timer;
     OMG_ObjectAnimTimer sin_timer;
     OMG_ObjectAnimTimer x_timer;
@@ -75,6 +76,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 
 bool scene_on_destroy(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
+    omg_anim_sprite_data_destroy(&scene->anim_data);
     this->ren->tex_destroy(this->ren, scene->map_tex);
     omg_ldtk_destroy(&scene->map);
     omg_bmfont_destroy(&scene->bmfont);
@@ -184,6 +186,8 @@ bool scene_on_init(TestScene* scene) {
     OMG_EPO();
     this->omg->std->memset(scene->objects, 0, sizeof(scene->objects));
     omg_obj_anim_sprite_fill(&scene->anim);
+    omg_anim_sprite_data_init(&scene->anim_data, this->omg);
+    scene->anim.data = &scene->anim_data;
     omg_obj_timer_init(&scene->timer, this->omg);
     scene->timer.duration = 1.0;
     scene->timer.running = true;
