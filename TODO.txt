@@ -2,4 +2,3 @@
 [-] Track memory allocations
 [-] Vulkan renderer
 [-] Tiled map import (or any other)
-[-] Sprite animations
