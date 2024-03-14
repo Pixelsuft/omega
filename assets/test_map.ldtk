@@ -11,7 +11,7 @@
 	"iid": "a22d35f0-7820-11ed-b6fd-213e885f30da",
 	"jsonVersion": "1.5.3",
 	"appBuildId": 473703,
-	"nextUid": 122,
+	"nextUid": 123,
 	"identifierStyle": "Capitalize",
 	"toc": [],
 	"worldLayout": "LinearHorizontal",
@@ -627,7 +627,45 @@
 			"limitBehavior": "MoveLastOne",
 			"pivotX": 0,
 			"pivotY": 0,
-			"fieldDefs": []
+			"fieldDefs": [
+				{
+					"identifier": "col_id",
+					"doc": "Color id",
+					"__type": "Int",
+					"uid": 122,
+					"type": "F_Int",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Int", "params": [0] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -760,7 +798,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [103,16],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 0, "__tile": null, "defUid": 122, "realEditorValues": [] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -774,7 +812,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [160,48],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -788,7 +826,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [304,136],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 0, "__tile": null, "defUid": 122, "realEditorValues": [] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -802,7 +840,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [32,120],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -816,7 +854,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [0,72],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -830,7 +868,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [72,48],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -844,7 +882,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [232,48],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 0, "__tile": null, "defUid": 122, "realEditorValues": [] }]
 						},
 						{
 							"__identifier": "Enemy",
@@ -858,7 +896,7 @@
 							"height": 16,
 							"defUid": 112,
 							"px": [136,128],
-							"fieldInstances": []
+							"fieldInstances": [{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] }]
 						}
 					]
 				},

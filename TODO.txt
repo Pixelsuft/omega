@@ -2,4 +2,5 @@
 [-] Track memory allocations
 [-] Vulkan renderer
 [-] Tiled map import (or any other)
+[-] Entites properties for LDTK
 [-] Write a slightly bigger example
