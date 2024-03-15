@@ -19,6 +19,8 @@ out.write(f'{hex_to_str(inp["bgColor"])}\n')
 
 for ent in inp['defs']['entities']:
     out.write(f'F,{ent["uid"]},"{ent["identifier"]}",{ent["width"]},{ent["height"]}\n')
+    for prop in ent['fieldDefs']:
+        out.write(f'G,{prop["identifier"]},{prop["type"]}')
 
 for ts in inp['defs']['tilesets']:
     out.write(f'S,{ts["uid"]},"{ts["identifier"]}","{ts["relPath"]}",{ts["pxWid"]},')
