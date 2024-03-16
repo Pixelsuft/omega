@@ -217,7 +217,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 return true;
             }
             OMG_Bmchar* chr = &this->chars.data[second_c];
-            if (OMG_ISNULL(chr->ks.data) && OMG_ARRAY_INIT(&chr->ks, 0, 0)) {
+            if ((OMG_ISNULL(chr->ks.data) && OMG_ARRAY_INIT(&chr->ks, 0, 0)) || OMG_ARRAY_PUSH(&chr->ks, first_c) || OMG_ARRAY_PUSH(&chr->ks, second_c)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse kerning");
                 omg_bmfont_destroy(this);
                 return true;
