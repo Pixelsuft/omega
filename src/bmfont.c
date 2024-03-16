@@ -34,7 +34,7 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
     bool res = false;
     OMG_FRect src_rect, dst_rect;
     dst_rect.w = dst_rect.h = 0.0f;
-    size_t last_chr = 0;
+    int last_chr = 0;
     for (size_t i = 0; i < text->len; i++) {
         size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
         if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa <= 0)))
@@ -46,11 +46,14 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
             src_rect.w = (float)bm_char->w;
             src_rect.h = (float)bm_char->h;
             dst_rect.x = cur_x + (float)bm_char->xo;
-            if (i > 0 && OMG_ISNOTNULL(bm_char->ks.data)) {
+            /*if (i > 0 && OMG_ISNOTNULL(bm_char->ks.data)) {
                 for (size_t j = 0; j < bm_char->ks.len; j += 2) {
-                    
+                    if (bm_char->ks.data[i] == last_chr) {
+                        dst_rect.x += bm_char->ks.data[i + 1];
+                        break;
+                    }
                 }
-            }
+            }*/
             dst_rect.y = cur_y + (float)bm_char->yo;
             dst_rect.w = (float)bm_char->w;
             dst_rect.h = (float)bm_char->h;
@@ -63,7 +66,7 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
             ) || res;
         }
         cur_x += (float)bm_char->xa;
-        last_chr = chr;
+        last_chr = (int)chr;
     }
     return res;
 }

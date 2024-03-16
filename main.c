@@ -373,6 +373,8 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_INFO(this->omg, "Scene init");
     OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_SOFTWARE_RENDERER"));
     int force_ren_driver = OMG_REN_DRIVER_AUTO;
+    if (OMG_IS_WIN)
+        force_ren_driver = OMG_REN_DRIVER_OPENGL;
     if (temp_env.type >= 0)
         force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
     // force_ren_driver = OMG_REN_DRIVER_D3D11;
