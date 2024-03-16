@@ -15,6 +15,8 @@
 typedef struct {
     OMG_String name;
     OMG_FPoint size;
+    OMG_Array(int) prop_types;
+    OMG_Array(OMG_String) prop_names;
     int id;
 } OMG_LdtkEntityDef;
 

@@ -32,6 +32,12 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
     }
     if (OMG_ISNOTNULL(this->entities.data)) {
         for (size_t i = 0; i < this->entities.len; i++) {
+            if (OMG_ISNOTNULL(this->entities.data[i].prop_names.data))
+                for (size_t j = 0; j < this->entities.data[i].prop_names.len; j++) {
+                    omg_string_destroy(&this->entities.data[i].prop_names.data[j]);
+                }
+            OMG_ARRAY_DESTROY(&this->entities.data[i].prop_names);
+            OMG_ARRAY_DESTROY(&this->entities.data[i].prop_types);
             if (OMG_ISNOTNULL(this->entities.data[i].name.ptr)) {
                 omg_string_destroy(&this->entities.data[i].name);
             }
@@ -399,6 +405,10 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             data[j] = '\"';
             ent.size.w = (float)size_buf[0];
             ent.size.h = (float)size_buf[1];
+            ent.prop_types.len = 0;
+            ent.prop_types.data = NULL;
+            ent.prop_names.len = 0;
+            ent.prop_names.data = NULL;
             if (OMG_ARRAY_PUSH(&this->entities, ent)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity def");
                 omg_string_destroy(&ent.name);
