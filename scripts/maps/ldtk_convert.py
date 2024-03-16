@@ -66,13 +66,13 @@ for lvl in inp['levels']:
                 val_str = field['__value']
                 if type_int == 1:
                     val = int(val_str)
-                elif val_str == 2:
+                elif type_int == 2:
                     val = int(float(val_str) * 10000)
-                elif val_str == 3:
+                elif type_int == 3:
                     val = 1 if int(val_str) else 0
-                elif val_str == 4:
+                elif type_int == 4:
                     val = val_str or ''
-                elif val_str == 5:
+                elif type_int == 5:
                     val = hex_to_str(val_str)
                 out.write(f'P,{field["defUid"]},{counter},{type_int},{val}\n')
                 counter += 1
