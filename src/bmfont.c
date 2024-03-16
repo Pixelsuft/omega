@@ -6,7 +6,7 @@
 bool omg_bmfont_destroy(OMG_Bmfont* this) {
     for (size_t i = 0; i < this->chars.len; i++) {
         if (OMG_ISNOTNULL(this->chars.data[i].ks.data))
-            OMG_ARRAY_DESTROY(&this->chars.data[i].ks); // TODO: fix crash here
+            OMG_ARRAY_DESTROY(&this->chars.data[i].ks);
     }
     this->page = NULL;
     this->ch_count = 0;
@@ -21,7 +21,7 @@ bool omg_bmfont_calc_size(OMG_Bmfont* this, const OMG_String* text, OMG_FPoint* 
     int last_chr = 0;
     for (size_t i = 0; i < text->len; i++) {
         size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
-        if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa != 0)))
+        if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa < 0)))
             continue;
         size_buf->x += (float)this->chars.data[chr].xa;
         if (i > 0 && OMG_ISNOTNULL(this->chars.data[chr].ks.data)) {
@@ -47,7 +47,7 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
     int last_chr = 0;
     for (size_t i = 0; i < text->len; i++) {
         size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
-        if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa != 0)))
+        if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa < 0)))
             continue;
         bm_char = &this->chars.data[chr];
         if (bm_char->w > 0) {
@@ -203,6 +203,10 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                     _OMG_LOG_ERROR(this->omg, "Failed to realloc chars array");
                     omg_bmfont_destroy(this);
                     return true;
+                }
+                for (size_t i = prev_len; i < this->chars.len; i++) {
+                    this->chars.data[i].ks.data = NULL;
+                    this->chars.data[i].ks.len = 0;
                 }
             }
             size_t ch_id = (size_t)buf[0];
