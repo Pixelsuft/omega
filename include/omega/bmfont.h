@@ -7,6 +7,7 @@
 #include <omega/array.h>
 
 typedef struct {
+    OMG_Array(int) ks;
     int x;
     int y;
     int w;

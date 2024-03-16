@@ -181,6 +181,8 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 }
             }
             size_t ch_id = (size_t)buf[0];
+            this->chars.data[ch_id].ks.data = NULL;
+            this->chars.data[ch_id].ks.len = 0;
             this->chars.data[ch_id].x = buf[1];
             this->chars.data[ch_id].y = buf[2];
             this->chars.data[ch_id].w = buf[3];
