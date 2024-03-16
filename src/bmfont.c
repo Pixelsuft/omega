@@ -18,11 +18,21 @@ bool omg_bmfont_destroy(OMG_Bmfont* this) {
 bool omg_bmfont_calc_size(OMG_Bmfont* this, const OMG_String* text, OMG_FPoint* size_buf) {
     size_buf->x = 0.0f;
     size_buf->y = (float)this->line_height;
+    int last_chr = 0;
     for (size_t i = 0; i < text->len; i++) {
         size_t chr = (size_t)text->ptr[i]; // TODO: utf-8 support
         if ((chr > this->chars.len) || ((this->chars.data[chr].w <= 0) && (this->chars.data[chr].xa <= 0)))
             continue;
         size_buf->x += (float)this->chars.data[chr].xa;
+        if (i > 0 && OMG_ISNOTNULL(this->chars.data[chr].ks.data)) {
+            for (size_t j = 0; j < this->chars.data[chr].ks.len; j += 2) {
+                if (this->chars.data[chr].ks.data[i] == last_chr) {
+                    size_buf->x += this->chars.data[chr].ks.data[i + 1];
+                    break;
+                }
+            }
+        }
+        last_chr = (int)chr;
     }
     return false;
 }
@@ -46,14 +56,14 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
             src_rect.w = (float)bm_char->w;
             src_rect.h = (float)bm_char->h;
             dst_rect.x = cur_x + (float)bm_char->xo;
-            /*if (i > 0 && OMG_ISNOTNULL(bm_char->ks.data)) {
+            if (i > 0 && OMG_ISNOTNULL(bm_char->ks.data)) {
                 for (size_t j = 0; j < bm_char->ks.len; j += 2) {
                     if (bm_char->ks.data[i] == last_chr) {
                         dst_rect.x += bm_char->ks.data[i + 1];
                         break;
                     }
                 }
-            }*/
+            }
             dst_rect.y = cur_y + (float)bm_char->yo;
             dst_rect.w = (float)bm_char->w;
             dst_rect.h = (float)bm_char->h;
