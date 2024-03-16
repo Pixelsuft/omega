@@ -27,7 +27,7 @@ bool omg_bmfont_calc_size(OMG_Bmfont* this, const OMG_String* text, OMG_FPoint* 
         if (i > 0 && OMG_ISNOTNULL(this->chars.data[chr].ks.data)) {
             for (size_t j = 0; j < this->chars.data[chr].ks.len; j += 2) {
                 if (this->chars.data[chr].ks.data[i] == last_chr) {
-                    size_buf->x += this->chars.data[chr].ks.data[i + 1];
+                    size_buf->x += (float)this->chars.data[chr].ks.data[i + 1];
                     break;
                 }
             }
@@ -59,7 +59,7 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
             if (i > 0 && OMG_ISNOTNULL(bm_char->ks.data)) {
                 for (size_t j = 0; j < bm_char->ks.len; j += 2) {
                     if (bm_char->ks.data[i] == last_chr) {
-                        dst_rect.x += bm_char->ks.data[i + 1];
+                        dst_rect.x += (float)bm_char->ks.data[i + 1];
                         break;
                     }
                 }
