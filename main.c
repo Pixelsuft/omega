@@ -129,7 +129,7 @@ bool scene_on_paint(TestScene* scene) {
     this->ren->set_scale(this->ren, NULL, &OMG_FPOINT(3, 3));
     this->ren->copy(this->ren, scene->map_tex, NULL);
     OMG_LdtkLevel* level = &scene->map.levels.data[0];
-    scene->jumper_src.x = scene->anim.cur_frame * 32;
+    scene->jumper_src.x = (float)scene->anim.cur_frame * 32;
     for (size_t i = 0; i < level->layers.len; i++) {
         OMG_LdtkLayer* lay = &level->layers.data[i];
         if (!lay->is_entity_layer)
@@ -330,12 +330,12 @@ void app_on_mouse_move(OMG_EventMouseMove* event) {
 void app_init(App* this, OMG_EntryData* data) {
     this->exit_code = 1;
 #if 0
+#elif OMG_SUPPORT_WIN && !OMG_IS_UWP
+    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #elif OMG_SUPPORT_SDL2
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_SDL2);
 #elif OMG_SUPPORT_RAYLIB
     this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_RAYLIB);
-#elif OMG_SUPPORT_WIN && !OMG_IS_UWP
-    this->omg = omg_create_by_type(data, OMG_OMEGA_TYPE_WIN);
 #endif
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg)) {
         return;
@@ -374,7 +374,7 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_SOFTWARE_RENDERER"));
     int force_ren_driver = OMG_REN_DRIVER_AUTO;
     if (OMG_IS_WIN)
-        force_ren_driver = OMG_REN_DRIVER_OPENGL;
+        force_ren_driver = (this->omg->type == OMG_OMEGA_TYPE_WIN) ? OMG_REN_DRIVER_D3D11 : OMG_REN_DRIVER_OPENGL;
     if (temp_env.type >= 0)
         force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
     // force_ren_driver = OMG_REN_DRIVER_D3D11;
