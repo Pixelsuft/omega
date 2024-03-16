@@ -198,6 +198,21 @@
 
 #endif
 
+#define OMG_Pair(type1, type2) union { \
+    struct { \
+        type1 x; \
+        type2 y; \
+    }; \
+    struct { \
+        type1 a; \
+        type2 b; \
+    }; \
+    struct { \
+        type1 left; \
+        type2 right; \
+    }; \
+};
+
 typedef struct {
     /* Allocated size (not length!) */
     size_t size;
