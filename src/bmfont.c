@@ -4,9 +4,14 @@
 // TODO: make a lot of stuff
 
 bool omg_bmfont_destroy(OMG_Bmfont* this) {
+    for (size_t i = 0; i < this->chars.len; i++) {
+        if (OMG_ISNOTNULL(this->chars.data[i].ks.data))
+            OMG_ARRAY_DESTROY(&this->chars.data[i].ks);
+    }
     this->page = NULL;
     this->ch_count = 0;
     OMG_ARRAY_DESTROY(&this->chars);
+    this->chars.len = 0;
     return false;
 }
 
@@ -202,6 +207,21 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
         }
         else if (data[i] == 'k') {
             // Kerning
+            int first_c = 0;
+            int second_c = 0;
+            int x_ammount = 0;
+            if ((this->omg->std->sscanf(&data[i], "kerning first=%i second=%i amount=%i", &first_c, &second_c, &x_ammount) < 1) ||
+                (first_c < 0) || (second_c < 0) || ((size_t)first_c > this->chars.len) || ((size_t)first_c > this->chars.len)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse kerning");
+                omg_bmfont_destroy(this);
+                return true;
+            }
+            OMG_Bmchar* chr = &this->chars.data[second_c];
+            if (OMG_ISNULL(chr->ks.data) && OMG_ARRAY_INIT(&chr->ks, 0, 0)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse kerning");
+                omg_bmfont_destroy(this);
+                return true;
+            }
         }
         data[temp_id + cur_len] = '\n';
         i = temp_id + cur_len + 1;
