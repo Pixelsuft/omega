@@ -15,7 +15,7 @@ out.write('PIXELSUFT_LDTK_TXT\n')
 out.write(f'INFO,{inp["worldGridWidth"]},{inp["worldGridHeight"]},')
 out.write(f'{hex_to_str(inp["bgColor"])}\n')
 
-type_map = {
+type_map_f = {
     'F_Int': 1,
     'F_Float': 2,
     'F_Bool': 3,
@@ -23,15 +23,23 @@ type_map = {
     'F_Color': 5
 }
 
+type_map = {
+    'Int': 1,
+    'Float': 2,
+    'Bool': 3,
+    'String': 4,
+    'Color': 5
+}
+
 # TODO: tags support
 
 for ent in inp['defs']['entities']:
     out.write(f'F,{ent["uid"]},"{ent["identifier"]}",{ent["width"]},{ent["height"]}\n')
     for prop in ent['fieldDefs']:
-        type_int = type_map.get(prop['type'])
+        type_int = type_map_f.get(prop['type'])
         if not type_int:
             continue
-        out.write(f'G,{prop["identifier"]},{type_int}\n')
+        out.write(f'G,{prop["uid"]},{prop["identifier"]},{type_int}\n')
 
 for ts in inp['defs']['tilesets']:
     out.write(f'S,{ts["uid"]},"{ts["identifier"]}","{ts["relPath"]}",{ts["pxWid"]},')
@@ -49,6 +57,25 @@ for lvl in inp['levels']:
         for ent in lay['entityInstances']:
             out.write(f'E,{ent["defUid"]},{ent["px"][0]},{ent["px"][1]},{ent["__grid"][0]},{ent["__grid"][1]}')
             out.write(f',{ent["width"]},{ent["height"]}\n')
+            counter = 0
+            for field in ent['fieldInstances']:
+                type_int = type_map.get(field['__type'])
+                if not type_int:
+                    continue
+                val = 0
+                val_str = field['__value']
+                if type_int == 1:
+                    val = int(val_str)
+                elif val_str == 2:
+                    val = int(float(val_str) * 10000)
+                elif val_str == 3:
+                    val = 1 if int(val_str) else 0
+                elif val_str == 4:
+                    val = val_str or ''
+                elif val_str == 5:
+                    val = hex_to_str(val_str)
+                out.write(f'P,{field["defUid"]},{counter},{type_int},{val}\n')
+                counter += 1
         for tile in (lay['autoLayerTiles'] or lay['gridTiles']):
             out.write(f'T,{tile["src"][0]},{tile["src"][1]},{tile["px"][0]},{tile["px"][1]}')
             out.write(f',{tile["f"]},{tile["t"]},{tile["a"]}\n')
