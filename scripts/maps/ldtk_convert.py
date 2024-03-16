@@ -39,7 +39,7 @@ for ent in inp['defs']['entities']:
         type_int = type_map_f.get(prop['type'])
         if not type_int:
             continue
-        out.write(f'G,{prop["uid"]},{prop["identifier"]},{type_int}\n')
+        out.write(f'G,{prop["uid"]},{type_int},"{prop["identifier"]}"\n')
 
 for ts in inp['defs']['tilesets']:
     out.write(f'S,{ts["uid"]},"{ts["identifier"]}","{ts["relPath"]}",{ts["pxWid"]},')

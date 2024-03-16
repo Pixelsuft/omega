@@ -409,9 +409,54 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             ent.prop_types.data = NULL;
             ent.prop_names.len = 0;
             ent.prop_names.data = NULL;
+            if (OMG_ARRAY_INIT(&ent.prop_types, 0, sizeof(int)) || OMG_ARRAY_INIT(&ent.prop_names, 0, sizeof(OMG_String))) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity def");
+                omg_string_destroy(&ent.name);
+                omg_ldtk_destroy(this);
+            }
             if (OMG_ARRAY_PUSH(&this->entities, ent)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity def");
                 omg_string_destroy(&ent.name);
+                omg_ldtk_destroy(this);
+                return true;
+            }
+        }
+        else if (data[i] == 'G') {
+            // Entity prop definition
+            int id_buf, type_id;
+            if (OMG_ISNULL(this->entities.data) || this->omg->std->sscanf(
+                &data[i], "G,%i,%i,\"", &id_buf, &type_id
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity prop def");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_String prop_name;
+            while (data[i] != '\"')
+                i++;
+            i++;
+            size_t j = i;
+            while (data[j] != '\"') {
+                if (data[j] == '\0') {
+                    _OMG_LOG_ERROR(this->omg, "Failed to parse tilemap def");
+                    omg_ldtk_destroy(this);
+                    return true;
+                }
+                j++;
+            }
+            data[j] = '\0';
+            if (omg_string_init_dynamic(&prop_name, &OMG_STRING_MAKE_STATIC(&data[i]))) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity prop def");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            data[j] = '"';
+            if (
+                OMG_ARRAY_PUSH(&this->entities.data[this->entities.len - 1].prop_types, type_id) ||
+                OMG_ARRAY_PUSH(&this->entities.data[this->entities.len - 1].prop_names, prop_name)
+            ) {
+                omg_string_destroy(&prop_name);
+                _OMG_LOG_ERROR(this->omg, "Failed to parse entity prop def");
                 omg_ldtk_destroy(this);
                 return true;
             }
