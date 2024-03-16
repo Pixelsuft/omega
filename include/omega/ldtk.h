@@ -6,6 +6,12 @@
 #include <omega/omega.h>
 #include <omega/array.h>
 
+#define OMG_LDTK_INT 1
+#define OMG_LDTK_FLOAT 2
+#define OMG_LDTK_BOOL 3
+#define OMG_LDTK_STRING 4
+#define OMG_LDTK_COLOR 5
+
 typedef struct {
     OMG_String name;
     OMG_FPoint size;

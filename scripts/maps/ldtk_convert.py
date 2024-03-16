@@ -15,12 +15,23 @@ out.write('PIXELSUFT_LDTK_TXT\n')
 out.write(f'INFO,{inp["worldGridWidth"]},{inp["worldGridHeight"]},')
 out.write(f'{hex_to_str(inp["bgColor"])}\n')
 
+type_map = {
+    'F_Int': 1,
+    'F_Float': 2,
+    'F_Bool': 3,
+    'F_String': 4,
+    'F_Color': 5
+}
+
 # TODO: tags support
 
 for ent in inp['defs']['entities']:
     out.write(f'F,{ent["uid"]},"{ent["identifier"]}",{ent["width"]},{ent["height"]}\n')
     for prop in ent['fieldDefs']:
-        out.write(f'G,{prop["identifier"]},{prop["type"]}')
+        type_int = type_map.get(prop['type'])
+        if not type_int:
+            continue
+        out.write(f'G,{prop["identifier"]},{type_int}\n')
 
 for ts in inp['defs']['tilesets']:
     out.write(f'S,{ts["uid"]},"{ts["identifier"]}","{ts["relPath"]}",{ts["pxWid"]},')
