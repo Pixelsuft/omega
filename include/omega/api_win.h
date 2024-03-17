@@ -1180,6 +1180,11 @@ typedef struct {
 
 typedef struct {
     HANDLE handle;
+    LPWSTR* OMG_WIN_STD_PREFIX (*CommandLineToArgvW)(LPCWSTR, int*);
+} OMG_Shell32;
+
+typedef struct {
+    HANDLE handle;
     bool OMG_WIN_STD_PREFIX (*ShouldAppsUseDarkMode)(void);
     void OMG_WIN_STD_PREFIX (*AllowDarkModeForWindow)(HWND, bool);
     void OMG_WIN_STD_PREFIX (*AllowDarkModeForApp)(bool);
@@ -1211,6 +1216,8 @@ OMG_API bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num);
 OMG_API bool omg_winapi_uxtheme_free(OMG_Uxtheme* this);
 OMG_API bool omg_winapi_msvcrt_load(OMG_Msvcrt* this);
 OMG_API bool omg_winapi_msvcrt_free(OMG_Msvcrt* this);
+OMG_API bool omg_winapi_shell32_load(OMG_Shell32* this);
+OMG_API bool omg_winapi_shell32_free(OMG_Shell32* this);
 #if OMG_EXPORT_SHIT
 OMG_API ULONGLONG omg_win_get_tick_count64_emu(void);
 #endif

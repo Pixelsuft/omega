@@ -20,6 +20,7 @@
 #define file_omg ((OMG_Omega*)file_base->omg)
 #define d_k32 ((OMG_Kernel32*)this->k32)
 #define d_u32 ((OMG_User32*)this->u32)
+#define d_s32 ((OMG_Shell32*)this->s32)
 #define d_libc ((OMG_Libc*)this->libc)
 #define d_msvcrt ((OMG_Msvcrt*)this->msvcrt)
 
@@ -627,6 +628,11 @@ bool omg_win_destroy_clean1(OMG_Omega* this) {
         result = OMG_FREE(this->mem, this->g32) || result;
         this->g32 = NULL;
     }
+    if (this->should_free_s32 && OMG_ISNOTNULL(this->s32)) {
+        result = omg_winapi_shell32_free(this->s32) || result;
+        result = OMG_FREE(this->mem, this->s32) || result;
+        this->s32 = NULL;
+    }
     if (this->should_free_u32 && OMG_ISNOTNULL(this->u32)) {
         result = omg_winapi_user32_free(this->u32) || result;
         result = OMG_FREE(this->mem, this->u32) || result;
@@ -740,6 +746,17 @@ bool omg_win_loads_libs3(OMG_Omega* this) {
             return true;
         }
         this->should_free_u32 = true;
+    }
+    if (OMG_ISNULL(this->s32)) {
+        this->s32 = OMG_MALLOC(this->mem, sizeof(OMG_Shell32));
+        if (OMG_ISNULL(this->s32)) {
+            return true;
+        }
+        if (omg_winapi_shell32_load(this->s32)) {
+            OMG_FREE(this->mem, this->s32);
+            return true;
+        }
+        this->should_free_s32 = true;
     }
     if (OMG_ISNULL(this->g32)) {
         this->g32 = OMG_MALLOC(this->mem, sizeof(OMG_Gdi32));
@@ -1636,7 +1653,7 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
 bool omg_omg_init(OMG_Omega* this) {
     this->type = OMG_OMEGA_TYPE_NONE;
 #if OMG_IS_WIN
-    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = this->should_free_msvcrt = false;
+    this->should_free_dwm = this->should_free_g32 = this->should_free_k32 = this->should_free_ntdll = this->should_free_u32 = this->should_free_uxtheme = this->should_free_std = this->should_free_msvcrt = this->should_free_s32 = false;
 #endif
 #if OMG_SUPPORT_LIBC
     this->should_free_libc = false;

@@ -326,6 +326,27 @@ bool omg_winapi_dwmapi_free(OMG_Dwmapi* this) {
 #endif
 }
 
+bool omg_winapi_shell32_load(OMG_Shell32* this) {
+#if OMG_WINAPI_DYNAMIC
+    this->handle = LOAD_SYSTEM_LIBRARY(L"shell32.dll");
+#endif
+    OMG_BEGIN_POINTER_CAST();
+    LOAD_REQUIRED_COMPAT(CommandLineToArgvW);
+    OMG_END_POINTER_CAST();
+    return (OMG_WINAPI_DYNAMIC) && OMG_ISNULL(this->handle);
+}
+
+bool omg_winapi_shell32_free(OMG_Shell32* this) {
+#if OMG_WINAPI_DYNAMIC
+    if (OMG_ISNULL(this->handle))
+        return true;
+    return (bool)FreeLibrary(this->handle);
+#else
+    OMG_UNUSED(this);
+    return false;
+#endif
+}
+
 bool omg_winapi_uxtheme_load(OMG_Uxtheme* this, int build_num) {
 #if OMG_WINAPI_DYNAMIC || OMG_WINAPI_DYNAMIC_ORDINAL
     this->handle = LOAD_SYSTEM_LIBRARY(L"uxtheme.dll");
