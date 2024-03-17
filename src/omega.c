@@ -1470,6 +1470,10 @@ OMG_FileWin* omg_win_file_from_fp(OMG_Omega* this, OMG_FileWin* file, const OMG_
 }
 #endif
 
+#if OMG_IS_WIN
+static bool omg_cwd_ugly_hack = false;
+#endif
+
 OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
 #if OMG_IS_WIN
     wchar_t* buf;
@@ -1493,13 +1497,14 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
             return *omg_dummy_string_create();
         }
         size_t counter = (size_t)len_read;
-        while (counter > 0) {
-            counter--;
-            if (buf[counter] == L'\\') {
-                buf[counter] = L'\0';
-                break;
+        if (!omg_cwd_ugly_hack)
+            while (counter > 0) {
+                counter--;
+                if (buf[counter] == L'\\') {
+                    buf[counter] = L'\0';
+                    break;
+                }
             }
-        }
         if ((counter == 0) && (buf[0] != L'\0')) {
             buf[len_read] = L'\0';
         }
@@ -1523,7 +1528,7 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
         OMG_FREE(this->mem, buf);
         return *omg_dummy_string_create();
     }
-    if (omg_string_add_wchar_p(&result, buf) || omg_string_add_char(&result, '\\')) {
+    if (omg_string_add_wchar_p(&result, buf) || (!omg_cwd_ugly_hack && omg_string_add_char(&result, '\\'))) {
         omg_string_destroy(&result);
         OMG_FREE(this->mem, buf);
         return *omg_dummy_string_create();
@@ -1558,6 +1563,7 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
 }
 
 bool omg_cmd_args_free(OMG_Omega* this, OMG_EntryArgsArray* arr) {
+    OMG_UNUSED(this);
     if (OMG_ISNULL(arr) || OMG_ISNULL(arr->data))
         return true;
     bool res = 0;
@@ -1579,6 +1585,17 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
         for (size_t i = 0; i < (size_t)this->entry_data->argc; i++)
             res.data[i] = OMG_STRING_MAKE_STATIC(this->entry_data->argv[i]);
     }
+#if OMG_IS_WIN
+    omg_cwd_ugly_hack = true;
+    OMG_String first_str = omg_get_cwd(this, true);
+    omg_cwd_ugly_hack = false;
+    if (OMG_ARRAY_INIT(&res, 1, sizeof(OMG_String)) || OMG_ISNULL(first_str.ptr))
+        return res;
+    res.data[0] = first_str;
+    /* OMG_String cur_str;
+    if (omg_string_init_dynamic(&cur_str, NULL))
+        return res; */
+#endif
     return res;
 }
 
