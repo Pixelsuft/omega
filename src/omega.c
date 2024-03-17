@@ -95,6 +95,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->dwm = NULL;
     this->uxtheme = NULL;
     this->g32 = NULL;
+    this->s32 = NULL;
     this->nt = NULL;
 #endif
 #if OMG_SUPPORT_LIBC
@@ -1607,9 +1608,8 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
     wchar_t* argv_buf = cmd_was_null ? d_k32->GetCommandLineW() : this->entry_data->cmdline;
     if (OMG_ISNULL(argv_buf))
         return res;
-    // TODO: shell32 dll load dynamicly and CommandLineToArgvW
     int arg_c;
-    LPWSTR* buf = CommandLineToArgvW(argv_buf, &arg_c);
+    LPWSTR* buf = d_s32->CommandLineToArgvW(argv_buf, &arg_c);
     if (OMG_ISNULL(buf))
         return res;
     if (OMG_ARRAY_INIT(&res, (size_t)arg_c + (cmd_was_null ? 0 : 1), sizeof(OMG_String))) {
