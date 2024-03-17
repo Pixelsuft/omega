@@ -14,9 +14,14 @@
 
 typedef struct {
     OMG_String name;
+    int val_type;
+    int id;
+} OMG_LdtkPropDef;
+
+typedef struct {
+    OMG_String name;
     OMG_FPoint size;
-    OMG_Array(int) prop_types;
-    OMG_Array(OMG_String) prop_names;
+    OMG_Array(OMG_LdtkPropDef) props;
     int id;
 } OMG_LdtkEntityDef;
 

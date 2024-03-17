@@ -32,12 +32,11 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
     }
     if (OMG_ISNOTNULL(this->entities.data)) {
         for (size_t i = 0; i < this->entities.len; i++) {
-            if (OMG_ISNOTNULL(this->entities.data[i].prop_names.data))
-                for (size_t j = 0; j < this->entities.data[i].prop_names.len; j++) {
-                    omg_string_destroy(&this->entities.data[i].prop_names.data[j]);
+            if (OMG_ISNOTNULL(this->entities.data[i].props.data))
+                for (size_t j = 0; j < this->entities.data[i].props.len; j++) {
+                    omg_string_destroy(&this->entities.data[i].props.data[j].name);
                 }
-            OMG_ARRAY_DESTROY(&this->entities.data[i].prop_names);
-            OMG_ARRAY_DESTROY(&this->entities.data[i].prop_types);
+            OMG_ARRAY_DESTROY(&this->entities.data[i].props);
             if (OMG_ISNOTNULL(this->entities.data[i].name.ptr)) {
                 omg_string_destroy(&this->entities.data[i].name);
             }
@@ -405,11 +404,9 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             data[j] = '\"';
             ent.size.w = (float)size_buf[0];
             ent.size.h = (float)size_buf[1];
-            ent.prop_types.len = 0;
-            ent.prop_types.data = NULL;
-            ent.prop_names.len = 0;
-            ent.prop_names.data = NULL;
-            if (OMG_ARRAY_INIT(&ent.prop_types, 0, sizeof(int)) || OMG_ARRAY_INIT(&ent.prop_names, 0, sizeof(OMG_String))) {
+            ent.props.len = 0;
+            ent.props.data = NULL;
+            if (OMG_ARRAY_INIT(&ent.props, 0, sizeof(OMG_LdtkPropDef))) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity def");
                 omg_string_destroy(&ent.name);
                 omg_ldtk_destroy(this);
@@ -423,15 +420,14 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
         }
         else if (data[i] == 'G') {
             // Entity prop definition
-            int id_buf, type_id;
+            OMG_LdtkPropDef prop;
             if (OMG_ISNULL(this->entities.data) || this->omg->std->sscanf(
-                &data[i], "G,%i,%i,\"", &id_buf, &type_id
+                &data[i], "G,%i,%i,\"", &prop.id, &prop.val_type
             ) < 1) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity prop def");
                 omg_ldtk_destroy(this);
                 return true;
             }
-            OMG_String prop_name;
             while (data[i] != '\"')
                 i++;
             i++;
@@ -445,17 +441,14 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
                 j++;
             }
             data[j] = '\0';
-            if (omg_string_init_dynamic(&prop_name, &OMG_STRING_MAKE_STATIC(&data[i]))) {
+            if (omg_string_init_dynamic(&prop.name, &OMG_STRING_MAKE_STATIC(&data[i]))) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity prop def");
                 omg_ldtk_destroy(this);
                 return true;
             }
             data[j] = '"';
-            if (
-                OMG_ARRAY_PUSH(&this->entities.data[this->entities.len - 1].prop_types, type_id) ||
-                OMG_ARRAY_PUSH(&this->entities.data[this->entities.len - 1].prop_names, prop_name)
-            ) {
-                omg_string_destroy(&prop_name);
+            if (OMG_ARRAY_PUSH(&this->entities.data[this->entities.len - 1].props, prop)) {
+                omg_string_destroy(&prop.name);
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity prop def");
                 omg_ldtk_destroy(this);
                 return true;
