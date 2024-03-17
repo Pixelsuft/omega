@@ -220,7 +220,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
                 omg_ldtk_destroy(this);
                 return true;
             }
-            tile.src.x = buf[0];
+            tile.src.x = (float)buf[0];
             tile.src.y = (float)buf[1];
             tile.pos.x = (float)buf[2];
             tile.pos.y = (float)buf[3];
@@ -290,27 +290,27 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
                 return true;
             }
             OMG_LdtkEntity* ent = &lay->entities.data[lay->entities.len - 1];
-            if (OMG_ISNULL(ent->props.data) && OMG_ARRAY_INIT(&ent->props, 0, sizeof(void*))) {
+            if (OMG_ISNULL(ent->props.data) && OMG_ARRAY_INIT(&ent->props, 0, sizeof(OMG_LdtkPropVal))) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
                 omg_ldtk_destroy(this);
                 return true;
             }
             bool res = false;
-            void* val = NULL;
+            OMG_LdtkPropVal val;
             if (type_val <= OMG_LDTK_BOOL) {
                 int buf = 0;
                 res = this->omg->std->sscanf(&data[i], "P,%i,%i,%i,%i", &id, &counter, &type_val, &buf) < 1;
                 if (!res) {
                     if (type_val == OMG_LDTK_FLOAT) {
                         float f_val = (float)buf / 10000.0f;
-                        val = *(void**)&f_val;
+                        this->omg->std->memcpy(&val, &f_val, sizeof(float));
                     }
                     else if (type_val == OMG_LDTK_BOOL) {
                         bool b_val = buf ? true : false;
-                        val = *(void**)&b_val;
+                        this->omg->std->memcpy(&val, &b_val, sizeof(bool));
                     }
                     else {
-                        val = *(void**)&buf;
+                        this->omg->std->memcpy(&val, &buf, sizeof(int));
                     }
                     res = OMG_ARRAY_PUSH(&ent->props, val);
                 }
