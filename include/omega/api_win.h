@@ -1052,6 +1052,7 @@ typedef struct {
     DWORD OMG_WIN_STD_PREFIX (*GetCurrentDirectoryW)(DWORD, LPWSTR);
     DWORD OMG_WIN_STD_PREFIX (*GetModuleFileNameW)(HMODULE, LPWSTR, DWORD);
     LPWSTR OMG_WIN_STD_PREFIX (*GetCommandLineW)(void);
+    HLOCAL OMG_WIN_STD_PREFIX (*LocalFree)(HLOCAL);
     // TODO: SHFileOperationW
     uint64_t _tick64_emu;
 } OMG_Kernel32;
