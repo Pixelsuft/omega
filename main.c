@@ -137,7 +137,9 @@ bool scene_on_paint(TestScene* scene) {
         scene->jumper_src.y = 0.0f;
         for (size_t j = 0; j < lay->entities.len; j++) {
             OMG_LdtkEntity* ent = &lay->entities.data[j];
-            scene->jumper_src.y = (scene->jumper_src.y == 0.0f) ? 32.0f : 0.0f;
+            // Hardcoded prop 0 is col_id
+            int col_id = *(int*)&ent->props.data[0];
+            scene->jumper_src.y = (col_id > 0) ? 32.0f : 0.0f;
             this->ren->copy_ex(
                 this->ren, this->jumper_anims,
                 &scene->jumper_src, &ent->rect, NULL, 0.0
