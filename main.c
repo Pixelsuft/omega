@@ -459,6 +459,11 @@ void app_init(App* this, OMG_EntryData* data) {
     OMG_String cwd = this->omg->get_cwd(this->omg, true);
     OMG_INFO(this->omg, "Current path: ", &cwd);
     omg_string_destroy(&cwd);
+    OMG_EntryArgsArray args_arr = this->omg->cmd_args_alloc(this->omg);
+    for (size_t i = 0; i < args_arr.len; i++) {
+        OMG_INFO(this->omg, "Arg ", (int)i, ": ", &args_arr.data[i]);
+    }
+    this->omg->cmd_args_free(this->omg, &args_arr);
     // this->clock->reset(this->clock);
     this->exit_code = 0;
 }
