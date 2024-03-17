@@ -98,6 +98,16 @@ int omg_ldtk_index_from_tilemap_name(OMG_Ldtk* this, const OMG_String* tilemap_n
     return -1;
 }
 
+int omg_ldtk_index_from_prop_name(OMG_LdtkEntityDef* ent_def, const OMG_String* prop_name) {
+    if (OMG_ISNULL(ent_def->props.data))
+        return -1;
+    for (int i = 0; i < (int)ent_def->props.len; i++) {
+        if (omg_string_equal(&ent_def->props.data[i].name, prop_name))
+            return i;
+    }
+    return -1;
+}
+
 int omg_ldtk_index_from_level_id(OMG_Ldtk* this, int level_id) {
     if (OMG_ISNULL(this->levels.data))
         return -1;
@@ -133,6 +143,16 @@ int omg_ldtk_index_from_tilemap_id(OMG_Ldtk* this, int tilemap_id) {
         return -1;
     for (int i = 0; i < (int)this->tilemaps.len; i++) {
         if (this->tilemaps.data[i].id == tilemap_id)
+            return i;
+    }
+    return -1;
+}
+
+int omg_ldtk_index_from_prop_id(OMG_LdtkEntityDef* ent_def, int prop_id) {
+    if (OMG_ISNULL(ent_def->props.data))
+        return -1;
+    for (int i = 0; i < (int)ent_def->props.len; i++) {
+        if (ent_def->props.data[i].id == prop_id)
             return i;
     }
     return -1;
