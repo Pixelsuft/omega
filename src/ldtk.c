@@ -315,6 +315,20 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
                     res = OMG_ARRAY_PUSH(&ent->props, val);
                 }
             }
+            else if (type_val == OMG_LDTK_COLOR) {
+                int r_buf, g_buf, b_buf, a_buf;
+                res = this->omg->std->sscanf(&data[i], "P,%i,%i,%i,(%i,%i,%i,%i)", &id, &counter, &type_val, &r_buf, &g_buf, &b_buf, &a_buf) < 1;
+                if (!res) {
+                    OMG_Color col;
+                    col.r = (omg_color_t)(r_buf) * OMG_MAX_COLOR / (omg_color_t)255;
+                    col.g = (omg_color_t)(g_buf) * OMG_MAX_COLOR / (omg_color_t)255;
+                    col.b = (omg_color_t)(b_buf) * OMG_MAX_COLOR / (omg_color_t)255;
+                    col.a = (omg_color_t)(a_buf) * OMG_MAX_COLOR / (omg_color_t)255;
+                    this->omg->std->memcpy(&val, &col, sizeof(OMG_Color));
+                    res = OMG_ARRAY_PUSH(&ent->props, val);
+                }
+            }
+            // TODO: string
             if (res) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
                 omg_ldtk_destroy(this);

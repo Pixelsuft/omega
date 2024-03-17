@@ -666,6 +666,43 @@
 					"tilesetUid": null
 				},
 				{
+					"identifier": "test_col",
+					"doc": null,
+					"__type": "Color",
+					"uid": 126,
+					"type": "F_Color",
+					"isArray": false,
+					"canBeNull": false,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayScale": 1,
+					"editorDisplayPos": "Above",
+					"editorLinkStyle": "StraightArrow",
+					"editorDisplayColor": null,
+					"editorAlwaysShow": false,
+					"editorShowInWorld": true,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"exportToToc": false,
+					"searchable": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": { "id": "V_Int", "params": [16777215] },
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefsEntityUid": null,
+					"allowedRefTags": [],
+					"tilesetUid": null
+				},
+				{
 					"identifier": "test_float",
 					"doc": null,
 					"__type": "Float",
@@ -767,43 +804,6 @@
 					"regex": null,
 					"acceptFileTypes": null,
 					"defaultOverride": null,
-					"textLanguageMode": null,
-					"symmetricalRef": false,
-					"autoChainRef": true,
-					"allowOutOfLevelRef": true,
-					"allowedRefs": "OnlySame",
-					"allowedRefsEntityUid": null,
-					"allowedRefTags": [],
-					"tilesetUid": null
-				},
-				{
-					"identifier": "test_col",
-					"doc": null,
-					"__type": "Color",
-					"uid": 126,
-					"type": "F_Color",
-					"isArray": false,
-					"canBeNull": false,
-					"arrayMinLength": null,
-					"arrayMaxLength": null,
-					"editorDisplayMode": "Hidden",
-					"editorDisplayScale": 1,
-					"editorDisplayPos": "Above",
-					"editorLinkStyle": "StraightArrow",
-					"editorDisplayColor": null,
-					"editorAlwaysShow": false,
-					"editorShowInWorld": true,
-					"editorCutLongValues": true,
-					"editorTextSuffix": null,
-					"editorTextPrefix": null,
-					"useForSmartColor": true,
-					"exportToToc": false,
-					"searchable": false,
-					"min": null,
-					"max": null,
-					"regex": null,
-					"acceptFileTypes": null,
-					"defaultOverride": { "id": "V_Int", "params": [16711680] },
 					"textLanguageMode": null,
 					"symmetricalRef": false,
 					"autoChainRef": true,
@@ -940,7 +940,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#FF0000",
+							"__smartColor": "#BE4A2F",
 							"iid": "cd527610-d7b0-11ee-9c15-7d0acda5cc50",
 							"width": 16,
 							"height": 16,
@@ -948,10 +948,10 @@
 							"px": [103,16],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 0, "__tile": null, "defUid": 122, "realEditorValues": [] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#FFFFFF", "__tile": null, "defUid": 126, "realEditorValues": [] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 0, "__tile": null, "defUid": 123, "realEditorValues": [] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#FF0000", "__tile": null, "defUid": 126, "realEditorValues": [] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						},
 						{
@@ -960,7 +960,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#FF0000",
+							"__smartColor": "#BE4A2F",
 							"iid": "65dd5d50-d7b0-11ee-9c15-edc9d7956696",
 							"width": 16,
 							"height": 16,
@@ -968,10 +968,10 @@
 							"px": [160,48],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#FFFFFF", "__tile": null, "defUid": 126, "realEditorValues": [] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 1337.229, "__tile": null, "defUid": 123, "realEditorValues": [{ "id": "V_Float", "params": [1337.228666] }] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#FF0000", "__tile": null, "defUid": 126, "realEditorValues": [] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						},
 						{
@@ -980,7 +980,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#FF0000",
+							"__smartColor": "#BE4A2F",
 							"iid": "5cb98820-d7b0-11ee-86f6-39bb18bc0a98",
 							"width": 16,
 							"height": 16,
@@ -988,10 +988,10 @@
 							"px": [304,136],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 0, "__tile": null, "defUid": 122, "realEditorValues": [] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#FFFFFF", "__tile": null, "defUid": 126, "realEditorValues": [] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 0, "__tile": null, "defUid": 123, "realEditorValues": [] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#FF0000", "__tile": null, "defUid": 126, "realEditorValues": [] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						},
 						{
@@ -1000,7 +1000,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#1EFF00",
+							"__smartColor": "#BE4A2F",
 							"iid": "5d6ece60-d7b0-11ee-86f6-a50235684dcd",
 							"width": 16,
 							"height": 16,
@@ -1008,10 +1008,10 @@
 							"px": [32,120],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#FFFFFF", "__tile": null, "defUid": 126, "realEditorValues": [null] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 0, "__tile": null, "defUid": 123, "realEditorValues": [] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#1EFF00", "__tile": null, "defUid": 126, "realEditorValues": [{ "id": "V_Int", "params": [2031360] }] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						},
 						{
@@ -1020,7 +1020,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#FF0000",
+							"__smartColor": "#BE4A2F",
 							"iid": "5dfd2bb0-d7b0-11ee-86f6-cbaeb52cd8a2",
 							"width": 16,
 							"height": 16,
@@ -1028,10 +1028,10 @@
 							"px": [0,72],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#0AFF00", "__tile": null, "defUid": 126, "realEditorValues": [{ "id": "V_Int", "params": [720640] }] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 0, "__tile": null, "defUid": 123, "realEditorValues": [] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#FF0000", "__tile": null, "defUid": 126, "realEditorValues": [] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						},
 						{
@@ -1040,7 +1040,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#1D00FF",
+							"__smartColor": "#BE4A2F",
 							"iid": "5eaccca0-d7b0-11ee-86f6-5158adfd31bc",
 							"width": 16,
 							"height": 16,
@@ -1048,6 +1048,7 @@
 							"px": [72,48],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#1D00FF", "__tile": null, "defUid": 126, "realEditorValues": [{ "id": "V_Int", "params": [1900799] }] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 1337, "__tile": null, "defUid": 123, "realEditorValues": [{ "id": "V_Float", "params": [1337] }] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": true, "__tile": null, "defUid": 124, "realEditorValues": [{
 									"id": "V_Bool",
@@ -1056,8 +1057,7 @@
 								{ "__identifier": "test_str", "__type": "String", "__value": "Hello, world!!!", "__tile": null, "defUid": 125, "realEditorValues": [{
 									"id": "V_String",
 									"params": ["Hello, world!!!"]
-								}] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#1D00FF", "__tile": null, "defUid": 126, "realEditorValues": [{ "id": "V_Int", "params": [1900799] }] }
+								}] }
 							]
 						},
 						{
@@ -1066,7 +1066,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#FF0000",
+							"__smartColor": "#BE4A2F",
 							"iid": "5fd8c980-d7b0-11ee-86f6-87a66df9545a",
 							"width": 16,
 							"height": 16,
@@ -1074,10 +1074,10 @@
 							"px": [232,48],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 0, "__tile": null, "defUid": 122, "realEditorValues": [] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#FFFFFF", "__tile": null, "defUid": 126, "realEditorValues": [] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 0, "__tile": null, "defUid": 123, "realEditorValues": [] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#FF0000", "__tile": null, "defUid": 126, "realEditorValues": [] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						},
 						{
@@ -1086,7 +1086,7 @@
 							"__pivot": [0,0],
 							"__tags": ["test"],
 							"__tile": null,
-							"__smartColor": "#FF0000",
+							"__smartColor": "#BE4A2F",
 							"iid": "60a95ff0-d7b0-11ee-86f6-310059cc580f",
 							"width": 16,
 							"height": 16,
@@ -1094,10 +1094,10 @@
 							"px": [136,128],
 							"fieldInstances": [
 								{ "__identifier": "col_id", "__type": "Int", "__value": 1, "__tile": null, "defUid": 122, "realEditorValues": [{ "id": "V_Int", "params": [1] }] },
+								{ "__identifier": "test_col", "__type": "Color", "__value": "#FFB300", "__tile": null, "defUid": 126, "realEditorValues": [{ "id": "V_Int", "params": [16757504] }] },
 								{ "__identifier": "test_float", "__type": "Float", "__value": 0, "__tile": null, "defUid": 123, "realEditorValues": [] },
 								{ "__identifier": "test_bool", "__type": "Bool", "__value": false, "__tile": null, "defUid": 124, "realEditorValues": [] },
-								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] },
-								{ "__identifier": "test_col", "__type": "Color", "__value": "#FF0000", "__tile": null, "defUid": 126, "realEditorValues": [] }
+								{ "__identifier": "test_str", "__type": "String", "__value": null, "__tile": null, "defUid": 125, "realEditorValues": [] }
 							]
 						}
 					]

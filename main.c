@@ -139,7 +139,10 @@ bool scene_on_paint(TestScene* scene) {
             OMG_LdtkEntity* ent = &lay->entities.data[j];
             // Hardcoded prop 0 is col_id
             int col_id = *(int*)&ent->props.data[0];
+            // Hardcoded prop 1 is test_col
+            OMG_Color* col_mod = (OMG_Color*)&ent->props.data[1];
             scene->jumper_src.y = (col_id > 0) ? 32.0f : 0.0f;
+            this->ren->tex_set_color_mod(this->ren, this->jumper_anims, col_mod);
             this->ren->copy_ex(
                 this->ren, this->jumper_anims,
                 &scene->jumper_src, &ent->rect, NULL, 0.0
@@ -438,7 +441,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->clock->init(this->clock, !(temp_env.type >= 0));
     omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
-    // this->clock->set_fps_limit(this->clock, 400.0);
+    this->clock->set_fps_limit(this->clock, 400.0);
     this->win->set_title(this->win, &OMG_STR("Test Window"));
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
     this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));
