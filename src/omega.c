@@ -1604,7 +1604,8 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
             res.data[i] = OMG_STRING_MAKE_STATIC(this->entry_data->argv[i]);
     }
 #if OMG_IS_WIN
-    bool cmd_was_null = OMG_ISNULL(this->entry_data->cmdline);
+    // bool cmd_was_null = OMG_ISNULL(this->entry_data->cmdline);
+    bool cmd_was_null = true;
     wchar_t* argv_buf = cmd_was_null ? d_k32->GetCommandLineW() : this->entry_data->cmdline;
     if (OMG_ISNULL(argv_buf))
         return res;
@@ -1628,7 +1629,7 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
         }
         res.data[0] = first_str;
         cur_id++;
-    }
+    } 
     for (size_t i = 0; i < (size_t)arg_c; i++) {
         if (omg_string_init_dynamic(&res.data[cur_id], NULL)) {
             res.len = cur_id;
