@@ -206,7 +206,7 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             }
         }
         else if (data[i] == 'E') {
-            // Entity definition
+            // Entity
             if (OMG_ISNULL(this->levels.data) || OMG_ISNULL(this->levels.data[this->levels.len - 1].layers.data)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
                 omg_ldtk_destroy(this);
@@ -237,6 +237,30 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             ent.rect.h = (float)buf[6];
             if (OMG_ARRAY_PUSH(&lay->entities, ent)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+        }
+        else if ((data[i] == 'P') && (data[i + 1] == ',')) {
+            // Entity prop
+            if (OMG_ISNULL(this->levels.data) || OMG_ISNULL(this->levels.data[this->levels.len - 1].layers.data)) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            OMG_LdtkLevel* lev = &this->levels.data[this->levels.len - 1];
+            OMG_LdtkLayer* lay = &lev->layers.data[lev->layers.len - 1];
+            int id, counter, type_val;
+            if (OMG_ISNULL(lay->entities.data) || this->omg->std->sscanf(
+                &data[i], "P,%i,%i,%i,", &id, &counter, &type_val
+            ) < 1) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
+                omg_ldtk_destroy(this);
+                return true;
+            }
+            bool res = false;
+            if (res) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
                 omg_ldtk_destroy(this);
                 return true;
             }
