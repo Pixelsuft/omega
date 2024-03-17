@@ -498,13 +498,13 @@ bool omg_renderer_sdl2_copy_ex(OMG_RendererSdl2* this, OMG_TextureSdl2* tex, con
         src_rect.w = (int)src->w;
         src_rect.h = (int)src->h;
         if (src_rect.w == 0.0f)
-            src_rect.w = tex_base->size.w;
+            src_rect.w = (int)tex_base->size.w;
         else if (src_rect.w < 0.0f) {
             src_rect.w = -src_rect.w;
             flip |= SDL_FLIP_HORIZONTAL;
         }
         if (src_rect.h == 0.0f)
-            src_rect.h = tex_base->size.h;
+            src_rect.h = (int)tex_base->size.h;
         else if (src_rect.h < 0.0f) {
             src_rect.h = -src_rect.h;
             flip |= SDL_FLIP_VERTICAL;
