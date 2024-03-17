@@ -1586,7 +1586,9 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
             res.data[i] = OMG_STRING_MAKE_STATIC(this->entry_data->argv[i]);
     }
 #if OMG_IS_WIN
-    if (OMG_ISNULL(this->entry_data->cmdline) && OMG_ISNULL(this->entry_data->cmdline_s))
+    bool skip_first = OMG_ISNULL(this->entry_data->cmdline);
+    wchar_t* argv_buf = skip_first ? d_k32->GetCommandLineW() : this->entry_data->cmdline;
+    if (OMG_ISNULL(argv_buf))
         return res;
     omg_cwd_ugly_hack = true;
     OMG_String first_str = omg_get_cwd(this, true);
