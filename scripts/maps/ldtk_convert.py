@@ -72,6 +72,7 @@ for lvl in inp['levels']:
                     val = 1 if int(val_str) else 0
                 elif type_int == 4:
                     val = val_str or ''
+                    val = '"' + val + '"'
                 elif type_int == 5:
                     val = hex_to_str(val_str)
                 out.write(f'P,{field["defUid"]},{counter},{type_int},{val}\n')

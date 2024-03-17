@@ -12,6 +12,15 @@ bool omg_ldtk_destroy(OMG_Ldtk* this) {
             }
             if (OMG_ISNOTNULL(this->levels.data[i].layers.data)) {
                 for (size_t j = 0; j < this->levels.data[i].layers.len; j++) {
+                    if (OMG_ISNOTNULL(this->levels.data[i].layers.data[j].entities.data)) {
+                        for (size_t h = 0; h < this->levels.data[i].layers.data[j].entities.len; h++) {
+                            OMG_LdtkEntity* ent = &this->levels.data[i].layers.data[j].entities.data[h];
+                            for (size_t k = 0; k < ent->props.len; k++) {
+                                // TODO: free
+                            }
+                            OMG_ARRAY_DESTROY(&ent->props);
+                        }
+                    }
                     omg_string_destroy(&this->levels.data[i].layers.data[j].name);
                     OMG_ARRAY_DESTROY(&this->levels.data[i].layers.data[j].entities);
                     OMG_ARRAY_DESTROY(&this->levels.data[i].layers.data[j].tiles);
@@ -235,6 +244,8 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             ent.grid_pos.y = (float)buf[4];
             ent.rect.w = (float)buf[5];
             ent.rect.h = (float)buf[6];
+            ent.props.data = NULL;
+            ent.props.len = 0;
             if (OMG_ARRAY_PUSH(&lay->entities, ent)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse entity");
                 omg_ldtk_destroy(this);
@@ -258,7 +269,32 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
                 omg_ldtk_destroy(this);
                 return true;
             }
+            OMG_LdtkEntity* ent = &lay->entities.data[lay->entities.len - 1];
+            if (OMG_ISNULL(ent->props.data) && OMG_ARRAY_INIT(&ent->props, 0, sizeof(void*))) {
+                _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
+                omg_ldtk_destroy(this);
+                return true;
+            }
             bool res = false;
+            void* val = NULL;
+            if (type_val <= OMG_LDTK_BOOL) {
+                int buf = 0;
+                res = this->omg->std->sscanf(&data[i], "P,%i,%i,%i,%i", &id, &counter, &type_val, &buf) < 1;
+                if (!res) {
+                    if (type_val == OMG_LDTK_FLOAT) {
+                        float f_val = (float)buf / 10000.0f;
+                        val = *(void**)&f_val;
+                    }
+                    else if (type_val == OMG_LDTK_BOOL) {
+                        bool b_val = buf ? true : false;
+                        val = *(void**)&b_val;
+                    }
+                    else {
+                        val = *(void**)&buf;
+                    }
+                    res = OMG_ARRAY_PUSH(&ent->props, val);
+                }
+            }
             if (res) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse prop");
                 omg_ldtk_destroy(this);

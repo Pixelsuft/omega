@@ -36,6 +36,7 @@ typedef struct {
 } OMG_LdtkTilemapDef;
 
 typedef struct {
+    OMG_Array(void*) props;
     OMG_FRect rect;
     OMG_FRect grid_pos;
     int id;
