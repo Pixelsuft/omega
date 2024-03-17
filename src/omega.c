@@ -1531,6 +1531,7 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
     OMG_FREE(this->mem, buf);
     return result;
 #elif OMG_SUPPORT_LIBC
+    // TODO: parse base dir via argv[0]
     // if (base_dir)
     //     return *omg_dummy_string_create();
     OMG_UNUSED(base_dir);
@@ -1554,6 +1555,25 @@ OMG_String omg_get_cwd(OMG_Omega* this, bool base_dir) {
     OMG_UNUSED(this, base_dir);
     return *omg_dummy_string_create();
 #endif
+}
+
+bool omg_cmd_args_free(OMG_Omega* this, OMG_EntryArgsArray* arr) {
+    if (OMG_ISNULL(arr) || OMG_ISNULL(arr->data))
+        return true;
+    bool res = 0;
+    for (size_t i = 0; i < arr->len; i++) {
+        if (OMG_ISNOTNULL(arr->data[i].ptr))
+            res = omg_string_destroy(&arr->data[i]) || res;
+    }
+    res = OMG_ARRAY_DESTROY(arr) || res;
+    return res;
+}
+
+OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
+    OMG_EntryArgsArray res;
+    res.len = 0;
+    res.data = NULL;
+    return res;
 }
 
 bool omg_omg_init(OMG_Omega* this) {
@@ -1590,6 +1610,8 @@ bool omg_omg_init(OMG_Omega* this) {
     this->app_init = omg_app_init;
     this->app_quit = omg_app_quit;
     this->auto_loop_run = omg_auto_loop_run;
+    this->cmd_args_alloc = omg_cmd_args_alloc;
+    this->cmd_args_free = omg_cmd_args_free;
     this->auto_loop_stop = omg_auto_loop_stop;
     this->set_text_input_state = omg_set_text_input_state;
     this->delay = omg_delay;

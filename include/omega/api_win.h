@@ -1070,7 +1070,7 @@ typedef struct {
     int OMG_WIN_STD_PREFIX (*abs)(int);
     double OMG_WIN_STD_PREFIX (*fabs)(double);
     double OMG_WIN_STD_PREFIX (*pow)(double, double);
-    int OMG_WIN_STD_PREFIX (*sscanf_s)(const char* src, const char* fmt, ...);
+    int OMG_WIN_STD_PREFIX (*sscanf_s)(const char*, const char*, ...);
 } OMG_Ntdll;
 
 #ifdef SetWindowLongW

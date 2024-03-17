@@ -11,6 +11,7 @@
 #include <omega/filesystem.h>
 #include <omega/audio.h>
 #include <omega/threading.h>
+#include <omega/array.h>
 
 #define OMG_OMEGA_TYPE_NONE 0
 #define OMG_OMEGA_TYPE_WIN 1
@@ -86,6 +87,8 @@
         title_ptr = title->ptr; \
 } while (0)
 
+typedef OMG_Array(OMG_String) OMG_EntryArgsArray;
+
 typedef struct OMG_Omega {
     OMG_Memory* mem;
     OMG_Std* std;
@@ -124,6 +127,10 @@ typedef struct OMG_Omega {
     bool (*winmgr_alloc)(struct OMG_Omega* this);
     /* Sleep seconds */
     void (*delay)(struct OMG_Omega* this, double seconds);
+    /* Alloc and parse command line args */
+    OMG_EntryArgsArray (*cmd_args_alloc)(struct OMG_Omega* this);
+    /* Free allocated args */
+    bool (*cmd_args_free)(struct OMG_Omega* this, OMG_EntryArgsArray* arr);
     /* Set log level */
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
     /* Log string */
@@ -305,6 +312,8 @@ OMG_API void omg_event_on_touch(OMG_EventTouch* event);
 #if OMG_EXPORT_SHIT
 #include <omega/filesystem.h>
 
+OMG_API bool omg_cmd_args_free(OMG_Omega* this, OMG_EntryArgsArray* arr);
+OMG_API OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this);
 OMG_API OMG_Thread* omg_thread_create(OMG_Omega* this, OMG_ThreadFunction func, const OMG_String* name, void* data, size_t stack_size, void* reserved1, void* reserved2);
 OMG_API size_t omg_thread_get_id(OMG_Omega* this, OMG_Thread* thread);
 OMG_API bool omg_thread_set_priority(OMG_Omega* this, OMG_Thread* thread, int priority);
