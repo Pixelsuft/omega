@@ -1,5 +1,5 @@
 #include <omega/api_static.h>
-#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+#if OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC
 #include <omega/api_sdl2.h>
 #elif OMG_IS_WIN
 #include <omega/api_win.h>
@@ -12,7 +12,7 @@
 #endif
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
-#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+#if OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC
     OMG_UNUSED(adv_fn);
     char* fn_ptr;
     if (OMG_ISNULL(fn)) {
@@ -78,7 +78,7 @@ void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
 }
 
 void* omg_static_lib_func(void* lib, const OMG_String* func_name) {
-#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+#if OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC
     omg_string_ensure_null((OMG_String*)func_name);
     return SDL_LoadFunction(lib, func_name->ptr);
 #elif OMG_IS_WIN
@@ -96,7 +96,7 @@ void* omg_static_lib_func(void* lib, const OMG_String* func_name) {
 }
 
 bool omg_static_lib_free(void* lib) {
-#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+#if OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC
     SDL_UnloadObject(lib);
     return false;
 #elif OMG_IS_WIN
@@ -111,7 +111,7 @@ bool omg_static_lib_free(void* lib) {
 
 #if OMG_SUPPORT_STATIC_MEM
 void* omg_static_malloc(size_t size) {
-#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+#if OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC
     return SDL_malloc(size);
 #elif OMG_IS_WIN
     return HeapAlloc(GetProcessHeap(), 0, size);
@@ -124,7 +124,7 @@ void* omg_static_malloc(size_t size) {
 }
 
 void omg_static_free(void* ptr) {
-#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+#if OMG_SUPPORT_SDL2 && !OMG_SDL2_DYNAMIC
     SDL_free(ptr);
 #elif OMG_IS_WIN
     HeapFree(GetProcessHeap(), 0, ptr);
