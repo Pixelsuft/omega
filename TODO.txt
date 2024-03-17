@@ -4,4 +4,3 @@
 [-] Tiled map import (or any other)
 [-] Entites properties for LDTK
 [-] Write a slightly bigger example
-[-] Switch License to LGPLv3
