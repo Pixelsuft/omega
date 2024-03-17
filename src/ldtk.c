@@ -298,19 +298,20 @@ bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len) {
             bool res = false;
             OMG_LdtkPropVal val;
             if (type_val <= OMG_LDTK_BOOL) {
-                int buf = 0;
-                res = this->omg->std->sscanf(&data[i], "P,%i,%i,%i,%i", &id, &counter, &type_val, &buf) < 1;
+                int64_t buf = 0;
+                res = this->omg->std->sscanf(&data[i], "P,%i,%i,%i,%lld", &id, &counter, &type_val, &buf) < 1;
                 if (!res) {
                     if (type_val == OMG_LDTK_FLOAT) {
                         float f_val = (float)buf / 10000.0f;
                         this->omg->std->memcpy(&val, &f_val, sizeof(float));
                     }
                     else if (type_val == OMG_LDTK_BOOL) {
-                        bool b_val = buf ? true : false;
+                        bool b_val = buf > 0;
                         this->omg->std->memcpy(&val, &b_val, sizeof(bool));
                     }
                     else {
-                        this->omg->std->memcpy(&val, &buf, sizeof(int));
+                        int i_val = (int)buf;
+                        this->omg->std->memcpy(&val, &i_val, sizeof(int));
                     }
                     res = OMG_ARRAY_PUSH(&ent->props, val);
                 }

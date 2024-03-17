@@ -442,7 +442,7 @@ void app_init(App* this, OMG_EntryData* data) {
     this->clock->init(this->clock, !(temp_env.type >= 0));
     omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
-    this->clock->set_fps_limit(this->clock, 400.0);
+    // this->clock->set_fps_limit(this->clock, 400.0);
     this->win->set_title(this->win, &OMG_STR("Test Window"));
     this->sm = OMG_MALLOC(this->omg->mem, sizeof(OMG_SceneMgr));
     this->sc = OMG_MALLOC(this->omg->mem, sizeof(TestScene));

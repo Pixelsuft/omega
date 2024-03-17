@@ -95,6 +95,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->dwm = NULL;
     this->uxtheme = NULL;
     this->g32 = NULL;
+    this->u32 = NULL;
     this->s32 = NULL;
     this->nt = NULL;
 #endif
