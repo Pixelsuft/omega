@@ -1586,15 +1586,14 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
             res.data[i] = OMG_STRING_MAKE_STATIC(this->entry_data->argv[i]);
     }
 #if OMG_IS_WIN
+    if (OMG_ISNULL(this->entry_data->cmdline) && OMG_ISNULL(this->entry_data->cmdline_s))
+        return res;
     omg_cwd_ugly_hack = true;
     OMG_String first_str = omg_get_cwd(this, true);
     omg_cwd_ugly_hack = false;
     if (OMG_ARRAY_INIT(&res, 1, sizeof(OMG_String)) || OMG_ISNULL(first_str.ptr))
         return res;
     res.data[0] = first_str;
-    /* OMG_String cur_str;
-    if (omg_string_init_dynamic(&cur_str, NULL))
-        return res; */
 #endif
     return res;
 }
