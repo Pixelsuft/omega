@@ -219,6 +219,10 @@
 #define OMG_USE_RADIANS 1
 #endif
 
+#ifndef OMG_SUPPORT_STATIC_MEM
+#define OMG_SUPPORT_STATIC_MEM 1
+#endif
+
 #ifndef OMG_NULL_STR
 #define OMG_NULL_STR "NULL"
 #endif

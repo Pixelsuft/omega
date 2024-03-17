@@ -1,6 +1,6 @@
 #include <omega/api_static.h>
 #if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
-#include <omega/sdl2.h>
+#include <omega/api_sdl2.h>
 #elif OMG_IS_WIN
 #include <omega/api_win.h>
 #elif OMG_IS_UNIX && OMG_HAS_STD
@@ -8,6 +8,7 @@
 #include <gnu/lib-names.h>
 #endif
 #include <dlfcn.h>
+#include <stdlib.h>
 #endif
 
 void* omg_static_lib_load(const OMG_String* fn, const wchar_t* adv_fn) {
@@ -107,3 +108,30 @@ bool omg_static_lib_free(void* lib) {
     return true;
 #endif
 }
+
+#if OMG_SUPPORT_STATIC_MEM
+void* omg_static_malloc(size_t size) {
+#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+    return SDL_malloc(size);
+#elif OMG_IS_WIN
+    return HeapAlloc(GetProcessHeap(), 0, size);
+#elif OMG_HAS_STD
+    return malloc(size);
+#else
+    OMG_UNUSED(size);
+    return NULL;
+#endif
+}
+
+void omg_static_free(void* ptr) {
+#if OMG_SUPPORTS_SDL2 && !OMG_SDL2_DYNAMIC
+    SDL_free(ptr);
+#elif OMG_IS_WIN
+    HeapFree(GetProcessHeap(), 0, ptr);
+#elif OMG_HAS_STD
+    free(ptr);
+#else
+    OMG_UNUSED(ptr);
+#endif
+}
+#endif

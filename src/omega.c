@@ -10,6 +10,7 @@
 #include <omega/audio_sdl2.h>
 #include <omega/audio_emscripten.h>
 #include <omega/api_libc.h>
+#include <omega/api_static.h>
 #if OMG_IS_WIN
 #include <omega/filesystem_win.h>
 #define f_omg_k32 ((OMG_Kernel32*)(file_omg_base->k32))
@@ -55,12 +56,23 @@ void omg_delay(OMG_Omega* this, double seconds) {
 
 OMG_Omega* omg_alloc_omega_internal(OMG_EntryData* data, size_t size) {
     OMG_UNUSED(data, size);
+    // Should I allow to configure???
+#if OMG_SUPPORT_STATIC_MEM
+    uint8_t* buf = omg_static_malloc(size);
+#else
     static uint8_t buf[1024 * 8];
+#endif
     return (OMG_Omega*)buf;
 }
 
 void omg_free_omega_internal(OMG_Omega* this) {
+#if OMG_SUPPORT_STATIC_MEM
+    if (OMG_ISNULL(this))
+        return;
+    omg_static_free(this);
+#else
     OMG_UNUSED(this);
+#endif
 }
 
 void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {

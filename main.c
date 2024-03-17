@@ -1,6 +1,7 @@
 #include <omega/omega.h>
 #include <omega/entry.h>
 #include <omega/api_win.h>
+#include <omega/api_static.h>
 #include <omega/scene.h>
 #include <omega/scene_objects.h>
 #include <omega/array.h>
@@ -463,10 +464,14 @@ void app_init(App* this, OMG_EntryData* data) {
 }
 
 int omega_main(OMG_EntryData* data) {
-    App app;
-    app_init(&app, data);
-    if (app.exit_code)
-        return app.exit_code;
-    app.omg->auto_loop_run(app.omg);
-    return app.exit_code;
+    App* app = omg_static_malloc(sizeof(App));
+    if (OMG_ISNULL(app))
+        return 1;
+    app_init(app, data);
+    if (app->exit_code)
+        return app->exit_code;
+    app->omg->auto_loop_run(app->omg);
+    int res = app->exit_code;
+    omg_static_free(app);
+    return res;
 }
