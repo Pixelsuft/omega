@@ -1577,7 +1577,7 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
         if (OMG_ARRAY_INIT(&res, this->entry_data->argc, sizeof(OMG_String)))
             return res;
         for (size_t i = 0; i < (size_t)this->entry_data->argc; i++)
-            res.data[i] = OMG_STRING_MAKE_STATIC(this->entry_data->argv);
+            res.data[i] = OMG_STRING_MAKE_STATIC(this->entry_data->argv[i]);
     }
     return res;
 }
