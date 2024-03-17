@@ -1590,18 +1590,45 @@ OMG_EntryArgsArray omg_cmd_args_alloc(OMG_Omega* this) {
     wchar_t* argv_buf = cmd_was_null ? d_k32->GetCommandLineW() : this->entry_data->cmdline;
     if (OMG_ISNULL(argv_buf))
         return res;
-    if (OMG_ARRAY_INIT(&res, cmd_was_null ? 0 : 1, sizeof(OMG_String)))
+    // TODO: shell32 dll load dynamicly and CommandLineToArgvW
+    int arg_c;
+    LPWSTR* buf = CommandLineToArgvW(argv_buf, &arg_c);
+    if (OMG_ISNULL(buf))
         return res;
+    if (OMG_ARRAY_INIT(&res, (size_t)arg_c + (cmd_was_null ? 0 : 1), sizeof(OMG_String))) {
+        d_k32->LocalFree(buf);
+        return res;
+    }
+    size_t cur_id = 0;
     if (!cmd_was_null) {
         omg_cwd_ugly_hack = true;
         OMG_String first_str = omg_get_cwd(this, true);
         omg_cwd_ugly_hack = false;
         if (OMG_ISNULL(first_str.ptr)) {
             OMG_ARRAY_DESTROY(&res);
+            d_k32->LocalFree(buf);
             return res;
         }
         res.data[0] = first_str;
+        cur_id++;
     }
+    for (size_t i = 0; i < (size_t)arg_c; i++) {
+        if (omg_string_init_dynamic(&res.data[cur_id], NULL)) {
+            res.len = cur_id;
+            omg_cmd_args_free(this, &res);
+            d_k32->LocalFree(buf);
+            return res;
+        }
+        if (omg_string_add_wchar_p(&res.data[cur_id], buf[i])) {
+            res.len = cur_id;
+            omg_string_destroy(&res.data[cur_id]);
+            omg_cmd_args_free(this, &res);
+            d_k32->LocalFree(buf);
+            return res;
+        }
+        cur_id++;
+    }
+    d_k32->LocalFree(buf);
 #endif
     return res;
 }

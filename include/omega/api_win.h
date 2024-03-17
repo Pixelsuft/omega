@@ -12,6 +12,7 @@
 #include <windows.h>
 #include <windowsx.h>
 #endif
+#include <shellapi.h>
 #if OMG_IS_VC // Fuck Visual Studio
 #define OMG_WIN_STD_PREFIX
 #else
