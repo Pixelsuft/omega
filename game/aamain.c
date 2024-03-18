@@ -1,8 +1,9 @@
-#include <aamain.h>
 #include <omega/omega.h>
 #include <omega/entry.h>
 #include <omega/api_win.h>
 #include <omega/api_static.h>
+#include <aamain.h>
+#include <logo.h>
 
 int omega_main(OMG_EntryData* data);
 OMG_MAIN_MAKE(omega_main)
@@ -72,7 +73,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
         OMG_ERROR(this->omg, "OMG Audio Init Fail");
         this->omg->destroy(this->omg);
-        return;
+        return false;
     }
     this->au = this->omg->audio;
     this->ren = this->win->ren;
@@ -88,8 +89,18 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->win->set_title(this->win, &OMG_STR("Example game"));
     this->omg->on_loop_stop = app_on_destroy;
     omg_scenemgr_init(&this->sm, this->ren);
-    this->win->show(this->win, true);
     return false;
+}
+
+void app_run(App* this) {
+    LogoScene* lc = OMG_MALLOC(this->omg->mem, sizeof(LogoScene));
+    omg_scenemgr_scene_fill(&this->sm, lc);
+    OMG_BEGIN_POINTER_CAST();
+    lc->parent.on_init = logo_scene_init;
+    OMG_END_POINTER_CAST();
+    omg_scenemgr_scene_init(&this->sm, lc, app);
+    this->win->show(this->win, true);
+    this->omg->auto_loop_run(app->omg);
 }
 
 int omega_main(OMG_EntryData* data) {
@@ -100,7 +111,7 @@ int omega_main(OMG_EntryData* data) {
         omg_static_free(app);
         return 1;
     }
-    app->omg->auto_loop_run(app->omg);
+    app_run(app);
     omg_static_free(app);
     return 0;
 }
