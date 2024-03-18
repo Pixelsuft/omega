@@ -9,6 +9,19 @@ OMG_MAIN_MAKE(omega_main)
 
 App* app;
 
+void app_on_destroy(OMG_EventLoopStop* event) {
+    OMG_UNUSED(event);
+    App* this = app;
+    omg_scenemgr_destroy(&this->sm);
+    this->omg->app_quit(this->omg);
+    OMG_INFO(
+        this->omg,
+        "Exit. Number of allocations: ",
+        (int)this->omg->mem->get_alloc_count(this->omg->mem)
+    );
+    this->omg->destroy(this->omg);
+}
+
 bool app_init(App* this, OMG_EntryData* data) {
     int omg_backend = 0;
     omg_backend = OMG_OMEGA_TYPE_SDL2;
@@ -56,6 +69,11 @@ bool app_init(App* this, OMG_EntryData* data) {
         return true;
     }
     this->omg->audio_type = OMG_AUDIO_TYPE_AUTO;
+    if (this->omg->audio_alloc(this->omg) || this->omg->audio->init(this->omg->audio)) {
+        OMG_ERROR(this->omg, "OMG Audio Init Fail");
+        this->omg->destroy(this->omg);
+        return;
+    }
     this->au = this->omg->audio;
     this->ren = this->win->ren;
     this->ren->soft_offset = false;
@@ -68,7 +86,9 @@ bool app_init(App* this, OMG_EntryData* data) {
     omg_string_destroy(&temp_env);
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STR("Example game"));
-    // this->win->show(this->win, true);
+    this->omg->on_loop_stop = app_on_destroy;
+    omg_scenemgr_init(&this->sm, this->ren);
+    this->win->show(this->win, true);
     return false;
 }
 
@@ -80,6 +100,7 @@ int omega_main(OMG_EntryData* data) {
         omg_static_free(app);
         return 1;
     }
+    app->omg->auto_loop_run(app->omg);
     omg_static_free(app);
     return 0;
 }
