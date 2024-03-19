@@ -23,4 +23,5 @@ typedef struct {
 
 extern App* _app;
 
+OMG_Surface* app_load_surf(App* this, const OMG_String* path);
 OMG_Texture* app_load_texture(App* this, const OMG_String* path);

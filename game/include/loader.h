@@ -3,6 +3,7 @@
 
 typedef struct {
     OMG_Texture* tex[32];
+    OMG_Surface* surf[32];
     OMG_Thread* thr;
     void* _app;
     int total_count;

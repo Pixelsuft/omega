@@ -38,6 +38,20 @@ OMG_Texture* app_load_texture(App* this, const OMG_String* path) {
     return res;
 }
 
+OMG_Surface* app_load_surf(App* this, const OMG_String* path) {
+    OMG_String res_path;
+    if (omg_string_init_dynamic(&res_path, &this->bp))
+        return omg_winmgr_dummy_surf_create(this->omg->winmgr);
+    bool add_res = omg_string_add_char_p(&res_path, "assets") || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
+    if (add_res) {
+        omg_string_destroy(&res_path);
+        return omg_winmgr_dummy_surf_create(this->omg->winmgr);
+    }
+    OMG_Surface* res = this->omg->winmgr->surf_from_fp(this->omg->winmgr, NULL, &res_path, OMG_IMG_FORMAT_PNG);
+    omg_string_destroy(&res_path);
+    return res;
+}
+
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     OMG_UNUSED(this);

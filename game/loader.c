@@ -12,7 +12,7 @@ void loader_clean(Loader* this) {
 
 void loader_img_load(Loader* this, const OMG_String* path) {
     App* app = this->_app;
-    this->tex[this->img_count] = app_load_texture(app, path);
+    this->surf[this->img_count] = app_load_surf(app, path);
     this->img_count++;
     this->progress++;
 }
@@ -45,4 +45,5 @@ void loader_init(Loader* this, void* _app) {
     this->img_count = 0;
     this->thr = NULL;
     app->omg->std->memset(this->tex, 0, sizeof(this->tex));
+    app->omg->std->memset(this->surf, 0, sizeof(this->surf));
 }
