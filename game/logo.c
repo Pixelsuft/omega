@@ -5,7 +5,9 @@
 
 bool logo_scene_on_update(LogoScene* this) {
     App* app = base->data;
-    app->clock->update(app->clock);    
+    app->clock->update(app->clock);
+    base->dt = app->clock->dt;
+    this->logo_timer += base->dt;
     return false;
 }
 
@@ -13,6 +15,13 @@ bool logo_scene_on_paint(LogoScene* this) {
     App* app = base->data;
     rn->begin(rn);
     rn->clear(rn, &OMG_RGB(0, 0, 0));
+    float scale = (float)(this->logo_timer * this->logo_timer) / 5.0f + 0.5f;
+    OMG_FRect logo_dst;
+    logo_dst.x = 320.0f - this->logo->size.w * scale / 2.0f;
+    logo_dst.y = 240.0f - this->logo->size.h * scale / 2.0f;
+    logo_dst.w = this->logo->size.w * scale;
+    logo_dst.h = this->logo->size.h * scale;
+    rn->copy_ex(rn, this->logo, NULL, &logo_dst, NULL, 0.0);
     rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, 320, 20), 2.0f, &OMG_RGB(0, 255, 255));
     rn->flip(rn);
     return false;
@@ -21,8 +30,8 @@ bool logo_scene_on_paint(LogoScene* this) {
 bool logo_scene_on_run(LogoScene* this) {
     App* app = base->data;
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->win->size.w / 640.0f, app->win->size.h / 480.0f));
+    this->logo_timer = 0.0;
     app->clock->reset(app->clock);
-    OMG_INFO(app->omg, "Scene run!");
     return false;
 }
 
