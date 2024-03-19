@@ -7,6 +7,7 @@ bool logo_scene_on_update(LogoScene* this) {
     App* app = base->data;
     app->clock->update(app->clock);
     base->dt = app->clock->dt;
+    loader_update(&app->ld);
     this->logo_timer += base->dt;
     return false;
 }
@@ -29,7 +30,7 @@ bool logo_scene_on_paint(LogoScene* this) {
     }
     float prog = (float)app->ld.progress / (float)app->ld.total_count;
     rn->copy_ex(rn, this->logo, NULL, &logo_dst, NULL, 0.0);
-    rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, prog * 640, 20), 2.0f, &OMG_RGB(0, 255, 255));
+    rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, prog * 640, 20), 4.0f, &OMG_RGB(0, 255, 255));
     rn->flip(rn);
     return false;
 }
@@ -50,7 +51,7 @@ void logo_scene_on_resize(LogoScene* this, OMG_EventResize* event) {
 
 void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
-    if (IS_BACK_CODE(event->code)) {
+    if (IS_BACK_CODE(event->code) && app->ld.finished) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
     }
