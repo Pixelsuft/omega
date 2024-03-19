@@ -21,6 +21,12 @@ bool logo_scene_on_paint(LogoScene* this) {
     logo_dst.y = 240.0f - this->logo->size.h * scale / 2.0f;
     logo_dst.w = this->logo->size.w * scale;
     logo_dst.h = this->logo->size.h * scale;
+    if (scale > 1.5f) {
+        if (scale > 2.5f)
+            scale = 2.5f;
+        float op = (2.5f - scale) * 255.0f;
+        rn->tex_set_color_mod(rn, this->logo, &OMG_RGBA(255, 255, 255, op));
+    }
     rn->copy_ex(rn, this->logo, NULL, &logo_dst, NULL, 0.0);
     rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, 320, 20), 2.0f, &OMG_RGB(0, 255, 255));
     rn->flip(rn);
