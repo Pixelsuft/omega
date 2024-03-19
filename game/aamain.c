@@ -23,6 +23,20 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     this->omg->destroy(this->omg);
 }
 
+OMG_Texture* app_load_texture(App* this, const OMG_String* path) {
+    OMG_String res_path;
+    if (omg_string_init_dynamic(&res_path, &this->bp))
+        return omg_renderer_dummy_tex_create(this->ren);
+    bool add_res = omg_string_add_char_p(&res_path, "assets") || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
+    if (add_res) {
+        omg_string_destroy(&res_path);
+        return omg_renderer_dummy_tex_create(this->ren);
+    }
+    OMG_Texture* res = OMG_REN_TEXTURE_FROM_FILE(this->ren, &res_path);
+    omg_string_destroy(&res_path);
+    return res;
+}
+
 void app_on_keyboard(OMG_EventKeyboard* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     OMG_UNUSED(this);

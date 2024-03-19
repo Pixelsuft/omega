@@ -4,7 +4,8 @@
 #define rn app->ren
 
 bool logo_scene_on_update(LogoScene* this) {
-    OMG_UNUSED(this);
+    App* app = base->data;
+    app->clock->update(app->clock);    
     return false;
 }
 
@@ -34,17 +35,19 @@ void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
     if (IS_BACK_CODE(event->code)) {
         omg_scenemgr_scene_destroy(&app->sm, this);
+        app->omg->auto_loop_stop(app->omg);
     }
 }
 
 bool logo_scene_on_destroy(LogoScene* this) {
     App* app = base->data;
+    rn->tex_destroy(rn, this->logo);
     return false;
 }
 
 bool logo_scene_init(LogoScene* this) {
     App* app = base->data;
-    this->logo = OMG_REN_TEXTURE_FROM_FILE(rn, &OMG_STR("assets/logo.png"));
+    this->logo = app_load_texture(app, &OMG_STR("logo.png"));
     OMG_BEGIN_POINTER_CAST();
     base->on_run = logo_scene_on_run;
     base->on_update = logo_scene_on_update;

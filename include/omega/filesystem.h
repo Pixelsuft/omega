@@ -69,6 +69,12 @@
 #define OMG_FILE_TYPE_MEMORY 4
 #define OMG_FILE_TYPE_MEMORY_RO 5
 
+#if OMG_IS_WIN
+#define OMG_PATH_DELIM '\\'
+#else
+#define OMG_PATH_DELIM '/'
+#endif
+
 typedef struct OMG_File {
     OMG_String fp;
     bool (*destroy)(struct OMG_File* file);
