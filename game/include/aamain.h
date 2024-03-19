@@ -6,6 +6,8 @@
 #include <omega/image.h>
 #include <omega/scene.h>
 
+#define IS_BACK_CODE(code) ((code == OMG_SCANCODE_ESCAPE) || (code == OMG_SCANCODE_AC_BACK))
+
 typedef struct {
     OMG_Omega* omg;
     OMG_Window* win;
@@ -16,4 +18,4 @@ typedef struct {
     OMG_SceneMgr sm;
 } App;
 
-extern App* app;
+extern App* _app;

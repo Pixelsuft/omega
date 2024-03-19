@@ -8,11 +8,10 @@
 int omega_main(OMG_EntryData* data);
 OMG_MAIN_MAKE(omega_main)
 
-App* app;
+App* _app;
 
 void app_on_destroy(OMG_EventLoopStop* event) {
-    OMG_UNUSED(event);
-    App* this = app;
+    App* this = OMG_ARG_FROM_EVENT(event);
     omg_scenemgr_destroy(&this->sm);
     this->omg->app_quit(this->omg);
     OMG_INFO(
@@ -21,6 +20,11 @@ void app_on_destroy(OMG_EventLoopStop* event) {
         (int)this->omg->mem->get_alloc_count(this->omg->mem)
     );
     this->omg->destroy(this->omg);
+}
+
+void app_on_keyboard(OMG_EventKeyboard* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    OMG_UNUSED(this);
 }
 
 bool app_init(App* this, OMG_EntryData* data) {
@@ -88,6 +92,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->clock->wait_for_limit = false;
     this->win->set_title(this->win, &OMG_STR("Example game"));
     this->omg->on_loop_stop = app_on_destroy;
+    this->omg->on_key_down = app_on_keyboard;
     omg_scenemgr_init(&this->sm, this->ren);
     return false;
 }
@@ -98,20 +103,21 @@ void app_run(App* this) {
     OMG_BEGIN_POINTER_CAST();
     lc->parent.on_init = logo_scene_init;
     OMG_END_POINTER_CAST();
-    omg_scenemgr_scene_init(&this->sm, lc, app);
+    omg_scenemgr_scene_init(&this->sm, lc, this);
     this->win->show(this->win, true);
-    this->omg->auto_loop_run(app->omg);
+    omg_scenemgr_scene_run(&this->sm, lc);
+    this->omg->auto_loop_run(this->omg);
 }
 
 int omega_main(OMG_EntryData* data) {
-    app = omg_static_malloc(sizeof(App));
-    if (OMG_ISNULL(app))
+    _app = omg_static_malloc(sizeof(App));
+    if (OMG_ISNULL(_app))
         return 1;
-    if (app_init(app, data)) {
-        omg_static_free(app);
+    if (app_init(_app, data)) {
+        omg_static_free(_app);
         return 1;
     }
-    app_run(app);
-    omg_static_free(app);
+    app_run(_app);
+    omg_static_free(_app);
     return 0;
 }
