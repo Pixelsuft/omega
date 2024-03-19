@@ -51,6 +51,7 @@ typedef struct OMG_Scene {
     void (*on_touch_move)(struct OMG_Scene* this, OMG_EventTouch* event);
     double dt;
     int id;
+    bool was_allocated;
     bool update_on_expose;
     bool paint_on_expose;
     bool enable_paint;

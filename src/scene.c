@@ -140,6 +140,7 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->update_on_expose = true;
     scene->paint_on_expose = true;
     scene->enable_paint = true;
+    scene->was_allocated = false;
     scene->id = 0;
     return false;
 }
@@ -176,6 +177,7 @@ bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     if (OMG_ISNOTNULL(scene->on_destroy))
         scene->on_destroy(scene);
     scene->inited = false;
+    // TODO: free if was_allocated
     OMG_UNUSED(this);
     return false;    
 }
