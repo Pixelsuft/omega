@@ -67,7 +67,8 @@ int loader_thread(void* data) {
 void loader_run(Loader* this) {
     App* app = _app;
     this->thread_safe = false;
-    OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
+    if (app->omg->type != OMG_OMEGA_TYPE_WIN)
+        OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
     if (OMG_ISNULL(this->thr)) {
         this->thread_safe = true;
         loader_thread(this);
