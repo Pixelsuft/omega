@@ -27,8 +27,9 @@ bool logo_scene_on_paint(LogoScene* this) {
         float op = (2.5f - scale) * 255.0f;
         rn->tex_set_color_mod(rn, this->logo, &OMG_RGBA(255, 255, 255, op));
     }
+    float prog = (float)app->ld.progress / (float)app->ld.total_count;
     rn->copy_ex(rn, this->logo, NULL, &logo_dst, NULL, 0.0);
-    rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, 320, 20), 2.0f, &OMG_RGB(0, 255, 255));
+    rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, prog * 640, 20), 2.0f, &OMG_RGB(0, 255, 255));
     rn->flip(rn);
     return false;
 }

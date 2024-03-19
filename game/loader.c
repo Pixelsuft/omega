@@ -21,6 +21,7 @@ int loader_thread(void* data) {
     Loader* this = data;
     loader_img_load(this, &OMG_STR("goldFont-uhd.png"));
     loader_img_load(this, &OMG_STR("tiles1.png"));
+    loader_img_load(this, &OMG_STR("bgBroccoli.png"));
     return 0;
 }
 
@@ -39,7 +40,7 @@ void loader_run(Loader* this) {
 void loader_init(Loader* this, void* _app) {
     App* app = _app;
     this->_app = _app;
-    this->total_count = 2;
+    this->total_count = 3;
     this->progress = 0;
     this->img_count = 0;
     this->thr = NULL;
