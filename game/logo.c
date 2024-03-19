@@ -39,7 +39,7 @@ void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
 }
 
 bool logo_scene_on_destroy(LogoScene* this) {
-    printf("test test");
+    App* app = base->data;
     return false;
 }
 
@@ -54,5 +54,6 @@ bool logo_scene_init(LogoScene* this) {
     base->on_key_down = logo_scene_on_keyboard;
     base->on_destroy = logo_scene_on_destroy;
     OMG_END_POINTER_CAST();
+    base->inited = true;
     return false;
 }
