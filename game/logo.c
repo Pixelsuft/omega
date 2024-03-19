@@ -37,6 +37,7 @@ bool logo_scene_on_run(LogoScene* this) {
     App* app = base->data;
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->win->size.w / 640.0f, app->win->size.h / 480.0f));
     this->logo_timer = 0.0;
+    loader_run(&app->ld);
     app->clock->reset(app->clock);
     return false;
 }

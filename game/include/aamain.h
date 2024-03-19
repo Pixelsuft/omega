@@ -5,10 +5,12 @@
 #include <omega/audio.h>
 #include <omega/image.h>
 #include <omega/scene.h>
+#include <loader.h>
 
 #define IS_BACK_CODE(code) ((code == OMG_SCANCODE_ESCAPE) || (code == OMG_SCANCODE_AC_BACK))
 
 typedef struct {
+    Loader ld;
     OMG_String bp;
     OMG_Omega* omg;
     OMG_Window* win;

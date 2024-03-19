@@ -14,6 +14,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     omg_scenemgr_destroy(&this->sm);
     omg_string_destroy(&this->bp);
+    loader_clean(&this->ld);
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
@@ -110,6 +111,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->omg->on_key_down = app_on_keyboard;
     this->bp = this->omg->get_cwd(this->omg, true);
     omg_scenemgr_init(&this->sm, this->ren);
+    loader_init(&this->ld, this);
     return false;
 }
 
