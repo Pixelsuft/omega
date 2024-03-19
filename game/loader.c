@@ -31,7 +31,9 @@ void loader_update(Loader* this) {
     App* app = this->_app;
     if (this->img_count > 0) {
         if (this->img_count > this->tex_count) {
-            this->tex[this->tex_count] = app->ren->tex_from_surf(app->ren, NULL, this->surf[this->tex_count], false);
+            this->tex[this->tex_count] = app->ren->tex_from_surf(
+                app->ren, NULL, this->surf[this->tex_count], false
+            );
             this->tex_count++;
             this->progress++;
         }
@@ -45,7 +47,7 @@ int loader_thread(void* data) {
     loader_img_load(this, &OMG_STR("tiles1.png"));
     loader_img_load(this, &OMG_STR("bgBroccoli.png"));
     this->loaded_images = true;
-    if (this->thread_safe) {
+    if (!this->thread_safe) {
         while (this->tex_count < this->img_count) {
             app->omg->delay(app->omg, 0.01);
         }

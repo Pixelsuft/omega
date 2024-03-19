@@ -27,6 +27,7 @@ bool logo_scene_on_paint(LogoScene* this) {
             scale = 2.5f;
         float op = (2.5f - scale) * 255.0f;
         rn->tex_set_color_mod(rn, this->logo, &OMG_RGBA(255, 255, 255, op));
+        // rn->copy(rn, app->ld.tex[0], NULL);
     }
     float prog = (float)app->ld.progress / (float)app->ld.total_count;
     rn->copy_ex(rn, this->logo, NULL, &logo_dst, NULL, 0.0);
