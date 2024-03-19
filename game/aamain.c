@@ -13,6 +13,7 @@ App* _app;
 void app_on_destroy(OMG_EventLoopStop* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
     omg_scenemgr_destroy(&this->sm);
+    omg_string_destroy(&this->bp);
     this->omg->app_quit(this->omg);
     OMG_INFO(
         this->omg,
@@ -93,6 +94,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->win->set_title(this->win, &OMG_STR("Example game"));
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_keyboard;
+    this->bp = this->omg->get_cwd(this->omg, true);
     omg_scenemgr_init(&this->sm, this->ren);
     return false;
 }

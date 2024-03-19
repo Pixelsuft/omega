@@ -9,6 +9,7 @@
 #define IS_BACK_CODE(code) ((code == OMG_SCANCODE_ESCAPE) || (code == OMG_SCANCODE_AC_BACK))
 
 typedef struct {
+    OMG_String bp;
     OMG_Omega* omg;
     OMG_Window* win;
     OMG_Renderer* ren;

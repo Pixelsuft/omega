@@ -4,6 +4,7 @@
 
 typedef struct {
     OMG_Scene parent;
+    OMG_Texture* logo;
 } LogoScene;
 
 bool logo_scene_init(LogoScene* this);

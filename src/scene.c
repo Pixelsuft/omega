@@ -177,8 +177,10 @@ bool omg_scenemgr_scene_destroy(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     if (OMG_ISNOTNULL(scene->on_destroy))
         scene->on_destroy(scene);
     scene->inited = false;
-    // TODO: free if was_allocated
-    OMG_UNUSED(this);
+    if (scene->was_allocated) {
+        scene->was_allocated = false;
+        OMG_FREE(omg_base->mem, scene);
+    }
     return false;    
 }
 

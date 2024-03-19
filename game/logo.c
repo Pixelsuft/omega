@@ -33,7 +33,6 @@ void logo_scene_on_resize(LogoScene* this, OMG_EventResize* event) {
 void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
     if (IS_BACK_CODE(event->code)) {
-        OMG_INFO(app->omg, "Exit!!!");
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
 }
@@ -45,7 +44,7 @@ bool logo_scene_on_destroy(LogoScene* this) {
 
 bool logo_scene_init(LogoScene* this) {
     App* app = base->data;
-    OMG_INFO(app->omg, "Scene init!");
+    this->logo = OMG_REN_TEXTURE_FROM_FILE(rn, &OMG_STR("assets/logo.png"));
     OMG_BEGIN_POINTER_CAST();
     base->on_run = logo_scene_on_run;
     base->on_update = logo_scene_on_update;
@@ -55,5 +54,6 @@ bool logo_scene_init(LogoScene* this) {
     base->on_destroy = logo_scene_on_destroy;
     OMG_END_POINTER_CAST();
     base->inited = true;
+    base->was_allocated = true;
     return false;
 }
