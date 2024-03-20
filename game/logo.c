@@ -28,7 +28,8 @@ bool logo_scene_on_paint(LogoScene* this) {
         float op = (2.5f - scale) * 255.0f;
         rn->tex_set_color_mod(rn, this->logo, &OMG_RGBA(255, 255, 255, op));
         if (app->ld.finished) {
-            omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("Hello, world!"), &OMG_FPOINT(100, 200));
+            rn->set_scale(rn, NULL, &OMG_FPOINT(1, 1));
+            omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("Hello world!"), &OMG_FPOINT(100, 200));
         }
     }
     float prog = (float)app->ld.progress / (float)app->ld.total_count;
