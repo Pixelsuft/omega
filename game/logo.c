@@ -26,22 +26,28 @@ bool logo_scene_on_paint(LogoScene* this) {
         if (scale > 2.5f)
             scale = 2.5f;
         float op = (2.5f - scale) * 255.0f;
-        rn->tex_set_color_mod(rn, this->logo, &OMG_RGBA(255, 255, 255, op));
-        if (app->ld.finished) {
-            rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
-            omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("HELLO, WORLD!"), &OMG_FPOINT(0, 200));
-        }
+        rn->tex_set_color_mod(rn, this->logo, &OMG_RGBA(op, op, op, 255));
+        rn->tex_set_blend_mode(rn, app->ld.fnt[0].page, OMG_BLEND_MODE_BLEND);
+        rn->tex_set_color_mod(rn, app->ld.fnt[0].page, &OMG_RGBA(255 - op, 255 - op, 255 - op, 255 - op));
     }
     float prog = (float)app->ld.progress / (float)app->ld.total_count;
     rn->copy_ex(rn, this->logo, NULL, &logo_dst, NULL, 0.0);
     rn->fill_rect_ex(rn, &OMG_FRECT(0, 450, prog * 640, 20), 4.0f, &OMG_RGB(0, 255, 255));
+    if ((scale > 1.5f) && app->ld.finished) {
+        rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
+        rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 2.0f, app->sc.h / 2.0f));
+        omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("HELLO, FMS SFU! :)"), &OMG_FPOINT(150, 700));
+        rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
+    }
     rn->flip(rn);
     return false;
 }
 
 bool logo_scene_on_run(LogoScene* this) {
     App* app = base->data;
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->win->size.w / 640.0f, app->win->size.h / 480.0f));
+    app->sc.w = app->win->size.w / 640.0f;
+    app->sc.h = app->win->size.h / 480.0f;
+    rn->set_scale(rn, NULL, &app->sc);
     this->logo_timer = 0.0;
     loader_run(&app->ld);
     app->clock->reset(app->clock);
@@ -50,7 +56,9 @@ bool logo_scene_on_run(LogoScene* this) {
 
 void logo_scene_on_resize(LogoScene* this, OMG_EventResize* event) {
     App* app = base->data;
-    rn->set_scale(rn, NULL, &OMG_FPOINT(event->size.w / 640.0f, event->size.h / 480.0f));
+    app->sc.w = event->size.w / 640.0f;
+    app->sc.h = event->size.h / 480.0f;
+    rn->set_scale(rn, NULL, &app->sc);
 }
 
 void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {

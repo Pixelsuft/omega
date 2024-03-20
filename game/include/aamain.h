@@ -13,6 +13,7 @@
 typedef struct {
     Loader ld;
     OMG_String bp;
+    OMG_FPoint sc;
     OMG_Omega* omg;
     OMG_Window* win;
     OMG_Renderer* ren;
