@@ -8,6 +8,7 @@
 #include <loader.h>
 
 #define IS_BACK_CODE(code) ((code == OMG_SCANCODE_ESCAPE) || (code == OMG_SCANCODE_AC_BACK))
+#define ASSETS_DIR "assets"
 
 typedef struct {
     Loader ld;

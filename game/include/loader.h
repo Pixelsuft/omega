@@ -1,13 +1,16 @@
 #pragma once
 #include <omega/omega.h>
+#include <omega/bmfont.h>
 
 typedef struct {
+    OMG_Bmfont fnt[2];
     OMG_Texture* tex[32];
     OMG_Surface* surf[32];
     OMG_Thread* thr;
     void* _app;
     int total_count;
     int img_count;
+    int fnt_count;
     int tex_count;
     int progress;
     bool loaded_images;
