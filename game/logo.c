@@ -37,7 +37,7 @@ bool logo_scene_on_paint(LogoScene* this) {
         rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
         float adv_scale = 0.5f + (float)app->omg->std->sin(this->logo_timer) / 100.0f;
         rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w * adv_scale, app->sc.h * adv_scale));
-        omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("HELLO, FMS SFU! :)"), &OMG_FPOINT(150, 700));
+        omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("HELLO, FMS SFU! ;)"), &OMG_FPOINT(150, 700));
         rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
     }
     rn->flip(rn);
