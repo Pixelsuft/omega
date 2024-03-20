@@ -57,6 +57,7 @@ void loader_fnt_load(Loader* this, const OMG_String* path) {
         this->fnt_count++;
         return;
     }
+    file->read(file, buf, 1, (size_t)(sz + 2));
     omg_bmfont_init(&app->ld.fnt[this->fnt_count], NULL, app->ren, buf, (size_t)sz);
     OMG_FREE(app->omg->mem, buf);
     file->destroy(file);
