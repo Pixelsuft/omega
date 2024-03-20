@@ -26,7 +26,7 @@ bool omg_bmfont_calc_size(OMG_Bmfont* this, const OMG_String* text, OMG_FPoint* 
         size_buf->x += (float)this->chars.data[chr].xa;
         if (i > 0 && OMG_ISNOTNULL(this->chars.data[chr].ks.data)) {
             for (size_t j = 0; j < this->chars.data[chr].ks.len; j += 2) {
-                if (this->chars.data[chr].ks.data[i] == last_chr) {
+                if (this->chars.data[chr].ks.data[j] == last_chr) {
                     size_buf->x += (float)this->chars.data[chr].ks.data[i + 1];
                     break;
                 }
@@ -58,8 +58,8 @@ bool omg_bmfont_render(OMG_Bmfont* this, const OMG_String* text, const OMG_FPoin
             dst_rect.x = cur_x + (float)bm_char->xo;
             if (i > 0 && OMG_ISNOTNULL(bm_char->ks.data)) {
                 for (size_t j = 0; j < bm_char->ks.len; j += 2) {
-                    if (bm_char->ks.data[i] == last_chr) {
-                        dst_rect.x += (float)bm_char->ks.data[i + 1];
+                    if (bm_char->ks.data[j] == last_chr) {
+                        dst_rect.x += (float)bm_char->ks.data[j + 1];
                         break;
                     }
                 }
@@ -241,7 +241,7 @@ bool omg_bmfont_init(OMG_Bmfont* this, OMG_Texture* page, OMG_Renderer* ren, cha
                 return true;
             }
             OMG_Bmchar* chr = &this->chars.data[second_c];
-            if ((OMG_ISNULL(chr->ks.data) && OMG_ARRAY_INIT(&chr->ks, 0, 0)) || OMG_ARRAY_PUSH(&chr->ks, first_c) || OMG_ARRAY_PUSH(&chr->ks, second_c)) {
+            if ((OMG_ISNULL(chr->ks.data) && OMG_ARRAY_INIT(&chr->ks, 0, 0)) || OMG_ARRAY_PUSH(&chr->ks, first_c) || OMG_ARRAY_PUSH(&chr->ks, x_ammount)) {
                 _OMG_LOG_ERROR(this->omg, "Failed to parse kerning");
                 omg_bmfont_destroy(this);
                 return true;
