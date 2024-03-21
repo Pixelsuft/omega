@@ -79,6 +79,7 @@ bool logo_scene_on_destroy(LogoScene* this) {
 bool logo_scene_init(LogoScene* this) {
     App* app = base->data;
     this->logo = app_load_texture(app, &OMG_STR("logo.png"));
+    rn->tex_set_scale_mode(rn, this->logo, OMG_SCALE_MODE_LINEAR);
     OMG_BEGIN_POINTER_CAST();
     base->on_run = logo_scene_on_run;
     base->on_update = logo_scene_on_update;

@@ -113,6 +113,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->ren = this->win->ren;
     this->ren->soft_offset = false;
     this->ren->aa = !OMG_IS_EMSCRIPTEN;
+    this->ren->tex_default_scale_mode = OMG_SCALE_MODE_NEAREST;
     this->clock = this->omg->clock;
     this->win->allow_alt = false;
     this->omg->event_arg = this;
