@@ -37,6 +37,8 @@ bool omg_image_loader_raylib_image_from(OMG_ImageLoaderRaylib* this, int type, c
         _FORMAT_TO_EXT(format, ext);
         img = this->raylib->LoadImageFromMemory(ext, (unsigned char*)mem_data->data, (int)mem_data->size);
     }
+    else
+        return true;
     if (!this->raylib->IsImageReady(img)) {
         _OMG_LOG_ERROR(omg_base, "Failed to load raylib image");
         return true;
