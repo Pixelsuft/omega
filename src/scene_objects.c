@@ -147,9 +147,13 @@ bool omg_obj_anim_sprite_init(OMG_ObjectAnimSprite* this) {
     return false;
 }
 
-bool omg_anim_sprite_data_destroy(OMG_AnimSpriteData* this) {
+bool omg_anim_sprite_data_destroy(OMG_AnimSpriteData* this, OMG_Omega* omg, bool destroy_states) {
     if (OMG_ISNULL(this->states.data))
         return false;
+    if (destroy_states) {
+        for (size_t i = 0; i < this->states.len; i++)
+            omg_anim_sprite_state_destroy(&this->states.data[i], omg);
+    }
     return OMG_ARRAY_DESTROY(&this->states);
 }
 

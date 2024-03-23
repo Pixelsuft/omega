@@ -53,6 +53,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
 bool game_scene_on_destroy(GameScene* this) {
     App* app = base->data;
     rn->tex_destroy(rn, this->bg[0]);
+    omg_anim_sprite_data_destroy(this->p.a.data, app->omg, true);
     return false;
 }
 
@@ -72,6 +73,10 @@ bool game_scene_on_stop(GameScene* this) {
 
 bool game_scene_init(GameScene* this) {
     App* app = base->data;
+    this->p.parent.rect.w = this->p.parent.rect.h = 32.0f;
+    this->p.a.data = &this->p.d;
+    omg_anim_sprite_data_init(this->p.a.data, app->omg);
+    omg_obj_anim_sprite_init(&this->p.a);
     app->sc.w = app->win->size.w / 800.0f;
     app->sc.h = app->win->size.h / 600.0f;
     this->ldtk = &app->ld.mp[0];
