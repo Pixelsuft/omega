@@ -57,6 +57,12 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
     OMG_UNUSED(this);
 }
 
+void app_on_resize(OMG_EventResize* event) {
+    App* this = OMG_ARG_FROM_EVENT(event);
+    this->sc.w = event->size.w / 640.0f;
+    this->sc.h = event->size.h / 480.0f;
+}
+
 bool app_init(App* this, OMG_EntryData* data) {
     int omg_backend = 0;
     omg_backend = OMG_OMEGA_TYPE_SDL2;
@@ -124,6 +130,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->win->set_title(this->win, &OMG_STR("Example game"));
     this->omg->on_loop_stop = app_on_destroy;
     this->omg->on_key_down = app_on_keyboard;
+    this->omg->on_size_change = app_on_resize;
     this->bp = this->omg->get_cwd(this->omg, true);
     omg_scenemgr_init(&this->sm, this->ren);
     loader_init(&this->ld, this);

@@ -1,5 +1,6 @@
 #include <logo.h>
 #include <aamain.h>
+#include <menu.h>
 #define base ((OMG_Scene*)this)
 #define rn app->ren
 
@@ -57,8 +58,6 @@ bool logo_scene_on_run(LogoScene* this) {
 
 void logo_scene_on_resize(LogoScene* this, OMG_EventResize* event) {
     App* app = base->data;
-    app->sc.w = event->size.w / 640.0f;
-    app->sc.h = event->size.h / 480.0f;
     rn->set_scale(rn, NULL, &app->sc);
 }
 
@@ -76,6 +75,21 @@ void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
 bool logo_scene_on_destroy(LogoScene* this) {
     App* app = base->data;
     rn->tex_destroy(rn, this->logo);
+    if (!this->should_cont)
+        return false;
+    MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
+    omg_scenemgr_scene_fill(&app->sm, scene);
+    OMG_BEGIN_POINTER_CAST();
+    scene->parent.on_init = menu_scene_init;
+    OMG_END_POINTER_CAST();
+    omg_scenemgr_scene_init(&app->sm, scene, this);
+    omg_scenemgr_scene_run(&app->sm, scene);
+    printf("1337\n");
+    return false;
+}
+
+bool logo_scene_on_stop(LogoScene* this) {
+    App* app = base->data;
     return false;
 }
 
@@ -91,6 +105,7 @@ bool logo_scene_init(LogoScene* this) {
     base->on_resize = logo_scene_on_resize;
     base->on_key_down = logo_scene_on_keyboard;
     base->on_destroy = logo_scene_on_destroy;
+    base->on_stop = logo_scene_on_stop;
     OMG_END_POINTER_CAST();
     base->inited = true;
     base->was_allocated = true;

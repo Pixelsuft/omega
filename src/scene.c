@@ -240,12 +240,12 @@ void omg_scenemgr_event_on_expose(OMG_EventExpose* event) {
 void omg_scenemgr_event_on_size_change(OMG_EventResize* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    this->on_size_change(event); // Should I call it before?
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_resize)) {
             this->cur_scene->on_resize(this->cur_scene, event);
         }
     }
-    this->on_size_change(event);
 }
 
 void omg_scenemgr_event_on_loop_stop(OMG_EventLoopStop* event) {
