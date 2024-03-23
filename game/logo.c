@@ -10,6 +10,10 @@ bool logo_scene_on_update(LogoScene* this) {
     base->dt = app->clock->dt;
     loader_update(&app->ld);
     this->logo_timer += base->dt;
+    if (app->ld.finished && OMG_DEBUG && !this->should_cont) {
+        this->should_cont = true;
+        omg_scenemgr_scene_destroy(&app->sm, this);
+    }
     return false;
 }
 
