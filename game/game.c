@@ -17,11 +17,11 @@ bool game_scene_on_paint(GameScene* this) {
     App* app = base->data;
     rn->begin(rn);
     rn->clear(rn, &this->ldtk->levels.data[0].bg_color);
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->win->size.w / 800.0f, app->win->size.h / 600.0f));
+    rn->set_scale(rn, NULL, &app->sc);
     rn->copy(rn, this->bg[0], NULL);
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 4.0f, app->sc.h / 4.0f));
+    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
     app_draw_fps(app);
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
+    rn->set_scale(rn, NULL, &app->sc);
     rn->flip(rn);
     return false;
 }
@@ -34,6 +34,7 @@ bool game_scene_on_run(GameScene* this) {
 
 void game_scene_on_resize(GameScene* this, OMG_EventResize* event) {
     App* app = base->data;
+    OMG_UNUSED(event);
     rn->set_scale(rn, NULL, &app->sc);
 }
 
@@ -58,7 +59,7 @@ bool game_scene_on_destroy(GameScene* this) {
 bool game_scene_on_stop(GameScene* this) {
     App* app = base->data;
     if (!this->should_back)
-        return;
+        return false;
     MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
     omg_scenemgr_scene_fill(&app->sm, scene);
     OMG_BEGIN_POINTER_CAST();
@@ -71,6 +72,8 @@ bool game_scene_on_stop(GameScene* this) {
 
 bool game_scene_init(GameScene* this) {
     App* app = base->data;
+    app->sc.w = app->win->size.w / 800.0f;
+    app->sc.h = app->win->size.h / 600.0f;
     this->ldtk = &app->ld.mp[0];
     this->bg[0] = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, true);
     rn->set_scale(rn, NULL, &OMG_FPOINT(1, 1));

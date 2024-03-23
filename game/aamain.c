@@ -59,8 +59,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
 
 void app_on_resize(OMG_EventResize* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    this->sc.w = event->size.w / 640.0f;
-    this->sc.h = event->size.h / 480.0f;
+    this->sc.w = event->size.w / 800.0f;
+    this->sc.h = event->size.h / 600.0f;
 }
 
 void app_draw_fps(App* this) {

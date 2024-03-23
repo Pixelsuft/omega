@@ -43,7 +43,7 @@ bool logo_scene_on_paint(LogoScene* this) {
         float adv_scale = 0.5f + (float)app->omg->std->sin(this->logo_timer) / 100.0f;
         rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w * adv_scale, app->sc.h * adv_scale));
         omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("HELLO, FMS SFU! ;)"), &OMG_FPOINT(150, 700));
-        rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
+        rn->set_scale(rn, NULL, &app->sc);
     }
     rn->flip(rn);
     return false;
@@ -62,6 +62,8 @@ bool logo_scene_on_run(LogoScene* this) {
 
 void logo_scene_on_resize(LogoScene* this, OMG_EventResize* event) {
     App* app = base->data;
+    app->sc.w = event->size.w / 640.0f;
+    app->sc.h = event->size.h / 480.0f;
     rn->set_scale(rn, NULL, &app->sc);
 }
 
@@ -104,6 +106,8 @@ bool logo_scene_init(LogoScene* this) {
     app->win->set_icon(app->win, icon);
     app->omg->winmgr->surf_destroy(app->omg->winmgr, icon);
     rn->tex_set_scale_mode(rn, this->logo, OMG_SCALE_MODE_LINEAR);
+    app->sc.w = app->win->size.w / 640.0f;
+    app->sc.h = app->win->size.h / 480.0f;
     OMG_BEGIN_POINTER_CAST();
     base->on_run = logo_scene_on_run;
     base->on_update = logo_scene_on_update;

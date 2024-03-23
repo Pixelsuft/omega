@@ -52,9 +52,9 @@ bool menu_scene_on_paint(MenuScene* this) {
     rn->copy_ex(rn, this->bg, NULL, &bg_r, NULL, rot);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 2.0f, app->sc.h / 2.0f));
     omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("TEST GAME!!!"), &OMG_FPOINT(290, 100));
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 4.0f, app->sc.h / 4.0f));
+    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 1.25f / 3.0f, app->sc.h / 1.25f / 3.0f));
     app_draw_fps(app);
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
+    rn->set_scale(rn, NULL, &app->sc);
     rn->flip(rn);
     return false;
 }
@@ -67,6 +67,8 @@ bool menu_scene_on_run(MenuScene* this) {
 
 void menu_scene_on_resize(MenuScene* this, OMG_EventResize* event) {
     App* app = base->data;
+    app->sc.w = event->size.w / 640.0f;
+    app->sc.h = event->size.h / 480.0f;
     rn->set_scale(rn, NULL, &app->sc);
 }
 
@@ -113,6 +115,8 @@ bool menu_scene_on_stop(MenuScene* this) {
 
 bool menu_scene_init(MenuScene* this) {
     App* app = base->data;
+    app->sc.w = app->win->size.w / 640.0f;
+    app->sc.h = app->win->size.h / 480.0f;
     rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
     this->bg = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, false);
     rn->set_target(rn, this->bg);
