@@ -8,6 +8,7 @@ typedef struct {
     OMG_Texture* bg;
     OMG_ObjectAnimTimer sc_t1;
     OMG_ObjectAnimTimer sc_t2;
+    bool should_cont;
 } MenuScene;
 
 bool menu_scene_init(MenuScene* this);

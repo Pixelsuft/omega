@@ -86,7 +86,8 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
         rn->set_vsync(rn, !app->win->vsync);
     }
     else {
-        // TODO: run game
+        this->should_cont = true;
+        omg_scenemgr_scene_destroy(&app->sm, this);
     }
 }
 
@@ -98,7 +99,15 @@ bool menu_scene_on_destroy(MenuScene* this) {
 
 bool menu_scene_on_stop(MenuScene* this) {
     App* app = base->data;
-    OMG_UNUSED(app);
+    if (!this->should_cont)
+        return false;
+    GameScene* scene = OMG_MALLOC(app->omg->mem, sizeof(GameScene));
+    omg_scenemgr_scene_fill(&app->sm, scene);
+    OMG_BEGIN_POINTER_CAST();
+    scene->parent.on_init = game_scene_init;
+    OMG_END_POINTER_CAST();
+    omg_scenemgr_scene_init(&app->sm, scene, app);
+    omg_scenemgr_scene_run(&app->sm, scene);
     return false;
 }
 
@@ -130,6 +139,7 @@ bool menu_scene_init(MenuScene* this) {
     base->on_destroy = menu_scene_on_destroy;
     base->on_stop = menu_scene_on_stop;
     OMG_END_POINTER_CAST();
+    this->should_cont = false;
     base->inited = true;
     base->was_allocated = true;
     return false;
