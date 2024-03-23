@@ -74,16 +74,18 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
 }
 
 bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
-    OMG_Scene* scene = (OMG_Scene*)_scene;
+    OMG_Scene* scene = _scene;
     if (OMG_ISNULL(this->cur_scene) || (OMG_ISNOTNULL(scene) && (scene != this->cur_scene)))
         return false;
-    omg_scenemgr_scene_reset_input(this, this->cur_scene, false);
-    if (OMG_ISNOTNULL(this->cur_scene->on_stop)) {
+    scene = this->cur_scene;
+    omg_scenemgr_scene_reset_input(this, scene, false);
+    if (this->cur_scene == scene)
+        this->cur_scene = NULL;
+    if (OMG_ISNOTNULL(scene->on_stop)) {
         if (scene->on_stop(scene)) {
             _OMG_LOG_ERROR(omg_base, "Failed to stop scene");
         }
     }
-    this->cur_scene = NULL;
     return false;
 }
 

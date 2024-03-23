@@ -31,6 +31,10 @@ void menu_scene_on_resize(MenuScene* this, OMG_EventResize* event) {
 
 void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
+    if (IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code)) {
+        omg_scenemgr_scene_destroy(&app->sm, this);
+        app->omg->auto_loop_stop(app->omg);
+    }
 }
 
 bool menu_scene_on_destroy(MenuScene* this) {

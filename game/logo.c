@@ -75,6 +75,11 @@ void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
 bool logo_scene_on_destroy(LogoScene* this) {
     App* app = base->data;
     rn->tex_destroy(rn, this->logo);
+    return false;
+}
+
+bool logo_scene_on_stop(LogoScene* this) {
+    App* app = base->data;
     if (!this->should_cont)
         return false;
     MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
@@ -82,14 +87,8 @@ bool logo_scene_on_destroy(LogoScene* this) {
     OMG_BEGIN_POINTER_CAST();
     scene->parent.on_init = menu_scene_init;
     OMG_END_POINTER_CAST();
-    omg_scenemgr_scene_init(&app->sm, scene, this);
+    omg_scenemgr_scene_init(&app->sm, scene, app);
     omg_scenemgr_scene_run(&app->sm, scene);
-    printf("1337\n");
-    return false;
-}
-
-bool logo_scene_on_stop(LogoScene* this) {
-    App* app = base->data;
     return false;
 }
 
