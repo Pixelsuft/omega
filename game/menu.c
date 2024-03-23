@@ -1,4 +1,5 @@
 #include <menu.h>
+#include <game.h>
 #include <aamain.h>
 #define base ((OMG_Scene*)this)
 #define rn app->ren
@@ -84,6 +85,9 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     else if (event->code == OMG_SCANCODE_V) {
         rn->set_vsync(rn, !app->win->vsync);
     }
+    else {
+        // TODO: run game
+    }
 }
 
 bool menu_scene_on_destroy(MenuScene* this) {
@@ -94,6 +98,7 @@ bool menu_scene_on_destroy(MenuScene* this) {
 
 bool menu_scene_on_stop(MenuScene* this) {
     App* app = base->data;
+    OMG_UNUSED(app);
     return false;
 }
 
