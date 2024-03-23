@@ -124,7 +124,7 @@ void loader_run(Loader* this) {
 void loader_init(Loader* this, void* _app) {
     App* app = _app;
     this->_app = _app;
-    this->total_count = 0;
+    this->total_count = 999999;
     this->progress = 0;
     this->img_count = this->fnt_count = 0;
     this->tex_count = 0;

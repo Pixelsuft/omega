@@ -100,6 +100,9 @@ bool logo_scene_init(LogoScene* this) {
     App* app = base->data;
     this->should_cont = false;
     this->logo = app_load_texture(app, &OMG_STR("logo.png"));
+    OMG_Surface* icon = app_load_surf(app, &OMG_STR("icon.png"));
+    app->win->set_icon(app->win, icon);
+    app->omg->winmgr->surf_destroy(app->omg->winmgr, icon);
     rn->tex_set_scale_mode(rn, this->logo, OMG_SCALE_MODE_LINEAR);
     OMG_BEGIN_POINTER_CAST();
     base->on_run = logo_scene_on_run;

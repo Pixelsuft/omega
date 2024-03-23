@@ -99,6 +99,7 @@ bool menu_scene_on_stop(MenuScene* this) {
 
 bool menu_scene_init(MenuScene* this) {
     App* app = base->data;
+    // app->win->set_icon(app->win, app->ld.surf[3]);
     rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
     this->bg = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, false);
     rn->set_target(rn, this->bg);
