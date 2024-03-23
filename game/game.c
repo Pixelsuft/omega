@@ -15,7 +15,7 @@ bool game_scene_on_update(GameScene* this) {
 bool game_scene_on_paint(GameScene* this) {
     App* app = base->data;
     rn->begin(rn);
-    rn->clear(rn, &OMG_RGB(0, 0, 0));
+    rn->clear(rn, &this->ldtk->levels.data[0].bg_color);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->win->size.w / 800.0f, app->win->size.h / 600.0f));
     rn->copy(rn, this->bg[0], NULL);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 4.0f, app->sc.h / 4.0f));
