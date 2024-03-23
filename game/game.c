@@ -1,4 +1,5 @@
 #include <game.h>
+#include <menu.h>
 #include <aamain.h>
 #define base ((OMG_Scene*)this)
 #define rn app->ren
@@ -42,6 +43,10 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
     }
+    else if (IS_BACK_CODE(event->code)) {
+        this->should_back = true;
+        omg_scenemgr_scene_destroy(&app->sm, this);
+    }
 }
 
 bool game_scene_on_destroy(GameScene* this) {
@@ -52,6 +57,15 @@ bool game_scene_on_destroy(GameScene* this) {
 
 bool game_scene_on_stop(GameScene* this) {
     App* app = base->data;
+    if (!this->should_back)
+        return;
+    MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
+    omg_scenemgr_scene_fill(&app->sm, scene);
+    OMG_BEGIN_POINTER_CAST();
+    scene->parent.on_init = menu_scene_init;
+    OMG_END_POINTER_CAST();
+    omg_scenemgr_scene_init(&app->sm, scene, app);
+    omg_scenemgr_scene_run(&app->sm, scene);
     return false;
 }
 
@@ -85,6 +99,7 @@ bool game_scene_init(GameScene* this) {
     base->on_destroy = game_scene_on_destroy;
     base->on_stop = game_scene_on_stop;
     OMG_END_POINTER_CAST();
+    this->should_back = false;
     base->inited = true;
     base->was_allocated = true;
     return false;
