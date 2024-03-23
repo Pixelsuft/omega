@@ -19,7 +19,7 @@ bool menu_scene_on_paint(MenuScene* this) {
     rn->clear(rn, &OMG_RGB(0, 0, 0));
     OMG_FRect bg_r;
     bg_r.x = -100.0f + 50.0f * (float)app->omg->std->sin(this->sc_t1.time);
-    bg_r.y = -50.0f + 40.0f * (float)app->omg->std->sin((this->sc_t1.time + 0.5) * 2.0);
+    bg_r.y = -70.0f + 40.0f * (float)app->omg->std->sin((this->sc_t1.time + 0.5) * 2.0);
     bg_r.w = bg_r.h = 0.0f;
     double rot = app->omg->std->cos(this->sc_t1.time) * 0.1;
     rn->copy_ex(rn, this->bg, NULL, &bg_r, NULL, rot);
