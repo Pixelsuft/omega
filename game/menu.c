@@ -9,6 +9,7 @@ bool menu_scene_on_update(MenuScene* this) {
     base->dt = app->clock->dt;
     OMG_BEGIN_POINTER_CAST();
     this->sc_t1.parent.on_update(&this->sc_t1, this);
+    this->sc_t2.parent.on_update(&this->sc_t2, this);
     OMG_END_POINTER_CAST();
     return false;
 }
@@ -22,6 +23,31 @@ bool menu_scene_on_paint(MenuScene* this) {
     bg_r.y = -70.0f + 40.0f * (float)app->omg->std->sin((this->sc_t1.time + 0.5) * 2.0);
     bg_r.w = bg_r.h = 0.0f;
     double rot = app->omg->std->cos(this->sc_t1.time) * 0.1;
+    int col_id = (int)this->sc_t2.time;
+    float st = (float)(this->sc_t2.time - (double)col_id) * 255.0f;
+    OMG_Color bg_col;
+    bg_col.a = 255.0f;
+    if (col_id == 0) {
+        bg_col.r = 0.0f;
+        bg_col.g = 255.0f;
+        bg_col.b = st;
+    }
+    else if (col_id == 1) {
+        bg_col.r = st;
+        bg_col.g = 255.0f;
+        bg_col.b = 255.0f - st;
+    }
+    else if (col_id == 2) {
+        bg_col.r = 255.0f - st;
+        bg_col.g = 255.0f;
+        bg_col.b = 0.0f;
+    }
+    else if (col_id == 3) {
+        bg_col.r = 0.0f;
+        bg_col.g = 255.0f;
+        bg_col.b = 0.0f;
+    }
+    rn->tex_set_color_mod(rn, this->bg, &bg_col);
     rn->copy_ex(rn, this->bg, NULL, &bg_r, NULL, rot);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 2.0f, app->sc.h / 2.0f));
     omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("TEST GAME!!!"), &OMG_FPOINT(290, 100));
@@ -74,13 +100,15 @@ bool menu_scene_init(MenuScene* this) {
     rn->clear(rn, &OMG_RGB(0, 0, 0));
     for (float i = 0.0f; i < 800.0f; i += 20.0f) {
         for (float j = (((int)i / 20) % 2 == 0) ? 20.0f : 0.0f; j < 600.0f; j += 40.0f) {
-            rn->fill_rect(rn, &OMG_FRECT(i, j, 20, 20), &OMG_RGB(0, 128, 0));
+            rn->fill_rect(rn, &OMG_FRECT(i, j, 20, 20), &OMG_RGB(128, 128, 128));
         }
     }
     rn->set_target(rn, NULL);
     omg_obj_anim_timer_init(&this->sc_t1, app->omg);
-    this->sc_t1.running = true;
+    omg_obj_anim_timer_init(&this->sc_t2, app->omg);
+    this->sc_t1.running = this->sc_t2.running = true;
     this->sc_t1.duration = OMG_M_PI2;
+    this->sc_t2.duration = 4.0;
     OMG_BEGIN_POINTER_CAST();
     base->on_run = menu_scene_on_run;
     base->on_update = menu_scene_on_update;
