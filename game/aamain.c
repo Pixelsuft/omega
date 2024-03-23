@@ -63,6 +63,14 @@ void app_on_resize(OMG_EventResize* event) {
     this->sc.h = event->size.h / 480.0f;
 }
 
+void app_draw_fps(App* this) {
+    if (!this->show_fps)
+        return;
+    this->fps_str.len = 5;
+    omg_string_add_int(&this->fps_str, this->clock->get_fps(this->clock));
+    omg_bmfont_render(&this->ld.fnt[0], &this->fps_str, NULL);
+}
+
 bool app_init(App* this, OMG_EntryData* data) {
     int omg_backend = 0;
     omg_backend = OMG_OMEGA_TYPE_SDL2;
@@ -95,7 +103,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     }
     OMG_String temp_env = this->omg->env_get(this->omg, &OMG_STR("OMG_SOFTWARE_RENDERER"));
     int force_ren_driver = OMG_REN_DRIVER_AUTO;
-    if (OMG_IS_WIN)
+    if (OMG_IS_WIN && 0)
         force_ren_driver = (this->omg->type == OMG_OMEGA_TYPE_WIN) ? OMG_REN_DRIVER_D3D11 : OMG_REN_DRIVER_OPENGL;
     if (temp_env.type >= 0)
         force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
@@ -134,6 +142,15 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->bp = this->omg->get_cwd(this->omg, true);
     omg_scenemgr_init(&this->sm, this->ren);
     loader_init(&this->ld, this);
+    this->fps_buf[0] = 'F';
+    this->fps_buf[1] = 'P';
+    this->fps_buf[2] = 'S';
+    this->fps_buf[3] = ':';
+    this->fps_buf[4] = ' ';
+    this->fps_buf[5] = '\0';
+    this->fps_str = OMG_STRING_MAKE_BUFFER(this->fps_buf);
+    this->fps_str.size = 20;
+    this->show_fps = OMG_DEBUG;
     return false;
 }
 

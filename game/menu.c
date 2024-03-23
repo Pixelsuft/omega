@@ -51,6 +51,8 @@ bool menu_scene_on_paint(MenuScene* this) {
     rn->copy_ex(rn, this->bg, NULL, &bg_r, NULL, rot);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 2.0f, app->sc.h / 2.0f));
     omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("TEST GAME!!!"), &OMG_FPOINT(290, 100));
+    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 4.0f, app->sc.h / 4.0f));
+    app_draw_fps(app);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
     rn->flip(rn);
     return false;
@@ -78,6 +80,9 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
             app->win,
             app->win->window_mode == OMG_WIN_MODE_WINDOW ? OMG_WIN_MODE_DESKTOP_FULLSCREEN : OMG_WIN_MODE_WINDOW
         );
+    }
+    else if (event->code == OMG_SCANCODE_V) {
+        rn->set_vsync(rn, !app->win->vsync);
     }
 }
 
