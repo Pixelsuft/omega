@@ -9,8 +9,10 @@ void loader_clean(Loader* this) {
             app->ren->tex_destroy(app->ren, this->tex[i]);
     }
     this->tex_count = 0;
+    omg_ldtk_destroy(&this->mp[0]);
     omg_bmfont_destroy(&this->fnt[0]);
     this->fnt_count = 0;
+    this->mp_count = 0;
 }
 
 void loader_clean_images(Loader* this) {
@@ -66,6 +68,42 @@ void loader_fnt_load(Loader* this, const OMG_String* path) {
     this->progress++;
 }
 
+void loader_map_load(Loader* this, const OMG_String* path) {
+    App* app = this->_app;
+    OMG_String res_path;
+    if (omg_string_init_dynamic(&res_path, &app->bp)) {
+        return;
+    }
+    bool add_res = omg_string_add_char_p(&res_path, ASSETS_DIR) || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
+    OMG_File* file = add_res ? NULL : app->omg->file_from_fp(app->omg, NULL, &res_path, OMG_FILE_MODE_RB);
+    omg_string_destroy(&res_path);
+    if (OMG_ISNULL(file)) {
+        this->progress++;
+        this->mp_count++;
+        return;
+    }
+    int64_t sz = file->get_size(file);
+    if (sz <= 0) {
+        file->destroy(file);
+        this->progress++;
+        this->mp_count++;
+        return;
+    }
+    char* buf = OMG_MALLOC(app->omg->mem, sz + 10);
+    if (OMG_ISNULL(buf)) {
+        file->destroy(file);
+        this->progress++;
+        this->mp_count++;
+        return;
+    }
+    file->read(file, buf, 1, (size_t)(sz + 2));
+    omg_ldtk_init(&app->ld.mp[this->mp_count], app->omg, buf, (size_t)sz);
+    OMG_FREE(app->omg->mem, buf);
+    file->destroy(file);
+    this->mp_count++;
+    this->progress++;
+}
+
 void loader_update(Loader* this) {
     App* app = this->_app;
     if (this->img_count > 0) {
@@ -82,10 +120,11 @@ void loader_update(Loader* this) {
 int loader_thread(void* data) {
     Loader* this = data;
     App* app = this->_app;
-    this->total_count = 7;
+    this->total_count = 8;
     loader_img_load(this, &OMG_STR("goldFont-uhd.png"));
     loader_img_load(this, &OMG_STR("tiles1.png"));
     loader_img_load(this, &OMG_STR("bgBroccoli.png"));
+    loader_map_load(this, &OMG_STR("map1_map.txt"));
     loader_fnt_load(this, &OMG_STR("goldFont-uhd.fnt"));
     this->loaded_images = true;
     if (!this->thread_safe) {
@@ -128,6 +167,7 @@ void loader_init(Loader* this, void* _app) {
     this->progress = 0;
     this->img_count = this->fnt_count = 0;
     this->tex_count = 0;
+    this->mp_count = 0;
     this->loaded_images = false;
     this->thread_safe = true;
     this->finished = false;
@@ -135,4 +175,5 @@ void loader_init(Loader* this, void* _app) {
     app->omg->std->memset(this->tex, 0, sizeof(this->tex));
     app->omg->std->memset(this->surf, 0, sizeof(this->surf));
     app->omg->std->memset(this->fnt, 0, sizeof(this->fnt));
+    app->omg->std->memset(this->mp, 0, sizeof(this->mp));
 }
