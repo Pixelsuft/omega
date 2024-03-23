@@ -120,10 +120,11 @@ void loader_update(Loader* this) {
 int loader_thread(void* data) {
     Loader* this = data;
     App* app = this->_app;
-    this->total_count = 8;
+    this->total_count = 10;
     loader_img_load(this, &OMG_STR("goldFont-uhd.png"));
     loader_img_load(this, &OMG_STR("tiles1.png"));
     loader_img_load(this, &OMG_STR("bgBroccoli.png"));
+    loader_img_load(this, &OMG_STR("kid.png"));
     loader_map_load(this, &OMG_STR("map1_map.txt"));
     loader_fnt_load(this, &OMG_STR("goldFont-uhd.fnt"));
     this->loaded_images = true;
