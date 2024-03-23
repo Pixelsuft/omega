@@ -16,6 +16,8 @@ bool game_scene_on_paint(GameScene* this) {
     App* app = base->data;
     rn->begin(rn);
     rn->clear(rn, &OMG_RGB(0, 0, 0));
+    rn->set_scale(rn, NULL, &OMG_FPOINT(app->win->size.w / 800.0f, app->win->size.h / 600.0f));
+    rn->copy(rn, this->bg[0], NULL);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 4.0f, app->sc.h / 4.0f));
     app_draw_fps(app);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w, app->sc.h));
@@ -36,7 +38,7 @@ void game_scene_on_resize(GameScene* this, OMG_EventResize* event) {
 
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
-    if (IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code)) {
+    if (IS_EXIT_CODE(event->code)) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
     }
@@ -44,6 +46,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
 
 bool game_scene_on_destroy(GameScene* this) {
     App* app = base->data;
+    rn->tex_destroy(rn, this->bg[0]);
     return false;
 }
 
@@ -54,6 +57,25 @@ bool game_scene_on_stop(GameScene* this) {
 
 bool game_scene_init(GameScene* this) {
     App* app = base->data;
+    this->ldtk = &app->ld.mp[0];
+    this->bg[0] = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, true);
+    rn->set_scale(rn, NULL, &OMG_FPOINT(1, 1));
+    rn->set_target(rn, this->bg[0]);
+    rn->clear(rn, &OMG_RGBA(0, 0, 0, 0));
+    for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
+        OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
+        if (!lay->is_entity_layer) {
+            for (size_t i = 0; i < lay->tiles.len; i++) {
+                OMG_LdtkTile* tile = &lay->tiles.data[i];
+                rn->copy_ex(
+                    rn, app->ld.tex[1], &OMG_FRECT(tile->src.x, tile->src.y, 32, 32),
+                    &OMG_FRECT(tile->pos.x, tile->pos.y, 32, 32), NULL, 0.0
+                );
+            }
+        }
+    }
+    rn->set_target(rn, NULL);
+    rn->set_scale(rn, NULL, &app->sc);
     OMG_BEGIN_POINTER_CAST();
     base->on_run = game_scene_on_run;
     base->on_update = game_scene_on_update;
