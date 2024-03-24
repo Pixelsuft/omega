@@ -10,6 +10,7 @@ bool game_scene_on_update(GameScene* this) {
     base->dt = app->clock->dt;
     if (base->dt > 0.5)
         base->dt = 0.5;
+    app->au->update(app->au);
     this->cloud_offset -= (float)(base->dt * 25.0);
     if (this->cloud_offset <= -960.0f)
         this->cloud_offset += 960.0f;
@@ -106,6 +107,7 @@ bool game_scene_on_paint(GameScene* this) {
 
 bool game_scene_on_run(GameScene* this) {
     App* app = base->data;
+    app->au->mus_play(app->au, app->ld.mus[1], -1, 0.0, 0.2);
     this->p.r.w = 14.0f;
     this->p.r.h = 21.0f;
     this->p.r.x = this->p.r.y = 100.0f;
@@ -205,6 +207,7 @@ bool game_scene_on_destroy(GameScene* this) {
 
 bool game_scene_on_stop(GameScene* this) {
     App* app = base->data;
+    app->au->mus_stop(app->au, app->ld.mus[1]);
     app->win->cursor_set_shown(app->win, 1);
     if (!this->should_back)
         return false;
@@ -220,6 +223,7 @@ bool game_scene_on_stop(GameScene* this) {
 
 bool game_scene_init(GameScene* this) {
     App* app = base->data;
+    app->au->mus_set_volume(app->au, app->ld.mus[1], 0.1f);
     this->p.parent.rect.w = this->p.parent.rect.h = 32.0f;
     this->p.a.data = &this->p.d;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);

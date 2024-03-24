@@ -7,7 +7,7 @@
 #include <omega/scene.h>
 #include <loader.h>
 
-#define IS_BACK_CODE(code) ((code == OMG_SCANCODE_ESCAPE) || (code == OMG_SCANCODE_AC_BACK))
+#define IS_BACK_CODE(code) ((code == OMG_SCANCODE_ESCAPE) || (code == OMG_SCANCODE_AC_BACK) || (code == OMG_SCANCODE_BACKSPACE))
 #define IS_EXIT_CODE(code) (code == OMG_SCANCODE_Q)
 #define ASSETS_DIR "assets"
 

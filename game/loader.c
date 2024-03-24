@@ -11,7 +11,8 @@ void loader_clean(Loader* this) {
     this->tex_count = 0;
     omg_ldtk_destroy(&this->mp[0]);
     omg_bmfont_destroy(&this->fnt[0]);
-    // app->au->mus_destroy(app->au, this->mus[0]);
+    app->au->mus_destroy(app->au, this->mus[0]);
+    app->au->mus_destroy(app->au, this->mus[1]);
     this->mus_count = 0;
     this->snd_count = 0;
     this->fnt_count = 0;
@@ -142,7 +143,7 @@ void loader_update(Loader* this) {
 int loader_thread(void* data) {
     Loader* this = data;
     App* app = this->_app;
-    this->total_count = 12;
+    this->total_count = 14;
     loader_img_load(this, &OMG_STR("goldFont-uhd.png"));
     loader_img_load(this, &OMG_STR("tiles1.png"));
     loader_img_load(this, &OMG_STR("bgBroccoli.png"));
@@ -150,7 +151,8 @@ int loader_thread(void* data) {
     loader_img_load(this, &OMG_STR("clouds.png"));
     loader_map_load(this, &OMG_STR("map1_map.txt"));
     loader_fnt_load(this, &OMG_STR("goldFont-uhd.fnt"));
-    // loader_music_load(this, &OMG_STR("menu.mp3"));
+    loader_music_load(this, &OMG_STR("menu.mp3"));
+    loader_music_load(this, &OMG_STR("game.mp3"));
     this->loaded_images = true;
     if (!this->thread_safe) {
         while (this->tex_count < this->img_count) {
@@ -173,7 +175,7 @@ int loader_thread(void* data) {
 void loader_run(Loader* this) {
     App* app = _app;
     this->thread_safe = false;
-    if (app->omg->type != OMG_OMEGA_TYPE_WIN && 0)
+    if (app->omg->type != OMG_OMEGA_TYPE_WIN && 1)
         OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
     if (OMG_ISNULL(this->thr)) {
         this->thread_safe = true;

@@ -8,6 +8,7 @@ bool menu_scene_on_update(MenuScene* this) {
     App* app = base->data;
     app->clock->update(app->clock);
     base->dt = app->clock->dt;
+    app->au->update(app->au);
     OMG_BEGIN_POINTER_CAST();
     this->sc_t1.parent.on_update(&this->sc_t1, this);
     this->sc_t2.parent.on_update(&this->sc_t2, this);
@@ -61,6 +62,7 @@ bool menu_scene_on_paint(MenuScene* this) {
 
 bool menu_scene_on_run(MenuScene* this) {
     App* app = base->data;
+    app->au->mus_play(app->au, app->ld.mus[0], -1, 0.0, 0.2);
     app->clock->reset(app->clock);
     return false;
 }
@@ -103,6 +105,7 @@ bool menu_scene_on_destroy(MenuScene* this) {
 
 bool menu_scene_on_stop(MenuScene* this) {
     App* app = base->data;
+    app->au->mus_stop(app->au, app->ld.mus[0]);
     if (!this->should_cont)
         return false;
     GameScene* scene = OMG_MALLOC(app->omg->mem, sizeof(GameScene));
@@ -136,6 +139,7 @@ bool menu_scene_init(MenuScene* this) {
     this->sc_t1.running = this->sc_t2.running = true;
     this->sc_t1.duration = OMG_M_PI2;
     this->sc_t2.duration = 4.0;
+    app->au->mus_set_volume(app->au, app->ld.mus[0], 0.1f);
     base->reset_input = false;
     OMG_BEGIN_POINTER_CAST();
     base->on_run = menu_scene_on_run;
