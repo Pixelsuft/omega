@@ -35,7 +35,8 @@ void loader_img_load(Loader* this, const OMG_String* path) {
     this->surf[this->img_count] = app_load_surf(app, path);
     this->img_count++;
     this->progress++;
-    app->omg->delay(app->omg, 0.1);
+    if (!OMG_IS_EMSCRIPTEN)
+        app->omg->delay(app->omg, 0.1);
 }
 
 void loader_fnt_load(Loader* this, const OMG_String* path) {
