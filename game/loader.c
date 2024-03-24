@@ -13,6 +13,8 @@ void loader_clean(Loader* this) {
     omg_bmfont_destroy(&this->fnt[0]);
     app->au->mus_destroy(app->au, this->mus[0]);
     app->au->mus_destroy(app->au, this->mus[1]);
+    app->au->snd_destroy(app->au, this->snd[0]);
+    app->au->snd_destroy(app->au, this->snd[1]);
     this->mus_count = 0;
     this->snd_count = 0;
     this->fnt_count = 0;
@@ -127,6 +129,21 @@ void loader_music_load(Loader* this, const OMG_String* path) {
     this->progress++;
 }
 
+void loader_sound_load(Loader* this, const OMG_String* path) {
+    App* app = this->_app;
+    OMG_String res_path;
+    if (omg_string_init_dynamic(&res_path, &app->bp)) {
+        this->snd_count++;
+        this->progress++;
+        return;
+    }
+    bool add_res = omg_string_add_char_p(&res_path, ASSETS_DIR) || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
+    this->snd[this->snd_count] = add_res ? NULL : app->au->snd_from_fp(app->au, NULL, &res_path, OMG_AUDIO_FORMAT_OGG);
+    omg_string_destroy(&res_path);
+    this->snd_count++;
+    this->progress++;
+}
+
 void loader_update(Loader* this) {
     App* app = this->_app;
     if (this->img_count > 0) {
@@ -143,7 +160,7 @@ void loader_update(Loader* this) {
 int loader_thread(void* data) {
     Loader* this = data;
     App* app = this->_app;
-    this->total_count = 14;
+    this->total_count = 16;
     loader_img_load(this, &OMG_STR("goldFont-uhd.png"));
     loader_img_load(this, &OMG_STR("tiles1.png"));
     loader_img_load(this, &OMG_STR("bgBroccoli.png"));
@@ -153,6 +170,8 @@ int loader_thread(void* data) {
     loader_fnt_load(this, &OMG_STR("goldFont-uhd.fnt"));
     loader_music_load(this, &OMG_STR("menu.mp3"));
     loader_music_load(this, &OMG_STR("game.mp3"));
+    loader_sound_load(this, &OMG_STR("jump1.ogg"));
+    loader_sound_load(this, &OMG_STR("jump2.ogg"));
     this->loaded_images = true;
     if (!this->thread_safe) {
         while (this->tex_count < this->img_count) {
