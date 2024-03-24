@@ -194,7 +194,7 @@ int loader_thread(void* data) {
 void loader_run(Loader* this) {
     App* app = _app;
     this->thread_safe = false;
-    if (app->omg->type != OMG_OMEGA_TYPE_WIN && 1)
+    if (app->omg->type != OMG_OMEGA_TYPE_WIN && 1 && !OMG_IS_EMSCRIPTEN)
         OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
     if (OMG_ISNULL(this->thr)) {
         this->thread_safe = true;
