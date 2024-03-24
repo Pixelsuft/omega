@@ -74,20 +74,20 @@ void menu_scene_on_resize(MenuScene* this, OMG_EventResize* event) {
 
 void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
-    if (IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code)) {
+    if ((IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code)) && !event->is_pressed) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
     }
-    else if (event->code == OMG_SCANCODE_F) {
+    else if (event->code == OMG_SCANCODE_F && event->is_pressed) {
         app->win->set_window_mode(
             app->win,
             app->win->window_mode == OMG_WIN_MODE_WINDOW ? OMG_WIN_MODE_DESKTOP_FULLSCREEN : OMG_WIN_MODE_WINDOW
         );
     }
-    else if (event->code == OMG_SCANCODE_V) {
+    else if (event->code == OMG_SCANCODE_V && event->is_pressed) {
         rn->set_vsync(rn, !app->win->vsync);
     }
-    else {
+    else if (event->is_pressed) {
         this->should_cont = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
@@ -140,6 +140,7 @@ bool menu_scene_init(MenuScene* this) {
     base->on_paint = menu_scene_on_paint;
     base->on_resize = menu_scene_on_resize;
     base->on_key_down = menu_scene_on_keyboard;
+    base->on_key_up = menu_scene_on_keyboard;
     base->on_destroy = menu_scene_on_destroy;
     base->on_stop = menu_scene_on_stop;
     OMG_END_POINTER_CAST();

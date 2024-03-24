@@ -427,18 +427,18 @@
 						},
 						{
 							"__identifier": "ColRect",
-							"__grid": [7,9],
+							"__grid": [6,9],
 							"__pivot": [0,0],
 							"__tags": [],
 							"__tile": null,
 							"__smartColor": "#8E0000",
 							"iid": "743e3c30-d7b0-11ee-befa-8f02ba95e950",
-							"width": 256,
+							"width": 310,
 							"height": 32,
 							"defUid": 4,
-							"px": [224,288],
+							"px": [198,288],
 							"fieldInstances": [],
-							"__worldX": 224,
+							"__worldX": 198,
 							"__worldY": 288
 						},
 						{

@@ -16,6 +16,8 @@ bool game_scene_on_update(GameScene* this) {
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
     this->p.y_speed += (float)base->dt * 750.0f;
+    if (this->p.y_speed > 1000.0f)
+        this->p.y_speed = 1000.0f;
     if (!this->p.on_ground)
         this->p.r.y += this->p.y_speed * (float)base->dt;
     this->p.r.x += (float)this->p.dir * this->p.x_speed * (float)base->dt;
@@ -139,11 +141,11 @@ void game_scene_on_resize(GameScene* this, OMG_EventResize* event) {
 
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
-    if (IS_EXIT_CODE(event->code) && event->is_pressed) {
+    if (IS_EXIT_CODE(event->code) && !event->is_pressed) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
     }
-    else if (IS_BACK_CODE(event->code) && event->is_pressed) {
+    else if (IS_BACK_CODE(event->code) && !event->is_pressed) {
         this->should_back = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
