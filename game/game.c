@@ -35,16 +35,20 @@ bool game_scene_on_update(GameScene* this) {
                                 if (!(this->p.r.x <= en->rect.x) && !(p_r.x >= (en->rect.x + en->rect.w)))
                                     is_dif = true;
                             }
-                            if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif) {
+                            if (this->p.y_speed < 0.0f && !this->p.on_ground && (p_r.y > (en->rect.y + en->rect.h))) {
+                                this->p.y_speed = 0.0f;
+                                this->p.r.y = en->rect.y + en->rect.h;
+                            }
+                            else if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif) {
                                 this->p.on_ground = true;
                                 this->p.r.y = en->rect.y - this->p.r.h;
                                 this->p.gr_o = en;
                                 omg_obj_anim_run_state(&this->p.a, (this->p.dir == 0) ? P_A_IDLE : P_A_CRUN);
                             }
-                            else if (this->p.r.x <= en->rect.x && (this->p.gr_o != en)) {
+                            else if (this->p.r.x < en->rect.x && (this->p.gr_o != en) && !is_dif) {
                                 this->p.r.x = en->rect.x - this->p.r.w;
                             }
-                            else if (p_r.x >= (en->rect.x + en->rect.w) && (this->p.gr_o != en)) {
+                            else if (p_r.x > (en->rect.x + en->rect.w) && (this->p.gr_o != en) && !is_dif) {
                                 this->p.r.x = en->rect.x + en->rect.w;
                             }
                         }
@@ -108,10 +112,10 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         this->should_back = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
-    else if (event->code == OMG_SCANCODE_Z && event->is_pressed && !event->is_repeated) {
+    else if ((event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_B) && event->is_pressed && !event->is_repeated) {
         if (this->p.on_ground) {
             this->p.on_ground = false;
-            this->p.y_speed = -275.0f;
+            this->p.y_speed = (event->code == OMG_SCANCODE_B) ? -400.0f : -275.0f;
             omg_obj_anim_run_state(&this->p.a, P_A_JUMP);
         }
     }
