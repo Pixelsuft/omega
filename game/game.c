@@ -104,7 +104,17 @@ bool game_scene_init(GameScene* this) {
     rn->clear(rn, &OMG_RGBA(0, 0, 0, 0));
     for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
         OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
-        if (!lay->is_entity_layer) {
+        if (lay->is_entity_layer) {
+            for (size_t i = 0; i < lay->entities.len; i++) {
+                OMG_LdtkEntity* en = &lay->entities.data[i];
+                if (en->id == 6) {
+                    // Player ID
+                    this->p.r.x = en->rect.x;
+                    this->p.r.y = en->rect.y;
+                }
+            }
+        }
+        else {
             for (size_t i = 0; i < lay->tiles.len; i++) {
                 OMG_LdtkTile* tile = &lay->tiles.data[i];
                 rn->copy_ex(
