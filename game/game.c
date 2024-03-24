@@ -8,7 +8,10 @@ bool game_scene_on_update(GameScene* this) {
     App* app = base->data;
     app->clock->update(app->clock);
     base->dt = app->clock->dt;
+    this->p.parent.rect.x = this->p.r.x - 9.0f;
+    this->p.parent.rect.y = this->p.r.y - 11.0f;
     OMG_BEGIN_POINTER_CAST();
+    this->p.a.parent.on_update(&this->p.a, this);
     OMG_END_POINTER_CAST();
     return false;
 }
@@ -19,6 +22,11 @@ bool game_scene_on_paint(GameScene* this) {
     rn->clear(rn, &this->ldtk->levels.data[0].bg_color);
     rn->set_scale(rn, NULL, &app->sc);
     rn->copy(rn, this->bg[0], NULL);
+    OMG_FRect p_src;
+    p_src.w = p_src.h = 32.0f;
+    p_src.x = (float)(this->p.a.cur_frame * 32);
+    p_src.y = (float)(this->p.a.cur_state * 32);
+    rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
     app_draw_fps(app);
     rn->set_scale(rn, NULL, &app->sc);
@@ -28,6 +36,7 @@ bool game_scene_on_paint(GameScene* this) {
 
 bool game_scene_on_run(GameScene* this) {
     App* app = base->data;
+    omg_obj_anim_run_state(&this->p.a, 0);
     app->clock->reset(app->clock);
     return false;
 }
@@ -75,7 +84,16 @@ bool game_scene_init(GameScene* this) {
     App* app = base->data;
     this->p.parent.rect.w = this->p.parent.rect.h = 32.0f;
     this->p.a.data = &this->p.d;
+    this->p.r.w = 14.0f;
+    this->p.r.h = 21.0f;
+    this->p.r.x = this->p.r.y = 100.0f;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);
+    OMG_ARRAY_SET_LEN(&this->p.d.states, 5, false);
+    omg_anim_sprite_state_init(&this->p.d.states.data[0], app->omg, 0.4, 4); // Idle
+    omg_anim_sprite_state_init(&this->p.d.states.data[1], app->omg, 0.4, 2); // Fall
+    omg_anim_sprite_state_init(&this->p.d.states.data[2], app->omg, 0.4, 6); // Classical run
+    omg_anim_sprite_state_init(&this->p.d.states.data[3], app->omg, 0.4, 4); // Jump
+    omg_anim_sprite_state_init(&this->p.d.states.data[4], app->omg, 0.4, 4); // Run
     omg_obj_anim_sprite_init(&this->p.a);
     app->sc.w = app->win->size.w / 800.0f;
     app->sc.h = app->win->size.h / 600.0f;
