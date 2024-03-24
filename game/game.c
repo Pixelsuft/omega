@@ -8,6 +8,8 @@ bool game_scene_on_update(GameScene* this) {
     App* app = base->data;
     app->clock->update(app->clock);
     base->dt = app->clock->dt;
+    if (base->dt > 0.5)
+        base->dt = 0.5;
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
     this->p.y_speed += (float)base->dt * 750.0f;
@@ -17,6 +19,7 @@ bool game_scene_on_update(GameScene* this) {
     OMG_FPoint p_r;
     p_r.x = this->p.r.x + this->p.r.w;
     p_r.y = this->p.r.y + this->p.r.h;
+    bool has_col = false;
     for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
         OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
         if (lay->is_entity_layer) {
@@ -26,16 +29,22 @@ bool game_scene_on_update(GameScene* this) {
                     // Collision rect
                     if (p_r.x >= en->rect.x && this->p.r.x < (en->rect.x + en->rect.w)) {
                         if (p_r.y >= en->rect.y && this->p.r.y < (en->rect.y + en->rect.h)) {
-                            if (!this->p.on_ground) {
+                            has_col = true;
+                            bool is_dif = app->omg->std->fabsf(this->p.r.y + this->p.r.h - en->rect.y) <= 4.0f;
+                            if (!is_dif) {
+                                if (!(this->p.r.x <= en->rect.x) && !(p_r.x >= (en->rect.x + en->rect.w)))
+                                    is_dif = true;
+                            }
+                            if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif) {
                                 this->p.on_ground = true;
                                 this->p.r.y = en->rect.y - this->p.r.h;
                                 this->p.gr_o = en;
                                 omg_obj_anim_run_state(&this->p.a, (this->p.dir == 0) ? P_A_IDLE : P_A_CRUN);
                             }
-                            else if (p_r.x >= en->rect.x && (this->p.gr_o != en)) {
+                            else if (this->p.r.x <= en->rect.x && (this->p.gr_o != en)) {
                                 this->p.r.x = en->rect.x - this->p.r.w;
                             }
-                            else if (this->p.r.x < (en->rect.x + en->rect.w) && (this->p.gr_o != en)) {
+                            else if (p_r.x >= (en->rect.x + en->rect.w) && (this->p.gr_o != en)) {
                                 this->p.r.x = en->rect.x + en->rect.w;
                             }
                         }
@@ -43,6 +52,14 @@ bool game_scene_on_update(GameScene* this) {
                 }
             }
         }
+    }
+    if (this->p.on_ground && !has_col) {
+        this->p.on_ground = false;
+        this->p.y_speed = 0.001f;
+        this->p.gr_o = NULL;
+    }
+    if (!this->p.on_ground && this->p.y_speed > 0.0f && (this->p.a.cur_state != P_A_FALL)) {
+        omg_obj_anim_run_state(&this->p.a, P_A_FALL);
     }
     OMG_BEGIN_POINTER_CAST();
     this->p.a.parent.on_update(&this->p.a, this);
@@ -90,6 +107,13 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     else if (IS_BACK_CODE(event->code) && event->is_pressed) {
         this->should_back = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
+    }
+    else if (event->code == OMG_SCANCODE_Z && event->is_pressed && !event->is_repeated) {
+        if (this->p.on_ground) {
+            this->p.on_ground = false;
+            this->p.y_speed = -275.0f;
+            omg_obj_anim_run_state(&this->p.a, P_A_JUMP);
+        }
     }
     else if (event->code == OMG_SCANCODE_LEFT && event->is_pressed && !event->is_repeated) {
         this->p.dir = -1;
@@ -164,6 +188,7 @@ bool game_scene_init(GameScene* this) {
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_CRUN], app->omg, 0.075, 6);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_JUMP], app->omg, 0.1, 4);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_RUN], app->omg, 0.1, 4);
+    this->p.d.states.data[P_A_JUMP].durations[3] = 100000.0f;
     omg_obj_anim_sprite_init(&this->p.a);
     omg_obj_anim_run_state(&this->p.a, P_A_FALL);
     app->sc.w = app->win->size.w / 800.0f;
