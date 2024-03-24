@@ -36,7 +36,6 @@ bool game_scene_on_paint(GameScene* this) {
 
 bool game_scene_on_run(GameScene* this) {
     App* app = base->data;
-    omg_obj_anim_run_state(&this->p.a, 0);
     app->clock->reset(app->clock);
     return false;
 }
@@ -89,12 +88,13 @@ bool game_scene_init(GameScene* this) {
     this->p.r.x = this->p.r.y = 100.0f;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);
     OMG_ARRAY_SET_LEN(&this->p.d.states, 5, false);
-    omg_anim_sprite_state_init(&this->p.d.states.data[0], app->omg, 0.4, 4); // Idle
-    omg_anim_sprite_state_init(&this->p.d.states.data[1], app->omg, 0.4, 2); // Fall
-    omg_anim_sprite_state_init(&this->p.d.states.data[2], app->omg, 0.4, 6); // Classical run
-    omg_anim_sprite_state_init(&this->p.d.states.data[3], app->omg, 0.4, 4); // Jump
-    omg_anim_sprite_state_init(&this->p.d.states.data[4], app->omg, 0.4, 4); // Run
+    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_IDLE], app->omg, 0.1, 4);
+    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_FALL], app->omg, 0.1, 2);
+    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_CRUN], app->omg, 0.075, 6);
+    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_JUMP], app->omg, 0.1, 4);
+    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_RUN], app->omg, 0.1, 4);
     omg_obj_anim_sprite_init(&this->p.a);
+    omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
     app->sc.w = app->win->size.w / 800.0f;
     app->sc.h = app->win->size.h / 600.0f;
     this->ldtk = &app->ld.mp[0];
