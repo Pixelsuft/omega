@@ -2,7 +2,7 @@
 #include <omega/platform.h>
 
 #ifndef OMG_DEBUG
-#define OMG_DEBUG (!OMG_IS_ANDROID && !OMG_IS_EMSCRIPTEN) && 1
+#define OMG_DEBUG (((!OMG_IS_ANDROID && !OMG_IS_EMSCRIPTEN && !OMG_IS_UWP) && 1) || 0)
 #endif
 #ifndef OMG_DEBUG_FILL_MEM
 #define OMG_DEBUG_FILL_MEM 1
