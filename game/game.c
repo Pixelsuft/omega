@@ -10,6 +10,9 @@ bool game_scene_on_update(GameScene* this) {
     base->dt = app->clock->dt;
     if (base->dt > 0.5)
         base->dt = 0.5;
+    this->cloud_offset -= (float)(base->dt * 25.0);
+    if (this->cloud_offset <= -960.0f)
+        this->cloud_offset += 960.0f;
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
     this->p.y_speed += (float)base->dt * 750.0f;
@@ -75,7 +78,14 @@ bool game_scene_on_update(GameScene* this) {
 bool game_scene_on_paint(GameScene* this) {
     App* app = base->data;
     rn->begin(rn);
+    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w * 1.2f, app->sc.h * 1.2f));
     rn->clear(rn, &this->ldtk->levels.data[0].bg_color);
+    OMG_FPoint cloud_pos;
+    cloud_pos.y = 0.0f;
+    cloud_pos.x = this->cloud_offset;
+    rn->copy(rn, app->ld.tex[4], &cloud_pos);
+    cloud_pos.x += 960.0f;
+    rn->copy(rn, app->ld.tex[4], &cloud_pos);
     rn->set_scale(rn, NULL, &app->sc);
     rn->copy(rn, this->bg[0], NULL);
     OMG_FRect p_src;
@@ -116,6 +126,7 @@ bool game_scene_on_run(GameScene* this) {
             }
         }
     }
+    this->cloud_offset = 0.0f;
     app->clock->reset(app->clock);
     return false;
 }
@@ -237,6 +248,7 @@ bool game_scene_init(GameScene* this) {
     }
     rn->set_target(rn, NULL);
     rn->set_scale(rn, NULL, &app->sc);
+    rn->tex_set_scale_mode(rn, app->ld.tex[4], OMG_SCALE_MODE_LINEAR);
     OMG_BEGIN_POINTER_CAST();
     base->on_run = game_scene_on_run;
     base->on_update = game_scene_on_update;

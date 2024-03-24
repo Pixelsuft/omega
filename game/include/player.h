@@ -9,15 +9,6 @@
 #define P_A_JUMP 3
 #define P_A_RUN 4
 
-/*
-Sprite anim info:
-0) idle
-1) fall
-2) cassical run
-3) jump
-4) run
-*/
-
 typedef struct {
     OMG_Object parent;
     OMG_ObjectAnimSprite a;
