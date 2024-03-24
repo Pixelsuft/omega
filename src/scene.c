@@ -23,9 +23,9 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 event.parent.data = omg_base->event_arg;
                 event.parent.omg = omg_base;
                 event.parent.time = 0; // Why we need this???
-                event.code = this->key_states[i];
+                event.sym = this->key_states[i];
                 event.is_repeated = false;
-                event.sym = (uint32_t)i;
+                event.code = (uint32_t)i;
                 event.win = this->omg_win;
                 event.mod = 0; // TODO maybe?
                 event.is_pressed = should_on;
@@ -104,7 +104,7 @@ bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
             _OMG_LOG_ERROR(omg_base, "Failed to run scene");
         }
     }
-    omg_scenemgr_scene_reset_input(this, this->cur_scene, true);
+    omg_scenemgr_scene_reset_input(this, scene, true);
     scene->dt = 0.0;
     this->cur_scene = scene;
     return false;
@@ -357,8 +357,8 @@ void omg_scenemgr_event_on_key_down(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
 #if OMG_SCENES_ADV_INPUT
-    if (event->sym < 520)
-        this->key_states[event->sym] = event->code;
+    if (event->code < 520)
+        this->key_states[event->code] = event->sym;
 #endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_key_down)) {
@@ -372,8 +372,8 @@ void omg_scenemgr_event_on_key_up(OMG_EventKeyboard* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
 #if OMG_SCENES_ADV_INPUT
-    if (event->sym < 520)
-        this->key_states[event->sym] = 0;
+    if (event->code < 520)
+        this->key_states[event->code] = 0;
 #endif
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_key_up)) {

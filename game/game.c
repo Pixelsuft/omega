@@ -175,7 +175,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
             }
         }
     }
-    else if (event->code == OMG_SCANCODE_R && event->is_pressed) {
+    else if (event->code == OMG_SCANCODE_R && !event->is_pressed) {
         omg_scenemgr_scene_stop(&app->sm, this);
         omg_scenemgr_scene_run(&app->sm, this);
     }
