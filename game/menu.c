@@ -122,6 +122,7 @@ bool menu_scene_init(MenuScene* this) {
     App* app = base->data;
     app->sc.w = app->win->size.w / 640.0f;
     app->sc.h = app->win->size.h / 480.0f;
+    rn->tex_set_color_mod(rn, app->ld.fnt[0].page, &OMG_RGB(255, 255, 255));
     rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
     this->bg = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, false);
     rn->set_target(rn, this->bg);
