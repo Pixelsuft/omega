@@ -78,7 +78,8 @@ bool omg_scenemgr_scene_stop(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     if (OMG_ISNULL(this->cur_scene) || (OMG_ISNOTNULL(scene) && (scene != this->cur_scene)))
         return false;
     scene = this->cur_scene;
-    omg_scenemgr_scene_reset_input(this, scene, false);
+    if (scene->reset_input)
+        omg_scenemgr_scene_reset_input(this, scene, false);
     if (this->cur_scene == scene)
         this->cur_scene = NULL;
     if (OMG_ISNOTNULL(scene->on_stop)) {
@@ -104,7 +105,8 @@ bool omg_scenemgr_scene_run(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
             _OMG_LOG_ERROR(omg_base, "Failed to run scene");
         }
     }
-    omg_scenemgr_scene_reset_input(this, scene, true);
+    if (scene->reset_input)
+        omg_scenemgr_scene_reset_input(this, scene, true);
     scene->dt = 0.0;
     this->cur_scene = scene;
     return false;
@@ -143,6 +145,7 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->paint_on_expose = true;
     scene->enable_paint = true;
     scene->was_allocated = false;
+    scene->reset_input = true;
     scene->id = 0;
     return false;
 }

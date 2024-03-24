@@ -74,9 +74,11 @@ void menu_scene_on_resize(MenuScene* this, OMG_EventResize* event) {
 
 void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
-    if ((IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code)) && !event->is_pressed) {
-        omg_scenemgr_scene_destroy(&app->sm, this);
-        app->omg->auto_loop_stop(app->omg);
+    if ((IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code))) {
+        if (!event->is_pressed) {
+            omg_scenemgr_scene_destroy(&app->sm, this);
+            app->omg->auto_loop_stop(app->omg);
+        }
     }
     else if (event->code == OMG_SCANCODE_F && event->is_pressed) {
         app->win->set_window_mode(
@@ -134,6 +136,7 @@ bool menu_scene_init(MenuScene* this) {
     this->sc_t1.running = this->sc_t2.running = true;
     this->sc_t1.duration = OMG_M_PI2;
     this->sc_t2.duration = 4.0;
+    base->reset_input = false;
     OMG_BEGIN_POINTER_CAST();
     base->on_run = menu_scene_on_run;
     base->on_update = menu_scene_on_update;

@@ -55,6 +55,7 @@ typedef struct OMG_Scene {
     bool update_on_expose;
     bool paint_on_expose;
     bool enable_paint;
+    bool reset_input;
     bool inited;
 } OMG_Scene;
 
