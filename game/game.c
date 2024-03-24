@@ -130,6 +130,7 @@ bool game_scene_on_run(GameScene* this) {
         }
     }
     this->cloud_offset = 0.0f;
+    app->win->cursor_set_shown(app->win, 0);
     app->clock->reset(app->clock);
     return false;
 }
@@ -204,6 +205,7 @@ bool game_scene_on_destroy(GameScene* this) {
 
 bool game_scene_on_stop(GameScene* this) {
     App* app = base->data;
+    app->win->cursor_set_shown(app->win, 1);
     if (!this->should_back)
         return false;
     MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
