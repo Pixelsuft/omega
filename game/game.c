@@ -16,8 +16,8 @@ bool game_scene_on_update(GameScene* this) {
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
     this->p.y_speed += (float)base->dt * 750.0f;
-    if (this->p.y_speed > 1000.0f)
-        this->p.y_speed = 1000.0f;
+    if (this->p.y_speed > 400.0f)
+        this->p.y_speed = 400.0f;
     if (!this->p.on_ground)
         this->p.r.y += this->p.y_speed * (float)base->dt;
     this->p.r.x += (float)this->p.dir * this->p.x_speed * (float)base->dt;
@@ -90,6 +90,7 @@ bool game_scene_on_paint(GameScene* this) {
     rn->copy(rn, app->ld.tex[4], &cloud_pos);
     rn->set_scale(rn, NULL, &app->sc);
     rn->copy(rn, this->bg[0], NULL);
+    rn->copy(rn, app->ld.tex[2], &OMG_FPOINT(10, 544.0f - app->ld.tex[2]->size.h));
     OMG_FRect p_src;
     p_src.h = 32.0f;
     p_src.w = this->p.face_left ? -32.0f : 32.0f;
