@@ -132,6 +132,7 @@ bool game_scene_on_run(GameScene* this) {
         }
     }
     this->cloud_offset = 0.0f;
+    this->should_back = false;
     app->win->cursor_set_shown(app->win, 0);
     app->clock->reset(app->clock);
     return false;
@@ -208,10 +209,10 @@ bool game_scene_on_destroy(GameScene* this) {
 
 bool game_scene_on_stop(GameScene* this) {
     App* app = base->data;
-    app->au->mus_stop(app->au, app->ld.mus[1]);
     app->win->cursor_set_shown(app->win, 1);
     if (!this->should_back)
         return false;
+    app->au->mus_stop(app->au, app->ld.mus[1]);
     MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
     omg_scenemgr_scene_fill(&app->sm, scene);
     OMG_BEGIN_POINTER_CAST();
