@@ -10,6 +10,40 @@ bool game_scene_on_update(GameScene* this) {
     base->dt = app->clock->dt;
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
+    this->p.y_speed += (float)base->dt * 750.0f;
+    if (!this->p.on_ground)
+        this->p.r.y += this->p.y_speed * (float)base->dt;
+    this->p.r.x += (float)this->p.dir * this->p.x_speed * (float)base->dt;
+    OMG_FPoint p_r;
+    p_r.x = this->p.r.x + this->p.r.w;
+    p_r.y = this->p.r.y + this->p.r.h;
+    for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
+        OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
+        if (lay->is_entity_layer) {
+            for (size_t i = 0; i < lay->entities.len; i++) {
+                OMG_LdtkEntity* en = &lay->entities.data[i];
+                if (en->id == 4) {
+                    // Collision rect
+                    if (p_r.x >= en->rect.x && this->p.r.x < (en->rect.x + en->rect.w)) {
+                        if (p_r.y >= en->rect.y && this->p.r.y < (en->rect.y + en->rect.h)) {
+                            if (!this->p.on_ground) {
+                                this->p.on_ground = true;
+                                this->p.r.y = en->rect.y - this->p.r.h;
+                                this->p.gr_o = en;
+                                omg_obj_anim_run_state(&this->p.a, (this->p.dir == 0) ? P_A_IDLE : P_A_CRUN);
+                            }
+                            else if (p_r.x >= en->rect.x && (this->p.gr_o != en)) {
+                                this->p.r.x = en->rect.x - this->p.r.w;
+                            }
+                            else if (this->p.r.x < (en->rect.x + en->rect.w) && (this->p.gr_o != en)) {
+                                this->p.r.x = en->rect.x + en->rect.w;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     OMG_BEGIN_POINTER_CAST();
     this->p.a.parent.on_update(&this->p.a, this);
     OMG_END_POINTER_CAST();
@@ -23,7 +57,8 @@ bool game_scene_on_paint(GameScene* this) {
     rn->set_scale(rn, NULL, &app->sc);
     rn->copy(rn, this->bg[0], NULL);
     OMG_FRect p_src;
-    p_src.w = p_src.h = 32.0f;
+    p_src.h = 32.0f;
+    p_src.w = this->p.face_left ? -32.0f : 32.0f;
     p_src.x = (float)(this->p.a.cur_frame * 32);
     p_src.y = (float)(this->p.a.cur_state * 32);
     rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
@@ -48,13 +83,43 @@ void game_scene_on_resize(GameScene* this, OMG_EventResize* event) {
 
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
-    if (IS_EXIT_CODE(event->code)) {
+    if (IS_EXIT_CODE(event->code) && event->is_pressed) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
     }
-    else if (IS_BACK_CODE(event->code)) {
+    else if (IS_BACK_CODE(event->code) && event->is_pressed) {
         this->should_back = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
+    }
+    else if (event->code == OMG_SCANCODE_LEFT && event->is_pressed && !event->is_repeated) {
+        this->p.dir = -1;
+        this->p.face_left = true;
+        if (this->p.on_ground) {
+            omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
+        }
+    }
+    else if (event->code == OMG_SCANCODE_RIGHT && event->is_pressed && !event->is_repeated) {
+        this->p.dir = 1;
+        this->p.face_left = false;
+        if (this->p.on_ground) {
+            omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
+        }
+    }
+    else if (event->code == OMG_SCANCODE_LEFT && !event->is_pressed) {
+        if (this->p.dir == -1) {
+            this->p.dir = 0;
+            if (this->p.on_ground) {
+                omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
+            }
+        }
+    }
+    else if (event->code == OMG_SCANCODE_RIGHT && !event->is_pressed) {
+        if (this->p.dir == 1) {
+            this->p.dir = 0;
+            if (this->p.on_ground) {
+                omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
+            }
+        }
     }
 }
 
@@ -86,15 +151,21 @@ bool game_scene_init(GameScene* this) {
     this->p.r.w = 14.0f;
     this->p.r.h = 21.0f;
     this->p.r.x = this->p.r.y = 100.0f;
+    this->p.y_speed = 0.0f;
+    this->p.x_speed = 100.0f;
+    this->p.on_ground = false;
+    this->p.gr_o = NULL;
+    this->p.dir = 0;
+    this->p.face_left = false;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);
     OMG_ARRAY_SET_LEN(&this->p.d.states, 5, false);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_IDLE], app->omg, 0.1, 4);
-    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_FALL], app->omg, 0.1, 2);
+    omg_anim_sprite_state_init(&this->p.d.states.data[P_A_FALL], app->omg, 0.075, 2);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_CRUN], app->omg, 0.075, 6);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_JUMP], app->omg, 0.1, 4);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_RUN], app->omg, 0.1, 4);
     omg_obj_anim_sprite_init(&this->p.a);
-    omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
+    omg_obj_anim_run_state(&this->p.a, P_A_FALL);
     app->sc.w = app->win->size.w / 800.0f;
     app->sc.h = app->win->size.h / 600.0f;
     this->ldtk = &app->ld.mp[0];
@@ -132,6 +203,7 @@ bool game_scene_init(GameScene* this) {
     base->on_paint = game_scene_on_paint;
     base->on_resize = game_scene_on_resize;
     base->on_key_down = game_scene_on_keyboard;
+    base->on_key_up = game_scene_on_keyboard;
     base->on_destroy = game_scene_on_destroy;
     base->on_stop = game_scene_on_stop;
     OMG_END_POINTER_CAST();
