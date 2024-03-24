@@ -157,9 +157,9 @@ bool omg_window_raylib_mouse_set_rel(OMG_WindowRaylib* this, int rel_mode) {
 
 bool omg_window_raylib_cursor_set_shown(OMG_WindowRaylib* this, int show_mode) {
     if (show_mode == 0)
-        this->raylib->ShowCursor();
-    else if (show_mode == 1)
         this->raylib->HideCursor();
+    else if (show_mode == 1)
+        this->raylib->ShowCursor();
     else if (show_mode == 2)
         (this->raylib->IsCursorHidden() ? this->raylib->ShowCursor : this->raylib->HideCursor)();
     else
