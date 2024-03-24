@@ -16,8 +16,8 @@ bool game_scene_on_update(GameScene* this) {
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
     this->p.y_speed += (float)base->dt * 750.0f;
-    if (this->p.y_speed > 400.0f)
-        this->p.y_speed = 400.0f;
+    if (this->p.y_speed > 300.0f)
+        this->p.y_speed = 300.0f;
     if (!this->p.on_ground)
         this->p.r.y += this->p.y_speed * (float)base->dt;
     this->p.r.x += (float)this->p.dir * this->p.x_speed * (float)base->dt;
