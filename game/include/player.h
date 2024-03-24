@@ -27,6 +27,7 @@ typedef struct {
     float x_speed;
     float y_speed;
     int dir;
+    bool air_jump;
     bool face_left;
     bool on_ground;
 } Player;

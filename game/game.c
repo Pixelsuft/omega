@@ -41,6 +41,7 @@ bool game_scene_on_update(GameScene* this) {
                             }
                             else if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif) {
                                 this->p.on_ground = true;
+                                this->p.air_jump = true;
                                 this->p.r.y = en->rect.y - this->p.r.h;
                                 this->p.gr_o = en;
                                 omg_obj_anim_run_state(&this->p.a, (this->p.dir == 0) ? P_A_IDLE : P_A_CRUN);
@@ -92,6 +93,29 @@ bool game_scene_on_paint(GameScene* this) {
 
 bool game_scene_on_run(GameScene* this) {
     App* app = base->data;
+    this->p.r.w = 14.0f;
+    this->p.r.h = 21.0f;
+    this->p.r.x = this->p.r.y = 100.0f;
+    this->p.y_speed = 0.0f;
+    this->p.x_speed = 100.0f;
+    this->p.on_ground = false;
+    this->p.gr_o = NULL;
+    this->p.dir = 0;
+    this->p.face_left = false;
+    this->p.air_jump = true;
+    for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
+        OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
+        if (lay->is_entity_layer) {
+            for (size_t i = 0; i < lay->entities.len; i++) {
+                OMG_LdtkEntity* en = &lay->entities.data[i];
+                if (en->id == 6) {
+                    // Player ID
+                    this->p.r.x = en->rect.x;
+                    this->p.r.y = en->rect.y;
+                }
+            }
+        }
+    }
     app->clock->reset(app->clock);
     return false;
 }
@@ -113,7 +137,9 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
     else if ((event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_B) && event->is_pressed && !event->is_repeated) {
-        if (this->p.on_ground) {
+        if (this->p.on_ground || this->p.air_jump) {
+            if (!this->p.on_ground)
+                this->p.air_jump = false;
             this->p.on_ground = false;
             this->p.y_speed = (event->code == OMG_SCANCODE_B) ? -400.0f : -275.0f;
             omg_obj_anim_run_state(&this->p.a, P_A_JUMP);
@@ -149,6 +175,10 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
             }
         }
     }
+    else if (event->code == OMG_SCANCODE_R && event->is_pressed) {
+        omg_scenemgr_scene_stop(&app->sm, this);
+        omg_scenemgr_scene_run(&app->sm, this);
+    }
 }
 
 bool game_scene_on_destroy(GameScene* this) {
@@ -176,15 +206,6 @@ bool game_scene_init(GameScene* this) {
     App* app = base->data;
     this->p.parent.rect.w = this->p.parent.rect.h = 32.0f;
     this->p.a.data = &this->p.d;
-    this->p.r.w = 14.0f;
-    this->p.r.h = 21.0f;
-    this->p.r.x = this->p.r.y = 100.0f;
-    this->p.y_speed = 0.0f;
-    this->p.x_speed = 100.0f;
-    this->p.on_ground = false;
-    this->p.gr_o = NULL;
-    this->p.dir = 0;
-    this->p.face_left = false;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);
     OMG_ARRAY_SET_LEN(&this->p.d.states, 5, false);
     omg_anim_sprite_state_init(&this->p.d.states.data[P_A_IDLE], app->omg, 0.1, 4);
@@ -204,17 +225,7 @@ bool game_scene_init(GameScene* this) {
     rn->clear(rn, &OMG_RGBA(0, 0, 0, 0));
     for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
         OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
-        if (lay->is_entity_layer) {
-            for (size_t i = 0; i < lay->entities.len; i++) {
-                OMG_LdtkEntity* en = &lay->entities.data[i];
-                if (en->id == 6) {
-                    // Player ID
-                    this->p.r.x = en->rect.x;
-                    this->p.r.y = en->rect.y;
-                }
-            }
-        }
-        else {
+        if (!lay->is_entity_layer) {
             for (size_t i = 0; i < lay->tiles.len; i++) {
                 OMG_LdtkTile* tile = &lay->tiles.data[i];
                 rn->copy_ex(
