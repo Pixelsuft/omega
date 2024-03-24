@@ -11,6 +11,9 @@ void loader_clean(Loader* this) {
     this->tex_count = 0;
     omg_ldtk_destroy(&this->mp[0]);
     omg_bmfont_destroy(&this->fnt[0]);
+    // app->au->mus_destroy(app->au, this->mus[0]);
+    this->mus_count = 0;
+    this->snd_count = 0;
     this->fnt_count = 0;
     this->mp_count = 0;
 }
@@ -36,6 +39,8 @@ void loader_fnt_load(Loader* this, const OMG_String* path) {
     App* app = this->_app;
     OMG_String res_path;
     if (omg_string_init_dynamic(&res_path, &app->bp)) {
+        this->progress++;
+        this->fnt_count++;
         return;
     }
     bool add_res = omg_string_add_char_p(&res_path, ASSETS_DIR) || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
@@ -72,6 +77,8 @@ void loader_map_load(Loader* this, const OMG_String* path) {
     App* app = this->_app;
     OMG_String res_path;
     if (omg_string_init_dynamic(&res_path, &app->bp)) {
+        this->progress++;
+        this->mp_count++;
         return;
     }
     bool add_res = omg_string_add_char_p(&res_path, ASSETS_DIR) || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
@@ -104,6 +111,21 @@ void loader_map_load(Loader* this, const OMG_String* path) {
     this->progress++;
 }
 
+void loader_music_load(Loader* this, const OMG_String* path) {
+    App* app = this->_app;
+    OMG_String res_path;
+    if (omg_string_init_dynamic(&res_path, &app->bp)) {
+        this->mus_count++;
+        this->progress++;
+        return;
+    }
+    bool add_res = omg_string_add_char_p(&res_path, ASSETS_DIR) || omg_string_add_char(&res_path, OMG_PATH_DELIM) || omg_string_add(&res_path, path);
+    this->mus[this->mus_count] = add_res ? NULL : app->au->mus_from_fp(app->au, NULL, &res_path, OMG_AUDIO_FORMAT_MP3);
+    omg_string_destroy(&res_path);
+    this->mus_count++;
+    this->progress++;
+}
+
 void loader_update(Loader* this) {
     App* app = this->_app;
     if (this->img_count > 0) {
@@ -128,6 +150,7 @@ int loader_thread(void* data) {
     loader_img_load(this, &OMG_STR("clouds.png"));
     loader_map_load(this, &OMG_STR("map1_map.txt"));
     loader_fnt_load(this, &OMG_STR("goldFont-uhd.fnt"));
+    // loader_music_load(this, &OMG_STR("menu.mp3"));
     this->loaded_images = true;
     if (!this->thread_safe) {
         while (this->tex_count < this->img_count) {
@@ -150,7 +173,7 @@ int loader_thread(void* data) {
 void loader_run(Loader* this) {
     App* app = _app;
     this->thread_safe = false;
-    if (app->omg->type != OMG_OMEGA_TYPE_WIN)
+    if (app->omg->type != OMG_OMEGA_TYPE_WIN && 0)
         OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
     if (OMG_ISNULL(this->thr)) {
         this->thread_safe = true;
@@ -170,6 +193,8 @@ void loader_init(Loader* this, void* _app) {
     this->img_count = this->fnt_count = 0;
     this->tex_count = 0;
     this->mp_count = 0;
+    this->mus_count = 0;
+    this->snd_count = 0;
     this->loaded_images = false;
     this->thread_safe = true;
     this->finished = false;
@@ -178,4 +203,6 @@ void loader_init(Loader* this, void* _app) {
     app->omg->std->memset(this->surf, 0, sizeof(this->surf));
     app->omg->std->memset(this->fnt, 0, sizeof(this->fnt));
     app->omg->std->memset(this->mp, 0, sizeof(this->mp));
+    app->omg->std->memset(this->mus, 0, sizeof(this->mus));
+    app->omg->std->memset(this->snd, 0, sizeof(this->snd));
 }

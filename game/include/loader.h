@@ -8,10 +8,14 @@ typedef struct {
     OMG_Bmfont fnt[2];
     OMG_Texture* tex[32];
     OMG_Surface* surf[32];
+    OMG_Music* mus[2];
+    OMG_Sound* snd[2];
     OMG_Thread* thr;
     void* _app;
     int total_count;
     int mp_count;
+    int mus_count;
+    int snd_count;
     int img_count;
     int fnt_count;
     int tex_count;
