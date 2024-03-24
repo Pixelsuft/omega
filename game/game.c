@@ -155,6 +155,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     }
     else if ((event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_B) && event->is_pressed && !event->is_repeated) {
         if (this->p.on_ground || this->p.air_jump) {
+            app->au->snd_play(app->au, app->ld.snd[this->p.on_ground ? 0 : 1], 0, 0.0, 0.0);
             if (!this->p.on_ground)
                 this->p.air_jump = false;
             this->p.on_ground = false;
@@ -224,6 +225,8 @@ bool game_scene_on_stop(GameScene* this) {
 bool game_scene_init(GameScene* this) {
     App* app = base->data;
     app->au->mus_set_volume(app->au, app->ld.mus[1], 0.1f);
+    app->au->snd_set_volume(app->au, app->ld.snd[0], 0.3f);
+    app->au->snd_set_volume(app->au, app->ld.snd[1], 0.3f);
     this->p.parent.rect.w = this->p.parent.rect.h = 32.0f;
     this->p.a.data = &this->p.d;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);

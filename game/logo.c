@@ -10,7 +10,7 @@ bool logo_scene_on_update(LogoScene* this) {
     base->dt = app->clock->dt;
     loader_update(&app->ld);
     this->logo_timer += base->dt;
-    if (app->ld.finished && OMG_DEBUG && !this->should_cont) {
+    if (app->ld.finished && OMG_DEBUG && !this->should_cont && 0) {
         this->should_cont = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
@@ -71,8 +71,9 @@ void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
     if (app->ld.finished) {
         this->should_cont = !(IS_BACK_CODE(event->code) || IS_EXIT_CODE(event->code));
+        bool sc = this->should_cont;
         omg_scenemgr_scene_destroy(&app->sm, this);
-        if (!this->should_cont)
+        if (!sc)
             app->omg->auto_loop_stop(app->omg);
         return;
     }
