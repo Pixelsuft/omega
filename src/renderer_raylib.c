@@ -307,8 +307,8 @@ bool omg_renderer_raylib_copy(OMG_RendererRaylib* this, OMG_TextureRaylib* tex, 
             src.height = -src.height; // Fuck Raylib
         RL_Rectangle dst;
         if (OMG_ISNULL(pos)) {
-            dst.x = this->so.x;
-            dst.y = this->so.y;
+            dst.x = this->so.x * this->ss.x;
+            dst.y = this->so.y * this->ss.y;
         }
         else {
             dst.x = (pos->x + this->so.x) * this->ss.x;

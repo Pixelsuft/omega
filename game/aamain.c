@@ -126,7 +126,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->au = this->omg->audio;
     this->ren = this->win->ren;
     this->ren->soft_offset = true;
-    this->ren->soft_scale = false;
+    this->ren->soft_scale = true;
     this->ren->aa = !OMG_IS_EMSCRIPTEN;
     this->ren->tex_default_scale_mode = OMG_SCALE_MODE_NEAREST;
     this->clock = this->omg->clock;
