@@ -2,7 +2,6 @@
 
 #if OMG_SUPPORT_LDTK
 #include <omega/renderer.h>
-// TODO: find functions
 
 bool omg_ldtk_destroy(OMG_Ldtk* this) {
     if (OMG_ISNOTNULL(this->levels.data)) {
