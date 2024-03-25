@@ -78,7 +78,7 @@ void app_on_destroy(OMG_EventLoopStop* event) {
 bool scene_on_destroy(TestScene* scene) {
     App* this = (App*)((OMG_Scene*)scene)->data;
     omg_anim_sprite_state_destroy(&scene->anim_data.states.data[0], this->omg);
-    omg_anim_sprite_data_destroy(&scene->anim_data);
+    omg_anim_sprite_data_destroy(&scene->anim_data, this->omg, false);
     this->ren->tex_destroy(this->ren, scene->map_tex);
     omg_ldtk_destroy(&scene->map);
     omg_bmfont_destroy(&scene->bmfont);
