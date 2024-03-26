@@ -35,7 +35,10 @@ int omg_clock_get_fps(OMG_Clock* this) {
 
 bool omg_clock_set_fps_limit(OMG_Clock* this, double fps_limit) {
     this->fps_limit = fps_limit;
-    this->dt_limit = 1.0 / fps_limit;
+    if (fps_limit <= 0.0)
+        this->dt_limit = 0.0;
+    else
+        this->dt_limit = 1.0 / fps_limit;
     return false;
 }
 

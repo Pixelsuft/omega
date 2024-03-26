@@ -205,6 +205,13 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         omg_scenemgr_scene_stop(&app->sm, this);
         omg_scenemgr_scene_run(&app->sm, this);
     }
+    else if (event->code == OMG_SCANCODE_T && event->is_pressed) {
+        app->clock->wait_for_limit = true;
+        app->clock->set_fps_limit(app->clock, 15.0);
+    }
+    else if (event->code == OMG_SCANCODE_Y && event->is_pressed) {
+        app->clock->set_fps_limit(app->clock, 0.0);
+    }
 }
 
 bool game_scene_on_destroy(GameScene* this) {
