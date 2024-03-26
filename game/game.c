@@ -245,8 +245,13 @@ bool game_scene_init(GameScene* this) {
     this->p.d.states.data[P_A_JUMP].durations[3] = 100000.0f;
     omg_obj_anim_sprite_init(&this->p.a);
     omg_obj_anim_run_state(&this->p.a, P_A_FALL);
-    app->sc.w = app->win->size.w / 800.0f;
-    app->sc.h = app->win->size.h / 600.0f;
+    if (app->sc.w == app->sc.h) {
+        app->sc.w = app->sc.h = ((app->sc.w > app->sc.h) ? (app->win->size.h / 600.0f) : (app->win->size.w / 800.0f));
+    }
+    else {
+        app->sc.w = app->win->size.w / 800.0f;
+        app->sc.h = app->win->size.h / 600.0f;
+    }
     this->ldtk = &app->ld.mp[0];
     this->bg[0] = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, true);
     rn->set_scale(rn, NULL, &OMG_FPOINT(1, 1));

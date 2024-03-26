@@ -94,6 +94,9 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     else if (event->code == OMG_SCANCODE_S && event->is_pressed) {
         app->show_fps = !app->show_fps;
     }
+    else if (event->code == OMG_SCANCODE_A && event->is_pressed) {
+        app->sc.w = app->sc.h = ((app->sc.w > app->sc.h) ? app->sc.h : app->sc.w);
+    }
     else if (event->is_pressed) {
         this->should_cont = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
