@@ -1049,3 +1049,33 @@ OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str) {
     output_str->len += out_size;
     return output_str;
 }
+
+bool omg_frect_intersect(const OMG_FRect* rect_a, const OMG_FRect* rect_b, OMG_FRect* res) {
+    if ((rect_a->w <= 0) || (rect_a->h <= 0) || (rect_b->w <= 0) || (rect_b->h <= 0)) {
+        res->x = res->y = 0.0f;
+        res->w = res->h = 0.0f;
+        return false;
+    }
+    float a_min, a_max, b_min, b_max;
+    a_min = rect_a->x;
+    a_max = a_min + rect_a->w;
+    b_min = rect_b->x;
+    b_max = b_min + rect_b->w;
+    if (b_min > a_min)
+        a_min = b_min;
+    res->x = a_min;
+    if (b_max < a_max)
+        a_max = b_max;
+    res->w = a_max - a_min;
+    a_min = rect_a->y;
+    a_max = a_min + rect_a->h;
+    b_min = rect_b->y;
+    b_max = b_min + rect_b->h;
+    if (b_min > a_min)
+        a_min = b_min;
+    res->y = a_min;
+    if (b_max < a_max)
+        a_max = b_max;
+    res->h = a_max - a_min;
+    return (res->w > 0) && (res->h > 0);
+}

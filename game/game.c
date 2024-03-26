@@ -36,7 +36,11 @@ bool game_scene_on_update(GameScene* this) {
                     if (p_r.x >= en->rect.x && this->p.r.x < (en->rect.x + en->rect.w)) {
                         if (p_r.y >= en->rect.y && this->p.r.y < (en->rect.y + en->rect.h)) {
                             has_col = true;
-                            bool is_dif = app->omg->std->fabsf(this->p.r.y + this->p.r.h - en->rect.y) <= 4.0f;
+                            OMG_FRect cr;
+                            omg_frect_intersect(&this->p.r, &en->rect, &cr);
+                            // Collides from up
+                            // bool is_dif = app->omg->std->fabsf(this->p.r.y + this->p.r.h - en->rect.y) <= 4.0f;
+                            bool is_dif = cr.h <= cr.w;
                             if (!is_dif) {
                                 if (!(this->p.r.x <= en->rect.x) && !(p_r.x >= (en->rect.x + en->rect.w)))
                                     is_dif = true;
