@@ -45,11 +45,8 @@ bool game_scene_on_update(GameScene* this) {
                                 if (!(this->p.r.x <= en->rect.x) && !(p_r.x >= (en->rect.x + en->rect.w)))
                                     is_dif = true;
                             } */
-                            if (this->p.y_speed < 0.0f && !this->p.on_ground && (p_r.y > (en->rect.y + en->rect.h))) {
-                                this->p.y_speed = 0.0f;
-                                this->p.r.y = en->rect.y + en->rect.h;
-                            }
-                            else if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif && this->p.r.y < (en->rect.y + en->rect.h)) {
+                            if (0) {}
+                            else if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif && this->p.r.y < en->rect.y) {
                                 this->p.on_ground = true;
                                 this->p.air_jump = true;
                                 this->p.r.y = en->rect.y - this->p.r.h;
@@ -61,6 +58,10 @@ bool game_scene_on_update(GameScene* this) {
                             }
                             else if (p_r.x > (en->rect.x + en->rect.w) && (this->p.gr_o != en) && !is_dif) {
                                 this->p.r.x = en->rect.x + en->rect.w;
+                            }
+                            else if (this->p.y_speed < 0.0f && !this->p.on_ground && (p_r.y > (en->rect.y + en->rect.h))) {
+                                this->p.y_speed = 0.0f;
+                                this->p.r.y = en->rect.y + en->rect.h;
                             }
                         }
                     }
