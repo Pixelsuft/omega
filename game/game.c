@@ -53,13 +53,13 @@ bool game_scene_on_update(GameScene* this) {
                                 this->p.gr_o = en;
                                 omg_obj_anim_run_state(&this->p.a, (this->p.dir == 0) ? P_A_IDLE : P_A_CRUN);
                             }
-                            else if (this->p.r.x < en->rect.x && (this->p.gr_o != en) && !is_dif) {
+                            else if (this->p.r.x < en->rect.x && !is_dif) {
                                 this->p.r.x = en->rect.x - this->p.r.w;
                             }
-                            else if (p_r.x > (en->rect.x + en->rect.w) && (this->p.gr_o != en) && !is_dif) {
+                            else if (p_r.x > en->rect.x && !is_dif) {
                                 this->p.r.x = en->rect.x + en->rect.w;
                             }
-                            else if (this->p.y_speed < 0.0f && !this->p.on_ground && (p_r.y > (en->rect.y + en->rect.h))) {
+                            else if (this->p.y_speed < 0.0f && !this->p.on_ground && (p_r.y > (en->rect.y + en->rect.h)) && is_dif) {
                                 this->p.y_speed = 0.0f;
                                 this->p.r.y = en->rect.y + en->rect.h;
                             }
