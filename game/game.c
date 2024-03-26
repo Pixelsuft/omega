@@ -41,15 +41,15 @@ bool game_scene_on_update(GameScene* this) {
                             // Collides from up
                             // bool is_dif = app->omg->std->fabsf(this->p.r.y + this->p.r.h - en->rect.y) <= 4.0f;
                             bool is_dif = cr.h <= cr.w;
-                            if (!is_dif) {
+                            /* if (!is_dif) {
                                 if (!(this->p.r.x <= en->rect.x) && !(p_r.x >= (en->rect.x + en->rect.w)))
                                     is_dif = true;
-                            }
+                            } */
                             if (this->p.y_speed < 0.0f && !this->p.on_ground && (p_r.y > (en->rect.y + en->rect.h))) {
                                 this->p.y_speed = 0.0f;
                                 this->p.r.y = en->rect.y + en->rect.h;
                             }
-                            else if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif) {
+                            else if (!this->p.on_ground && this->p.y_speed >= 0.0f && is_dif && this->p.r.y < (en->rect.y + en->rect.h)) {
                                 this->p.on_ground = true;
                                 this->p.air_jump = true;
                                 this->p.r.y = en->rect.y - this->p.r.h;
