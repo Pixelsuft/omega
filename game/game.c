@@ -39,17 +39,7 @@ bool game_scene_on_update(GameScene* this) {
                             has_col = true;
                             OMG_FRect cr;
                             omg_frect_intersect(&this->p.r, &en->rect, &cr);
-                            // cr.h /= this->p.y_speed;
-                            // More precise
-                            // t = S / (new_y_s - t * 750)
-                            // t^2*750 - t*ys + S = 0
-                            // float y_t1 = (this->p.y_speed + app->omg->std->sqrtf(this->p.y_speed * this->p.y_speed - 4.0f * 750.0f * cr.h)) / 2.0f / 750.0f;
-                            // float y_t2 = (this->p.y_speed - app->omg->std->sqrtf(this->p.y_speed * this->p.y_speed - 4.0f * 750.0f * cr.h)) / 2.0f / 750.0f;
                             cr.h /= this->p.y_speed;
-                            /* if (app->omg->std->fabsf(y_t2 - cr.h) > app->omg->std->fabsf(y_t1 - cr.h))
-                                cr.h = y_t1;
-                            else
-                                cr.h = y_t2; */
                             cr.w /= this->p.x_speed * (float)this->p.dir;
                             // Collides from up
                             // bool is_dif = app->omg->std->fabsf(this->p.r.y + this->p.r.h - en->rect.y) <= 4.0f;
