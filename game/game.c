@@ -213,6 +213,14 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     else if (event->code == OMG_SCANCODE_Y && event->is_pressed) {
         app->clock->set_fps_limit(app->clock, 0.0);
     }
+    else if (event->code == OMG_SCANCODE_U && event->is_pressed) {
+        app->clock->speed = 0.1;
+        app->au->mus_set_speed(app->au, app->ld.mus[1], 0.1f);
+    }
+    else if (event->code == OMG_SCANCODE_I && event->is_pressed) {
+        app->clock->speed = 1.0;
+        app->au->mus_set_speed(app->au, app->ld.mus[1], 1.0f);
+    }
 }
 
 bool game_scene_on_destroy(GameScene* this) {
@@ -228,6 +236,8 @@ bool game_scene_on_stop(GameScene* this) {
     if (!this->should_back)
         return false;
     app->au->mus_stop(app->au, app->ld.mus[1]);
+    app->clock->speed = 1.0;
+    app->au->mus_set_speed(app->au, app->ld.mus[1], 1.0f);
     MenuScene* scene = OMG_MALLOC(app->omg->mem, sizeof(MenuScene));
     omg_scenemgr_scene_fill(&app->sm, scene);
     OMG_BEGIN_POINTER_CAST();
