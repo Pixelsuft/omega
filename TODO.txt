@@ -1,5 +1,4 @@
 [-] Add function to set log callback
 [-] Track memory allocations
 [-] Vulkan renderer
-[-] Write a slightly bigger example
 [-] Loader api?
