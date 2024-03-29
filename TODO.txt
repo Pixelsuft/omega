@@ -1,4 +1,4 @@
 [-] Add function to set log callback
 [-] Track memory allocations
-[-] Vulkan renderer
+[-] Vulkan (and other) renderers
 [-] Loader api?
