@@ -165,7 +165,6 @@ void game_player_do_jump(GameScene* this, bool high) {
 }
 
 void player_do_walk(GameScene* this, bool is_right, bool is_pressed) {
-    App* app = base->data;
     if (is_right) {
         if (is_pressed) {
             this->p.dir = 1;
@@ -293,6 +292,7 @@ bool game_scene_init(GameScene* this) {
         app->sc.w /= 800.0f / 640.0f;
         app->sc.h /= 600 / 480.0f;
         this->offset.x = (rn->size.w - 800.0f * app->sc.w) / 2.0f;
+        this->offset.y = (rn->size.h - 600.0f * app->sc.h) / 2.0f;
     }
     else {
         app->sc.w = app->win->size.w / 800.0f;
