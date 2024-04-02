@@ -162,7 +162,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         this->should_back = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
-    else if ((event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_B) && event->is_pressed && !event->is_repeated) {
+    else if ((event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_B || event->code == OMG_SCANCODE_SPACE) && event->is_pressed && !event->is_repeated) {
         if (this->p.on_ground || this->p.air_jump) {
             app->au->snd_play(app->au, app->ld.snd[this->p.on_ground ? 0 : 1], 0, 0.0, 0.0);
             if (!this->p.on_ground)
@@ -172,21 +172,21 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
             omg_obj_anim_run_state(&this->p.a, P_A_JUMP);
         }
     }
-    else if (event->code == OMG_SCANCODE_LEFT && event->is_pressed && !event->is_repeated) {
+    else if ((event->code == OMG_SCANCODE_LEFT || event->code == OMG_SCANCODE_A) && event->is_pressed && !event->is_repeated) {
         this->p.dir = -1;
         this->p.face_left = true;
         if (this->p.on_ground) {
             omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
         }
     }
-    else if (event->code == OMG_SCANCODE_RIGHT && event->is_pressed && !event->is_repeated) {
+    else if ((event->code == OMG_SCANCODE_RIGHT || event->code == OMG_SCANCODE_D) && event->is_pressed && !event->is_repeated) {
         this->p.dir = 1;
         this->p.face_left = false;
         if (this->p.on_ground) {
             omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
         }
     }
-    else if (event->code == OMG_SCANCODE_LEFT && !event->is_pressed) {
+    else if ((event->code == OMG_SCANCODE_LEFT || event->code == OMG_SCANCODE_A) && !event->is_pressed) {
         if (this->p.dir == -1) {
             this->p.dir = 0;
             if (this->p.on_ground) {
@@ -194,7 +194,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
             }
         }
     }
-    else if (event->code == OMG_SCANCODE_RIGHT && !event->is_pressed) {
+    else if ((event->code == OMG_SCANCODE_RIGHT || event->code == OMG_SCANCODE_D) && !event->is_pressed) {
         if (this->p.dir == 1) {
             this->p.dir = 0;
             if (this->p.on_ground) {
