@@ -198,15 +198,18 @@ void omg_scenemgr_scene_do_update(OMG_SceneMgr* this) {
                 omg_scenemgr_scene_stop(this, temp_scene);
             }
         }
+        else {
+            temp_scene->dt = 0.0;
+        }
     }
 }
 
 void omg_scenemgr_event_on_update(OMG_EventUpdate* event) {
     OMG_SceneMgr* this = OMG_ARG_FROM_EVENT(event);
     SET_EVENT_ARG();
+    this->on_update(event);
     if (OMG_ISNOTNULL(this->cur_scene))
         omg_scenemgr_scene_do_update(this);
-    this->on_update(event);
 }
 
 void omg_scenemgr_scene_do_paint(OMG_SceneMgr* this) {
