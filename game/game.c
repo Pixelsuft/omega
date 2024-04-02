@@ -164,6 +164,42 @@ void game_player_do_jump(GameScene* this, bool high) {
     }
 }
 
+void player_do_walk(GameScene* this, bool is_right, bool is_pressed) {
+    App* app = base->data;
+    if (is_right) {
+        if (is_pressed) {
+            this->p.dir = 1;
+            this->p.face_left = false;
+            if (this->p.on_ground) {
+                omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
+            }
+        }
+        else {
+            if (this->p.dir == 1) {
+                this->p.dir = 0;
+                if (this->p.on_ground) {
+                    omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
+                }
+            }
+        }
+    }
+    else if (is_pressed) {
+        this->p.dir = -1;
+        this->p.face_left = true;
+        if (this->p.on_ground) {
+            omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
+        }        
+    }
+    else {
+        if (this->p.dir == -1) {
+            this->p.dir = 0;
+            if (this->p.on_ground) {
+                omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
+            }
+        }
+    }
+}
+
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
     if (IS_EXIT_CODE(event->code) && !event->is_pressed) {
@@ -178,34 +214,16 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         game_player_do_jump(this, event->code == OMG_SCANCODE_B);
     }
     else if ((event->code == OMG_SCANCODE_LEFT || event->code == OMG_SCANCODE_A) && event->is_pressed && !event->is_repeated) {
-        this->p.dir = -1;
-        this->p.face_left = true;
-        if (this->p.on_ground) {
-            omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
-        }
+        player_do_walk(this, false, true);
     }
     else if ((event->code == OMG_SCANCODE_RIGHT || event->code == OMG_SCANCODE_D) && event->is_pressed && !event->is_repeated) {
-        this->p.dir = 1;
-        this->p.face_left = false;
-        if (this->p.on_ground) {
-            omg_obj_anim_run_state(&this->p.a, P_A_CRUN);
-        }
+        player_do_walk(this, true, true);
     }
     else if ((event->code == OMG_SCANCODE_LEFT || event->code == OMG_SCANCODE_A) && !event->is_pressed) {
-        if (this->p.dir == -1) {
-            this->p.dir = 0;
-            if (this->p.on_ground) {
-                omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
-            }
-        }
+        player_do_walk(this, false, false);
     }
     else if ((event->code == OMG_SCANCODE_RIGHT || event->code == OMG_SCANCODE_D) && !event->is_pressed) {
-        if (this->p.dir == 1) {
-            this->p.dir = 0;
-            if (this->p.on_ground) {
-                omg_obj_anim_run_state(&this->p.a, P_A_IDLE);
-            }
-        }
+        player_do_walk(this, true, false);
     }
     else if (event->code == OMG_SCANCODE_R && !event->is_pressed) {
         omg_scenemgr_scene_stop(&app->sm, this);
