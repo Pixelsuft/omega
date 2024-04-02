@@ -152,6 +152,18 @@ void game_scene_on_resize(GameScene* this, OMG_EventResize* event) {
     rn->set_scale(rn, NULL, &app->sc);
 }
 
+void game_player_do_jump(GameScene* this, bool high) {
+    App* app = base->data;
+    if (this->p.on_ground || this->p.air_jump) {
+        app->au->snd_play(app->au, app->ld.snd[this->p.on_ground ? 0 : 1], 0, 0.0, 0.0);
+        if (!this->p.on_ground)
+            this->p.air_jump = false;
+        this->p.on_ground = false;
+        this->p.y_speed = high ? -400.0f : -275.0f;
+        omg_obj_anim_run_state(&this->p.a, P_A_JUMP);
+    }
+}
+
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
     if (IS_EXIT_CODE(event->code) && !event->is_pressed) {
@@ -163,14 +175,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
         omg_scenemgr_scene_destroy(&app->sm, this);
     }
     else if ((event->code == OMG_SCANCODE_Z || event->code == OMG_SCANCODE_B || event->code == OMG_SCANCODE_SPACE) && event->is_pressed && !event->is_repeated) {
-        if (this->p.on_ground || this->p.air_jump) {
-            app->au->snd_play(app->au, app->ld.snd[this->p.on_ground ? 0 : 1], 0, 0.0, 0.0);
-            if (!this->p.on_ground)
-                this->p.air_jump = false;
-            this->p.on_ground = false;
-            this->p.y_speed = (event->code == OMG_SCANCODE_B) ? -400.0f : -275.0f;
-            omg_obj_anim_run_state(&this->p.a, P_A_JUMP);
-        }
+        game_player_do_jump(this, event->code == OMG_SCANCODE_B);
     }
     else if ((event->code == OMG_SCANCODE_LEFT || event->code == OMG_SCANCODE_A) && event->is_pressed && !event->is_repeated) {
         this->p.dir = -1;
