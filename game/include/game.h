@@ -8,6 +8,7 @@
 typedef struct {
     OMG_Scene parent;
     Player p;
+    OMG_FPoint offset;
     OMG_Texture* bg[1];
     OMG_Ldtk* ldtk;
     float cloud_offset;

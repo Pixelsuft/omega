@@ -89,7 +89,7 @@ bool game_scene_on_update(GameScene* this) {
 bool game_scene_on_paint(GameScene* this) {
     App* app = base->data;
     rn->begin(rn);
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w * 1.2f, app->sc.h * 1.2f));
+    rn->set_scale(rn, &OMG_FPOINT(this->offset.x / 1.2f / app->sc.w, this->offset.y / 1.2f / app->sc.h), &OMG_FPOINT(app->sc.w * 1.2f, app->sc.h * 1.2f));
     rn->clear(rn, &this->ldtk->levels.data[0].bg_color);
     OMG_FPoint cloud_pos;
     cloud_pos.y = 0.0f;
@@ -97,7 +97,7 @@ bool game_scene_on_paint(GameScene* this) {
     rn->copy(rn, app->ld.tex[4], &cloud_pos);
     cloud_pos.x += 960.0f;
     rn->copy(rn, app->ld.tex[4], &cloud_pos);
-    rn->set_scale(rn, NULL, &app->sc);
+    rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->copy(rn, this->bg[0], NULL);
     rn->copy(rn, app->ld.tex[2], &OMG_FPOINT(10, 544.0f - app->ld.tex[2]->size.h));
     OMG_FRect p_src;
@@ -106,9 +106,9 @@ bool game_scene_on_paint(GameScene* this) {
     p_src.x = (float)(this->p.a.cur_frame * 32);
     p_src.y = (float)(this->p.a.cur_state * 32);
     rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
-    rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
+    rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w * 3.0f, this->offset.y / app->sc.h * 3.0f), &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
     app_draw_fps(app);
-    rn->set_scale(rn, NULL, &app->sc);
+    rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->flip(rn);
     return false;
 }
@@ -265,9 +265,11 @@ bool game_scene_init(GameScene* this) {
     this->p.d.states.data[P_A_JUMP].durations[3] = 100000.0f;
     omg_obj_anim_sprite_init(&this->p.a);
     omg_obj_anim_run_state(&this->p.a, P_A_FALL);
+    this->offset.x = this->offset.y = 0.0f;
     if (app->sc.w == app->sc.h) {
         app->sc.w /= 800.0f / 640.0f;
         app->sc.h /= 600 / 480.0f;
+        this->offset.x = (rn->size.w - 800.0f * app->sc.w) / 2.0f;
     }
     else {
         app->sc.w = app->win->size.w / 800.0f;
@@ -291,7 +293,7 @@ bool game_scene_init(GameScene* this) {
         }
     }
     rn->set_target(rn, NULL);
-    rn->set_scale(rn, NULL, &app->sc);
+    rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->tex_set_scale_mode(rn, app->ld.tex[4], OMG_SCALE_MODE_LINEAR);
     OMG_BEGIN_POINTER_CAST();
     base->on_run = game_scene_on_run;
