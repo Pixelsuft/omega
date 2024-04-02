@@ -319,7 +319,16 @@ void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
             ev.parent.time = event->parent.time;
             ev.parent.data = event->parent.data;
             ev.finger_id = 0;
-            ev.pos.x = event->pos.x;
+            ev.pos.x = event->pos.x / ren->size.w;
+            ev.pos.y = event->pos.y / ren->size.h;
+            ev.rel.x = ev.rel.y = 0.0f;
+            ev.pressure = 1.0f;
+            ev.touch_id = 0;
+            ev.pressed = true;
+            ev.win = this->omg_win;
+            if (CUR_SCENE_CHECK_NULL_VAL(on_touch_down)) {
+                this->cur_scene->on_touch_down(this->cur_scene, &ev);
+            }
         }
     }
     this->on_mouse_down(event);
@@ -338,6 +347,23 @@ void omg_scenemgr_event_on_mouse_up(OMG_EventMouseButton* event) {
     if (event->win == this->omg_win) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_up)) {
             this->cur_scene->on_mouse_up(this->cur_scene, event);
+        }
+        if (this->emulate_touch_with_mouse && (event->button == OMG_MBUTTON_LEFT)) {
+            OMG_EventTouch ev;
+            ev.parent.omg = event->parent.omg;
+            ev.parent.time = event->parent.time;
+            ev.parent.data = event->parent.data;
+            ev.finger_id = 0;
+            ev.pos.x = event->pos.x / ren->size.w;
+            ev.pos.y = event->pos.y / ren->size.h;
+            ev.rel.x = ev.rel.y = 0.0f;
+            ev.pressure = 1.0f;
+            ev.touch_id = 0;
+            ev.pressed = false;
+            ev.win = this->omg_win;
+            if (CUR_SCENE_CHECK_NULL_VAL(on_touch_up)) {
+                this->cur_scene->on_touch_up(this->cur_scene, &ev);
+            }
         }
     }
     this->on_mouse_up(event);

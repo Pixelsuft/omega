@@ -234,6 +234,13 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
                 event.rel.x = this->ev.tfinger.dx;
                 event.rel.y = this->ev.tfinger.dy;
                 event.pressure = this->ev.tfinger.pressure;
+                event.pressed = (this->ev.type != SDL_FINGERUP);
+                if (this->ev.type == SDL_FINGERDOWN)
+                    base->on_touch_down(&event);
+                else if (this->ev.type == SDL_FINGERUP)
+                    base->on_touch_up(&event);
+                else if (this->ev.type == SDL_FINGERMOTION)
+                    base->on_touch_move(&event);
                 break;
             }
             case SDL_WINDOWEVENT: {
