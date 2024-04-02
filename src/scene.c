@@ -295,6 +295,24 @@ void omg_scenemgr_event_on_mouse_move(OMG_EventMouseMove* event) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_move)) {
             this->cur_scene->on_mouse_move(this->cur_scene, event);
         }
+        if (this->emulate_touch_with_mouse) {
+            OMG_EventTouch ev;
+            ev.parent.omg = event->parent.omg;
+            ev.parent.time = event->parent.time;
+            ev.parent.data = event->parent.data;
+            ev.finger_id = 0;
+            ev.pos.x = event->pos.x / ren->size.w;
+            ev.pos.y = event->pos.y / ren->size.h;
+            ev.rel.x = event->rel.x / ren->size.w;
+            ev.rel.y = event->rel.y / ren->size.h;
+            ev.pressure = 1.0f;
+            ev.touch_id = 0;
+            ev.pressed = true;
+            ev.win = this->omg_win;
+            if (CUR_SCENE_CHECK_NULL_VAL(on_touch_move)) {
+                this->cur_scene->on_touch_move(this->cur_scene, &ev);
+            }
+        }
     }
     this->on_mouse_move(event);
 }
