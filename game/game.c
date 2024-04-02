@@ -266,7 +266,8 @@ bool game_scene_init(GameScene* this) {
     omg_obj_anim_sprite_init(&this->p.a);
     omg_obj_anim_run_state(&this->p.a, P_A_FALL);
     if (app->sc.w == app->sc.h) {
-        app->sc.w = app->sc.h = ((app->sc.w > app->sc.h) ? (app->win->size.h / 600.0f) : (app->win->size.w / 800.0f));
+        app->sc.w /= 800.0f / 640.0f;
+        app->sc.h /= 600 / 480.0f;
     }
     else {
         app->sc.w = app->win->size.w / 800.0f;

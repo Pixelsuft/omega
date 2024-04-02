@@ -32,6 +32,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 (should_on ? scene->on_key_down : scene->on_key_up)(scene, &event);
             }
         }
+    // TODO: should I reset emulated touch input???
     if (((should_on && OMG_ISNOTNULL(scene->on_mouse_down)) || (!should_on && OMG_ISNOTNULL(scene->on_mouse_up))))
         for (size_t i = 0; i < 7; i++) {
             if (this->mouse_states[i].w > 0.0f) {
