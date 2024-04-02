@@ -62,7 +62,7 @@ bool menu_scene_on_paint(MenuScene* this) {
 
 bool menu_scene_on_run(MenuScene* this) {
     App* app = base->data;
-    rn->set_scale(rn, NULL, &OMG_FPOINT(1, 1));
+    rn->set_scale(rn, &OMG_FPOINT(0, 0), &OMG_FPOINT(1, 1));
     app->au->mus_play(app->au, app->ld.mus[0], -1, 0.0, 0.2);
     app->clock->reset(app->clock);
     return false;
@@ -129,6 +129,7 @@ bool menu_scene_init(MenuScene* this) {
     App* app = base->data;
     app->sc.w = app->win->size.w / 640.0f;
     app->sc.h = app->win->size.h / 480.0f;
+    rn->set_scale(rn, &OMG_FPOINT(0, 0), &OMG_FPOINT(1, 1));
     rn->tex_set_color_mod(rn, app->ld.fnt[0].page, &OMG_RGB(255, 255, 255));
     rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);
     this->bg = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, false);
