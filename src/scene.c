@@ -313,6 +313,14 @@ void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
         if (CUR_SCENE_CHECK_NULL_VAL(on_mouse_down)) {
             this->cur_scene->on_mouse_down(this->cur_scene, event);
         }
+        if (this->emulate_touch_with_mouse && (event->button == OMG_MBUTTON_LEFT)) {
+            OMG_EventTouch ev;
+            ev.parent.omg = event->parent.omg;
+            ev.parent.time = event->parent.time;
+            ev.parent.data = event->parent.data;
+            ev.finger_id = 0;
+            ev.pos.x = event->pos.x;
+        }
     }
     this->on_mouse_down(event);
 }
@@ -459,6 +467,7 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     this->omg_omg = ren->omg;
     this->omg_win = ren->win;
     this->is_mouse_entered = true;
+    this->emulate_touch_with_mouse = false;
 #if OMG_SCENES_ADV_INPUT
     omg_base->std->memset(this->key_states, 0, sizeof(this->key_states));
     omg_base->std->memset(this->mouse_states, 0, sizeof(this->mouse_states));

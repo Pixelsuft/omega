@@ -87,6 +87,7 @@ typedef struct OMG_SceneMgr {
     void (*on_touch_down)(OMG_EventTouch* event);
     void (*on_touch_up)(OMG_EventTouch* event);
     void (*on_touch_move)(OMG_EventTouch* event);
+    bool emulate_touch_with_mouse;
     bool is_mouse_entered;
 } OMG_SceneMgr;
 
