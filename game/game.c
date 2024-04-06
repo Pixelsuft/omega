@@ -329,6 +329,7 @@ bool game_scene_init(GameScene* this) {
     base->on_stop = game_scene_on_stop;
     OMG_END_POINTER_CAST();
     this->should_back = false;
+    base->reset_input_touch = false;
     base->inited = true;
     base->was_allocated = true;
     return false;

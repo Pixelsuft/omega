@@ -104,6 +104,17 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     }
 }
 
+void menu_scene_on_touch(MenuScene* this, OMG_EventTouch* event) {
+    App* app = base->data;
+    if (event->pos.y < 0.2f) {
+        app->omg->set_text_input_state(app->omg, OMG_TEXT_INPUT_ENABLED);
+    }
+    else {
+        this->should_cont = true;
+        omg_scenemgr_scene_destroy(&app->sm, this);
+    }
+}
+
 bool menu_scene_on_destroy(MenuScene* this) {
     App* app = base->data;
     rn->tex_destroy(rn, this->bg);
@@ -156,6 +167,7 @@ bool menu_scene_init(MenuScene* this) {
     base->on_resize = menu_scene_on_resize;
     base->on_key_down = menu_scene_on_keyboard;
     base->on_key_up = menu_scene_on_keyboard;
+    base->on_touch_up = menu_scene_on_touch;
     base->on_destroy = menu_scene_on_destroy;
     base->on_stop = menu_scene_on_stop;
     OMG_END_POINTER_CAST();
