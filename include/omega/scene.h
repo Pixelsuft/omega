@@ -58,6 +58,9 @@ typedef struct OMG_Scene {
     bool reset_input;
     bool reset_input_on_run;
     bool reset_input_on_stop;
+    bool reset_input_keyboard;
+    bool reset_input_mouse;
+    bool reset_input_touch;
     bool inited;
 } OMG_Scene;
 

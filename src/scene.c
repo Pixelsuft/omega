@@ -16,7 +16,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
 #if OMG_SCENES_ADV_INPUT
     if (OMG_ISNULL(scene) || !scene->inited)
         return;
-    if (((should_on && OMG_ISNOTNULL(scene->on_key_down)) || (!should_on && OMG_ISNOTNULL(scene->on_key_up))))
+    if (scene->reset_input_keyboard && ((should_on && OMG_ISNOTNULL(scene->on_key_down)) || (!should_on && OMG_ISNOTNULL(scene->on_key_up))))
         for (size_t i = 0; i < 512; i++) {
             if (this->key_states[i] > 0) {
                 OMG_EventKeyboard event;
@@ -33,7 +33,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
             }
         }
     // TODO: should I reset emulated touch input???
-    if (((should_on && OMG_ISNOTNULL(scene->on_mouse_down)) || (!should_on && OMG_ISNOTNULL(scene->on_mouse_up))))
+    if (scene->reset_input_mouse && ((should_on && OMG_ISNOTNULL(scene->on_mouse_down)) || (!should_on && OMG_ISNOTNULL(scene->on_mouse_up))))
         for (size_t i = 0; i < 7; i++) {
             if (this->mouse_states[i].w > 0.0f) {
                 OMG_EventMouseButton event;
@@ -52,7 +52,7 @@ void omg_scenemgr_scene_reset_input(OMG_SceneMgr* this, OMG_Scene* scene, bool s
                 (should_on ? scene->on_mouse_down : scene->on_mouse_up)(scene, &event);
             }
         }
-    if (((should_on && OMG_ISNOTNULL(scene->on_touch_down)) || (!should_on && OMG_ISNOTNULL(scene->on_touch_up))))
+    if (scene->reset_input_touch && ((should_on && OMG_ISNOTNULL(scene->on_touch_down)) || (!should_on && OMG_ISNOTNULL(scene->on_touch_up))))
         for (size_t i = 0; i < 64; i++) {
             if (this->finger_states[i].w > 0.0f) {
                 OMG_EventTouch event;
@@ -149,6 +149,9 @@ bool omg_scenemgr_scene_fill(OMG_SceneMgr* this, OMG_SceneFuncArg* _scene) {
     scene->reset_input = true;
     scene->reset_input_on_run = true;
     scene->reset_input_on_stop = true;
+    scene->reset_input_keyboard = true;
+    scene->reset_input_mouse = true;
+    scene->reset_input_touch = true;
     scene->id = 0;
     return false;
 }
