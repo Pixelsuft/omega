@@ -141,7 +141,7 @@ bool game_scene_on_run(GameScene* this) {
     }
     this->cloud_offset = 0.0f;
     this->should_back = false;
-    app->win->cursor_set_shown(app->win, 0);
+    // app->win->cursor_set_shown(app->win, 0);
     app->clock->reset(app->clock);
     return false;
 }
@@ -247,7 +247,14 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
 
 void game_scene_on_touch(GameScene* this, OMG_EventTouch* event) {
     if (event->moving) {
-
+        if (event->pos.x >= 0.25f && this->p.dir < 0) {
+            player_do_walk(this, false, false);
+            player_do_walk(this, true, true);
+        }
+        else if (event->pos.x < 0.25f && this->p.dir > 0) {
+            player_do_walk(this, true, false);
+            player_do_walk(this, false, true);
+        }
     }
     else if (event->pressed) {
         if (event->pos.x < 0.5f) {
