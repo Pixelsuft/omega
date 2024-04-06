@@ -52,7 +52,9 @@ bool menu_scene_on_paint(MenuScene* this) {
     rn->tex_set_color_mod(rn, this->bg, &bg_col);
     rn->copy_ex(rn, this->bg, NULL, &bg_r, NULL, rot);
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 2.0f, app->sc.h / 2.0f));
+    rn->tex_set_color_mod(rn, app->ld.fnt[0].page, &bg_col);
     omg_bmfont_render(&app->ld.fnt[0], &OMG_STR("TEST GAME!!!"), &OMG_FPOINT(290, 100));
+    rn->tex_set_color_mod(rn, app->ld.fnt[0].page, &OMG_RGBA(255, 255, 255, 255));
     rn->set_scale(rn, NULL, &OMG_FPOINT(app->sc.w / 1.25f / 3.0f, app->sc.h / 1.25f / 3.0f));
     app_draw_fps(app);
     rn->set_scale(rn, NULL, &app->sc);
