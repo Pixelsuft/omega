@@ -245,6 +245,19 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     }
 }
 
+void game_scene_on_touch(GameScene* this, OMG_EventTouch* event) {
+    App* app = base->data;
+    if (event->moving) {
+
+    }
+    else if (event->pressed) {
+
+    }
+    else {
+
+    }
+}
+
 bool game_scene_on_destroy(GameScene* this) {
     App* app = base->data;
     rn->tex_destroy(rn, this->bg[0]);
@@ -325,6 +338,9 @@ bool game_scene_init(GameScene* this) {
     base->on_resize = game_scene_on_resize;
     base->on_key_down = game_scene_on_keyboard;
     base->on_key_up = game_scene_on_keyboard;
+    base->on_touch_down = game_scene_on_touch;
+    base->on_touch_up = game_scene_on_touch;
+    base->on_touch_move = game_scene_on_touch;
     base->on_destroy = game_scene_on_destroy;
     base->on_stop = game_scene_on_stop;
     OMG_END_POINTER_CAST();

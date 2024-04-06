@@ -129,4 +129,5 @@ typedef struct {
     OMG_FPoint rel;
     float pressure;
     bool pressed;
+    bool moving;
 } OMG_EventTouch;
