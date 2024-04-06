@@ -123,6 +123,7 @@ bool app_init(App* this, OMG_EntryData* data) {
         this->omg->destroy(this->omg);
         return false;
     }
+    this->omg->emulate_mouse = false;
     this->au = this->omg->audio;
     this->ren = this->win->ren;
     this->ren->soft_offset = true;
