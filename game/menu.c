@@ -107,7 +107,15 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
 void menu_scene_on_touch(MenuScene* this, OMG_EventTouch* event) {
     App* app = base->data;
     if (event->pos.y < 0.2f) {
-        app->omg->set_text_input_state(app->omg, OMG_TEXT_INPUT_ENABLED);
+        if (event->pos.x < 0.2f)
+            rn->set_vsync(rn, !app->win->vsync);
+        else if (event->pos.x >= 0.8f)
+            app->win->set_window_mode(
+                app->win,
+                app->win->window_mode == OMG_WIN_MODE_WINDOW ? OMG_WIN_MODE_DESKTOP_FULLSCREEN : OMG_WIN_MODE_WINDOW
+            );
+        else
+            app->show_fps = !app->show_fps;
     }
     else {
         this->should_cont = true;
