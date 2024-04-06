@@ -530,8 +530,9 @@ bool omg_scenemgr_init(OMG_SceneMgr* this, void* omg_ren) {
     omg_base->std->memcpy(
         (void*)((size_t)(&this->on_update)),
         (void*)((size_t)(&omg_base->on_update)),
-        (size_t)(&this->on_touch_move) - (size_t)(&this->on_update)
+        (size_t)(&this->on_touch_move) - (size_t)(&this->on_update) + sizeof(size_t)
     );
+    this->dummy123 = NULL;
     omg_base->on_update = omg_scenemgr_event_on_update;
     omg_base->on_loop_stop = omg_scenemgr_event_on_loop_stop;
     omg_base->on_paint = omg_scenemgr_event_on_paint;
@@ -563,7 +564,7 @@ bool omg_scenemgr_destroy(OMG_SceneMgr* this) {
     omg_base->std->memcpy(
         (void*)((size_t)(&omg_base->on_update)),
         (void*)((size_t)(&this->on_update)),
-        (size_t)(&this->on_touch_move) - (size_t)(&this->on_update)
+        (size_t)(&this->on_touch_move) - (size_t)(&this->on_update) + sizeof(size_t)
     );
     omg_base->event_arg = this->event_arg;
     return false;
