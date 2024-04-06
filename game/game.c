@@ -246,15 +246,29 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
 }
 
 void game_scene_on_touch(GameScene* this, OMG_EventTouch* event) {
-    App* app = base->data;
     if (event->moving) {
 
     }
     else if (event->pressed) {
-
+        if (event->pos.x < 0.5f) {
+            this->fingers[0] = event->finger_id;
+            player_do_walk(this, event->pos.x >= 0.25f, true);
+        }
+        else {
+            this->fingers[1] = event->finger_id;
+            game_player_do_jump(this, event->pos.y < 0.2f);
+        }
     }
     else {
-
+        if (event->finger_id == this->fingers[0]) {
+            bool is_r = this->p.dir == 1;
+            player_do_walk(this, !is_r, false);
+            player_do_walk(this, is_r, false);
+            this->fingers[0] = -1337;
+        }
+        else if (event->finger_id == this->fingers[1]) {
+            this->fingers[1] = -1337;
+        }
     }
 }
 
@@ -331,6 +345,7 @@ bool game_scene_init(GameScene* this) {
     rn->set_target(rn, NULL);
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->tex_set_scale_mode(rn, app->ld.tex[4], OMG_SCALE_MODE_LINEAR);
+    this->fingers[0] = this->fingers[1] = -1337;
     OMG_BEGIN_POINTER_CAST();
     base->on_run = game_scene_on_run;
     base->on_update = game_scene_on_update;

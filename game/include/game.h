@@ -11,6 +11,7 @@ typedef struct {
     OMG_FPoint offset;
     OMG_Texture* bg[1];
     OMG_Ldtk* ldtk;
+    int64_t fingers[2];
     float cloud_offset;
     bool should_back;
 } GameScene;

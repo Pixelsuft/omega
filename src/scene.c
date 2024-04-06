@@ -314,6 +314,7 @@ void omg_scenemgr_event_on_mouse_move(OMG_EventMouseMove* event) {
             ev.pressure = 1.0f;
             ev.touch_id = 0;
             ev.pressed = true;
+            ev.moving = true;
             ev.win = this->omg_win;
             if (CUR_SCENE_CHECK_NULL_VAL(on_touch_move)) {
                 this->cur_scene->on_touch_move(this->cur_scene, &ev);
@@ -349,6 +350,7 @@ void omg_scenemgr_event_on_mouse_down(OMG_EventMouseButton* event) {
             ev.pressure = 1.0f;
             ev.touch_id = 0;
             ev.pressed = true;
+            ev.moving = false;
             ev.win = this->omg_win;
             if (CUR_SCENE_CHECK_NULL_VAL(on_touch_down)) {
                 this->cur_scene->on_touch_down(this->cur_scene, &ev);
@@ -384,6 +386,7 @@ void omg_scenemgr_event_on_mouse_up(OMG_EventMouseButton* event) {
             ev.pressure = 1.0f;
             ev.touch_id = 0;
             ev.pressed = false;
+            ev.moving = false;
             ev.win = this->omg_win;
             if (CUR_SCENE_CHECK_NULL_VAL(on_touch_up)) {
                 this->cur_scene->on_touch_up(this->cur_scene, &ev);
