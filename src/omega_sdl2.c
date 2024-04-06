@@ -220,7 +220,7 @@ void omg_sdl2_poll_events(OMG_OmegaSdl2* this) {
             case SDL_FINGERUP:
             case SDL_FINGERMOTION: {
                 OMG_Window* win = NULL;
-                FIND_SDL2_WIN(win, this->ev.button.windowID);
+                FIND_SDL2_WIN(win, this->ev.tfinger.windowID);
                 if (OMG_ISNULL(win))
                     break;
                 OMG_EventTouch event;
