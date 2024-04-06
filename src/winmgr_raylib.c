@@ -97,7 +97,7 @@ OMG_SurfaceRaylib* omg_winmgr_raylib_surf_from_fp(OMG_WinmgrRaylib* this, OMG_Su
         if (OMG_ISNULL(surf))
             return NULL;
 #if OMG_ALLOW_SURF_WAS_ALLOCATED
-        surf_base->was_allocated = false;
+        surf_base->was_allocated = true;
 #endif
     }
 #if OMG_ALLOW_SURF_WAS_ALLOCATED
