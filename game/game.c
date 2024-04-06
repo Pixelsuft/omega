@@ -141,7 +141,7 @@ bool game_scene_on_run(GameScene* this) {
     }
     this->cloud_offset = 0.0f;
     this->should_back = false;
-    // app->win->cursor_set_shown(app->win, 0);
+    app->win->cursor_set_shown(app->win, 0);
     app->clock->reset(app->clock);
     return false;
 }
