@@ -5,6 +5,8 @@
 #include <aamain.h>
 #include <logo.h>
 
+// TODO: use renderer size instead to fix DPI scale
+
 int omega_main(OMG_EntryData* data);
 OMG_MAIN_MAKE(omega_main)
 
