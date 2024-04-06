@@ -75,7 +75,15 @@ void logo_scene_on_keyboard(LogoScene* this, OMG_EventKeyboard* event) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         if (!sc)
             app->omg->auto_loop_stop(app->omg);
-        return;
+    }
+}
+
+void logo_scene_on_touch(LogoScene* this, OMG_EventTouch* event) {
+    App* app = base->data;
+    OMG_UNUSED(event);
+    if (app->ld.finished) {
+        this->should_cont = true;
+        omg_scenemgr_scene_destroy(&app->sm, this);
     }
 }
 
@@ -118,6 +126,7 @@ bool logo_scene_init(LogoScene* this) {
     base->on_key_down = logo_scene_on_keyboard;
     base->on_destroy = logo_scene_on_destroy;
     base->on_stop = logo_scene_on_stop;
+    base->on_touch_up = logo_scene_on_touch;
     OMG_END_POINTER_CAST();
     base->inited = true;
     base->was_allocated = true;

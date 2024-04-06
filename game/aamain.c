@@ -142,6 +142,7 @@ bool app_init(App* this, OMG_EntryData* data) {
     this->omg->on_size_change = app_on_resize;
     this->bp = this->omg->get_cwd(this->omg, true);
     omg_scenemgr_init(&this->sm, this->ren);
+    this->sm.emulate_touch_with_mouse = true;
     loader_init(&this->ld, this);
     this->fps_buf[0] = 'F';
     this->fps_buf[1] = 'P';
