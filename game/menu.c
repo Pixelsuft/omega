@@ -71,9 +71,10 @@ bool menu_scene_on_run(MenuScene* this) {
 }
 
 void menu_scene_on_resize(MenuScene* this, OMG_EventResize* event) {
+    OMG_UNUSED(event);
     App* app = base->data;
-    app->sc.w = event->size.w / 640.0f;
-    app->sc.h = event->size.h / 480.0f;
+    app->sc.w = app->ren->size.w / 640.0f;
+    app->sc.h = app->ren->size.h / 480.0f;
     rn->set_scale(rn, NULL, &app->sc);
 }
 
@@ -148,8 +149,8 @@ bool menu_scene_on_stop(MenuScene* this) {
 
 bool menu_scene_init(MenuScene* this) {
     App* app = base->data;
-    app->sc.w = app->win->size.w / 640.0f;
-    app->sc.h = app->win->size.h / 480.0f;
+    app->sc.w = app->ren->size.w / 640.0f;
+    app->sc.h = app->ren->size.h / 480.0f;
     rn->set_scale(rn, &OMG_FPOINT(0, 0), &OMG_FPOINT(1, 1));
     rn->tex_set_color_mod(rn, app->ld.fnt[0].page, &OMG_RGB(255, 255, 255));
     rn->tex_set_scale_mode(rn, app->ld.fnt[0].page, OMG_SCALE_MODE_LINEAR);

@@ -326,13 +326,13 @@ bool game_scene_init(GameScene* this) {
     this->offset.x = this->offset.y = 0.0f;
     if (app->sc.w == app->sc.h) {
         app->sc.w /= 800.0f / 640.0f;
-        app->sc.h /= 600 / 480.0f;
+        app->sc.h /= 600.0f / 480.0f;
         this->offset.x = (rn->size.w - 800.0f * app->sc.w) / 2.0f;
         this->offset.y = (rn->size.h - 600.0f * app->sc.h) / 2.0f;
     }
     else {
-        app->sc.w = app->win->size.w / 800.0f;
-        app->sc.h = app->win->size.h / 600.0f;
+        app->sc.w = rn->size.w / 800.0f;
+        app->sc.h = rn->size.h / 600.0f;
     }
     this->ldtk = &app->ld.mp[0];
     this->bg[0] = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, true);

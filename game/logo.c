@@ -51,8 +51,8 @@ bool logo_scene_on_paint(LogoScene* this) {
 
 bool logo_scene_on_run(LogoScene* this) {
     App* app = base->data;
-    app->sc.w = app->win->size.w / 640.0f;
-    app->sc.h = app->win->size.h / 480.0f;
+    app->sc.w = app->ren->size.w / 640.0f;
+    app->sc.h = app->ren->size.h / 480.0f;
     rn->set_scale(rn, NULL, &app->sc);
     this->logo_timer = 0.0;
     loader_run(&app->ld);
@@ -115,8 +115,8 @@ bool logo_scene_init(LogoScene* this) {
     app->win->set_icon(app->win, icon);
     app->omg->winmgr->surf_destroy(app->omg->winmgr, icon);
     rn->tex_set_scale_mode(rn, this->logo, OMG_SCALE_MODE_LINEAR);
-    app->sc.w = app->win->size.w / 640.0f;
-    app->sc.h = app->win->size.h / 480.0f;
+    app->sc.w = app->ren->size.w / 640.0f;
+    app->sc.h = app->ren->size.h / 480.0f;
     base->reset_input = false;
     OMG_BEGIN_POINTER_CAST();
     base->on_run = logo_scene_on_run;

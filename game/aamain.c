@@ -5,8 +5,6 @@
 #include <aamain.h>
 #include <logo.h>
 
-// TODO: use renderer size instead to fix DPI scale
-
 int omega_main(OMG_EntryData* data);
 OMG_MAIN_MAKE(omega_main)
 
@@ -61,8 +59,8 @@ void app_on_keyboard(OMG_EventKeyboard* event) {
 
 void app_on_resize(OMG_EventResize* event) {
     App* this = OMG_ARG_FROM_EVENT(event);
-    this->sc.w = event->size.w / 800.0f;
-    this->sc.h = event->size.h / 600.0f;
+    this->sc.w = this->ren->size.w / 800.0f;
+    this->sc.h = this->ren->size.h / 600.0f;
 }
 
 void app_draw_fps(App* this) {
