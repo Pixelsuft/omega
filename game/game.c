@@ -247,13 +247,15 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
 
 void game_scene_on_touch(GameScene* this, OMG_EventTouch* event) {
     if (event->moving) {
-        if (event->pos.x >= 0.25f && this->p.dir < 0) {
-            player_do_walk(this, false, false);
-            player_do_walk(this, true, true);
-        }
-        else if (event->pos.x < 0.25f && this->p.dir > 0) {
-            player_do_walk(this, true, false);
-            player_do_walk(this, false, true);
+        if (event->finger_id == this->fingers[0]) {
+            if (event->pos.x >= 0.25f && this->p.dir < 0) {
+                player_do_walk(this, false, false);
+                player_do_walk(this, true, true);
+            }
+            else if (event->pos.x < 0.25f && this->p.dir > 0) {
+                player_do_walk(this, true, false);
+                player_do_walk(this, false, true);
+            }
         }
     }
     else if (event->pressed) {
