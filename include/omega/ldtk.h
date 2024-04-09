@@ -86,7 +86,9 @@ typedef struct {
     OMG_Color bg_color;
 } OMG_Ldtk;
 
+/* Init LDtk */
 OMG_API bool omg_ldtk_init(OMG_Ldtk* this, void* omg, char* data, size_t data_len);
+/* Destroy LDtk */
 OMG_API bool omg_ldtk_destroy(OMG_Ldtk* this);
 OMG_API int omg_ldtk_index_from_level_name(OMG_Ldtk* this, const OMG_String* level_name);
 OMG_API int omg_ldtk_index_from_layer_name(OMG_LdtkLevel* level, const OMG_String* layer_name);

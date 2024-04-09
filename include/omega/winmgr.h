@@ -33,11 +33,11 @@ typedef struct OMG_Winmgr {
     bool (*surf_destroy)(struct OMG_Winmgr* this, OMG_Surface* surf);
     /* Lock/unlock surface */
     bool (*surf_set_locked)(struct OMG_Winmgr* this, OMG_Surface* surf, bool locked);
-    /* Allocate image loader */
+    /* Allocate image loader (for opening different types of images) */
     bool (*image_loader_alloc)(struct OMG_Winmgr* this);
     /* Free image loader */
     bool (*image_loader_free)(struct OMG_Winmgr* this);
-    /* Allocate font manager */
+    /* Allocate font manager (for opening and rendering TTF fonts) */
     bool (*fontmgr_alloc)(struct OMG_Winmgr* this);
     /* Free font manager */
     bool (*fontmgr_free)(struct OMG_Winmgr* this);

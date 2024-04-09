@@ -29,6 +29,7 @@ typedef struct OMG_Window {
     bool (*destroy)(struct OMG_Window* this);
     /* Set window shown */
     bool (*show)(struct OMG_Window* this, bool show);
+    /* Set window title */
     bool (*set_title)(struct OMG_Window* this, const OMG_String* new_title);
     bool (*set_size)(struct OMG_Window* this, const OMG_FPoint* new_size);
     bool (*set_min_size)(struct OMG_Window* this, const OMG_FPoint* new_min_size);

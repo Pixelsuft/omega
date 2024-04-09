@@ -74,7 +74,7 @@ typedef struct OMG_Renderer {
     bool (*tex_destroy)(struct OMG_Renderer* this, OMG_Texture* tex);
     /* Blit texture to target */
     bool (*copy)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FPoint* pos);
-    /* Blit texture to target */
+    /* Blit texture to target. If origin is NULL, it will be centered */
     bool (*copy_ex)(struct OMG_Renderer* this, OMG_Texture* tex, const OMG_FRect* src, const OMG_FRect* dst, const OMG_FPoint* origin, const double rot);
     /* Set texture scale mode */
     bool (*tex_set_scale_mode)(struct OMG_Renderer* this, OMG_Texture* tex, int scale_mode);

@@ -90,9 +90,12 @@
 typedef OMG_Array(OMG_String) OMG_EntryArgsArray;
 
 typedef struct OMG_Omega {
+    /* Memory object */
     OMG_Memory* mem;
+    /* Stdlib object */
     OMG_Std* std;
     OMG_EntryData* entry_data;
+    /* Window manager object */
     OMG_Winmgr* winmgr;
     OMG_Clock* clock;
     OMG_Audio* audio;
@@ -133,7 +136,7 @@ typedef struct OMG_Omega {
     bool (*cmd_args_free)(struct OMG_Omega* this, OMG_EntryArgsArray* arr);
     /* Set log level */
     void (*log_set_level)(struct OMG_Omega* this, const int log_level, const int omg_log_level, const int lib_log_level);
-    /* Log string */
+    /* Log string with type (log level) */
     bool (*log_str_type)(struct OMG_Omega* this, const OMG_String* data, int type);
     /* Run simple main loop */
     void (*auto_loop_run)(struct OMG_Omega* this);

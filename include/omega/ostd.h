@@ -216,7 +216,7 @@
 typedef struct {
     /* Allocated size (not length!) */
     size_t size;
-    // Technically, we should also include utf-8 size for things like utf-16 convertion, but Microsoft sucks
+    // Technically, we should also include utf-8 size for things like utf-16 convertion, but Microsoft sucks anyway
     /* Length */
     size_t len;
     /* Type */
@@ -381,25 +381,41 @@ typedef struct {
 } OMG_DataWithSize;
 
 typedef struct {
+    // Fill memory with value
     void* (*memset)(void* dst, register int val, register size_t len);
+    // Copy memory from src to dst
     void* (*memcpy)(void* dst, const void* src, size_t len);
+    // Safe copy memory from src to dst
     void* (*memmove)(void* dst, const void* src, size_t len);
+    // Compare memory
     int (*memcmp)(const void* s1, const void* s2, size_t len);
+    // Compare strings
     int (*strcmp)(const char* str1, const char* str2);
+    // Get string length
     size_t (*strlen)(const char* src);
+    // Get string length (safe)
     size_t (*strnlen)(const char* src, size_t max_len);
+    // Get UTF-8 string length
     size_t (*utf8strlen)(const char* src);
+    // Get UTF-8 string length (safe)
     size_t (*utf8strnlen)(const char* src, size_t max_len);
+    // Reverse string
     char* (*strrev)(char* str);
+    // Int to string
     char* (*itoa)(int value, char* buffer, int radix);
+    // Long to string
     char* (*ltoa)(long value, char* buffer, int radix);
     char* (*uitoa)(unsigned int value, char* buffer, int radix);
     char* (*ultoa)(unsigned long value, char* buffer, int radix);
     char* (*lltoa)(int64_t value, char* string, int radix);
     char* (*ulltoa)(uint64_t value, char* string, int radix);
+    // Unicode string length
     size_t (*wcslen)(const wchar_t* src);
+    // Floor
     double (*floor)(double x);
+    // Ceil
     double (*ceil)(double x);
+    // Round
     double (*round)(double x);
     float (*floorf)(float x);
     float (*ceilf)(float x);
@@ -419,18 +435,25 @@ typedef struct {
     float (*atan2f)(float x, float y);
     float (*sqrtf)(float x);
     float (*fmodf)(float x, float y);
+    // Quick sort
     void (*qsort)(void* base, size_t num, size_t size, int (*compare) (const void*, const void*));
+    // Absolute
     int (*abs)(int n);
     double (*fabs)(double n);
     float (*fabsf)(float n);
+    // Power
     double (*pow)(double base, double exponent);
+    // Power float
     float (*powf)(float base, float exponent);
+    // Scan string for values
     int (*sscanf)(const char* src, const char* fmt, ...);
+    /* Internal sleep function. Please use omg->delay */
     unsigned int (*sleep)(unsigned int);
     void* memory_allocator;
     void* extra;
 } OMG_Std;
 
+/* Get default std handle */
 OMG_API OMG_Std* omg_std_get_default_handle(void);
 OMG_API void omg_std_set_default_handle(OMG_Std* this);
 OMG_API void omg_std_fill_defaults(OMG_Std* this);
@@ -468,7 +491,10 @@ OMG_API bool omg_string_add_dpoint(OMG_String* this, const OMG_DPoint* dpoint_to
 OMG_API bool omg_string_add_rect(OMG_String* this, const OMG_Rect* rect_to_add);
 OMG_API bool omg_string_add_frect(OMG_String* this, const OMG_FRect* frect_to_add);
 OMG_API bool omg_string_add_drect(OMG_String* this, const OMG_DRect* drect_to_add);
+/* Check if strings are equal */
 OMG_API bool omg_string_equal(const OMG_String* this, const OMG_String* other_string);
+/* Find frect intersect */
 OMG_API bool omg_frect_intersect(const OMG_FRect* rect_a, const OMG_FRect* rect_b, OMG_FRect* res);
 OMG_API OMG_String* omg_dummy_string_create(void);
+/* Base64 encode. output_str may be NULL */
 OMG_API OMG_String* omg_base64_encode(OMG_String* input_str, OMG_String* output_str);
