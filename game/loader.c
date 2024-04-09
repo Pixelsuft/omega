@@ -222,6 +222,7 @@ void loader_run(Loader* this) {
 
 void loader_init(Loader* this, void* _app) {
     App* app = _app;
+    // Set default values
     this->_app = _app;
     this->total_count = 999999;
     this->progress = 0;
