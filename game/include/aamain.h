@@ -11,6 +11,7 @@
 #define IS_EXIT_CODE(code) (code == OMG_SCANCODE_Q)
 #define ASSETS_DIR "assets"
 
+// Main class
 typedef struct {
     Loader ld;
     OMG_String bp;
