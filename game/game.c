@@ -167,6 +167,7 @@ void game_scene_on_resize(GameScene* this, OMG_EventResize* event) {
 
 void game_player_do_jump(GameScene* this, bool high) {
     App* app = base->data;
+    // Do jump if we can
     if (this->p.on_ground || this->p.air_jump) {
         app->au->snd_play(app->au, app->ld.snd[this->p.on_ground ? 0 : 1], 0, 0.0, 0.0);
         if (!this->p.on_ground)
@@ -178,6 +179,7 @@ void game_player_do_jump(GameScene* this, bool high) {
 }
 
 void player_do_walk(GameScene* this, bool is_right, bool is_pressed) {
+    // Start or stop walking
     if (is_right) {
         if (is_pressed) {
             this->p.dir = 1;
