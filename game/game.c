@@ -129,6 +129,9 @@ bool game_scene_on_paint(GameScene* this) {
     p_src.w = this->p.face_left ? -32.0f : 32.0f;
     p_src.y = (float)(this->p.a.cur_state * 32); // Take frame from y pos by current anim state id (we can do this because we created it in special order)
     p_src.x = (float)(this->p.a.cur_frame * 32); // Take frame from x pos by current anim state frame
+    // Fix raylib offsety
+    p_src.y += 2.0f;
+    p_src.h -= 2.0f;
     rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
     if (this->render_hitbox) {
         // Draw player hitbox
@@ -137,7 +140,7 @@ bool game_scene_on_paint(GameScene* this) {
         p_dst.y = this->p.parent.rect.y + 11.0f;
         p_dst.w = 14.0f;
         p_dst.h = 21.0f;
-        rn->fill_rect(rn, &p_dst, &OMG_RGBA(0, 0, 255, 100));
+        rn->fill_rect(rn, &p_dst, &OMG_RGBA(0, 255, 0, 100));
         rn->draw_rect(rn, &p_dst, &OMG_RGBA(0, 255, 0, 255));
     }
     // Draw FPS
