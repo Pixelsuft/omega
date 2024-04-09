@@ -2,7 +2,7 @@
 Simple framework for creating 2D games in C
 ## Functionality
  - Multiple backends (Dynamic/static backends loading at real time) (SDL2, Raylib, Win32) <br />
- - Libraries config using [`config.h` or preprocessor macros](include/config.h) <br />
+ - Libraries config using [`config.h` or preprocessor macros](include/omega/config.h) <br />
  - Window management (SDL2, Raylib) <br />
  - Renderer (Direct3D, OpenGL, OpenGLES, WebGL, Software) (SDL2, Raylib) <br />
  - Images loading (SDL2_image, Raylib, libspng) <br />
