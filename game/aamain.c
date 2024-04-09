@@ -177,6 +177,7 @@ void app_run(App* this) {
     OMG_BEGIN_POINTER_CAST();
     lc->parent.on_init = logo_scene_init;
     OMG_END_POINTER_CAST();
+    // Init scene. Use App class as data arg
     omg_scenemgr_scene_init(&this->sm, lc, this);
     this->win->show(this->win, true);
     omg_scenemgr_scene_run(&this->sm, lc);
