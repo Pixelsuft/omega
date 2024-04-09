@@ -109,7 +109,7 @@ bool game_scene_on_paint(GameScene* this) {
     rn->copy(rn, this->bg[0], NULL);
     rn->copy(rn, app->ld.tex[2], &OMG_FPOINT(10, 544.0f - app->ld.tex[2]->size.h));
     if (this->render_hitbox) {
-        // Draw hitbox
+        // Draw hitboxes
         for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
             OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
             if (lay->is_entity_layer) {
@@ -130,6 +130,16 @@ bool game_scene_on_paint(GameScene* this) {
     p_src.y = (float)(this->p.a.cur_state * 32); // Take frame from y pos by current anim state id (we can do this because we created it in special order)
     p_src.x = (float)(this->p.a.cur_frame * 32); // Take frame from x pos by current anim state frame
     rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
+    if (this->render_hitbox) {
+        // Draw player hitbox
+        OMG_FRect p_dst;
+        p_dst.x = this->p.parent.rect.x + 9.0f;
+        p_dst.y = this->p.parent.rect.y + 11.0f;
+        p_dst.w = 14.0f;
+        p_dst.h = 21.0f;
+        rn->fill_rect(rn, &p_dst, &OMG_RGBA(0, 0, 255, 100));
+        rn->draw_rect(rn, &p_dst, &OMG_RGBA(0, 255, 0, 255));
+    }
     // Draw FPS
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w * 3.0f, this->offset.y / app->sc.h * 3.0f), &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
     app_draw_fps(app);
