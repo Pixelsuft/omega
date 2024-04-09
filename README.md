@@ -17,7 +17,16 @@ It also does some tricks with C to extend its power. For example:
  - Magic macros like `OMG_INFO` which accepts different number of arguments of different types <br />
  - Things like tracing memory allocation by code file, function, line <br />
  - Simple error handling using `bool` return type <br />
+ - Using native win32 api instead of C stdlib on Windows <br />
  - Many other tricks
+## Portability
+It's only limited to C language and backend libraries. I was able to run examples on:
+ - from Windows XP (including ReactOS) to Windows 11 (Windows 2000 is only supported with extended kernel) <br />
+ - UWP (Windows 11) <br />
+ - Linux <br />
+ - UNIX (FeeBSD, NetBSD, OpenBSD) <br />
+ - Web (using Emscripten) <br />
+ - Android (thanks to SDL2)
 ## Examples
 There are some examples. <br />
 ### [Simple Example](examples/example1.c)
