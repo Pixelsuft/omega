@@ -8,12 +8,16 @@ bool game_scene_on_update(GameScene* this) {
     App* app = base->data;
     app->clock->update(app->clock);
     base->dt = app->clock->dt;
+    // If we have very low fps, let's just slow down fps
     if (base->dt > 0.5)
         base->dt = 0.5;
+    // Update audio system
     app->au->update(app->au);
+    // Update cloud pos
     this->cloud_offset -= (float)(base->dt * 25.0);
     if (this->cloud_offset <= -960.0f)
         this->cloud_offset += 960.0f;
+    // Player physics. I haven't created platformes before, so code is very ugly
     this->p.parent.rect.x = this->p.r.x - 9.0f;
     this->p.parent.rect.y = this->p.r.y - 11.0f;
     float prev_y_speed = this->p.y_speed;
@@ -27,6 +31,7 @@ bool game_scene_on_update(GameScene* this) {
     p_r.x = this->p.r.x + this->p.r.w;
     p_r.y = this->p.r.y + this->p.r.h;
     bool has_col = false;
+    // Collision check with hitbox objects
     for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
         OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
         if (lay->is_entity_layer) {
@@ -81,6 +86,7 @@ bool game_scene_on_update(GameScene* this) {
         omg_obj_anim_run_state(&this->p.a, P_A_FALL);
     }
     OMG_BEGIN_POINTER_CAST();
+    // Update sprite anim cflass
     this->p.a.parent.on_update(&this->p.a, this);
     OMG_END_POINTER_CAST();
     return false;
@@ -91,30 +97,36 @@ bool game_scene_on_paint(GameScene* this) {
     rn->begin(rn);
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / 1.2f / app->sc.w, this->offset.y / 1.2f / app->sc.h), &OMG_FPOINT(app->sc.w * 1.2f, app->sc.h * 1.2f));
     rn->clear(rn, &this->ldtk->levels.data[0].bg_color);
+    // Draw clouds
     OMG_FPoint cloud_pos;
     cloud_pos.y = 0.0f;
     cloud_pos.x = this->cloud_offset;
     rn->copy(rn, app->ld.tex[4], &cloud_pos);
     cloud_pos.x += 960.0f;
     rn->copy(rn, app->ld.tex[4], &cloud_pos);
+    // Draw tilemap we rendered on init
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->copy(rn, this->bg[0], NULL);
     rn->copy(rn, app->ld.tex[2], &OMG_FPOINT(10, 544.0f - app->ld.tex[2]->size.h));
+    // Draw player
     OMG_FRect p_src;
     p_src.h = 32.0f;
     p_src.w = this->p.face_left ? -32.0f : 32.0f;
     p_src.x = (float)(this->p.a.cur_frame * 32);
     p_src.y = (float)(this->p.a.cur_state * 32);
     rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
+    // Draw FPS
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w * 3.0f, this->offset.y / app->sc.h * 3.0f), &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
     app_draw_fps(app);
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
+    // Present
     rn->flip(rn);
     return false;
 }
 
 bool game_scene_on_run(GameScene* this) {
     App* app = base->data;
+    // Reset game scene
     app->au->mus_play(app->au, app->ld.mus[1], -1, 0.0, 0.2);
     this->p.r.w = 14.0f;
     this->p.r.h = 21.0f;
@@ -126,6 +138,7 @@ bool game_scene_on_run(GameScene* this) {
     this->p.dir = 0;
     this->p.face_left = false;
     this->p.air_jump = true;
+    // Find player to set it's position
     for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
         OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
         if (lay->is_entity_layer) {
@@ -201,6 +214,7 @@ void player_do_walk(GameScene* this, bool is_right, bool is_pressed) {
 
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
+    // Handle keyboard
     if (IS_EXIT_CODE(event->code) && !event->is_pressed) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
@@ -246,6 +260,7 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
 }
 
 void game_scene_on_touch(GameScene* this, OMG_EventTouch* event) {
+    // Handle touch
     if (event->moving) {
         if (event->finger_id == this->fingers[0]) {
             if (event->pos.x >= 0.25f && this->p.dir < 0) {
@@ -293,6 +308,7 @@ bool game_scene_on_stop(GameScene* this) {
     app->win->cursor_set_shown(app->win, 1);
     if (!this->should_back)
         return false;
+    // We stopped, so let's go back to the menu
     app->au->mus_stop(app->au, app->ld.mus[1]);
     app->clock->speed = 1.0;
     app->au->mus_set_speed(app->au, app->ld.mus[1], 1.0f);
@@ -312,6 +328,7 @@ bool game_scene_init(GameScene* this) {
     app->au->snd_set_volume(app->au, app->ld.snd[0], 0.3f);
     app->au->snd_set_volume(app->au, app->ld.snd[1], 0.3f);
     this->p.parent.rect.w = this->p.parent.rect.h = 32.0f;
+    // Init sprite anim in special order based on frames stored in texture
     this->p.a.data = &this->p.d;
     omg_anim_sprite_data_init(this->p.a.data, app->omg);
     OMG_ARRAY_SET_LEN(&this->p.d.states, 5, false);
@@ -324,6 +341,7 @@ bool game_scene_init(GameScene* this) {
     omg_obj_anim_sprite_init(&this->p.a);
     omg_obj_anim_run_state(&this->p.a, P_A_FALL);
     this->offset.x = this->offset.y = 0.0f;
+    // Should we keep aspect ratio
     if (app->sc.w == app->sc.h) {
         app->sc.w /= 800.0f / 640.0f;
         app->sc.h /= 600.0f / 480.0f;
@@ -334,6 +352,7 @@ bool game_scene_init(GameScene* this) {
         app->sc.w = rn->size.w / 800.0f;
         app->sc.h = rn->size.h / 600.0f;
     }
+    // Render tilemap into a texture we will create
     this->ldtk = &app->ld.mp[0];
     this->bg[0] = rn->tex_create(rn, NULL, &OMG_FPOINT(800, 600), OMG_TEXTURE_ACCESS_TARGET, true);
     rn->set_scale(rn, NULL, &OMG_FPOINT(1, 1));
@@ -355,6 +374,7 @@ bool game_scene_init(GameScene* this) {
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->tex_set_scale_mode(rn, app->ld.tex[4], OMG_SCALE_MODE_LINEAR);
     this->fingers[0] = this->fingers[1] = -1337;
+    // Fill events
     OMG_BEGIN_POINTER_CAST();
     base->on_run = game_scene_on_run;
     base->on_update = game_scene_on_update;
