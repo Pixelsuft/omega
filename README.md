@@ -5,9 +5,9 @@ Simple framework for creating 2D games in C
  - Libraries config using [`config.h` or preprocessor macros](include/omega/config.h) <br />
  - Window management (SDL2, Raylib) <br />
  - Renderer (Direct3D, OpenGL, OpenGLES, WebGL, Software) (using SDL2, Raylib) <br />
- - Images loading (SDL2_image, Raylib, libspng) <br />
- - Audio playback (SDL2_mixer, Raylib, FMOD, Web) <br />
- - TTF Rendering (SDL2_ttf, Raylib) <br />
+ - Image loading (SDL2_image, Raylib, libspng) <br />
+ - Audio (Music/Sounds) playback (SDL2_mixer, Raylib, FMOD, Web) <br />
+ - TTF (TrueType Font) Rendering (SDL2_ttf, Raylib) <br />
  - Bitmap fonts <br />
  - LDtk tilemaps import
 ## Is it written in C?
