@@ -1,5 +1,21 @@
 # OMEGA
 Simple framework for creating 2D games in C
+## Functionality
+ - Multiple backends (SDL2, Raylib, Win32) <br />
+ - Window management (SDL2, Raylib) <br />
+ - Renderer (Direct3D, OpenGL, OpenGLES, WebGL, Software) (SDL2, Raylib) <br />
+ - Images loading (SDL2_image, Raylib, libspng) <br />
+ - Audio playback (SDL2_mixer, Raylib, FMOD, Web) <br />
+ - TTF Rendering (SDL2_ttf, Raylib) <br />
+ - Bitmap fonts <br />
+ - LDtk tilemaps import
+## Is it written in C?
+Yes, it it's written in pure C. <br />
+It also does some tricks with C to extend its power. For example:
+ - OOP using structs, function pointers, etc <br />
+ - Magic macros like `OMG_INFO` which accepts different number of arguments of different types <br />
+ - Things like tracing memory allocation by code file, function, line
+ - Many other
 ## Examples
 There are some examples. <br />
 ### [Simple Example](examples/example1.c)
