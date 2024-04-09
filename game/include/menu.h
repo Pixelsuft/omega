@@ -3,6 +3,7 @@
 #include <omega/scene.h>
 #include <omega/scene_objects.h>
 
+// Menu class
 typedef struct {
     OMG_Scene parent;
     OMG_Texture* bg;

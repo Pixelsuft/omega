@@ -9,6 +9,7 @@
 #define P_A_JUMP 3
 #define P_A_RUN 4
 
+// Game player class
 typedef struct {
     OMG_Object parent;
     OMG_ObjectAnimSprite a;

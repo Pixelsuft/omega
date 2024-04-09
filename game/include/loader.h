@@ -3,6 +3,7 @@
 #include <omega/bmfont.h>
 #include <omega/ldtk.h>
 
+// Loader class
 typedef struct {
     OMG_Ldtk mp[1];
     OMG_Bmfont fnt[2];

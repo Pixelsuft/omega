@@ -5,6 +5,7 @@
 #include <omega/scene_objects.h>
 #include <player.h>
 
+// Game class
 typedef struct {
     OMG_Scene parent;
     Player p;

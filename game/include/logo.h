@@ -3,6 +3,7 @@
 #include <omega/scene.h>
 #include <omega/scene_objects.h>
 
+// Logo class
 typedef struct {
     OMG_Scene parent;
     double logo_timer;
