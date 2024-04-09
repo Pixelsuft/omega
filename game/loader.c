@@ -3,6 +3,7 @@
 #include <omega/api_win.h>
 
 void loader_clean(Loader* this) {
+    // Clean loaded files
     App* app = this->_app;
     for (int i = 0; i < this->tex_count; i++) {
         if (OMG_ISNOTNULL(this->tex[i]))
@@ -22,6 +23,7 @@ void loader_clean(Loader* this) {
 }
 
 void loader_clean_images(Loader* this) {
+    // Clean surfaces since we converted all of them into textures
     App* app = this->_app;
     for (int i = 0; i < this->img_count; i++) {
         if (OMG_ISNOTNULL(this->surf[i]))
@@ -31,6 +33,7 @@ void loader_clean_images(Loader* this) {
 }
 
 void loader_img_load(Loader* this, const OMG_String* path) {
+    // Load surface. We will then convert it into a texture
     App* app = this->_app;
     this->surf[this->img_count] = app_load_surf(app, path);
     this->img_count++;
@@ -40,6 +43,7 @@ void loader_img_load(Loader* this, const OMG_String* path) {
 }
 
 void loader_fnt_load(Loader* this, const OMG_String* path) {
+    // Load bmfont. Most of the code is file reading and error checks
     App* app = this->_app;
     OMG_String res_path;
     if (omg_string_init_dynamic(&res_path, &app->bp)) {
@@ -70,6 +74,7 @@ void loader_fnt_load(Loader* this, const OMG_String* path) {
         return;
     }
     file->read(file, buf, 1, (size_t)(sz + 2));
+    // Hack: we pass NULL page here
     omg_bmfont_init(&app->ld.fnt[this->fnt_count], NULL, app->ren, buf, (size_t)sz);
     OMG_FREE(app->omg->mem, buf);
     file->destroy(file);
@@ -78,6 +83,7 @@ void loader_fnt_load(Loader* this, const OMG_String* path) {
 }
 
 void loader_map_load(Loader* this, const OMG_String* path) {
+    // Load map (way like bmfont)
     App* app = this->_app;
     OMG_String res_path;
     if (omg_string_init_dynamic(&res_path, &app->bp)) {
@@ -116,6 +122,7 @@ void loader_map_load(Loader* this, const OMG_String* path) {
 }
 
 void loader_music_load(Loader* this, const OMG_String* path) {
+    // Load music
     App* app = this->_app;
     OMG_String res_path;
     if (omg_string_init_dynamic(&res_path, &app->bp)) {
@@ -131,6 +138,7 @@ void loader_music_load(Loader* this, const OMG_String* path) {
 }
 
 void loader_sound_load(Loader* this, const OMG_String* path) {
+    // Load sound
     App* app = this->_app;
     OMG_String res_path;
     if (omg_string_init_dynamic(&res_path, &app->bp)) {
@@ -147,6 +155,8 @@ void loader_sound_load(Loader* this, const OMG_String* path) {
 
 void loader_update(Loader* this) {
     App* app = this->_app;
+    // Convert surfaces into textures. We can do this only in main thread,
+    // since textures are stored in a GPU
     if (this->img_count > 0) {
         if (this->img_count > this->tex_count) {
             this->tex[this->tex_count] = app->ren->tex_from_surf(
@@ -161,6 +171,7 @@ void loader_update(Loader* this) {
 int loader_thread(void* data) {
     Loader* this = data;
     App* app = this->_app;
+    // Load some files
     this->total_count = 16;
     loader_img_load(this, &OMG_STR("goldFont-uhd.png"));
     loader_img_load(this, &OMG_STR("tiles1.png"));
@@ -174,6 +185,7 @@ int loader_thread(void* data) {
     loader_sound_load(this, &OMG_STR("jump1.ogg"));
     loader_sound_load(this, &OMG_STR("jump2.ogg"));
     this->loaded_images = true;
+    // Clean surfaces
     if (!this->thread_safe) {
         while (this->tex_count < this->img_count) {
             app->omg->delay(app->omg, 0.01);
@@ -195,6 +207,7 @@ int loader_thread(void* data) {
 void loader_run(Loader* this) {
     App* app = _app;
     this->thread_safe = false;
+    // Let's try to create a thread. Run in main thread, if we can't
     if (app->omg->type != OMG_OMEGA_TYPE_WIN && 1 && !OMG_IS_EMSCRIPTEN)
         OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
     if (OMG_ISNULL(this->thr)) {
