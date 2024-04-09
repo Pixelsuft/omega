@@ -112,8 +112,8 @@ bool game_scene_on_paint(GameScene* this) {
     OMG_FRect p_src;
     p_src.h = 32.0f;
     p_src.w = this->p.face_left ? -32.0f : 32.0f;
-    p_src.x = (float)(this->p.a.cur_frame * 32);
-    p_src.y = (float)(this->p.a.cur_state * 32);
+    p_src.y = (float)(this->p.a.cur_state * 32); // Take frame from y pos by current anim state id (we can do this because we created it in special order)
+    p_src.x = (float)(this->p.a.cur_frame * 32); // Take frame from x pos by current anim state frame
     rn->copy_ex(rn, app->ld.tex[3], &p_src, &this->p.parent.rect, NULL, 0.0);
     // Draw FPS
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w * 3.0f, this->offset.y / app->sc.h * 3.0f), &OMG_FPOINT(app->sc.w / 3.0f, app->sc.h / 3.0f));
