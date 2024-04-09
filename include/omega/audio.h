@@ -43,11 +43,11 @@ typedef struct OMG_Audio {
     bool (*destroy)(struct OMG_Audio* this);
     /* Update audio system */
     bool (*update)(struct OMG_Audio* this);
-    /* Music from file path */
+    /* Music from file path. It's recommended to set format */
     OMG_Music* (*mus_from_fp)(struct OMG_Audio* this, OMG_Music* mus, const OMG_String* path, int format);
-    /* Music from memory */
+    /* Music from memory. It's recommended to set format */
     OMG_Music* (*mus_from_mem)(struct OMG_Audio* this, OMG_Music* mus, const void* data, size_t size, int format);
-    /* Music from file object */
+    /* Music from file object. It's recommended to set format */
     OMG_Music* (*mus_from_file)(struct OMG_Audio* this, OMG_Music* mus, const OMG_File*, bool destroy_file, int format);
     /* Close music */
     bool (*mus_destroy)(struct OMG_Audio* this, OMG_Music* mus);
@@ -68,6 +68,7 @@ typedef struct OMG_Audio {
     OMG_Sound* (*snd_from_file)(struct OMG_Audio* this, OMG_Sound* snd, const OMG_File* file, bool destroy_file, int format);
     /* Close sound */
     bool (*snd_destroy)(struct OMG_Audio* this, OMG_Sound* snd);
+    /* Play sound. Set loops to -1 for infinite playing */
     bool (*snd_play)(struct OMG_Audio* this, OMG_Sound* snd, int loops, double pos, double fade_in);
     bool (*snd_stop)(struct OMG_Audio* this, OMG_Sound* snd);
     bool (*snd_pause)(struct OMG_Audio* this, OMG_Sound* snd, bool paused);

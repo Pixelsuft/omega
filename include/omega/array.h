@@ -34,12 +34,17 @@ typedef struct {
 #define OMG_ARRAY_RESERVE_LEN(this, need_len) omg_array_reserve_len((OMG_ArrayBase*)(this), need_len, (size_t)sizeof(*(this)->data))
 #define OMG_ARRAY_CLEAN(this) omg_array_remove((OMG_ArrayBase*)(this), (size_t)sizeof(*(this)->data))
 
+/* Init array with initial length, chunk size (0 for default) */
 OMG_API bool omg_array_init(OMG_ArrayBase* this, size_t initial_len, size_t elem_size, int chunk_size);
 OMG_API bool omg_array_set_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size, bool trim);
+/* Arr elem into array */
 OMG_API bool omg_array_push(OMG_ArrayBase* this, size_t elem_size, const void* need_elem);
 OMG_API bool omg_array_push_dummy(OMG_ArrayBase* this, size_t elem_size);
+/* Reserve length */
 OMG_API bool omg_array_reserve_len(OMG_ArrayBase* this, size_t need_len, size_t elem_size);
+/* Remove element */
 OMG_API bool omg_array_remove(OMG_ArrayBase* this, size_t elem_id, size_t elem_size, bool trim);
+/* Clean */
 OMG_API bool omg_array_clean(OMG_ArrayBase* this, size_t elem_size);
 OMG_API bool omg_array_add_chunk(OMG_ArrayBase* this);
 OMG_API bool omg_array_destroy(OMG_ArrayBase* this);

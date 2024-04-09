@@ -11,7 +11,7 @@ typedef struct OMG_Clock {
     bool (*destroy)(struct OMG_Clock* this);
     /* Reset clock timer */
     bool (*reset)(struct OMG_Clock* this);
-    /* Update clock */
+    /* Update clock and update dt (delta time) */
     bool (*update)(struct OMG_Clock* this);
     bool (*set_fps_limit)(struct OMG_Clock* this, double fps_limit);
     int (*get_fps)(struct OMG_Clock* this);

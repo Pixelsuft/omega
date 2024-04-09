@@ -77,11 +77,17 @@
 
 typedef struct OMG_File {
     OMG_String fp;
+    /* Close file and free mem */
     bool (*destroy)(struct OMG_File* file);
+    /* Get file size */
     int64_t (*get_size)(struct OMG_File* file);
+    /* Set pos */
     int64_t (*seek)(struct OMG_File* file, int64_t offset, int whence);
+    /* Get pos */
     int64_t (*tell)(struct OMG_File* file);
+    /* Read */
     size_t (*read)(struct OMG_File* file, void* buf, size_t size, size_t maxnum);
+    /* Write */
     size_t (*write)(struct OMG_File* file, const void* buf, size_t size, size_t num);
     void* extra1;
     void* omg;

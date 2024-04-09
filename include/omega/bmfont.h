@@ -8,18 +8,22 @@
 
 typedef struct {
     OMG_Array(int) ks;
+    // Pos
     int x;
     int y;
     int w;
     int h;
+    // Offset
     int xo;
     int yo;
+    // Advance
     int xa;
 } OMG_Bmchar;
 
 typedef struct {
     OMG_Renderer* ren;
     OMG_Omega* omg;
+    // Chars array
     OMG_Array(OMG_Bmchar) chars;
     OMG_Texture* page;
     size_t ch_count;
