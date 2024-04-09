@@ -108,6 +108,21 @@ bool game_scene_on_paint(GameScene* this) {
     rn->set_scale(rn, &OMG_FPOINT(this->offset.x / app->sc.w, this->offset.y / app->sc.h), &app->sc);
     rn->copy(rn, this->bg[0], NULL);
     rn->copy(rn, app->ld.tex[2], &OMG_FPOINT(10, 544.0f - app->ld.tex[2]->size.h));
+    if (this->render_hitbox) {
+        // Draw hitbox
+        for (size_t li = 0; li < this->ldtk->levels.data[0].layers.len; li++) {
+            OMG_LdtkLayer* lay = &this->ldtk->levels.data[0].layers.data[li];
+            if (lay->is_entity_layer) {
+                for (size_t i = 0; i < lay->entities.len; i++) {
+                    OMG_LdtkEntity* en = &lay->entities.data[i];
+                    if (en->id == 4) {
+                        rn->fill_rect(rn, &en->rect, &OMG_RGBA(255, 0, 0, 100));
+                        rn->draw_rect(rn, &en->rect, &OMG_RGBA(0, 255, 0, 255));
+                    }
+                }
+            }
+        }
+    }
     // Draw player
     OMG_FRect p_src;
     p_src.h = 32.0f;
@@ -127,6 +142,7 @@ bool game_scene_on_paint(GameScene* this) {
 bool game_scene_on_run(GameScene* this) {
     App* app = base->data;
     // Reset game scene
+    this->render_hitbox = false;
     app->au->mus_play(app->au, app->ld.mus[1], -1, 0.0, 0.2);
     this->p.r.w = 14.0f;
     this->p.r.h = 21.0f;
@@ -217,6 +233,7 @@ void player_do_walk(GameScene* this, bool is_right, bool is_pressed) {
 void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     App* app = base->data;
     // Handle keyboard
+    // I hate switch/case btw
     if (IS_EXIT_CODE(event->code) && !event->is_pressed) {
         omg_scenemgr_scene_destroy(&app->sm, this);
         app->omg->auto_loop_stop(app->omg);
@@ -258,6 +275,9 @@ void game_scene_on_keyboard(GameScene* this, OMG_EventKeyboard* event) {
     else if (event->code == OMG_SCANCODE_I && event->is_pressed) {
         app->clock->speed = 1.0;
         app->au->mus_set_speed(app->au, app->ld.mus[1], 1.0f);
+    }
+    else if (event->code == OMG_SCANCODE_H && event->is_pressed) {
+        this->render_hitbox = !this->render_hitbox;
     }
 }
 

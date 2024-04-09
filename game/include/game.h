@@ -15,6 +15,7 @@ typedef struct {
     int64_t fingers[2];
     float cloud_offset;
     bool should_back;
+    bool render_hitbox;
 } GameScene;
 
 bool game_scene_init(GameScene* this);
