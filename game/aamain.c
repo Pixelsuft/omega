@@ -118,7 +118,6 @@ bool app_init(App* this, OMG_EntryData* data) {
         force_ren_driver = (this->omg->type == OMG_OMEGA_TYPE_WIN) ? OMG_REN_DRIVER_D3D11 : OMG_REN_DRIVER_OPENGL;
     if (temp_env.type >= 0)
         force_ren_driver = OMG_REN_DRIVER_SOFTWARE;
-    force_ren_driver = OMG_REN_DRIVER_D3D11;
     omg_string_destroy(&temp_env);
     if (
         this->win->renderer_alloc(this->win) ||
