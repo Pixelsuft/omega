@@ -1,5 +1,5 @@
 # OMEGA
-Simple framework for creating 2D games in C
+Simple framework for creating 2D games in C (C++)
 ## Functionality
  - Multiple backends (Dynamic/static backends loading at real time) (SDL2, Raylib, Win32) <br />
  - Libraries config using [`config.h` or preprocessor macros](include/omega/config.h) <br />
