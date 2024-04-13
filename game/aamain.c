@@ -81,7 +81,7 @@ void app_draw_fps(App* this) {
 bool app_init(App* this, OMG_EntryData* data) {
     int omg_backend = 0;
     // Omega backend
-    omg_backend = OMG_OMEGA_TYPE_SDL2;
+    omg_backend = OMG_OMEGA_TYPE_WIN;
     this->omg = omg_create_by_type(data, omg_backend);
     if (OMG_ISNULL(this->omg) || this->omg->omg_init(this->omg))
         return true;
@@ -96,6 +96,8 @@ bool app_init(App* this, OMG_EntryData* data) {
         return true;
     }
     this->win->resizable = true;
+    if (this->omg->type == OMG_OMEGA_TYPE_WIN)
+        this->win->vsync = false;
     if (this->win->default_init(this->win)) {
         OMG_ERROR(this->omg, "OMG Window Init Fail");
         this->omg->destroy(this->omg);
