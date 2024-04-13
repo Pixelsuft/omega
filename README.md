@@ -25,7 +25,7 @@ It's only limited to C language and backend libraries. I was able to run example
  - UWP (Windows 11) <br />
  - Linux <br />
  - UNIX (FeeBSD, NetBSD, OpenBSD) <br />
- - Web (using Emscripten) <br />
+ - Web (SDL2 + Emscripten) <br />
  - Android (thanks to SDL2)
 ## Examples
 There are some examples. <br />
