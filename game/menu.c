@@ -114,6 +114,13 @@ void menu_scene_on_keyboard(MenuScene* this, OMG_EventKeyboard* event) {
     else if (event->code == OMG_SCANCODE_A && event->is_pressed) {
         app->sc.w = app->sc.h = ((app->sc.w > app->sc.h) ? app->sc.h : app->sc.w);
     }
+    else if (event->code == OMG_SCANCODE_G && event->is_pressed) {
+        app->clock->set_fps_limit(app->clock, 400.0);
+        app->clock->wait_for_limit = true;
+    }
+    else if (event->code == OMG_SCANCODE_H && event->is_pressed) {
+        app->clock->set_fps_limit(app->clock, 0.0);
+    }
     else if (event->is_pressed) {
         this->should_cont = true;
         omg_scenemgr_scene_destroy(&app->sm, this);
