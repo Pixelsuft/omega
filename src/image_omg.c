@@ -92,7 +92,7 @@ bool omg_image_loader_omg_image_from(OMG_ImageLoaderOmg* this, int type, const v
     this->spng.spng_get_ihdr(ctx, &ihdr);
     this->spng.spng_ctx_free(ctx);
     img_buf->w = (int)ihdr.width;
-    img_buf->h = (int)ihdr.width;
+    img_buf->h = (int)ihdr.height;
     img_buf->depth = (int)ihdr.bit_depth;
     return false;
 #endif
