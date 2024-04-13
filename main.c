@@ -17,12 +17,13 @@
 
 typedef struct {
     OMG_Scene parent;
-    OMG_Bmfont bmfont;
-    OMG_Ldtk map;
-    OMG_Color circle_color;
-    OMG_FRect jumper_src;
-    OMG_Texture* map_tex;
-    OMG_Object* objects[MAX_OBJECTS];
+    OMG_Bmfont bmfont; // Font
+    OMG_Ldtk map; // Tilemap
+    OMG_Color circle_color; // Circle anim color
+    OMG_FRect jumper_src; // Jumper src rect for anim
+    OMG_Texture* map_tex; // Pre-rendered tilemap
+    OMG_Object* objects[MAX_OBJECTS]; // Objects
+    // Animations
     OMG_ObjectAnimSprite anim;
     OMG_AnimSpriteData anim_data;
     OMG_ObjectTimer timer;
