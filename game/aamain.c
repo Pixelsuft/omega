@@ -96,7 +96,7 @@ bool app_init(App* this, OMG_EntryData* data) {
         return true;
     }
     this->win->resizable = true;
-    if (this->omg->type == OMG_OMEGA_TYPE_WIN) // Vsync works bad with Win32 backend and SDL2
+    if (this->omg->type == OMG_OMEGA_TYPE_WIN) // VSync works bad with Win32 backend and SDL2 (SDL2 problem)
         this->win->vsync = false;
     if (this->win->default_init(this->win)) {
         OMG_ERROR(this->omg, "OMG Window Init Fail");
