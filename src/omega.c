@@ -11,6 +11,7 @@
 #include <omega/audio_emscripten.h>
 #include <omega/api_libc.h>
 #include <omega/api_static.h>
+#include <omega/api_gdip.h>
 #if OMG_IS_WIN
 #include <omega/filesystem_win.h>
 #define f_omg_k32 ((OMG_Kernel32*)(file_omg_base->k32))
@@ -23,6 +24,7 @@
 #define d_s32 ((OMG_Shell32*)this->s32)
 #define d_libc ((OMG_Libc*)this->libc)
 #define d_msvcrt ((OMG_Msvcrt*)this->msvcrt)
+#define d_gdip ((OMG_Gdip*)this->gdip)
 
 static OMG_Omega* omg_def_omega = NULL;
 
@@ -95,6 +97,7 @@ void omg_fill_on_create(OMG_Omega* this, OMG_EntryData* data) {
     this->dwm = NULL;
     this->uxtheme = NULL;
     this->g32 = NULL;
+    this->gdip = NULL;
     this->u32 = NULL;
     this->s32 = NULL;
     this->nt = NULL;
@@ -630,6 +633,13 @@ bool omg_win_destroy_clean1(OMG_Omega* this) {
         result = OMG_FREE(this->mem, this->g32) || result;
         this->g32 = NULL;
     }
+#if OMG_SUPPORT_GPIP
+    if (this->should_free_gp && OMG_ISNOTNULL(this->gdip)) {
+        result = omg_winapi_gdip_free(this->gdip) || result;
+        result = OMG_FREE(this->mem, this->gdip) || result;
+        this->gdip = NULL;
+    }
+#endif
     if (this->should_free_s32 && OMG_ISNOTNULL(this->s32)) {
         result = omg_winapi_shell32_free(this->s32) || result;
         result = OMG_FREE(this->mem, this->s32) || result;
@@ -771,6 +781,19 @@ bool omg_win_loads_libs3(OMG_Omega* this) {
         }
         this->should_free_g32 = true;
     }
+#if OMG_SUPPORT_GDIP
+    if (OMG_ISNULL(this->gdip)) {
+        this->gdip = OMG_MALLOC(this->mem, sizeof(OMG_Gdip));
+        if (OMG_ISNULL(this->gdip)) {
+            return true;
+        }
+        if (omg_winapi_gdip_load(this->gdip)) {
+            OMG_FREE(this->mem, this->gdip);
+            return true;
+        }
+        this->should_free_gp = true;
+    }
+#endif
     if (OMG_ISNULL(this->msvcrt)) {
         this->msvcrt = OMG_MALLOC(this->mem, sizeof(OMG_Msvcrt));
         if (OMG_ISNULL(this->msvcrt)) {

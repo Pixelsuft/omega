@@ -99,7 +99,7 @@ typedef struct Rect {
 
 typedef Rect GpRect;
 
-typedef INT PixelFormat;
+typedef INT GDIP_PixelFormat;
 typedef void GpBitmap;
 typedef void GpImage;
 
@@ -110,11 +110,11 @@ GpStatus OMG_WINGDIPAPI GdipGetImageDecodersSize(UINT*, UINT*);
 GpStatus OMG_WINGDIPAPI GdipGetImageDecoders(UINT, UINT, ImageCodecInfo*);
 GpStatus OMG_WINGDIPAPI GdipGetImageEncodersSize(UINT*, UINT*);
 GpStatus OMG_WINGDIPAPI GdipGetImageEncoders(UINT, UINT, ImageCodecInfo*);
-GpStatus OMG_WINGDIPAPI GdipBitmapLockBits(GpBitmap*, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*);
+GpStatus OMG_WINGDIPAPI GdipBitmapLockBits(GpBitmap*, GDIPCONST GpRect*, UINT, GDIP_PixelFormat, BitmapData*);
 GpStatus OMG_WINGDIPAPI GdipBitmapUnlockBits(GpBitmap*, BitmapData*);
 GpStatus OMG_WINGDIPAPI GdipGetImageWidth(GpImage*, UINT*);
 GpStatus OMG_WINGDIPAPI GdipGetImageHeight(GpImage*, UINT*);
-GpStatus OMG_WINGDIPAPI GdipGetImagePixelFormat(GpImage*, PixelFormat*);
+GpStatus OMG_WINGDIPAPI GdipGetImagePixelFormat(GpImage*, GDIP_PixelFormat*);
 GpStatus OMG_WINGDIPAPI GdipLoadImageFromStream(IStream*, GpImage**);
 GpStatus OMG_WINGDIPAPI GdipLoadImageFromFile(GDIPCONST WCHAR*, GpImage**);
 GpStatus OMG_WINGDIPAPI GdipCreateBitmapFromStreamICM(IStream*, GpBitmap**);
@@ -129,11 +129,11 @@ typedef struct {
     GpStatus OMG_GPIP_PREFIX (*GdipGetImageDecoders)(UINT, UINT, ImageCodecInfo*);
     GpStatus OMG_GPIP_PREFIX (*GdipGetImageEncodersSize)(UINT*, UINT*);
     GpStatus OMG_GPIP_PREFIX (*GdipGetImageEncoders)(UINT, UINT, ImageCodecInfo*);
-    GpStatus OMG_GPIP_PREFIX (*GdipBitmapLockBits)(GpBitmap*, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*);
+    GpStatus OMG_GPIP_PREFIX (*GdipBitmapLockBits)(GpBitmap*, GDIPCONST GpRect*, UINT, GDIP_PixelFormat, BitmapData*);
     GpStatus OMG_GPIP_PREFIX (*GdipBitmapUnlockBits)(GpBitmap*, BitmapData*);
     GpStatus OMG_GPIP_PREFIX (*GdipGetImageWidth)(GpImage*, UINT*);
     GpStatus OMG_GPIP_PREFIX (*GdipGetImageHeight)(GpImage*, UINT*);
-    GpStatus OMG_GPIP_PREFIX (*GdipGetImagePixelFormat)(GpImage*, PixelFormat*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImagePixelFormat)(GpImage*, GDIP_PixelFormat*);
     GpStatus OMG_GPIP_PREFIX (*GdipLoadImageFromStream)(IStream*, GpImage**);
     GpStatus OMG_GPIP_PREFIX (*GdipLoadImageFromFile)(GDIPCONST WCHAR*, GpImage**);
     GpStatus OMG_GPIP_PREFIX (*GdipCreateBitmapFromStreamICM)(IStream*, GpBitmap**);

@@ -234,6 +234,7 @@ typedef struct OMG_Omega {
     void* s32;
     void* uxtheme;
     void* msvcrt;
+    void* gdip;
 #endif
 #if OMG_SUPPORT_LIBC
     void* libc;
@@ -263,6 +264,7 @@ typedef struct OMG_Omega {
     bool should_free_dwm;
     bool should_free_u32;
     bool should_free_g32;
+    bool should_free_gp;
     bool should_free_s32;
     bool should_free_uxtheme;
     bool should_free_msvcrt;
