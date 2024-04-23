@@ -102,7 +102,7 @@ typedef INT PixelFormat;
 typedef void GpBitmap;
 typedef void GpImage;
 
-#if !OMG_WINAPI_DYNAMIC || 1 // TODO: Remove
+#if !OMG_WINAPI_DYNAMIC
 GpStatus OMG_WINGDIPAPI GdiplusStartup(ULONG_PTR*, GDIPCONST GdiplusStartupInput*, GdiplusStartupOutput*);
 void OMG_WINGDIPAPI GdiplusShutdown(ULONG_PTR);
 GpStatus OMG_WINGDIPAPI GdipGetImageDecodersSize(UINT*, UINT*);
@@ -120,4 +120,25 @@ GpStatus OMG_WINGDIPAPI GdipCreateBitmapFromStreamICM(IStream*, GpBitmap**);
 GpStatus OMG_WINGDIPAPI GdipCreateBitmapFromFileICM(GDIPCONST WCHAR*, GpBitmap**);
 #endif
 
+typedef struct {
+    HANDLE handle;
+    GpStatus OMG_WINGDIPAPI (*GdiplusStartup)(ULONG_PTR*, GDIPCONST GdiplusStartupInput*, GdiplusStartupOutput*);
+    void OMG_WINGDIPAPI (*GdiplusShutdown)(ULONG_PTR);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImageDecodersSize)(UINT*, UINT*);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImageDecoders)(UINT, UINT, ImageCodecInfo*);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImageEncodersSize)(UINT*, UINT*);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImageEncoders)(UINT, UINT, ImageCodecInfo*);
+    GpStatus OMG_WINGDIPAPI (*GdipBitmapLockBits)(GpBitmap*, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*);
+    GpStatus OMG_WINGDIPAPI (*GdipBitmapUnlockBits)(GpBitmap*, BitmapData*);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImageWidth)(GpImage*, UINT*);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImageHeight)(GpImage*, UINT*);
+    GpStatus OMG_WINGDIPAPI (*GdipGetImagePixelFormat)(GpImage*, PixelFormat*);
+    GpStatus OMG_WINGDIPAPI (*GdipLoadImageFromStream)(IStream*, GpImage**);
+    GpStatus OMG_WINGDIPAPI (*GdipLoadImageFromFile)(GDIPCONST WCHAR*, GpImage**);
+    GpStatus OMG_WINGDIPAPI (*GdipCreateBitmapFromStreamICM)(IStream*, GpBitmap**);
+    GpStatus OMG_WINGDIPAPI (*GdipCreateBitmapFromFileICM)(GDIPCONST WCHAR*, GpBitmap**);
+} OMG_Gdip;
+
+OMG_API bool omg_winapi_gdip_load(OMG_Gdip* this);
+OMG_API bool omg_winapi_gdip_free(OMG_Gdip* this);
 #endif
