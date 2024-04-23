@@ -633,7 +633,7 @@ bool omg_win_destroy_clean1(OMG_Omega* this) {
         result = OMG_FREE(this->mem, this->g32) || result;
         this->g32 = NULL;
     }
-#if OMG_SUPPORT_GPIP
+#if OMG_SUPPORT_GDIP
     if (this->should_free_gp && OMG_ISNOTNULL(this->gdip)) {
         result = omg_winapi_gdip_free(this->gdip) || result;
         result = OMG_FREE(this->mem, this->gdip) || result;
