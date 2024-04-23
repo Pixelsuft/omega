@@ -15,6 +15,7 @@
 #else
 #define OMG_GDIP_CB OMG_WINGDIPAPI
 #endif
+#define OMG_GPIP_PREFIX OMG_WIN_STD_PREFIX
 
 #ifndef _COM_interface
 #define _COM_interface struct
@@ -122,21 +123,21 @@ GpStatus OMG_WINGDIPAPI GdipCreateBitmapFromFileICM(GDIPCONST WCHAR*, GpBitmap**
 
 typedef struct {
     HANDLE handle;
-    GpStatus OMG_WINGDIPAPI (*GdiplusStartup)(ULONG_PTR*, GDIPCONST GdiplusStartupInput*, GdiplusStartupOutput*);
-    void OMG_WINGDIPAPI (*GdiplusShutdown)(ULONG_PTR);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImageDecodersSize)(UINT*, UINT*);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImageDecoders)(UINT, UINT, ImageCodecInfo*);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImageEncodersSize)(UINT*, UINT*);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImageEncoders)(UINT, UINT, ImageCodecInfo*);
-    GpStatus OMG_WINGDIPAPI (*GdipBitmapLockBits)(GpBitmap*, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*);
-    GpStatus OMG_WINGDIPAPI (*GdipBitmapUnlockBits)(GpBitmap*, BitmapData*);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImageWidth)(GpImage*, UINT*);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImageHeight)(GpImage*, UINT*);
-    GpStatus OMG_WINGDIPAPI (*GdipGetImagePixelFormat)(GpImage*, PixelFormat*);
-    GpStatus OMG_WINGDIPAPI (*GdipLoadImageFromStream)(IStream*, GpImage**);
-    GpStatus OMG_WINGDIPAPI (*GdipLoadImageFromFile)(GDIPCONST WCHAR*, GpImage**);
-    GpStatus OMG_WINGDIPAPI (*GdipCreateBitmapFromStreamICM)(IStream*, GpBitmap**);
-    GpStatus OMG_WINGDIPAPI (*GdipCreateBitmapFromFileICM)(GDIPCONST WCHAR*, GpBitmap**);
+    GpStatus OMG_GPIP_PREFIX (*GdiplusStartup)(ULONG_PTR*, GDIPCONST GdiplusStartupInput*, GdiplusStartupOutput*);
+    void OMG_GPIP_PREFIX (*GdiplusShutdown)(ULONG_PTR);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImageDecodersSize)(UINT*, UINT*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImageDecoders)(UINT, UINT, ImageCodecInfo*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImageEncodersSize)(UINT*, UINT*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImageEncoders)(UINT, UINT, ImageCodecInfo*);
+    GpStatus OMG_GPIP_PREFIX (*GdipBitmapLockBits)(GpBitmap*, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*);
+    GpStatus OMG_GPIP_PREFIX (*GdipBitmapUnlockBits)(GpBitmap*, BitmapData*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImageWidth)(GpImage*, UINT*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImageHeight)(GpImage*, UINT*);
+    GpStatus OMG_GPIP_PREFIX (*GdipGetImagePixelFormat)(GpImage*, PixelFormat*);
+    GpStatus OMG_GPIP_PREFIX (*GdipLoadImageFromStream)(IStream*, GpImage**);
+    GpStatus OMG_GPIP_PREFIX (*GdipLoadImageFromFile)(GDIPCONST WCHAR*, GpImage**);
+    GpStatus OMG_GPIP_PREFIX (*GdipCreateBitmapFromStreamICM)(IStream*, GpBitmap**);
+    GpStatus OMG_GPIP_PREFIX (*GdipCreateBitmapFromFileICM)(GDIPCONST WCHAR*, GpBitmap**);
 } OMG_Gdip;
 
 OMG_API bool omg_winapi_gdip_load(OMG_Gdip* this);
