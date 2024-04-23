@@ -16,6 +16,12 @@
 #define OMG_GDIP_CB OMG_WINGDIPAPI
 #endif
 
+#ifndef _COM_interface
+#define _COM_interface struct
+#endif
+
+typedef _COM_interface IStream IStream;
+
 typedef enum GpStatus {
 	Ok = 0,
 	GenericError = 1,
@@ -94,6 +100,7 @@ typedef Rect GpRect;
 
 typedef INT PixelFormat;
 typedef void GpBitmap;
+typedef void GpImage;
 
 #if !OMG_WINAPI_DYNAMIC || 1 // TODO: Remove
 GpStatus OMG_WINGDIPAPI GdiplusStartup(ULONG_PTR*, GDIPCONST GdiplusStartupInput*, GdiplusStartupOutput*);
@@ -104,6 +111,13 @@ GpStatus OMG_WINGDIPAPI GdipGetImageEncodersSize(UINT*, UINT*);
 GpStatus OMG_WINGDIPAPI GdipGetImageEncoders(UINT, UINT, ImageCodecInfo*);
 GpStatus OMG_WINGDIPAPI GdipBitmapLockBits(GpBitmap*, GDIPCONST GpRect*, UINT, PixelFormat, BitmapData*);
 GpStatus OMG_WINGDIPAPI GdipBitmapUnlockBits(GpBitmap*, BitmapData*);
+GpStatus OMG_WINGDIPAPI GdipGetImageWidth(GpImage*, UINT*);
+GpStatus OMG_WINGDIPAPI GdipGetImageHeight(GpImage*, UINT*);
+GpStatus OMG_WINGDIPAPI GdipGetImagePixelFormat(GpImage*, PixelFormat*);
+GpStatus OMG_WINGDIPAPI GdipLoadImageFromStream(IStream*, GpImage**);
+GpStatus OMG_WINGDIPAPI GdipLoadImageFromFile(GDIPCONST WCHAR*, GpImage**);
+GpStatus OMG_WINGDIPAPI GdipCreateBitmapFromStreamICM(IStream*, GpBitmap**);
+GpStatus OMG_WINGDIPAPI GdipCreateBitmapFromFileICM(GDIPCONST WCHAR*, GpBitmap**);
 #endif
 
 #endif
