@@ -195,5 +195,8 @@
     <ClCompile Include="..\src\api_sdl2_image.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\api_gdip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

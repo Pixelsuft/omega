@@ -148,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\api_fmod.c" />
+    <ClCompile Include="..\src\api_gdip.c" />
     <ClCompile Include="..\src\api_libc.c" />
     <ClCompile Include="..\src\api_raylib.c" />
     <ClCompile Include="..\src\api_sdl2.c" />

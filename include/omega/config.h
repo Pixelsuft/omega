@@ -48,6 +48,10 @@
 #define OMG_WIN_BETTER_LIBRARY_LOAD 0
 #endif
 
+#ifndef OMG_SUPPORT_GDIP
+#define OMG_SUPPORT_GDIP 1
+#endif
+
 #ifndef OMG_SUPPORT_SDL2
 #define OMG_SUPPORT_SDL2 1
 #endif
