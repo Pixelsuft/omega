@@ -49,7 +49,7 @@
 #endif
 
 #ifndef OMG_SUPPORT_GDIP
-#define OMG_SUPPORT_GDIP 1
+#define OMG_SUPPORT_GDIP 0
 #endif
 
 #ifndef OMG_SUPPORT_SDL2

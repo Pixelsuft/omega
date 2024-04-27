@@ -1,7 +1,7 @@
 #pragma once
 #include <omega/config.h>
 #include <omega/ostd.h>
-#if OMG_IS_WIN && OMG_SUPPORT_GDIP || 1
+#if OMG_IS_WIN && OMG_SUPPORT_GDIP
 #include <omega/api_win.h>
 #if defined(_ARM_)
 #define OMG_WINGDIPAPI
