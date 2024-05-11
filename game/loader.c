@@ -208,7 +208,7 @@ void loader_run(Loader* this) {
     App* app = _app;
     this->thread_safe = false;
     // Let's try to create a thread. Run in main thread, if we can't
-    if (!OMG_IS_EMSCRIPTEN)
+    if (!OMG_IS_EMSCRIPTEN && (app->omg->type != OMG_OMEGA_TYPE_WIN))
         OMG_THREAD_CREATE(this->thr, app->omg, loader_thread, &OMG_STR("ldrthr"), this, 0);
     if (OMG_ISNULL(this->thr)) {
         this->thread_safe = true;
